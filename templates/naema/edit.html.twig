@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit NAEMA{% endblock %}
+
+{% block body %}
+    <h1>Edit NAEMA</h1>
+
+    {{ include('naema/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('n_a_e_m_a_index') }}">back to list</a>
+
+    {{ include('naema/_delete_form.html.twig') }}
+{% endblock %}

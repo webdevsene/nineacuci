@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CACR index{% endblock %}
+
+{% block body %}
+    <h1>CACR index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CacrID</th>
+                <th>CacrActiveF</th>
+                <th>CacrCDATE</th>
+                <th>CacrCUSER</th>
+                <th>CacrCD</th>
+                <th>CacrCDMIG</th>
+                <th>CacrDescription</th>
+                <th>CacrMDATE</th>
+                <th>CacrMUSER</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c_a_c_r in c_a_c_rs %}
+            <tr>
+                <td>{{ c_a_c_r.id }}</td>
+                <td>{{ c_a_c_r.cacrID }}</td>
+                <td>{{ c_a_c_r.cacrActiveF }}</td>
+                <td>{{ c_a_c_r.cacrCDATE ? c_a_c_r.cacrCDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ c_a_c_r.cacrCUSER }}</td>
+                <td>{{ c_a_c_r.cacrCD }}</td>
+                <td>{{ c_a_c_r.cacrCDMIG }}</td>
+                <td>{{ c_a_c_r.cacrDescription }}</td>
+                <td>{{ c_a_c_r.cacrMDATE ? c_a_c_r.cacrMDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ c_a_c_r.cacrMUSER }}</td>
+                <td>
+                    <a href="{{ path('c_a_c_r_show', {'id': c_a_c_r.id}) }}">show</a>
+                    <a href="{{ path('c_a_c_r_edit', {'id': c_a_c_r.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('c_a_c_r_new') }}">Create new</a>
+{% endblock %}

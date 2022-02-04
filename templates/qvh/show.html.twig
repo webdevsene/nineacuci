@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QVH{% endblock %}
+
+{% block body %}
+    <h1>QVH</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ q_v_h.id }}</td>
+            </tr>
+            <tr>
+                <th>QVHID</th>
+                <td>{{ q_v_h.QVHID }}</td>
+            </tr>
+            <tr>
+                <th>QvhCUSER</th>
+                <td>{{ q_v_h.qvhCUSER }}</td>
+            </tr>
+            <tr>
+                <th>QvhActiveF</th>
+                <td>{{ q_v_h.qvhActiveF }}</td>
+            </tr>
+            <tr>
+                <th>QvhCDATE</th>
+                <td>{{ q_v_h.qvhCDATE ? q_v_h.qvhCDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>QvhCD</th>
+                <td>{{ q_v_h.qvhCD }}</td>
+            </tr>
+            <tr>
+                <th>QvhCDMIG</th>
+                <td>{{ q_v_h.qvhCDMIG }}</td>
+            </tr>
+            <tr>
+                <th>QvhDescription</th>
+                <td>{{ q_v_h.qvhDescription }}</td>
+            </tr>
+            <tr>
+                <th>QvhMDATE</th>
+                <td>{{ q_v_h.qvhMDATE ? q_v_h.qvhMDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>QvhMUSER</th>
+                <td>{{ q_v_h.qvhMUSER }}</td>
+            </tr>
+            <tr>
+                <th>QvhTYPE</th>
+                <td>{{ q_v_h.qvhTYPE }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('q_v_h_index') }}">back to list</a>
+
+    <a href="{{ path('q_v_h_edit', {'id': q_v_h.id}) }}">edit</a>
+
+    {{ include('qvh/_delete_form.html.twig') }}
+{% endblock %}

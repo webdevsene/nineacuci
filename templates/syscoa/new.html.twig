@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New SYSCOA{% endblock %}
+
+{% block body %}
+    <h1>Create new SYSCOA</h1>
+
+    {{ include('syscoa/_form.html.twig') }}
+
+    <a href="{{ path('s_y_s_c_o_a_index') }}">back to list</a>
+{% endblock %}

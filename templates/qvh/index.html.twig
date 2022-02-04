@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QVH index{% endblock %}
+
+{% block body %}
+    <h1>QVH index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>QVHID</th>
+                <th>QvhCUSER</th>
+                <th>QvhActiveF</th>
+                <th>QvhCDATE</th>
+                <th>QvhCD</th>
+                <th>QvhCDMIG</th>
+                <th>QvhDescription</th>
+                <th>QvhMDATE</th>
+                <th>QvhMUSER</th>
+                <th>QvhTYPE</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for q_v_h in q_v_hs %}
+            <tr>
+                <td>{{ q_v_h.id }}</td>
+                <td>{{ q_v_h.QVHID }}</td>
+                <td>{{ q_v_h.qvhCUSER }}</td>
+                <td>{{ q_v_h.qvhActiveF }}</td>
+                <td>{{ q_v_h.qvhCDATE ? q_v_h.qvhCDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ q_v_h.qvhCD }}</td>
+                <td>{{ q_v_h.qvhCDMIG }}</td>
+                <td>{{ q_v_h.qvhDescription }}</td>
+                <td>{{ q_v_h.qvhMDATE ? q_v_h.qvhMDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ q_v_h.qvhMUSER }}</td>
+                <td>{{ q_v_h.qvhTYPE }}</td>
+                <td>
+                    <a href="{{ path('q_v_h_show', {'id': q_v_h.id}) }}">show</a>
+                    <a href="{{ path('q_v_h_edit', {'id': q_v_h.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('q_v_h_new') }}">Create new</a>
+{% endblock %}

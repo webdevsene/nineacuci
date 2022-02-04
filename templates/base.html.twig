@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+
+        <meta charset="utf-8" />
+        <title>ANSD - Agence Nationale de la Statistique et de la Démographie - Portail NINEA_CUCI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico')}}">
+
+
+        <!-- Bootstrap Css -->
+        <link href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            label{
+                font-size: 12px;
+                color: #676767;
+            }
+        </style>
+
+
+        {% block stylesheets %}
+                
+        {% endblock %}
+
+       
+
+  </head>
+  
+  <body data-topbar="dark" data-layout="horizontal">
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            <header id="page-topbar">
+                <div class="navbar-header">
+                    <div class="d-flex">
+                        <!-- LOGO -->
+                        <div class="navbar-brand-box">
+                            <a href="index.html" class="logo logo-dark">
+                                <span class="logo-sm">
+                                    
+                                </span>
+                                <span class="logo-lg">
+                                    
+                                </span>
+                            </a>
+
+                            <a href="index.html" class="logo logo-light">
+                                <span class="logo-sm">
+                                    
+                                </span>
+                                <span class="logo-lg">
+                                    
+                                </span>
+                            </a>
+                        </div>
+
+                        <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                            <i class="fa fa-fw fa-bars"></i>
+                        </button>
+
+                        <!-- App Search-->
+                        <form class="app-search d-none d-lg-block">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="bx bx-search-alt"></span>
+                            </div>
+                        </form>
+
+                        
+                    </div>
+
+                    <div class="d-flex">
+
+                        
+
+                      
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="rounded-circle header-profile-user" src="{{ asset('admin/dist/assets/images/users/avatar-1.jpg')}}"
+                                    alt="Header Avatar">
+                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.prenom}} {{app.user.nom}}</span>
+                                <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <!-- item-->
+                                <a class="dropdown-item" href="{{path('user_change_password',{'id':app.user.id})}}"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Changer mot de passe</span></a>
+                                
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="{{path('app_logout')}}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Déconnexion</span></a>
+                            </div>
+                        </div>
+
+                        
+            
+                    </div>
+                </div>
+            </header>
+    
+            <div class="topnav">
+                <div class="container-fluid">
+                    <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+
+                        <div class="collapse navbar-collapse" id="topnav-menu-content">
+                            <ul class="navbar-nav">
+
+                             {% if app.user.premierConnexion==0 %}
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                    >
+                                        <i class="bx bx-home-circle me-2"></i><span key="t-dashboards">Tableau de bord</span> <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+
+                                        <a href="{{path('accueil')}}" class="dropdown-item" key="t-default">Tableau de bord</a>
+                                        
+                                    </div>
+                                </li>
+                                {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button"
+                                    >
+                                        <i class="bx bx-tone me-2"></i>
+                                        <span key="t-ui-elements"> Administrations</span> 
+                                        <div class="arrow-down"></div>
+                                    </a>
+
+                                    <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl"
+                                        aria-labelledby="topnav-uielement">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div>
+                                                    <a href="{{path('user_index')}}" class="dropdown-item" key="t-alerts">Gestion des utilisateurs</a>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                </li>
+
+                                 {% endif %}
+
+
+
+                             {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BREA_AGENT_SAISIE')  %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button"
+                                    >
+                                        <i class="bx bx-tone me-2"></i>
+                                        <span key="t-ui-elements"> Gestion des répertoires</span> 
+                                        <div class="arrow-down"></div>
+                                    </a>
+
+                                    <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl"
+                                        aria-labelledby="topnav-uielement">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div>
+                                                    <a href="{{path('repertoire_index')}}" class="dropdown-item" key="t-alerts">Saisie et mise à jour d'une unité</a>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                </li>
+
+                                {% if is_granted('ROLE_BREA_ADMIN')   %}
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                    >
+                                        <i class="bx bx-tone me-2"></i>
+                                        <span key="t-ui-elements">Paramètres</span> <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+
+                                        <a href="{{path('region_new')}}" class="dropdown-item" key="t-default">Région</a>
+
+                                         <a href="{{path('departement_new')}}" class="dropdown-item" key="t-default">Département</a>
+
+                                          <a href="{{path('cav_new')}}" class="dropdown-item" key="t-default">Cav</a>
+
+                                          <a href="{{path('cacr_new')}}" class="dropdown-item" key="t-default">Cacr</a>
+
+                                          <a href="{{path('qvh_new')}}" class="dropdown-item" key="t-default">Qvh</a>
+
+                                          <a href="{{path('ref_agg_index')}}" class="dropdown-item" key="t-default">Aggrégation</a>
+                                        
+                                    </div>
+
+                                </li>
+                                 {% endif %}
+
+
+                            
+
+                                 {% endif %}
+
+
+
+
+                                  {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
+                                
+
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                    >
+                                        <i class="bx bx-tone me-2"></i>
+                                        <span key="t-ui-elements">Etat financier</span> <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+
+                                          <a href="{{path('bilan_new')}}" class="dropdown-item" key="t-default">Bilan</a>
+                                        
+                                    </div>
+
+                                </li>
+
+                                 {% endif %}
+
+                             {% endif %}
+
+                                
+
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content" >
+                    <div class="container-fluid">
+
+                          {% block body %}{% endblock %}
+                        
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+              
+                
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <script>document.write(new Date().getFullYear())</script> © 
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-end d-none d-sm-block">
+                                    République du Sénégal . Tous droits réservés.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        <!-- Right Sidebar -->
+        <div class="right-bar">
+            <div data-simplebar class="h-100">
+                <div class="rightbar-title d-flex align-items-center px-3 py-4">
+            
+                    <h5 class="m-0 me-2">Settings</h5>
+
+                    <a href="javascript:void(0);" class="right-bar-toggle ms-auto">
+                        <i class="mdi mdi-close noti-icon"></i>
+                    </a>
+                </div>
+
+                <!-- Settings -->
+                <hr class="mt-0" />
+                <h6 class="text-center mb-0">Choose Layouts</h6>
+
+                <div class="p-4">
+                    <div class="mb-2">
+                        <
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input theme-choice" type="checkbox" id="light-mode-switch" checked>
+                        <label class="form-check-label" for="light-mode-switch">Light Mode</label>
+                    </div>
+    
+                    <div class="mb-2">
+                       
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input theme-choice" type="checkbox" id="dark-mode-switch">
+                        <label class="form-check-label" for="dark-mode-switch">Dark Mode</label>
+                    </div>
+    
+                    <div class="mb-2">
+                       
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input theme-choice" type="checkbox" id="rtl-mode-switch">
+                        <label class="form-check-label" for="rtl-mode-switch">RTL Mode</label>
+                    </div>
+
+                    <div class="mb-2">
+                        
+                    </div>
+                    <div class="form-check form-switch mb-5">
+                        <input class="form-check-input theme-choice" type="checkbox" id="dark-rtl-mode-switch">
+                        <label class="form-check-label" for="dark-rtl-mode-switch">Dark RTL Mode</label>
+                    </div>
+
+            
+                </div>
+
+            </div> <!-- end slimscroll-menu-->
+        </div>
+        <!-- /Right-bar -->
+
+        <!-- Right bar overlay-->
+        <div class="rightbar-overlay"></div> 
+        
+
+        <!-- JAVASCRIPT -->
+        <script src="{{ asset('admin/dist/assets/libs/jquery/jquery.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/metismenu/metisMenu.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+
+        {% block javascript %}
+                
+        {% endblock %}
+        
+       
+        
+       
+    </body>
+
+</html>

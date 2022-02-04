@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit CommissairesComptes{% endblock %}
+
+{% block body %}
+    <h1>Edit CommissairesComptes</h1>
+
+    {{ include('commissaires_comptes/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('commissaires_comptes_index') }}">back to list</a>
+
+    {{ include('commissaires_comptes/_delete_form.html.twig') }}
+{% endblock %}

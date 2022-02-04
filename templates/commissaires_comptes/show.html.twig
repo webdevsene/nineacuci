@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CommissairesComptes{% endblock %}
+
+{% block body %}
+    <h1>CommissairesComptes</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ commissaires_compte.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ commissaires_compte.createdAt ? commissaires_compte.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ commissaires_compte.updatedAt ? commissaires_compte.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ commissaires_compte.address }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ commissaires_compte.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ commissaires_compte.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>{{ commissaires_compte.telephone }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('commissaires_comptes_index') }}">back to list</a>
+
+    <a href="{{ path('commissaires_comptes_edit', {'id': commissaires_compte.id}) }}">edit</a>
+
+    {{ include('commissaires_comptes/_delete_form.html.twig') }}
+{% endblock %}

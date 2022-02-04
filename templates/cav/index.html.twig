@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CAV index{% endblock %}
+
+{% block body %}
+    <h1>CAV index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CAVID</th>
+                <th>CavActiveF</th>
+                <th>CavCDATE</th>
+                <th>CavCUSER</th>
+                <th>CavCDMIG</th>
+                <th>CavCD</th>
+                <th>CavDescription</th>
+                <th>CavMDATE</th>
+                <th>CavMUSER</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c_a_v in c_a_vs %}
+            <tr>
+                <td>{{ c_a_v.id }}</td>
+                <td>{{ c_a_v.CAVID }}</td>
+                <td>{{ c_a_v.cavActiveF }}</td>
+                <td>{{ c_a_v.cavCDATE ? c_a_v.cavCDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ c_a_v.cavCUSER }}</td>
+                <td>{{ c_a_v.cavCDMIG }}</td>
+                <td>{{ c_a_v.cavCD }}</td>
+                <td>{{ c_a_v.cavDescription }}</td>
+                <td>{{ c_a_v.cavMDATE ? c_a_v.cavMDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ c_a_v.cavMUSER }}</td>
+                <td>
+                    <a href="{{ path('c_a_v_show', {'id': c_a_v.id}) }}">show</a>
+                    <a href="{{ path('c_a_v_edit', {'id': c_a_v.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('cav_new') }}">Create new</a>
+{% endblock %}

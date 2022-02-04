@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New CommissairesComptes{% endblock %}
+
+{% block body %}
+    <h1>Create new CommissairesComptes</h1>
+
+    {{ include('commissaires_comptes/_form.html.twig') }}
+
+    <a href="{{ path('commissaires_comptes_index') }}">back to list</a>
+{% endblock %}

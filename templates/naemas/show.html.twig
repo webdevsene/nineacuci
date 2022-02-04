@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NAEMAS{% endblock %}
+
+{% block body %}
+    <h1>NAEMAS</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ n_a_e_m_a.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ n_a_e_m_a.libelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('n_a_e_m_a_s_index') }}">back to list</a>
+
+    <a href="{{ path('n_a_e_m_a_s_edit', {'id': n_a_e_m_a.id}) }}">edit</a>
+
+    {{ include('naemas/_delete_form.html.twig') }}
+{% endblock %}

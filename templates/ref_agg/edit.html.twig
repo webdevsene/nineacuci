@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New RefAgg{% endblock %}
+
+{% block body %}
+    
+
+   
+
+   
+
+    <div class="row">
+                <div class="col-xl-12">
+                        <div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                            <div class="card-body">
+                            <h4> <small> <a href="{{ path('ref_agg_index') }}" class="">Retourner</a></small></h4>
+           
+    {{ form_start(form) }}
+    <div  style="border: 1px solid #ccc;">
+            <div >
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <br>
+                            <div class="item row">
+                                 <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.typeBilan) }} </b> 
+                                </label>
+                               
+                                <div class="col-md-4 col-sm-4 ">
+
+                                    {{form_widget(form.typeBilan)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.category) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    {{form_widget(form.category)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 label-align" for="first-name"><b> {{ form_label(form.code) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    {{form_widget(form.code)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 label-align" for="first-name"><b> {{ form_label(form.parent) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    {{form_widget(form.parent)}}
+                                </div>
+                            </div>
+                            
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.libelle) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    {{form_widget(form.libelle)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.ordre) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    {{form_widget(form.ordre)}}
+                                </div>
+                            </div>
+                              <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.surlignee) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    {{form_widget(form.surlignee)}}
+                                </div>
+                            </div>
+
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                   <button class="btn btn-secondary">Sauvegarder</button>
+                                </div>
+                            </div>
+                    </div> 
+                     <br>
+                </div>
+            </div>
+        
+    </div>
+
+{{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+{% endblock %}

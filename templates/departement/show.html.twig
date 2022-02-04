@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Departement{% endblock %}
+
+{% block body %}
+    <h1>Departement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ departement.id }}</td>
+            </tr>
+            <tr>
+                <th>DepId</th>
+                <td>{{ departement.depId }}</td>
+            </tr>
+            <tr>
+                <th>DepActiveF</th>
+                <td>{{ departement.depActiveF }}</td>
+            </tr>
+            <tr>
+                <th>DepCDATE</th>
+                <td>{{ departement.depCDATE ? departement.depCDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DepCUSER</th>
+                <td>{{ departement.depCUSER }}</td>
+            </tr>
+            <tr>
+                <th>DepCD</th>
+                <td>{{ departement.depCD }}</td>
+            </tr>
+            <tr>
+                <th>DepCDMIG</th>
+                <td>{{ departement.depCDMIG }}</td>
+            </tr>
+            <tr>
+                <th>DepDescription</th>
+                <td>{{ departement.depDescription }}</td>
+            </tr>
+            <tr>
+                <th>DepMDATE</th>
+                <td>{{ departement.depMDATE ? departement.depMDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DepMUSER</th>
+                <td>{{ departement.depMUSER }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('departement_index') }}">back to list</a>
+
+    <a href="{{ path('departement_edit', {'id': departement.id}) }}">edit</a>
+
+    {{ include('departement/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Repertoire Corbeille{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+ <link href="{{ asset('admin/dist/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+      
+{% endblock %}
+
+{% block body %}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Corbeille</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %} 
+                    <li class="breadcrumb-item active"><a href="{{path('repertoire_index')}}" class="btn btn-success" style="color:#fff">Retourner <br></a></li>
+                    {% endif %}
+
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+  <div class="col-12">
+    {% for message in app.session.flashbag.get('message')%}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{message}}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div> 
+
+        {% endfor%}
+    <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+      <div class="card-body " style="margin: 0%;padding: 0%;">
+        <table id="datatable" class="table table-bordered dt-responsive table-hover nowrap w-100">
+            <thead style="background:#efefef; margin-top: 0px;">
+            <tr>
+                <th> <center><b>NINEA</b><br> <input id="ninea" type="text" class="form-control filter"
+                    data-column-index="0"></center> </th>
+                <th>
+                    <center>  <b>N° CUCI</b>
+                    <input  type="text" class="form-control filter"
+                        data-column-index="1" width="100%"></center>
+                
+                </th>
+                <th>
+                    <center>
+                    <b>Dénomination sociale</b>
+                    <input  type="text" class="form-control filter"
+                    data-column-index="2"></center>
+                </th>
+                <th> <center>
+                    <b>Sigle</b>
+                  <input  type="text" class="form-control filter"
+                    data-column-index="3"></center>
+                </th>
+                <th> <center>
+                    <b>N° du RC</b>
+                 <input  type="text" class="form-control filter"
+                    data-column-index="4"></center>
+                </th>
+                <th><center><b>SYSCOA</b>
+                  <input  type="text" class="form-control filter"
+                    data-column-index="5"></center>
+                </th>
+                <th>
+                    <center><b>Addresse</b>
+                        <input  type="text" class="form-control filter"
+                          data-column-index="6"></center>
+                </th>
+                <th>
+                
+                    <center><b>Activité principale</b>
+                        <input  type="text" class="form-control filter"
+                          data-column-index="7"></center>
+                </th>
+                <th>
+                    <center><b>Actif</b>
+                        <input  type="text" class="form-control filter"
+                          data-column-index="8"></center>
+                </th>
+               
+               
+                
+                <th></th>
+            </tr>
+            </thead>
+            <tbody style="color: #5a5a5a; font-size: 12px;">
+                 {% for repertoire in repertoires %}
+                    <tr>
+                        <td>{{ repertoire.ninea }}</td>
+                        <td>{{ repertoire.CodeCuci }}</td>
+                        <td>{{ repertoire.DenominationSocial }}</td>
+                        <td>{{ repertoire.sigle }}</td>
+                        <td>{{ repertoire.NumeroRegistreCommerce }}</td>
+                        <td>{{ repertoire.syscoa }}</td>
+                        <td>{{ repertoire.addresseComplete }}</td>
+                        <td>{{ repertoire.activitePrincipale }}</td>
+                        <td>
+                         {{ repertoire.statut ? "Oui" : "Non" }}
+                        </td>
+                        <td>
+                            
+                            {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}
+                           
+                            <a href="{{ path('repertoire_restaurer', {'id': repertoire.id}) }}" class="btn btn-secondary"  title="Restaurer une unité">Restaurer</a>
+
+                           
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="18">no records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div> <!-- end col -->
+</div> <!-- end row -->
+
+    
+{% endblock %}
+{% block javascript %}
+  
+
+ <script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+ <script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+
+<!-- Responsive examples -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+
+<!-- Datatable init js -->
+<script src="{{ asset('admin/dist/assets/js/pages/dataTables.init.js')}}"></script>  
+
+ <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+
+
+{% endblock %}

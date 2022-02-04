@@ -1,0 +1,371 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau utlisateur{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+ </style> 
+{% endblock %}
+{% block body %}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h6 class="mb-sm-0 font-size-18"><i class="fa fa-list"></i>Nouveau utilisateur</h6>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{{path('user_index')}}">Gestion des utilisateurs</a></li>
+                    <li class="breadcrumb-item active">Nouveau utilisateur</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    
+    <div class="card-body "> 
+         {{ form_start(form) }}   
+   <div class="row">
+
+    <div class="col-6">
+   
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.prenom)}}:<span style="color:red">*</span>
+                 </label>
+                <div class="col-md-6">
+                     {{form_widget(form.prenom)}}
+                     <span style="color: red;" id="idPrenom"> {{form_errors(form.prenom)}}</span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.nom)}}:<span style="color:red">*</span>
+                 </label>
+                <div class="col-md-6">
+                     {{form_widget(form.nom)}}
+                     <span style="color: red;" id="idNom"> {{form_errors(form.nom)}}</span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="example-date-input" class="col-md-4 col-form-label">{{form_label(form.dateNaissance)}}:</label>
+                <div class="col-md-6">
+                    
+                     {{form_widget(form.dateNaissance)}}
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.LieuNaissance)}}:
+                 <span style="color: red;"> {{form_errors(form.LieuNaissance)}}</span></label>
+                <div class="col-md-6">
+                     {{form_widget(form.LieuNaissance)}}
+                </div>
+            </div>
+
+
+             <div class="mb-3 row">
+                <label class="col-md-4 col-form-label">{{form_label(form.sexe)}}</label>
+                <div class="col-md-6">
+                     {{form_widget(form.sexe)}}
+                </div>
+            </div>
+
+             <div class="mb-3 row">
+                <label class="col-md-4 col-form-label">{{form_label(form.matricule)}}</label>
+                <div class="col-md-6">
+                     {{form_widget(form.matricule)}}
+                </div>
+            </div>
+
+          
+           
+
+    </div> <!-- end col -->
+
+     <div class="col-6">
+   
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.username)}}:<span style="color:red">*</span>
+                 </label>
+                <div class="col-md-6">
+                     {{form_widget(form.username)}}
+                     <span style="color: red;" > {{form_errors(form.username)}}</span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="example-password-input" class="col-md-4 col-form-label">{{form_label(form.plainPassword.first)}}:<span style="color:red">*</span></label>
+                <div class="col-md-6">
+                    {{form_widget(form.plainPassword.first)}}
+                     <span style="color: red;" id="idfirst" > {{form_errors(form.plainPassword.first)}}</span>
+                   
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="example-password-input" class="col-md-4 col-form-label">{{form_label(form.plainPassword.second)}}:<span style="color:red">*</span></label>
+                <div class="col-md-6">
+                    {{form_widget(form.plainPassword.second)}}
+                     <span style="color: red;" id="idSecond"> {{form_errors(form.plainPassword.second)}}</span>
+                   
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="example-date-input" class="col-md-4 col-form-label">{{form_label(form.dateExpiration)}}:<span style="color:red">*</span></label>
+                <div class="col-md-6">
+                    
+                     {{form_widget(form.dateExpiration)}}
+                     <span style="color: red;" > {{form_errors(form.dateExpiration)}}</span>
+                </div>
+            </div>
+
+             <div class="mb-3 row">
+                <label for="example-date-input" class="col-md-4 col-form-label">{{form_label(form.email)}}:<span style="color:red">*</span></label>
+                <div class="col-md-6">
+                    
+                     {{form_widget(form.email)}}
+                     <span style="color: red;" id="idEmail"> {{form_errors(form.email)}}</span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.tel)}}:
+                 <span style="color: red;" id="idTel"> {{form_errors(form.tel)}}</span></label>
+                <div class="col-md-6">
+                     {{form_widget(form.tel)}}
+                </div>
+            </div>
+
+
+             <div class="mb-3 row">
+                <label class="col-md-4 col-form-label">{{form_label(form.description)}}</label>
+                <div class="col-md-6">
+                     {{form_widget(form.description)}}
+                </div>
+            </div>
+
+          
+    </div> <!-- end col -->
+     <div class="col-12"><br>
+       <h6 class="mb-sm-0 font-size-18" style="border-bottom: 1px solid black ;">Rôles de l'utilisateur</h6> 
+         <div align="center" style="width: 20%;">
+            <br><br>
+             <table class="table table-striped table-bordered" width="20%">
+                {% for tag in form.roles%}
+                    <tr>
+                        <td><label > {{form_label(tag)}}</label></td>
+                        <td> {{form_widget(tag)}}</td>
+                    </tr>
+                {% endfor%}
+            </table>
+             
+         </div>
+     </div>
+
+     <div class="col-6" align="right"><br>
+       <input type="submit"  class="btn btn-primary" id="idbtn"  value="Sauvegarder"  />
+
+    </div>
+
+    <div class="col-6" align="left"><br>
+        <a href="{{path('user_index')}}"  class="btn btn-secondary waves-effect">Retourner</a>
+
+    </div>
+
+</div>
+</div>
+</div>
+ {{ form_end(form) }}
+<!-- end row -->
+
+
+{% endblock %}
+
+{% block javascript %}
+
+
+<script type="text/javascript">
+    
+    function existeUsername() {
+        
+      if ( $('#user_username').val().length >= 1) {
+             var route="{{path('user_nomUtilisateur')}}"+"/"+$('#user_username').val();
+
+             $.ajax({
+
+                type: 'GET',
+                url: route,
+                dataType: "json",
+                success : function(data){
+                     
+                     if(data==1){
+                       
+                        Swal.fire('Il existe déjà un compte avec ce nom d\'utilisateur.');
+                        $('#user_username').value = "";
+
+                     }
+
+                }
+                ,
+                error :  function(err){
+                    console.log(err);
+                }
+
+             });
+                
+      } 
+    } 
+
+
+    function estValide() {
+        
+             if ($('#user_plainPassword_first').val().match( /[0-9]/g) && 
+                    $('#user_plainPassword_first').val().match( /[A-Z]/g) && 
+                    $('#user_plainPassword_first').val().match(/[a-z]/g) && 
+                    $('#user_plainPassword_first').val().match( /[^a-zA-Z\d]/g) &&
+                    $('#user_plainPassword_first').val().length >= 8) {
+                $('#user_plainPassword_first').removeClass('has_error'); 
+                msg = "<p style='color:green'><i class='fa fa-check'></i></p>"; 
+                }
+            else {
+                msg = "<p style='color:red'><br><br> Le mot de passe doit contenir: <br> - Au moins 1 caractère majuscule.  <br> - Au moins 1 caractère minuscule.  <br> - Au moins 1 chiffre.  <br> - Au moins 1 caractère spécial.  <br> - Minimum 8 caractères.</p>";
+
+                 $('#user_plainPassword_first').addClass('has_error'); 
+            }
+            document.getElementById("idfirst").innerHTML= msg; 
+    } 
+
+
+    function estConforme() {
+       
+         
+           if (     $('#user_plainPassword_first').val().match( /[0-9]/g) && 
+                    $('#user_plainPassword_first').val().match( /[A-Z]/g) && 
+                    $('#user_plainPassword_first').val().match(/[a-z]/g) && 
+                    $('#user_plainPassword_first').val().match( /[^a-zA-Z\d]/g) &&
+                    $('#user_plainPassword_first').val().length >= 8) {
+
+                  if ($('#user_plainPassword_second').val().localeCompare($('#user_plainPassword_first').val())==0) {
+
+                        
+                          $('#user_plainPassword_second').removeClass('has_error'); 
+                          document.getElementById("idSecond").innerHTML= "<p style='color:green'><i class='fa fa-check'></i></p>";
+
+                    }else{
+                          
+                         
+                          $('#user_plainPassword_second').addClass('has_error'); 
+                          document.getElementById("idSecond").innerHTML= "<p style='color:red'> Les mot de passe ne correspondent pas. </p>"; 
+                    }
+                
+                }
+            else {
+              
+
+            }
+    }
+
+
+      function estMailValide(){
+        
+         var email="";
+        if (!$('#user_email').val().match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i)) {
+          email="Le mail n'est pas une adresse valide";
+          $('#idEmail').text(email);
+          $('#user_email').addClass('has_error');
+       }else{
+          var email="";
+          $('#idEmail').text(email);
+          $('#user_email').removeClass('has_error');
+       }
+
+    }
+
+
+    document.getElementById("user_plainPassword_first").addEventListener("change", estValide); 
+    document.getElementById("user_plainPassword_second").addEventListener("change", estConforme); 
+    document.getElementById("user_username").addEventListener("change", existeUsername); 
+    document.getElementById("user_email").addEventListener("change", estMailValide); 
+
+
+
+    $(document).ready(function(){
+
+       
+
+
+  
+     $('#idbtn').click(function(){
+ 
+       var nom="";
+       var prenom="";
+       if ($.trim($('#user_prenom').val()).length==0) {
+           prenom="Le prenom est obligatoire";
+          $('#idPrenom').text(prenom);
+          $('#user_prenom').addClass('has_error');
+       }
+       if ($.trim($('#user_nom').val()).length==0) {
+          nom="Le nom est obligatoire";
+          $('#idNom').text(nom);
+          $('#user_nom').addClass('has_error');
+       }
+
+        if ($.trim($('#user_email').val()).length==0) {
+                email="Le mail est obligatoire";
+          $('#idEmail').text(email);
+          $('#user_email').addClass('has_error');
+       }
+
+         if ($.trim($('#user_plainPassword_first').val()).length==0) {
+               
+          $('#idfirst').text("Le mot de passe est obligatoire");
+          $('#user_plainPassword_first').addClass('has_error');
+       }
+       if ($.trim($('#user_plainPassword_second').val()).length==0) {
+          $('#user_plainPassword_second').addClass('has_error');
+       }
+
+       if ($.trim($('#user_username').val()).length==0) {
+          $('#user_username').addClass('has_error');
+       }
+ 
+       
+ 
+     });
+
+     
+ 
+  
+    });
+ </script>
+
+
+<script src="{{ asset('admin/dist/assets/libs/parsleyjs/parsley.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/js/pages/form-validation.init.js')}}"></script>
+
+
+
+  <!-- Sweet Alerts js -->
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+        <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+{% endblock %}

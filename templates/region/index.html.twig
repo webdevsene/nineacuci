@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Region index{% endblock %}
+
+{% block body %}
+    <h1>Region index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>RegCD</th>
+                <th>RegActiviteF</th>
+                <th>RegCDATE</th>
+                <th>RegCUSER</th>
+                <th>RegCDMIG</th>
+                <th>RegContactDetails</th>
+                <th>RegDescription</th>
+                <th>RegMDATE</th>
+                <th>RegMUSER</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for region in regions %}
+            <tr>
+                <td>{{ region.id }}</td>
+                <td>{{ region.regCD }}</td>
+                <td>{{ region.regActiviteF }}</td>
+                <td>{{ region.regCDATE ? region.regCDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ region.regCUSER }}</td>
+                <td>{{ region.regCDMIG }}</td>
+                <td>{{ region.regContactDetails }}</td>
+                <td>{{ region.regDescription }}</td>
+                <td>{{ region.regMDATE ? region.regMDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ region.regMUSER }}</td>
+                <td>
+                    <a href="{{ path('region_show', {'id': region.id}) }}">show</a>
+                    <a href="{{ path('region_edit', {'id': region.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('region_new') }}">Create new</a>
+{% endblock %}

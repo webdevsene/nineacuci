@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h6 class="mb-sm-0 font-size-18"><i class="fa fa-list"></i> utilisateur</h6>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+               {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}    
+                <li class="breadcrumb-item">    <a  title="Retourner à la liste des utilisateurs" href="{{ path('user_index') }}"> Liste</a></li>
+
+              
+              {% if user.enabled==1%}
+              <li class="breadcrumb-item"> <a  title="Désactiver un compte" href="{{ path('user_desactiver',{id:user.id}) }}">Désactiver</a></li>
+              
+              {%else%}
+              <li class="breadcrumb-item"> <a  title="activer un compte" href="{{ path('user_activer',{id:user.id}) }}">Activer</a></li>
+              
+              {%endif%}
+             
+              
+              <li class="breadcrumb-item"> <a  title="Réinitialiser le mot de passe" href="{{ path('user_reinisialiser',{id:user.id}) }}">Réinitialiser</a></li>
+             
+
+              <li class="breadcrumb-item"><a  title="Modifier un compte utilisateur" href="{{ path('user_edit',{id:user.id}) }}">Modifier</a></li>
+
+              {% endif %}
+                   
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    
+      {% for message in app.session.flashbag.get('message')%}
+               <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                               {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div> 
+
+              {% endfor%}
+        <div class="card-body"> 
+
+              <table class="data table table-striped ">
+                <thead>
+                  <tr class="tr_entete">
+                  <th width="25%"><h3>{{user.prenom}} {{user.nom}}</h3></th>
+                  <th></th>
+                  
+                </tr>
+                </thead>
+                 <tbody>
+                  <tr>
+                    <td width="10%"><b>Email:</b></td>
+                    <td>{{user.email}}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%"><b>Tél:</b></td>
+                    <td>{{user.tel}}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%"><b>Matricule:</b></td>
+                    <td>{{user.matricule}}</td>
+                  </tr>
+                  <tr>
+                    <td width="10%"><b>Nom d'utilisateur:</b></td>
+                    <td>{{user.username}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Compte:</b></td>
+                    <td> {{ user.enabled ? "Active" : "Désactive" }}</td>
+                  </tr>
+
+                  <tr>
+                    <td width="10%"><b>Roles:</b></td>
+                    <td> {% for tag in user.roles%}
+                          {% if tag=="ROLE_SUPER_ADMIN" %}
+                               Super Admin,
+                          {%else%}
+                             {% if tag=="ROLE_ADMIN" %}
+                                   Admin,
+                             {%else%}
+                              {% if tag=="ROLE_BREA_ADMIN" %}
+                                    Admin BREA,
+                               {%else%}
+                               {% if tag=="ROLE_BSE_ADMIN" %}
+                                   Admin BSE,
+                               {%else%}
+                               {% if tag=="ROLE_BREA_AGENT_SAISIE" %}
+                                   Agent Saisie BREA,
+                               {%else%}
+                               {% if tag=="ROLE_BSE_AGENT_SAISIE" %}
+                                     Agent Saisie BREA
+
+                                 {%endif%}
+                                 {%endif%}
+                                {%endif%}
+                              {%endif%}
+                            {%endif%}
+                          {%endif%}
+                         {%endfor%}
+
+                    </td>
+                  </tr>
+                  </tbody>
+                 
+               
+              </table>
+
+            
+        
+        </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{{ asset('admin/dist/assets/js/pages/alerts.init.js')}}"></script>
+
+{% endblock %}

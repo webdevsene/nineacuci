@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New QVH{% endblock %}
+
+{% block body %}
+
+
+
+
+<!-- ici on ajoute le data-table liste ressource -->
+<div class="row">
+
+    <!-- end le data-table liste region -->
+
+
+    
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                <div class="card-body">
+<!--                    
+ -->
+                    <div class="table-responsive">
+                        <table id="usertable" class="table table-hover mb-0">
+
+                            <thead>
+                                <tr>
+                                   
+                                    <th data-priority="3">Code CACR </th>
+                                    <th data-priority="3">Libelle</th>
+                                    
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {% for tag in cacr %}
+                                <tr>
+                                   
+                                    <td>{{ tag.codeCacr }}</td>
+                                    <td>{{ tag.libelle}}</td>
+                                   
+                                </tr>
+                                {% else %}
+                                        <tr>
+                                            <td colspan="12">Aucun enregistrement trouvé</td>
+                                        </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-6">
+            <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                <div class="card-body">
+                      
+                    <div class="row">
+                        <!-- begin to upload file -->
+                        <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="post" action="{{ path('importCacr')}}">
+                                     <div class="form-group">
+                                        <!-- <label for="_file" class="control-label col-sm-3">Charger le template</label> -->
+                                        <div class="col-sm-9">
+                                            <input class="form-control" type="file" name="_file" id="_file" title="Charger un template">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-6-offset-2">
+                                          <input type="submit" class="btn btn-secondary" value="Charger">
+                                        </div>
+                                     </div>
+                        </form>
+                            
+                </div> <!-- end col -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+
+{% endblock %}
+
+{% block javascript %}
+  
+
+ <script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+ <script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+
+<!-- Responsive examples -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+
+<!-- Datatable init js -->
+<script src="{{ asset('admin/dist/assets/js/pages/dataTables.init.js')}}"></script>  
+
+<script src="{{ asset('admin/dist/assets/libs/select2/js/select2.min.js')}}"></script>
+
+
+  
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}}"></script>
+  <!-- Sweet Alerts js -->
+  <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+        <!-- form advanced init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-advanced.init.js')}}"></script>
+
+
+
+
+{% endblock %}
+
