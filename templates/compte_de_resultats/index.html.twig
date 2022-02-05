@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CompteDeResultats index{% endblock %}
+
+{% block body %}
+    <h1>CompteDeResultats index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Rank</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>Ref_code</th>
+                <th>Annee_financiere</th>
+                <th>Uploaded_file_name</th>
+                <th>Net1</th>
+                <th>Net2</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for compte_de_resultat in compte_de_resultats %}
+            <tr>
+                <td>{{ compte_de_resultat.id }}</td>
+                <td>{{ compte_de_resultat.rank }}</td>
+                <td>{{ compte_de_resultat.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ compte_de_resultat.status }}</td>
+                <td>{{ compte_de_resultat.refCode }}</td>
+                <td>{{ compte_de_resultat.anneeFinanciere }}</td>
+                <td>{{ compte_de_resultat.uploadedFileName }}</td>
+                <td>{{ compte_de_resultat.net1 }}</td>
+                <td>{{ compte_de_resultat.net2 }}</td>
+                <td>{{ compte_de_resultat.createdAt ? compte_de_resultat.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ compte_de_resultat.updatedAt ? compte_de_resultat.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('compte_de_resultats_show', {'id': compte_de_resultat.id}) }}">show</a>
+                    <a href="{{ path('compte_de_resultats_edit', {'id': compte_de_resultat.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('compte_de_resultats_new') }}">Create new</a>
+{% endblock %}

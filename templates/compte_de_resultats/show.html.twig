@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CompteDeResultats{% endblock %}
+
+{% block body %}
+    <h1>CompteDeResultats</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ compte_de_resultat.id }}</td>
+            </tr>
+            <tr>
+                <th>Rank</th>
+                <td>{{ compte_de_resultat.rank }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ compte_de_resultat.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ compte_de_resultat.status }}</td>
+            </tr>
+            <tr>
+                <th>Ref_code</th>
+                <td>{{ compte_de_resultat.refCode }}</td>
+            </tr>
+            <tr>
+                <th>Annee_financiere</th>
+                <td>{{ compte_de_resultat.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Uploaded_file_name</th>
+                <td>{{ compte_de_resultat.uploadedFileName }}</td>
+            </tr>
+            <tr>
+                <th>Net1</th>
+                <td>{{ compte_de_resultat.net1 }}</td>
+            </tr>
+            <tr>
+                <th>Net2</th>
+                <td>{{ compte_de_resultat.net2 }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ compte_de_resultat.createdAt ? compte_de_resultat.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ compte_de_resultat.updatedAt ? compte_de_resultat.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('compte_de_resultats_index') }}">back to list</a>
+
+    <a href="{{ path('compte_de_resultats_edit', {'id': compte_de_resultat.id}) }}">edit</a>
+
+    {{ include('compte_de_resultats/_delete_form.html.twig') }}
+{% endblock %}
