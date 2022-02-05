@@ -169,4 +169,12 @@ class Citi
 
         return $this;
     }
+
+    /**
+     * @return Collection|Repertoire[]
+     */
+    public function getRepertoires(): Collection
+    {
+        return $this->repertoires;
+    }
 }

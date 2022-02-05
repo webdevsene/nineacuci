@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ControlRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
@@ -86,5 +88,13 @@ class Control
         $this->libelle = $libelle;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Repertoire[]
+     */
+    public function getRepertoires(): Collection
+    {
+        return $this->repertoires;
     }
 }

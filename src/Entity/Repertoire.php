@@ -435,6 +435,17 @@ class Repertoire
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $prenomDuExpert;
+    
+    /**
+     * @ORM\OneToMany(targetEntity=CompteDeResultats::class, mappedBy="cuci_rep_code")
+     */
+    private $compte_de_resultats;
+
+    
+    public function __toString()
+    {
+        return $this->denominationSocial;
+    }
 
 
 
@@ -452,6 +463,7 @@ class Repertoire
         $this->deleted=true;
         $this->bilans = new ArrayCollection();
          $this->id = Uuid::v4();
+         $this->compte_de_resultats = new ArrayCollection();
     }
 
 
@@ -1522,6 +1534,36 @@ class Repertoire
     public function setPrenomDuExpert(?string $prenomDuExpert): self
     {
         $this->prenomDuExpert = $prenomDuExpert;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompteDeResultats[]
+     */
+    public function getCompteDeResultats(): Collection
+    {
+        return $this->compte_de_resultats;
+    }
+
+    public function addCompteDeResultat(CompteDeResultats $compteDeResultat): self
+    {
+        if (!$this->compte_de_resultats->contains($compteDeResultat)) {
+            $this->compte_de_resultats[] = $compteDeResultat;
+            $compteDeResultat->setCuciRepCode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompteDeResultat(CompteDeResultats $compteDeResultat): self
+    {
+        if ($this->compte_de_resultats->removeElement($compteDeResultat)) {
+            // set the owning side to null (unless already changed)
+            if ($compteDeResultat->getCuciRepCode() === $this) {
+                $compteDeResultat->setCuciRepCode(null);
+            }
+        }
 
         return $this;
     }

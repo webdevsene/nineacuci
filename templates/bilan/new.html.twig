@@ -274,7 +274,7 @@
 
     $('#annee').change(function(){
             
-            let route="{{path('bilanjson')}}"+"/"+ $('#annee').val();
+            let route="{{path('bilansjson')}}"+"/"+ $('#annee').val();
              var form = $(this).closest("form");
             $.ajax({
                 type: 'GET',
@@ -635,7 +635,7 @@
                
            tagbrut='{{tag.code}}'+"brut";
            tagammo='{{tag.code}}'+"ammo";
-           tagnet='{{tag.code}}'+"net1";
+           tagnet='{{tag.code}}'+"net1";  // code ref agg concaténé à net1
            if(is_int(document.getElementById(tagbrut).value)==true){
               brut=parseInt(remplacer(document.getElementById(tagbrut).value));
            }else brut=0;

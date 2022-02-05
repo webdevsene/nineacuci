@@ -7,6 +7,9 @@ use App\Entity\RefAgg;
 use App\Entity\Repertoire;
 use App\Form\BilanType;
 use App\Repository\BilanRepository;
+use App\Repository\CompteDeResultatsRepository;
+use App\Repository\RefAggRepository;
+use App\Repository\RepertoireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +17,33 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @Route("/bilan")
  */
 class BilanController extends AbstractController
 {
+    // declarer ici les variable Repository qui entre en jeux 
+    private RepertoireRepository $reperRepo;
+    private CompteDeResultatsRepository $cdrRepo;
+    private RefAggRepository $refAggRepo;
+    private BilanRepository $bilanRepo;
+    private $requestStack;
+    
+    public function __construct(RequestStack $requestStack, 
+                                RepertoireRepository $reperRepo, 
+                                CompteDeResultatsRepository $cdrRepo,
+                                RefAggRepository $refAggRepo, BilanRepository $bilanRepo)
+    {
+        $this->requestStack = $requestStack;
+        $this->reperRepo = $reperRepo;
+        $this->cdrRepo = $cdrRepo;
+        $this->refAggRepo = $refAggRepo;
+        $this->bilanRepo = $bilanRepo;
+    }
+
+    
     /**
      * @Route("/", name="bilan_index", methods={"GET"})
      */
@@ -50,7 +73,10 @@ class BilanController extends AbstractController
           
             
 
-            $bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
+            // $bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
+            //$bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
+            $bn = $this->bilanRepo->findByCodeCuci($codeCuci,$annee,"Actif"); 
+
 
            if(count($bn)>1){
                foreach ($refAgg as $key ) {
@@ -132,7 +158,9 @@ class BilanController extends AbstractController
           
             
 
-            $bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
+            //$bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
+            $bn = $this->bilanRepo->findByCodeCuci($codeCuci,$annee,"Passif"); 
+
 
            if(count($bn)>1){
                foreach ($refAggPassif as $key ) {
@@ -224,7 +252,7 @@ class BilanController extends AbstractController
 
 
       /**
-     * @Route("/bilanjson/{annee}", name="bilanjson", methods={"GET","POST"})
+     * @Route("/bilanjson/{annee}", name="bilansjson", methods={"GET","POST"})
      */
     public function bilanjson( $annee="")
     {
@@ -243,8 +271,12 @@ class BilanController extends AbstractController
         $session=new Session();
         $codeCuci= $session->get('codeCuci');
         
-        $bilan=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
-        $bilanPassif=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
+        // $bilan=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
+        $bilan = $this->bilanRepo->findByCodeCuci($codeCuci,$annee,"Actif"); 
+
+        // $bilanPassif=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
+        $bilanPassif = $this->bilanRepo->findByCodeCuci($codeCuci,$annee,"Passif"); 
+
 
 
         foreach ($bilanPassif as $key ) {

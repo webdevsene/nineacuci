@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PaysRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -112,5 +114,13 @@ class Pays
         $this->libelle = $libelle;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Repertoire[]
+     */
+    public function getRepertoires(): Collection
+    {
+        return $this->repertoires;
     }
 }
