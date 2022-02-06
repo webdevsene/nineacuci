@@ -25,22 +25,23 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class BilanController extends AbstractController
 {
     // declarer ici les variable Repository qui entre en jeux 
-    private RepertoireRepository $reperRepo;
-    private CompteDeResultatsRepository $cdrRepo;
-    private RefAggRepository $refAggRepo;
-    private BilanRepository $bilanRepo;
-    private $requestStack;
-    
-    public function __construct(RequestStack $requestStack, 
-                                RepertoireRepository $reperRepo, 
-                                CompteDeResultatsRepository $cdrRepo,
-                                RefAggRepository $refAggRepo, BilanRepository $bilanRepo)
+   // private RepertoireRepository $reperRepo;
+   // private CompteDeResultatsRepository $cdrRepo;
+   // private RefAggRepository $refAggRepo;
+    //private BilanRepository $bilanRepo;
+    // private $requestStack;
+
+    public function __construct(
+    RepertoireRepository $reperRepo, 
+    CompteDeResultatsRepository $cdrRepo,
+    RefAggRepository $refAggRepo, BilanRepository $bilanRepo)
     {
-        $this->requestStack = $requestStack;
+        // $this->requestStack = $requestStack;
         $this->reperRepo = $reperRepo;
         $this->cdrRepo = $cdrRepo;
         $this->refAggRepo = $refAggRepo;
         $this->bilanRepo = $bilanRepo;
+        //Do your magic here
     }
 
     
@@ -80,7 +81,8 @@ class BilanController extends AbstractController
 
            if(count($bn)>1){
                foreach ($refAgg as $key ) {
-                  $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+                 // $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+                  $repertoire=$this->reperRepo->findOneBy(["codeCuci"=>$codeCuci]);
                   $bilan =$this->getDoctrine()->getRepository(Bilan::class)->findOneBy(["repertoire"=>$repertoire,"anneeFinanciere"=>$annee,"type"=>"Actif","refCode"=>$key->getCode()]);
 
                  

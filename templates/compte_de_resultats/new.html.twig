@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.0/sweetalert2.min.css" />
     <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
 
 {% endblock %}
 
@@ -39,7 +39,7 @@
         
 {# {% block body %} #}
 <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
-    <form method="post" action="{{path('compte_de_resultats_new')}}" id="target">
+    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte">
     <div class="card-body " style="margin: 0%;padding: 0%;">
         <div class="row">
         <div class="col-xl-12"> 
@@ -150,30 +150,10 @@
 
 
 {% block javascript %}
-<script src="{{ asset('admin/dist/assets/libs/select2/js/select2.min.js')}}"></script>
-
-
-
-<script src="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-<script src="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}}"></script>
-<script src="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}}"></script>
-<script src="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}}"></script>
-<script src="{{ asset('admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
-<script src="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}}"></script>
-
-        <!-- form advanced init -->
-<script src="{{ asset('admin/dist/assets/js/pages/form-advanced.init.js')}}"></script>
-
-
-<!-- Sweet Alerts js -->
 <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
-<!-- Sweet alert init js-->
+
+  <!-- Sweet alert init js-->
 <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
-
-<!-- inclure a partir du cdn sweet alert2-->
-<script src="https://cdn.jsdelivr.net/sweetalert2/6.1.0/sweetalert2.min.js"></script> 
-
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -454,7 +434,9 @@
                parseInt(Number(value)) == value ;
     }
 
-    $('#valider').click(function(){
+    $('#valider').click(function(e){
+
+        e.preventDefault();
 
         var swalMsg = "Verifier les valeurs NET saisie pour ";
         
@@ -501,7 +483,9 @@
         var testVar = "XA marge brute !";
         if(tb != sumTB){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
                 text: "Verifier les valeurs NET saisie pour " + testVar,
                 type: "error",
@@ -515,7 +499,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
         
         // traitement sum chiffre d'affaire TI = TA+TC+TD+TH
@@ -543,12 +526,14 @@
             ti = parseInt(document.getElementById('XBnet1').value);
         }
         
-        testVar = "XB chiffre d'affaires !";
+        var testVar1 = "XB chiffre d'affaires !";
         if(ti != sumTI){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar1,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -560,7 +545,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
 
         // traitement sum valeur ajoutee TN = TB+TI + TE+TF+TK+TL+TT+RC+RD+RE+RH+RI+RJ+RK+RL
@@ -606,14 +590,16 @@
         if(isInt(document.getElementById('XCnet1').value) == true){ 
             tn = parseInt(document.getElementById('XCnet1').value); // recuperer la valeur de TN
         }
-        testVar = "XC valeur ajoutee !";
+        var testVar2 = "XC valeur ajoutee !";
         if(tn != sumTN){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar2,
                 type: "error",
-                icon:"warning",
+                icon:"error",
                 showCancelButton:true,
                 confirmButtonText:"Oui",
                 cancelButtonText:"Non",
@@ -623,7 +609,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
 
 
@@ -640,12 +625,14 @@
             tq =  parseInt(document.getElementById('XDnet1').value);
 
         }
-        testVar = "XD Excedent brute d'exploitation !"; 
+        var testVar3 = "XD Excedent brute d'exploitation !"; 
         if(tq != sumTQ){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar3,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -657,7 +644,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
         
         // traitement sum resultat d'exploitation TX = sumTQ+TS+RS
@@ -678,13 +664,15 @@
             tx =  parseInt(document.getElementById('XEnet1').value);
 
         }
-        testVar = "XE Resultat d'exploitation !";
+        var testVar4 = "XE Resultat d'exploitation !";
         console.log(sumTX);
         if(tx != sumTX){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar4,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -696,7 +684,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
 
         // traitement sum resultat financier UG = UA+ UD+ UE+ SA+ SD
@@ -723,13 +710,15 @@
             ug =  parseInt(document.getElementById('XFnet1').value);
 
         }
-        testVar = "XF Resultat financier !";
+        var testVar5 = "XF Resultat financier !";
         console.log(testVar);
         if(ug != sumUG){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar5,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -741,7 +730,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
 
         // traitement sum resultat des activités ordinaires UI = TX +UG 
@@ -753,12 +741,14 @@
             ui =  parseInt(document.getElementById('XGnet1').value);
 
         }
-        testVar = "XG Resultat des activites ordinaires !";
+        var testVar6 = "XG Resultat des activites ordinaires !";
         if(ui != sumUI){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar6,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -770,7 +760,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
 
         // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
@@ -793,12 +782,14 @@
             up =  parseInt(document.getElementById('XHnet1').value);
 
         }
-        testVar = "XH Resultat hors activites ordinaires !";
+        var testVar7 = "XH Resultat hors activites ordinaires !";
         if(up != sumUP){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar7,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -810,7 +801,6 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à valider !");
         }
 
         // traitement sum benef ou perte UZ = UI +UP +SQ +SR
@@ -830,12 +820,14 @@
             uz =  parseInt(document.getElementById('XInet1').value);
 
         }
-        testVar = "XI résultat net !";
+        var testVar8 = "XI résultat net !";
         if(uz != sumUZ){
 
-            swal({
+            valider=0;
+
+            Swal.fire({
                 title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
+                text: "Verifier les valeurs NET saisie pour " + testVar8,
                 type: "error",
                 icon:"warning",
                 showCancelButton:true,
@@ -847,7 +839,31 @@
                      
         }else{
             
-            swal("Aucune incoherence dans la saisie, penser à sauvegarder !");
+            //swal("Aucune incoherence dans la saisie, penser à sauvegarder !");
+        }
+
+        if (valider==1) {
+
+                {
+                e.preventDefault();
+                var a=$(this);
+                Swal.fire({
+                title:"Confirmation",
+                text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                icon:"warning",
+                showCancelButton:true,
+                confirmButtonText:"Oui",
+                cancelButtonText:"Non",
+                confirmButtonClass:"btn btn-success mt-2",
+                cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                buttonsStyling:!1}).then(function(t)
+                {
+                  if (t.value) {
+                     document.getElementById("idformcompte").submit()
+                  }else
+                      e.preventDefault();
+
+                })}
         }
 
     }); // end eventListner btn valider 

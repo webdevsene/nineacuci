@@ -28,10 +28,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class CompteDeResultatsController extends AbstractController
 {
     // declarer ici les variable Repository qui entre en jeux 
-    private RepertoireRepository $reperRepo;
-    private CompteDeResultatsRepository $cdrRepo;
-    private RefAggRepository $refAggRepo;
-    private $requestStack;
+   // private RepertoireRepository $reperRepo;
+   // private CompteDeResultatsRepository $cdrRepo;
+   // private RefAggRepository $refAggRepo;
+   private $requestStack;
     
     public function __construct(RequestStack $requestStack, 
                                 RepertoireRepository $reperRepo, 
