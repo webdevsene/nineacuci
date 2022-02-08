@@ -37,7 +37,13 @@ class Control
         $this->repertoires = new ArrayCollection();
          $this->id = Uuid::v4();
     }
+    
 
+
+    public function getCodeLibelle(): ?string
+    {
+        return $this->id."-".$this->libelle;
+    }
 
 
 

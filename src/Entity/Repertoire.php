@@ -171,7 +171,7 @@ class Repertoire
     private $etablissementsHorsPays;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity=Qualite::class, inversedBy="repertoires")
      */
     private $fonctionDucontact;
 
@@ -252,11 +252,7 @@ class Repertoire
      */
     private $syscoa;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * 
-     */
-    private $systeme;
+    
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -437,6 +433,17 @@ class Repertoire
     private $prenomDuExpert;
 
 
+    public $activitePrincipaleRepeat;
+    public $chiffreAffaire;
+    public $valeurAjoutee;
+    public $pourcentage;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SystemeComptabilite::class, inversedBy="repertoire")
+     */
+    private $systemeComptabilite;
+
+
 
 
     public function __construct()
@@ -449,9 +456,23 @@ class Repertoire
         $this->filiales = new ArrayCollection();
         $this->createdAt=new \DateTime();
         $this->updatedAt=new \DateTime();
-        $this->deleted=true;
+        $this->deleted=false;
         $this->bilans = new ArrayCollection();
          $this->id = Uuid::v4();
+    }
+
+
+     public function setActivitePrincipaleRepeat(?string $activitePrincipaleRepeat): self
+    {
+        $this->activitePrincipaleRepeat = $activitePrincipaleRepeat;
+
+        return $this;
+    }
+
+
+     public function getActivitePrincipaleRepeat()
+    {
+       return $this->activitePrincipaleRepeat ;
     }
 
 
@@ -459,6 +480,9 @@ class Repertoire
     {
         return $this->denominationSocial;
     }
+
+
+
 
 
    
@@ -816,17 +840,7 @@ class Repertoire
         return $this;
     }
 
-    public function getFonctionDucontact(): ?string
-    {
-        return $this->fonctionDucontact;
-    }
-
-    public function setFonctionDucontact(?string $fonctionDucontact): self
-    {
-        $this->fonctionDucontact = $fonctionDucontact;
-
-        return $this;
-    }
+  
 
     public function getNinea(): ?string
     {
@@ -1000,17 +1014,7 @@ class Repertoire
         return $this;
     }
 
-    public function getSysteme(): ?string
-    {
-        return $this->systeme;
-    }
-
-    public function setSysteme(?string $systeme): self
-    {
-        $this->systeme = $systeme;
-
-        return $this;
-    }
+ 
 
     public function getTelephone1(): ?string
     {
@@ -1436,6 +1440,21 @@ class Repertoire
         return $this;
     }
 
+
+     public function getFonctionDucontact(): ?Qualite
+    {
+        return $this->fonctionDucontact;
+    }
+
+    public function setFonctionDucontact(?Qualite $fonctionDucontact): self
+    {
+        $this->fonctionDucontact = $fonctionDucontact;
+
+        return $this;
+    }
+
+    
+
     public function getDeleted(): ?bool
     {
         return $this->deleted;
@@ -1522,6 +1541,18 @@ class Repertoire
     public function setPrenomDuExpert(?string $prenomDuExpert): self
     {
         $this->prenomDuExpert = $prenomDuExpert;
+
+        return $this;
+    }
+
+    public function getSystemeComptabilite(): ?SystemeComptabilite
+    {
+        return $this->systemeComptabilite;
+    }
+
+    public function setSystemeComptabilite(?SystemeComptabilite $systemeComptabilite): self
+    {
+        $this->systemeComptabilite = $systemeComptabilite;
 
         return $this;
     }

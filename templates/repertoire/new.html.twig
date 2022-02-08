@@ -115,7 +115,7 @@
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#dirigent" id="dirigents" role="tab">
                             <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
-                            <span class="d-none d-sm-block">Dirigents ou Associés principaux</span>    
+                            <span class="d-none d-sm-block">Dirigeants ou Associés principaux</span>    
                         </a>
                     </li>
                     <li class="nav-item">
@@ -333,21 +333,21 @@
                                 </div>
                                 <div class="col-lg-3">
                                    SYCOA <span style="color:red">*</span><br>
-                                    <select class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;">
-                                                    <option>Selectionner la catégorie</option>
-                                                    {% for tag in categorySyscoa%}
-                                                    <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
-                                                    {% endfor%}
-                                        </select>
+                                    <select class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;" disabled>
+                                                    
+                                     </select>
 
                                                 <br><br>
                                             
-                                             <select class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
-                                                    <option></option>
+                                    <select class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
+                                                    <option value="">Selectionner le code SYSCOA</option>
+                                                    {% for tag in syscoa%}
+                                                    <option value="{{tag.id}}">{{tag.CODEACTIVITE}}-{{tag.libelle}}</option>
+                                                    {% endfor%}
                                                    
-                                            </select>
+                                     </select>
 
-                                             <span style="color: red;" id="syscoa" > </span>
+                                    <span style="color: red;" id="syscoa" > </span>
                                 </div>
                                 <div class="col-lg-3">
                                     NAEMA <span style="color:red">*</span><br>
@@ -363,7 +363,8 @@
                                               <br>
 
                                            <select class="form-control select2 syscoa" name="naema" id="idnaema"  style="width: 100%;">
-                                                    <option></option>
+                                                   <option value="">Selectionner le code NAEMA</option>
+                                                    
                                                    
                                             </select>
 
@@ -387,7 +388,8 @@
                                               <br>
 
                                            <select class="form-control select2 syscoa" name="naemas" id="idnaemas"  style="width: 100%;">
-                                                    <option></option>
+                                                     <option value="">Selectionner le code NAEMAS</option>
+                                                   
                                                    
                                             </select>
 
@@ -408,7 +410,8 @@
                                               <br>
 
                                            <select class="form-control select2 syscoa" name="citi" id="idciti"  style="width: 100%;">
-                                                    <option></option>
+                                                  <option value="">Selectionner le code CITI</option>
+                                                    
                                                    
                                             </select>
 
@@ -889,23 +892,182 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                    
-                                        <label for="basicpill-address-input">
-                                        <button type="button" class="btn btn-secondary ajouterActivities" id="ajouterActivity" >Ajouter</button>
-
-                                        </label>
+                                        
 
                                         <br>
                                         <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
-                                            <label style="text-align: center;background:#efefef;">Activités principales et secondaires</label>
+                                            <label style="text-align: center;background:#efefef; font-size: 20px;">Activités principales </label>
                                         </div>
+                                      
+                                        <table class="table table table-bordered dt-responsive" style="width: 100%;">
+                                            <tr style="width: 100%;" >
+                                                
+                                                <td width="100%">
+
+                                                    <table class="table table table-bordered dt-responsive" width="100%">
+
+                                                        <tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+                                                            <td>Libellé</td>
+                                                            <td>Chiffre d'affaire</td>
+                                                            <td>Valeur ajoutée</td>
+                                                            <td>Pourcentage</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                {{form_widget(form.activitePrincipaleRepeat)}}
+                                                            </td>
+                                                            <td>
+                                                                 {{form_widget(form.chiffreAffaire)}}
+                                                            </td>
+                                                            <td>
+                                                                 {{form_widget(form.valeurAjoutee)}}
+                                                            </td>
+                                                            <td>
+                                                                 {{form_widget(form.pourcentage)}}
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </table> 
+                                                    <br>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                   SYCOA <span style="color:red">*</span><br>
+                                    <select class="form-control select2 syscoa" name="categorySyscoaRepeat" id="categorySyscoaRepeat"  style="width: 100%;" disabled>
+                                                    
+                                     </select>
+
+                                                <br><br>
+                                            
+                                    <select class="form-control select2 syscoa" name="syscoaRepeat" id="idsyscoaRepeat"  style="width: 100%;">
+                                                    <option value="">Selectionner le code SYSCOA</option>
+                                                    {% for tag in syscoa%}
+                                                    <option value="{{tag.id}}">{{tag.CODEACTIVITE}}-{{tag.libelle}}</option>
+                                                    {% endfor%}
+                                                   
+                                     </select>
+
+                                    <span style="color: red;" id="syscoaRepeat" > </span>
+                                </div>
+                                <div class="col-lg-3">
+                                    NAEMA <span style="color:red">*</span><br>
+                                     <select class="form-control select2 syscoa" name="categoryNaemaRepeat" id="categoryNaemaRepeat"  style="width: 100%;">
+                                                    <option>Selectionner la catégorie</option>
+                                                    {% for tag in categoryNaema%}
+                                                    <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                    {% endfor%}
+                                            </select>
+
+
+                                              <br>
+                                              <br>
+
+                                           <select class="form-control select2 syscoa" name="naemaRepeat" id="idnaemaRepeat"  style="width: 100%;">
+                                                   <option value="">Selectionner le code NAEMA</option>
+                                                    
+                                                   
+                                            </select>
+
+
+                                             <span style="color: red;" id="naemaRepeat" > </span>
+
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                    NAEMAS <span style="color:red">*</span><br>
+
+                                            <select class="form-control select2 syscoa" name="categoryNaemasRepeat" id="categoryNaemasRepeat"  style="width: 100%;">
+                                                    <option>Selectionner la catégorie</option>
+                                                    {% for tag in categoryNaemas%}
+                                                    <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                    {% endfor%}
+                                            </select>
+
+
+                                              <br>
+                                              <br>
+
+                                           <select class="form-control select2 syscoa" name="naemasRepeat" id="idnaemasRepeat"  style="width: 100%;">
+                                                     <option value="">Selectionner le code NAEMAS</option>
+                                                   
+                                                   
+                                            </select>
+
+                                                <span style="color: red;" id="naemasRepeat" > </span>
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                    CITI <span style="color:red">*</span><br>
+                                    <select class="form-control select2 syscoa" name="categoryCitiRepeat" id="categoryCitiRepeat"  style="width: 100%;">
+                                                    <option>Selectionner la catégorie</option>
+                                                    {% for tag in categoryCiti%}
+                                                    <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                    {% endfor%}
+                                            </select>
+
+
+                                              <br>
+                                              <br>
+
+                                           <select class="form-control select2 syscoa" name="citiRepeat" id="idcitiRepeat"  style="width: 100%;">
+                                                  <option value="">Selectionner le code CITI</option>
+                                                    
+                                                   
+                                            </select>
+
+
+                                               
+                                                <span style="color: red;" id="citiRepeat" > 
+
+                                                </span>
+                                                 <br>
+                                                 <br>
+                                                 <br>
+                                   
+                                </div>
+                                                        
+                                                    </div>
+
+                                                   
+
+                                                 </td>
+                                                
+                                            </tr>
+                                        </table>
+                                        <br><br>
                                     
                                        
                                                    
                                     
                                 </div>
                             </div>
-                            <div id="activitescontent">
-                                
+                            
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                   
+                                        <label for="basicpill-address-input">
+                                        <button type="button" class="btn btn-secondary ajouterActivities" id="btnAjouterActivities" data-collection="#idActivities">Ajouter une activité secondaire</button>
+                                        </label>
+                                        <br>
+                                        <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+                                            <label style="text-align: center;background:#efefef; font-size: 20px;">Activités  secondaires</label>
+                                        </div>
+                                    
+                                        <table class="table table table-bordered dt-responsive" style="width: 100%;" >
+                                                <thead style="background:#efefef;">
+                                                    <tr style="width:100%;">
+                                                        <th width="100%;"></th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody  id="idActivities" 
+                                                        data-prototype="{{include('repertoire/activities.html.twig',{'form':form.activities.vars.prototype})|e }}"
+                                                        data-index="{{ form.activities|length > 0 ? form.activities|last.vars.name + 1 : 0 }}" >
+                                                </tbody>
+                                        </table>
+                                                   
+                                    
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
@@ -1157,10 +1319,10 @@
                                 <div class="col-lg-6">
 
                                     <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.systeme)}}:</label>
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.systemeComptabilite)}}:</label>
                                        
                                         <div class="col-md-7">
-                                              {{form_widget(form.systeme)}}
+                                              {{form_widget(form.systemeComptabilite)}}
                                               
                                         </div>
                                     </div>
@@ -1191,7 +1353,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                    
-                                      <div class="mb-3 row" >
+                                      <div class="mb-3 row"  >
                                         <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.reactivation)}}:</label>
                                        
                                         <div class="col-md-7">
@@ -1203,7 +1365,7 @@
                         <div class="row">
                                 <div class="col-lg-6">
 
-                                    <div class="mb-3 row" >
+                                    <div class="mb-3 row"  >
                                         <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dateMiseAjour)}}:</label>
                                        
                                         <div class="col-md-7">
@@ -1214,10 +1376,44 @@
                                 <div class="col-lg-6">
                                    
                                       <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div  style="display: none;" id="iddateReactivationLabel">
+                                            {{form_label(form.dateReactivation)}}:
+                                        </div>
+                                        </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div  style="display: none;" id="iddateReactivation">
+                                              {{form_widget(form.dateReactivation)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                         <div class="row">
+                                <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
                                         <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.observation)}}:</label>
                                        
                                         <div class="col-md-7">
                                               {{form_widget(form.observation)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div style="display: none;" id="idraisonReactivationLabel">
+                                              {{form_label(form.raisonReactivation)}}:
+                                        </div>
+                                      </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div style="display: none;" id="idraisonReactivation">
+                                              {{form_widget(form.raisonReactivation)}}
+                                             </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1237,7 +1433,7 @@
                                         </div>
                                     </div>
                                 </div>
-                        </div>
+                    </div>
                     </div>
                 </div>
 
@@ -1402,446 +1598,35 @@
 
 
 
-
-
-
-
-    function activite(i){
-
-
+    const newItemActivities=(e)=>{
+        var collections=document.querySelector(e.currentTarget.dataset.collection);
+        let index=parseInt(collections.dataset.index);
+        let item=document.createElement("tr");
         
-        var item = document.createElement("div");
-            item.setAttribute('class','row');
-            item.setAttribute('style','border:1px solid #efefef;');
+         
+        item.innerHTML=
+        collections.dataset.index=index+1;
+        let prototype=collections.dataset.prototype;
+         item.innerHTML=prototype.replace(/__name__/g,index);
 
 
-        var div1 = document.createElement("div");
-            div1.setAttribute('class','col-lg-4');
-
-        let labellibelle=document.createElement('label');
-            labellibelle.innerHTML="Libelle";
-
-        var  input1 = document.createElement("input");
-             input1.setAttribute('name','libelle'+i);            
-             input1.setAttribute('id','libelle'+i);            
-             input1.setAttribute('class','form-control form-control-sm');
-        div1.appendChild(document.createElement('br'));
-        div1.appendChild(document.createElement('br'));
-        div1.appendChild(labellibelle);
-        div1.appendChild(document.createElement('br'));
-        div1.appendChild(input1);
-        item.appendChild(div1);
-
-        var div2 = document.createElement("div");
-            div2.setAttribute('class','col-lg-2');
-
-        let labelChiffre=document.createElement('label');
-            labelChiffre.innerHTML="Chiffre d'affaire";
-
-        var  input2 = document.createElement("input");
-             input2.setAttribute('name','chiffreAffaire'+i);            
-             input2.setAttribute('type','number');            
-             input2.setAttribute('id','libelle'+i);            
-             input2.setAttribute('class','form-control form-control-sm');
-              div2.appendChild(document.createElement('br'));
-              div2.appendChild(document.createElement('br'));
-             div2.appendChild(labelChiffre);
-             div2.appendChild(document.createElement('br'));
-             div2.appendChild(input2);
-        item.appendChild(div2);
-
-
-        var div3 = document.createElement("div");
-            div3.setAttribute('class','col-lg-2');
-
-        let labelValeur=document.createElement('label');
-            labelValeur.innerHTML="Valeure ajoutée";
-
-        var  input3 = document.createElement("input");
-             input3.setAttribute('name','valeurAjouter'+i);            
-             input3.setAttribute('type','number');            
-             input3.setAttribute('id','valeurAjouter'+i);            
-             input3.setAttribute('class','form-control form-control-sm');
-             div3.appendChild(document.createElement('br'));
-             div3.appendChild(document.createElement('br'));
-
-             div3.appendChild(labelValeur);
-             div3.appendChild(document.createElement('br'));
-             div3.appendChild(input3);
-        item.appendChild(div3);
-
-        var div4 = document.createElement("div");
-            div4.setAttribute('class','col-lg-2');
-            let labelPourcentage=document.createElement('label');
-            labelPourcentage.innerHTML="Pourcentage";
-
-        var  input4 = document.createElement("input");
-             input4.setAttribute('name','pourcentage'+i);            
-             input4.setAttribute('type','number');            
-             input4.setAttribute('id','pourcentage'+i);            
-             input4.setAttribute('class','form-control form-control-sm');
-             div4.appendChild(document.createElement('br'));
-             div4.appendChild(document.createElement('br'));
-
-             div4.appendChild(labelPourcentage);
-             div4.appendChild(document.createElement('br'));
-             div4.appendChild(input4);
-        item.appendChild(div4);
+         
         
-        var div5 = document.createElement("div");
-            div5.setAttribute('class','col-lg-2');
-        let labelPrincipale=document.createElement('label');
-            labelPrincipale.innerHTML="Activité principale";
-
-        var  input5 = document.createElement("input");
-             input5.setAttribute('name','activitePrincipale'+i);            
-             input5.setAttribute('type','checkbox');            
-             input5.setAttribute('id','activitePrincipale'+i);            
-             input5.setAttribute('class','');
-             div5.appendChild(document.createElement('br'));
-             div5.appendChild(document.createElement('br'));
-
-             div5.appendChild(labelPrincipale);
-             div5.appendChild(document.createElement('br'));
-             div5.appendChild(input5);
-        item.appendChild(div5);
-
-
-        var col1 = document.createElement("div");
-            col1.setAttribute('class','col-lg-3');
-
-            
-
-
-        let labelSYCOA=document.createElement('label');
-            labelSYCOA.innerHTML="SYSCOA";
-        let selectcategorySyscoa=document.createElement('select');
-        let op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    selectcategorySyscoa.add(op);
-
-        {% for tag in categorySyscoa%}
-            op=document.createElement('option');
-            op.value="{{tag.id}}";
-            op.innerHTML="{{tag.id}}"+"-"+"{{tag.libelle|raw}}";
-            selectcategorySyscoa.add(op);                     
-        {% endfor%}
-        selectcategorySyscoa.setAttribute('name','categorySyscoa'+i); 
-        selectcategorySyscoa.setAttribute('id','categorySyscoa'+i);                       
-        selectcategorySyscoa.setAttribute('class','form-control form-control-sm syscoa');              
-        selectcategorySyscoa.setAttribute('style','width:100%;');
-
-        col1.appendChild(document.createElement('br')); 
-        col1.appendChild(document.createElement('br')); 
-        col1.appendChild(labelSYCOA); 
-        col1.appendChild(document.createElement('br')); 
-        col1.appendChild(selectcategorySyscoa); 
-        item.appendChild(col1); 
-
-
-        let syscoa=document.createElement('select');
-
-        syscoa.setAttribute('name','syscoa'+i);            
-        syscoa.setAttribute('id','syscoa'+i);            
-        syscoa.setAttribute('class','form-control form-control-sm syscoa');              
-        syscoa.setAttribute('style','width:100%;');
-
-        
-        col1.appendChild(document.createElement('br')); 
-        col1.appendChild(document.createElement('br')); 
-       
-        col1.appendChild(syscoa); 
-        col1.appendChild(document.createElement('br')); 
-        col1.appendChild(document.createElement('br')); 
-
-        item.appendChild( col1); 
-
         
 
-
-        var col12 = document.createElement("div");
-            col12.setAttribute('class','col-lg-3');
-
-
-        let labelNAEMA=document.createElement('label');
-            labelNAEMA.innerHTML="NAEMA";
-        let selectcategoryNaema=document.createElement('select');
-         op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    selectcategoryNaema.add(op);
-
-        {% for tag in categoryNaema%}
-            op=document.createElement('option');
-            op.value="{{tag.id}}";
-            op.innerHTML="{{tag.id}}"+"-"+"{{tag.libelle|raw}}";
-            selectcategoryNaema.add(op);                     
-        {% endfor%}
-        selectcategoryNaema.setAttribute('name','categoryNaema'+i); 
-        selectcategoryNaema.setAttribute('id','categoryNaema'+i);                       
-        selectcategoryNaema.setAttribute('class','form-control form-control-sm syscoa');              
-        selectcategoryNaema.setAttribute('style','width:100%;');
-
-        col12.appendChild(document.createElement('br')); 
-        col12.appendChild(document.createElement('br')); 
+        item.querySelector(".btn-delete").addEventListener("click",()=>item.remove());
+         collections.appendChild(item);
+         $(".syscoa").select2({
+          theme: "classic"
+        });
         
-        col12.appendChild(labelNAEMA); 
-        col12.appendChild(document.createElement('br')); 
-        col12.appendChild(selectcategoryNaema); 
-        item.appendChild(col12); 
-
-
-        let naema=document.createElement('select');
-
-        naema.setAttribute('name','naema'+i);            
-        naema.setAttribute('id','naema'+i);            
-        naema.setAttribute('class','form-control form-control-sm syscoa');              
-        naema.setAttribute('style','width:100%;');
-
-        
-        col12.appendChild(document.createElement('br')); 
-        col12.appendChild(document.createElement('br')); 
-       
-        col12.appendChild(naema); 
-        col12.appendChild(document.createElement('br')); 
-        col12.appendChild(document.createElement('br')); 
-
-        item.appendChild( col12);
-
-
-
-       
-        var col13 = document.createElement("div");
-            col13.setAttribute('class','col-lg-3');
-
-
-        let labelNAEMAS=document.createElement('label');
-            labelNAEMAS.innerHTML="NAEMAS";
-        let selectcategoryNaemas=document.createElement('select');
-         op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    selectcategoryNaemas.add(op);
-
-        {% for tag in categoryNaemas%}
-            op=document.createElement('option');
-            op.value="{{tag.id}}";
-            op.innerHTML="{{tag.id}}"+"-"+"{{tag.libelle|raw}}";
-            selectcategoryNaemas.add(op);                     
-        {% endfor%}
-        selectcategoryNaemas.setAttribute('name','categoryNaemas'+i); 
-        selectcategoryNaemas.setAttribute('id','categoryNaemas'+i);                       
-        selectcategoryNaemas.setAttribute('class','form-control form-control-sm syscoa');              
-        selectcategoryNaemas.setAttribute('style','width:100%;');
-
-        col13.appendChild(document.createElement('br')); 
-        col13.appendChild(document.createElement('br')); 
-        
-        col13.appendChild(labelNAEMAS); 
-        col13.appendChild(document.createElement('br')); 
-        col13.appendChild(selectcategoryNaemas); 
-        item.appendChild(col13); 
-
-
-        let naemas=document.createElement('select');
-
-        naemas.setAttribute('name','naemas'+i);            
-        naemas.setAttribute('id','naemas'+i);            
-        naemas.setAttribute('class','form-control form-control-sm syscoa');              
-        naemas.setAttribute('style','width:100%;');
-
-        
-        col13.appendChild(document.createElement('br')); 
-        col13.appendChild(document.createElement('br')); 
-       
-        col13.appendChild(naemas); 
-        col13.appendChild(document.createElement('br')); 
-        col13.appendChild(document.createElement('br')); 
-
-        item.appendChild( col13); 
-
- 
-        var col14 = document.createElement("div");
-            col14.setAttribute('class','col-lg-3');
-
-
-        let labelCiti=document.createElement('label');
-            labelCiti.innerHTML="CITI";
-        let selectcategoryCiti=document.createElement('select');
-         op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    selectcategoryCiti.add(op);
-
-        {% for tag in categoryCiti %}
-            op=document.createElement('option');
-            op.value="{{tag.id}}";
-            op.innerHTML="{{tag.id}}"+"-"+"{{tag.libelle|raw}}";
-            selectcategoryCiti.add(op);                     
-        {% endfor%}
-        selectcategoryCiti.setAttribute('name','categoryCiti'+i); 
-        selectcategoryCiti.setAttribute('id','categoryCiti'+i);                       
-        selectcategoryCiti.setAttribute('class','form-control form-control-sm syscoa');              
-        selectcategoryCiti.setAttribute('style','width:100%;');
-
-        col14.appendChild(document.createElement('br')); 
-        col14.appendChild(document.createElement('br')); 
-        col14.appendChild(labelCiti); 
-        col14.appendChild(document.createElement('br')); 
-        col14.appendChild(selectcategoryCiti); 
-        item.appendChild(col14); 
-
-
-        let citi=document.createElement('select');
-
-        citi.setAttribute('name','citi'+i);            
-        citi.setAttribute('id','citi'+i);            
-        citi.setAttribute('class','form-control form-control-sm syscoa');              
-        citi.setAttribute('style','width:100%;');
-
-        
-        col14.appendChild(document.createElement('br')); 
-        col14.appendChild(document.createElement('br')); 
-       
-        col14.appendChild(citi);
-        col14.appendChild(document.createElement('br')); 
-
-        col14.appendChild(document.createElement('br')); 
-
-        item.appendChild( col14); 
-
-
-
-
-        
-
-
-        var nouveauMaillon = document.getElementById("activitescontent").appendChild(item);
-
-      $('#activitescontent').on('change', '#categoryCiti'+i, function() {
-       var ind="citi"+i;
-       let route="{{path('citicat')}}"+"/"+ $('#categoryCiti'+i).val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById(ind);
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][0]+"-"+data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-   $('#activitescontent').on('change', '#categoryNaema'+i, function() {
-    
-       let route="{{path('naemacat')}}"+"/"+ $('#categoryNaema'+i).val();
-       var ind="naema"+i;
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById(ind);
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][0]+"-"+data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-   $('#activitescontent').on('change', '#categoryNaemas'+i, function() {
-    
-        var ind="naemas"+i;
-       let route="{{path('naemascat')}}"+"/"+ $('#categoryNaemas'+i).val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById(ind);
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][0]+"-"+data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-
-
-        $('#activitescontent').on('change', '#categorySyscoa'+i, function() {
-       let route="{{path('syscoa')}}"+"/"+ $('#categorySyscoa'+i).val();
-       var ind="syscoa"+i;
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById(ind);
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][0]+"-"+data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-        
-   
-       
     }
+    document.querySelectorAll(".ajouterActivities").forEach(btn=>btn.addEventListener("click",newItemActivities));
+
+
+
+
+
 
 
 
@@ -1854,16 +1639,16 @@
     $(document).ready(function(){
 
       
-            document.getElementById("prenomDuExpert").style.display = "none";
-             document.getElementById("prenomDuExpertlabel").style.display = "none";
-             document.getElementById("nomDuExpertLabel").style.display = "none";
-             document.getElementById("nomDuExpert").style.display = "none";
+        document.getElementById("prenomDuExpert").style.display = "none";
+        document.getElementById("prenomDuExpertlabel").style.display = "none";
+        document.getElementById("nomDuExpertLabel").style.display = "none";
+        document.getElementById("nomDuExpert").style.display = "none";
        
 
         document.getElementById("taille").value=1; 
-        activite(1);
+       
    
-        var act=2;
+        
 
         
         $('#btnAjouterCommissaireCompte').click();
@@ -1877,13 +1662,6 @@
           theme: "classic"
         });
 
-
-         $('#ajouterActivity').click(function(){
-            activite(act)
-            document.getElementById("taille").value=act; 
-
-            act++;
-         });
 
 
 
@@ -1905,6 +1683,69 @@
                     departement.add(opt);
                     for (var i = data.length - 1; i >= 0; i--) {
                        
+                      let opt=document.createElement('option');
+                        opt.value=data[i][0];
+                        opt.innerHTML=data[i][0]+"-"+data[i][1];
+                        departement.add(opt);
+                    }
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        });
+
+
+
+        $('#categoryCitiRepeat').change(function(){
+            
+            let route="{{path('citicat')}}"+"/"+ $('#categoryCitiRepeat').val();
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let departement=document.getElementById("idcitiRepeat");
+                    departement.innerHTML="";
+
+                    let opt=document.createElement('option');
+                    opt.innerHTML="Choissir ...";
+                    opt.value='';
+                    departement.add(opt);
+                    for (var i = data.length - 1; i >= 0; i--) {
+                       
+                      let opt=document.createElement('option');
+                        opt.value=data[i][0];
+                        opt.innerHTML=data[i][0]+"-"+data[i][1];
+                        departement.add(opt);
+                    }
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        });
+
+
+        $('#categoryNaemasRepeat').change(function(){
+            
+            let route="{{path('naemascat')}}"+"/"+ $('#categoryNaemasRepeat').val();
+            console.log($('#categoryNaemas').val());
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let departement=document.getElementById("idnaemasRepeat");
+                    departement.innerHTML="";
+
+                    let opt=document.createElement('option');
+                    opt.innerHTML="Choissir ...";
+                    opt.value='';
+                    departement.add(opt);
+                    for (var i = data.length - 1; i >= 0; i--) {
                       let opt=document.createElement('option');
                         opt.value=data[i][0];
                         opt.innerHTML=data[i][0]+"-"+data[i][1];
@@ -1982,10 +1823,108 @@
 
 
 
+         $('#categoryNaemaRepeat').change(function(){
+            
+            let route="{{path('naemacat')}}"+"/"+ $('#categoryNaemaRepeat').val();
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let departement=document.getElementById("idnaemaRepeat");
+                    departement.innerHTML="";
+
+                    let opt=document.createElement('option');
+                    opt.innerHTML="Choissir ...";
+                    opt.value='';
+                    departement.add(opt);
+                    for (var i = data.length - 1; i >= 0; i--) {
+                      let opt=document.createElement('option');
+                        opt.value=data[i][0];
+                        opt.innerHTML=data[i][1];
+                        departement.add(opt);
+                    }
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        });
+
+
+
+        $('#idsyscoa').change(function(){
+            
+            let route="{{path('categorySyscoa')}}"+"/"+ $('#idsyscoa').val();
+            
+           
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+           
+                    
+                    let selectcategorySyscoa=document.getElementById("categorySyscoa");
+                    selectcategorySyscoa.innerHTML="";
+
+                    for (var i = data.length - 1; i >= 0; i--) {
+                      let opt=document.createElement('option');
+                        opt.value=data[i][0];
+                        opt.innerHTML=data[i][2]+"-"+data[i][1];
+                        selectcategorySyscoa.add(opt);
+                    }
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            });
+           
+
+           
+            
+        });
+
+
+         $('#idsyscoaRepeat').change(function(){
+            
+            let route="{{path('categorySyscoa')}}"+"/"+ $('#idsyscoaRepeat').val();
+            
+           
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+           
+                    
+                    let selectcategorySyscoa=document.getElementById("categorySyscoaRepeat");
+                    selectcategorySyscoa.innerHTML="";
+
+                    for (var i = data.length - 1; i >= 0; i--) {
+                      let opt=document.createElement('option');
+                        opt.value=data[i][0];
+                        opt.innerHTML=data[i][2]+"-"+data[i][1];
+                        selectcategorySyscoa.add(opt);
+                    }
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            });
+           
+
+           
+            
+        });
+
+
+
         $('#categorySyscoa').change(function(){
             
             
-        let route="{{path('syscoa')}}"+"/"+ $('#categorySyscoa').val();
+            let route="{{path('syscoa')}}"+"/"+ $('#categorySyscoa').val();
             
            
             $.ajax({
@@ -2105,13 +2044,28 @@
             })
         });
 
+
+        $('#repertoire_reactivation').change(function(){
+             
+              if ($('#repertoire_reactivation').val()==0) {
+
+             document.getElementById("iddateReactivation").style.display = "block";
+             document.getElementById("iddateReactivationLabel").style.display = "block";
+             document.getElementById("idraisonReactivation").style.display = "block";
+             document.getElementById("idraisonReactivationLabel").style.display = "block";
+         }else{
+
+             document.getElementById("iddateReactivationLabel").style.display = "none";
+             document.getElementById("iddateReactivation").style.display = "none";
+             document.getElementById("idraisonReactivationLabel").style.display = "none";
+             document.getElementById("idraisonReactivation").style.display = "none";
+         }
+
+        });
+
         
 
-         $('#formRadiosRight1').change(function(){
-
-           
-           
-            
+        $('#formRadiosRight1').change(function(){
             
              document.getElementById("nomDuCabinet").style.display = "block";
              document.getElementById("addresseDuCabinetLabel").style.display = "block";
@@ -2148,6 +2102,86 @@
              document.getElementById("addresseDuCabinet").style.display = "none";
          });
 
+
+
+        $('#repertoire_activitePrincipaleRepeat').change(function(){ 
+             
+             if ($.trim($('#repertoire_activitePrincipaleRepeat').val())!=$.trim($('#repertoire_activitePrincipale').val())) {
+               $('#repertoire_activitePrincipaleRepeat').addClass('has_error');
+                
+                Swal.fire('Le libellé  d\'activité principale doit etre le meme que celui que vous avez saisie dans l\'onglet identification.');
+
+             }else{
+                  $('#repertoire_activitePrincipaleRepeat').removeClass('has_error');
+             }
+
+        });
+
+
+
+        $('#idsyscoaRepeat').change(function(){ 
+             
+             if ($.trim($('#idsyscoaRepeat').val())!=$.trim($('#idsyscoa').val())) {
+               $('#idsyscoaRepeat').addClass('has_error');
+                
+                Swal.fire('Le SYSCOA ne correspond pas à celui saisi précédement.');
+
+             }else{
+                  $('#idsyscoaRepeat').removeClass('has_error');
+             }
+
+        });
+
+
+        $('#idnaemaRepeat').change(function(){ 
+             
+             if ($.trim($('#idnaemaRepeat').val())!=$.trim($('#idnaema').val())) {
+               $('#idnaemaRepeat').addClass('has_error');
+                
+                Swal.fire('Le NAEMA ne correspond pas à celui saisi précédement.');
+
+             }else{
+                  $('#idnaemaRepeat').removeClass('has_error');
+             }
+
+        });
+
+
+
+        $('#idnaemasRepeat').change(function(){ 
+             
+             if ($.trim($('#idnaemasRepeat').val())!=$.trim($('#idnaemas').val())) {
+               $('#idnaemasRepeat').addClass('has_error');
+                
+                Swal.fire('Le NAEMAS ne correspond pas à celui saisi précédement.');
+
+             }else{
+                  $('#idnaemasRepeat').removeClass('has_error');
+             }
+
+        });
+
+
+
+
+          $('#idcitiRepeat').change(function(){ 
+             
+             if ($.trim($('#idcitiRepeat').val())!=$.trim($('#idciti').val())) {
+               $('#idcitiRepeat').addClass('has_error');
+                
+                Swal.fire('Le CITI ne correspond pas à celui saisi précédement.');
+
+             }else{
+                  $('#idcitiRepeat').removeClass('has_error');
+             }
+
+        });
+
+
+        
+
+
+        
 
 
 

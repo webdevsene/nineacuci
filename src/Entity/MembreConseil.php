@@ -48,8 +48,8 @@ class MembreConseil
      */
     private $nom;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     /**
+     * @ORM\ManyToOne(targetEntity=Qualite::class, inversedBy="membreConseils")
      */
     private $position;
 
@@ -149,12 +149,12 @@ class MembreConseil
         return $this;
     }
 
-    public function getPosition(): ?string
+    public function getPosition(): ?Qualite
     {
         return $this->position;
     }
 
-    public function setPosition(?string $position): self
+    public function setPosition(?Qualite $position): self
     {
         $this->position = $position;
 

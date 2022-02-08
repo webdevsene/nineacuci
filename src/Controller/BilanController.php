@@ -40,6 +40,8 @@ class BilanController extends AbstractController
        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>1]);
        $refAggPassif=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>2]);
 
+
+
         if($request->get('annee')){
            
            $codeCuci=$request->get('codecuci');
@@ -47,10 +49,13 @@ class BilanController extends AbstractController
            $annee=$request->get('annee');
 
 
+
+
           
             
 
             $bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
+
 
            if(count($bn)>1){
                foreach ($refAgg as $key ) {
@@ -133,10 +138,11 @@ class BilanController extends AbstractController
             
 
             $bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
+            $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
 
            if(count($bn)>1){
                foreach ($refAggPassif as $key ) {
-                  $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+                 
                   $bilan =$this->getDoctrine()->getRepository(Bilan::class)->findOneBy(["repertoire"=>$repertoire,"anneeFinanciere"=>$annee,"type"=>"Passif","refCode"=>$key->getCode()]);
 
                  
@@ -247,12 +253,28 @@ class BilanController extends AbstractController
         $bilanPassif=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
 
 
+        $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+
+
         foreach ($bilanPassif as $key ) {
-              $tabPassif1[$key->getRefCode()]=[$key->getRefCode(),$key->getNet1(),$key->getNet2()];
+              
+
+               $bln =$this->getDoctrine()->getRepository(Bilan::class)->findOneBy(["repertoire"=>$repertoire,"anneeFinanciere"=>$annee-1,"type"=>"Passif","refCode"=>$key->getRefCode()]);
+              if($bln)
+              $tabPassif1[$key->getRefCode()]=[$key->getRefCode(),$key->getNet1(),$bln->getNet1()];
+              else
+                $tabPassif1[$key->getRefCode()]=[$key->getRefCode(),$key->getNet1(),$key->getNet2()];
          } 
+
+
         
         foreach ($bilan as $key ) {
-              $tab1[$key->getRefCode()]=[$key->getRefCode(),$key->getBrut(),$key->getAmortPR(),$key->getNet1(),$key->getNet2()];
+
+              $bln =$this->getDoctrine()->getRepository(Bilan::class)->findOneBy(["repertoire"=>$repertoire,"anneeFinanciere"=>$annee-1,"type"=>"Actif","refCode"=>$key->getRefCode()]);
+              if($bln)
+              $tab1[$key->getRefCode()]=[$key->getRefCode(),$key->getBrut(),$key->getAmortPR(),$key->getNet1(),$bln->getNet1()];
+              else
+                 $tab1[$key->getRefCode()]=[$key->getRefCode(),$key->getBrut(),$key->getAmortPR(),$key->getNet1(),$key->getNet2()];
          } 
 
 

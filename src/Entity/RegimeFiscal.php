@@ -41,6 +41,12 @@ class RegimeFiscal
          $this->id = Uuid::v4();
     }
 
+     public function getCodeLibelle(): ?string
+    {
+        return $this->code."-".$this->libelle;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;

@@ -9,6 +9,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Qualite;
+
+
 
 
 class MembreConseilShowType extends AbstractType
@@ -28,16 +32,16 @@ class MembreConseilShowType extends AbstractType
             'disabled'=>true,
             'attr'=>array('class'=>'form-control')))
           
-             ->add('position', ChoiceType::class, [
-                  'label'=>'Nationalité ',
-                  'attr'=>array('class'=>'form-control select2'),
-                  'choices'  => [
-                      '' => "choissir...",
-                      'Teste' => "Teste"
-                  ],
-                   'required'=>false,
-                   'disabled'=>true,
-              ])
+               ->add('position', EntityType::class, [
+                 'class' => Qualite::class,
+                'choice_label' => 'getCodeLibelle',
+                'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
+               
+                'required'=>false,
+                'disabled'=>true,
+                'label'=>'Fonction/Qualité ',
+
+               ])
             ->add('prenom',TextType::class,
             array('label'=>'Prénom  ',
             'required'=>false,

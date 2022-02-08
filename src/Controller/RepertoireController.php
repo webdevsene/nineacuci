@@ -6,6 +6,7 @@ use App\Entity\Repertoire;
 use App\Entity\TypeNINEA;
 use App\Form\RepertoireType;
 use App\Form\RepertoireShowType;
+use App\Form\RepertoireEditType;
 use App\Repository\RepertoireRepository;
 use App\Repository\TypeNINEARepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,62 +102,26 @@ class RepertoireController extends AbstractController
         $sequenceNumeroCUCI=new SequenceNumeroCUCI();
 
         $repertoire->setTypeNINEA($entityManager->getRepository(TypeNINEA::class)->find(1));
-        $syscoa=$entityManager->getRepository(SYSCOA::class)->findAll();
-        $naema=$entityManager->getRepository(NAEMA::class)->findAll();
-        $naemas=$entityManager->getRepository(NAEMAS::class)->findAll();
-        $citi=$entityManager->getRepository(Citi::class)->findAll();
+        $syscoas=$entityManager->getRepository(SYSCOA::class)->findAll();
+        $naemas=$entityManager->getRepository(NAEMA::class)->findAll();
+        $naemass=$entityManager->getRepository(NAEMAS::class)->findAll();
+        $citis=$entityManager->getRepository(Citi::class)->findAll();
         $regions=$entityManager->getRepository(Region::class)->findAll();
         $categorySyscoa=$entityManager->getRepository(CategorySyscoa::class)->findAll();
         $categoryNaema=$entityManager->getRepository(CategoryNaema::class)->findAll();
         $categoryNaemas=$entityManager->getRepository(CategoryNaemas::class)->findAll();
         $categoryCiti=$entityManager->getRepository(CategoryCiti::class)->findAll();
-        $form = $this->createForm(RepertoireType::class, $repertoire,[ "syscoa"=>$syscoa,"naema"=>$naema,"naemas"=>$naemas,"citi"=>$citi]);
+        $form = $this->createForm(RepertoireType::class, $repertoire,[]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $i=1;
-            while($i<=$request->get('taille')){
-             if ($request->get('libelle'.$i)) {
+          
+         
+           
             
-               $activities= new Activities(); 
-
-                $activities->setChiffreAffaire($request->get('chiffreAffaire'.$i)) ;
-                $activities->setPourcentage($request->get('pourcentage'.$i)) ;
-                $activities->setActivitePrincipale($request->get('activitePrincipale'.$i)) ;
-                $activities->setValeurAjoutee($request->get('valeurAjouter'.$i)); 
-                $activities->setLibelleActivitePrincipale($request->get('libelle'.$i)) ;
-                $activities->setRepertoire($repertoire) ;
-
-                if($request->get('syscoa'.$i)){
-                $syscoa=$entityManager->getRepository(SYSCOA::class)->find($request->get('syscoa'.$i));
-                $activities->setSYSCOA($syscoa); 
-                }
+            $activities= new Activities(); 
 
                 
-                if($request->get('naema'.$i)){
-                 $naema=$entityManager->getRepository(NAEMA::class)->find($request->get('naema'.$i)); 
-                 $activities->setNAEMA($naema);  
-                }
-
-                if($request->get('naemas'.$i)){
-                 $naemas=$entityManager->getRepository(NAEMAS::class)->find($request->get('naemas'.$i)); 
-                 $activities->setNAEMAS($naemas);  
-                }
-
-
-                if($request->get('citi'.$i)){
-                 $citi=$entityManager->getRepository(CITI::class)->find($request->get('citi'.$i)); 
-                 $activities->setCITI($citi);  
-                }
-
-                 $entityManager->persist($activities);
-             }
-                
-               
-                
-                $i++;
-
-            }
             $last_insert=$entityManager->getRepository(SequenceNumeroCUCI::class)->findBy(array(),array('id'=>'desc'),1,0);
 
             if(count($last_insert)>0){
@@ -164,103 +129,96 @@ class RepertoireController extends AbstractController
             }else
              $codeCUCI= $this->genererNumeroCUCI(1);
             
-            if($request->get('qvh'))
+            if($request->get('qvh')){
+
                 $qvh=$entityManager->getRepository(QVH::class)->find($request->get('qvh'));
+                $repertoire->setQvh($qvh);
+            }
             else{
                 $request->getSession()->getFlashBag()->add('messageRepertoire'," le Quartier/Village/Hameau est obligatoire");
-                return $this->redirectToRoute('repertoire_new');
+               
             }
 
 
             if($request->get('naema')){
-                $naema=$entityManager->getRepository(NAEMA::class)->find($request->get('naema'));  
+                $naema=$entityManager->getRepository(NAEMA::class)->find($request->get('naema')); 
+
+                $repertoire->setNAEMA($naema);
+
+                $activities->setNAEMA($naema) ;
             }
             else{
                 $request->getSession()->getFlashBag()->add('messageRepertoire'," le naema est obligatoire");
-                return $this->redirectToRoute('repertoire_new');
+
+                
             }
 
 
-            if($request->get('naemas'))
+            if($request->get('naemas')){
                 $naemas=$entityManager->getRepository(NAEMAS::class)->find($request->get('naemas'));
+                $activities->setNAEMAS($naemas);
+                 $repertoire->setNAEMAS($naemas);
+            }
             else{
                 $request->getSession()->getFlashBag()->add('messageRepertoire'," le naemas est obligatoire");
-                return $this->redirectToRoute('repertoire_new');
+               
             }
 
             
-            if($request->get('citi'))
+            if($request->get('citi')){
                 $citi=$entityManager->getRepository(Citi::class)->find($request->get('citi'));
+                 $activities->setCITI($citi);
+                  $repertoire->setCITI($citi);
+            }
             else{
                 $request->getSession()->getFlashBag()->add('messageRepertoire'," le citi est obligatoire");
-                return $this->redirectToRoute('repertoire_new');
+                
             }
 
 
 
-            if($request->get('syscoa'))
+            if($request->get('syscoa')){
                 $syscoa=$entityManager->getRepository(SYSCOA::class)->find($request->get('syscoa'));
+                 $repertoire->setSYSCOA($syscoa);
+                 $activities->setSYSCOA($syscoa);
+            }
             else{
                 $request->getSession()->getFlashBag()->add('messageRepertoire'," le syscoa est obligatoire");
-                return $this->redirectToRoute('repertoire_new');
+               
+            }
+
+
+            if(!$form['activitePrincipaleRepeat']->getData())
+            {
+                $request->getSession()->getFlashBag()->add('messageRepertoire'," l'activité principale   est obligatoire"); 
+            }else{
+              $activities->setLibelleActivitePrincipale($form['activitePrincipaleRepeat']->getData());   
+              $activities->setChiffreAffaire($form['chiffreAffaire']->getData());   
+              $activities->setValeurAjoutee($form['valeurAjoutee']->getData());   
+              $activities->setPourcentage($form['pourcentage']->getData());   
             }
 
             $repertoire->setCodeCuci($codeCUCI);
 
-            $repertoire->setQvh($qvh);
-            $repertoire->setNAEMA($naema);
-            $repertoire->setNAEMAS($naemas);
-            $repertoire->setCITI($citi);
-            $repertoire->setSYSCOA($syscoa);
-            $repertoire->setCreatedBy($this->getUser());
-            $repertoire->setUpdatedBy($this->getUser());
-
-            
-            $entityManager->persist($sequenceNumeroCUCI);
-            $entityManager->persist($repertoire);
-            $entityManager->flush();
-
-            foreach ($repertoire->getCommissairesComptes() as $key) {
-               
-                if( $key->getNom()==null && $key->getPrenom()==null){
-                    $entityManager->remove($key);
-                   
-                }
-               
-            }
-
-
-            foreach ($repertoire->getDirigeants() as $key) {
-               
-                if( $key->getNom()=="" && $key->getPrenom()==""){
-                    $entityManager->remove($key);
-                }
-               
-            }
-
-
-            foreach ($repertoire->getMembreConseils() as $key) {
-               
-                if( $key->getNom()=="" && $key->getPrenom()==""){
-                    $entityManager->remove($key);
-                }
-               
-            }
-
-             foreach ($repertoire->getFiliales() as $key) {
-               
-                if( $key->getDesignation()=="" ){
-                    $entityManager->remove($key);
-                }
-               
-            }
-            
-
+            $activities->setActivitePrincipale(true);
 
            
-            $entityManager->flush();
+            $repertoire->setCreatedBy($this->getUser());
+            $repertoire->setUpdatedBy($this->getUser());
+            $activities->setRepertoire($repertoire);
 
-            return $this->redirectToRoute('repertoire_index', [], Response::HTTP_SEE_OTHER);
+            if (!$request->get('qvh')||!$request->get('naema') || !$request->get('naemas') || !$request->get('syscoa') || !$request->get('citi') ||!$form['activitePrincipaleRepeat']->getData()) {
+            
+               
+
+            }else
+            {
+                $entityManager->persist($sequenceNumeroCUCI);
+                $entityManager->persist($repertoire);
+                $entityManager->persist($activities);
+                $entityManager->flush();
+                return $this->redirectToRoute('repertoire_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->renderForm('repertoire/new.html.twig', [
@@ -271,6 +229,10 @@ class RepertoireController extends AbstractController
             'categoryCiti'=>$categoryCiti,
             'categoryNaemas'=>$categoryNaemas,
             'regions' => $regions,
+            'syscoa'=>$syscoas,
+            'naema'=>$naemas,
+            'citi'=>$citis,
+            'naemas'=>$naemass,
         ]);
     }
 
@@ -285,7 +247,7 @@ class RepertoireController extends AbstractController
         $naemas=$entityManager->getRepository(NAEMAS::class)->findAll();
         $citi=$entityManager->getRepository(Citi::class)->findAll();
         $regions=$entityManager->getRepository(Region::class)->findAll();
-        $form = $this->createForm(RepertoireShowType::class, $repertoire,[ "syscoa"=>$syscoa,"naema"=>$naema,"naemas"=>$naemas,"citi"=>$citi]);
+        $form = $this->createForm(RepertoireShowType::class, $repertoire,[ ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -330,13 +292,39 @@ class RepertoireController extends AbstractController
     {
         
 
-        $syscoa=$entityManager->getRepository(SYSCOA::class)->findAll();
-        $naema=$entityManager->getRepository(NAEMA::class)->findAll();
-        $naemas=$entityManager->getRepository(NAEMAS::class)->findAll();
-        $citi=$entityManager->getRepository(Citi::class)->findAll();
+        $syscoas=$entityManager->getRepository(SYSCOA::class)->findAll();
+        $naemas=$entityManager->getRepository(NAEMA::class)->findAll();
+        $naemass=$entityManager->getRepository(NAEMAS::class)->findAll();
+        $citis=$entityManager->getRepository(Citi::class)->findAll();
         $regions=$entityManager->getRepository(Region::class)->findAll();
-        $form = $this->createForm(RepertoireType::class, $repertoire,[ "syscoa"=>$syscoa,"naema"=>$naema,"naemas"=>$naemas,"citi"=>$citi]);
+
+        
+
+        $repertoire->setActivitePrincipaleRepeat( $repertoire->getActivitePrincipale());
+
+        $activitiePrincipale=$repertoire->getActivitePrincipale();
+        $chiffreAffaire="";
+        $valeurAjoutee="";
+        $pourcentage="";
+        foreach ($repertoire->getActivities() as $key) {
+            if ($key->getActivitePrincipale()) {
+
+                $chiffreAffaire=$key->getChiffreAffaire();
+                $valeurAjoutee=$key->getValeurAjoutee();
+                $pourcentage=$key->getPourcentage();
+               
+            }
+        }
+        
+
+        $form = $this->createForm(RepertoireEditType::class, $repertoire,[ ]);
         $form->handleRequest($request);
+
+
+
+       
+
+      
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -371,6 +359,14 @@ class RepertoireController extends AbstractController
             'categoryNaema'=>$categoryNaema,
             'categoryCiti'=>$categoryCiti,
             'categoryNaemas'=>$categoryNaemas,
+            'syscoa'=>$syscoas,
+            'naema'=>$naemas,
+            'citi'=>$citis,
+            'naemas'=>$naemass,
+            'activitiePrincipale'=>$activitiePrincipale,
+            'chiffreAffaire'=>$chiffreAffaire,
+            'valeurAjoutee'=>$valeurAjoutee,
+            'pourcentage'=>$pourcentage,
         ]);
     }
     

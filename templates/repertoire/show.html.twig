@@ -309,7 +309,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12">
+                                 <div class="col-lg-12">
                                     <div class="mb-3 row" >
                                         <label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
                                         <br>
@@ -322,59 +322,60 @@
 
                                               <span style="color: red;" id="activitePrincipale" > </span><br>
                                 </div>
-                                <div class="col-lg-3">
+                                 <div class="col-lg-3">
+                                   
                                 </div>
-                                <div class="col-lg-3"> 
+                                <div class="col-lg-3">
+                                   
                                 </div>
                                 <div class="col-lg-3">
                                    
                                 </div>
                                 <div class="col-lg-3">
                                    SYCOA <span style="color:red">*</span><br>
-                                    
-                                          <select disabled class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;">
-                                                    <option>Selectionner la catégorie</option>
+                                    <select disabled class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;" disabled>
+
+                                        <option>Selectionner la catégorie</option>
                                                     {% for tag in categorySyscoa%}
                                                    {% if repertoire.syscoa.categorySyscoa.id==tag.id%}
-                                                    <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                    <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                                     {%else%}
-                                                    <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                                    <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                                     {%endif%}
                                                     {% endfor%}
-                                            </select>
+                                                    
+                                     </select>
 
                                                 <br><br>
                                             
-            <select disabled class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
-                                                    <option></option>
+                                    <select disabled class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
+                                        
 
-                                         {% for tag in repertoire.syscoa.categorySyscoa.syscoa%}
+                                        {% for tag in repertoire.syscoa.categorySyscoa.syscoa%}
                                         {% if repertoire.syscoa.id==tag.id%}
-                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" selected>{{tag.CODEACTIVITE}}-{{tag.libelle}}</option>
                                         {%else%}
-                                        <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" >{{tag.CODEACTIVITE}}-{{tag.libelle}}</option>
                                         {%endif%}
                                         {% endfor%}
                                                    
-                            </select>
+                                     </select>
 
-                                             <span style="color: red;" id="syscoa" > </span>
+                                    <span style="color: red;" id="syscoa" > </span>
                                 </div>
                                 <div class="col-lg-3">
                                     NAEMA <span style="color:red">*</span><br>
-                                      <select disabled class="form-control select2 syscoa" name="categoryNaema" id="categoryNaema"  style="width: 100%;">
+                                     <select disabled class="form-control select2 syscoa" name="categoryNaema" id="categoryNaema"  style="width: 100%;">
                                                     <option>Selectionner la catégorie</option>
                                                     {% for tag in categoryNaema%}
 
                                                  {% if repertoire.naema.categoryNaema.id==tag.id%}
-                                                    <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                    <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                                     {%else%}
-                                                    <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                                    <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                                     {%endif%}
                                                     
                                                     {% endfor%}
-
-
                                             </select>
 
 
@@ -382,15 +383,15 @@
                                               <br>
 
                                            <select disabled class="form-control select2 syscoa" name="naema" id="idnaema"  style="width: 100%;">
-                                                    <option></option>
-
+                                                   <option value="">Selectionner le code NAEMA</option>
                                         {% for tag in repertoire.naema.categoryNaema.naema%}
                                         {% if repertoire.naema.id==tag.id%}
-                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                         {%else%}
-                                        <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                         {%endif%}
                                         {% endfor%}
+                                                    
                                                    
                                             </select>
 
@@ -401,13 +402,14 @@
                                 </div>
                                 <div class="col-lg-3">
                                     NAEMAS <span style="color:red">*</span><br>
-                                    <select disabled class="form-control select2 syscoa" name="categoryNaemas" id="categoryNaemas"  style="width: 100%;">
+
+                                            <select disabled class="form-control select2 syscoa" name="categoryNaemas" id="categoryNaemas"  style="width: 100%;">
                                                     <option>Selectionner la catégorie</option>
                                                     {% for tag in categoryNaemas%}
                                                     {% if repertoire.naemas.categoryNaemas.id==tag.id%}
-                                                    <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                    <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                                     {%else%}
-                                                    <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                                    <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                                     {%endif%}
                                                     {% endfor%}
                                             </select>
@@ -417,13 +419,15 @@
                                               <br>
 
                                            <select disabled class="form-control select2 syscoa" name="naemas" id="idnaemas"  style="width: 100%;">
-                                            {% for tag in repertoire.naemas.categoryNaemas.naemas%}
+                                                     <option value="">Selectionner le code NAEMAS</option>
+                            {% for tag in repertoire.naemas.categoryNaemas.naemas%}
                                         {% if repertoire.naemas.id==tag.id%}
-                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                         {%else%}
-                                        <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                         {%endif%}
                                         {% endfor%}
+                                                   
                                                    
                                             </select>
 
@@ -432,15 +436,14 @@
                                 </div>
                                 <div class="col-lg-3">
                                     CITI <span style="color:red">*</span><br>
-                                
-                                            <select disabled class="form-control select2 syscoa" name="categoryCiti" id="categoryCiti"  style="width: 100%;">
+                                    <select disabled class="form-control select2 syscoa" name="categoryCiti" id="categoryCiti"  style="width: 100%;">
                                                     <option>Selectionner la catégorie</option>
-                                                    {% for tag in categoryCiti%}
+                                                   {% for tag in categoryCiti%}
                                                     
                                                     {% if repertoire.citi.categoryCiti.id==tag.id%}
-                                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                        <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                                         {%else%}
-                                                        <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                                        <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                                         {%endif%}
                                                     {% endfor%}
                                             </select>
@@ -449,24 +452,22 @@
                                               <br>
                                               <br>
 
-                                           <select class="form-control select2 syscoa" disabled name="citi" id="idciti"  style="width: 100%;">
+                                           <select disabled class="form-control select2 syscoa" name="citi" id="idciti"  style="width: 100%;">
+                                                  <option value="">Selectionner le code CITI</option>
                                         {% for tag in repertoire.citi.categoryCiti.citi%}
                                         {% if repertoire.citi.id==tag.id%}
-                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
                                         {%else%}
-                                        <option value="{{tag.id}}" >{{tag.libelle}}</option>
+                                        <option value="{{tag.id}}" >{{tag.id}}-{{tag.libelle}}</option>
                                         {%endif%}
                                         {% endfor%}
+                                                    
                                                    
                                             </select>
 
 
                                                
                                                 <span style="color: red;" id="citi" > 
-
-                                                </span>
-
-                                              
 
                                                 </span>
                                                  <br>
@@ -476,19 +477,20 @@
                                 </div>
                                 
                             </div>
-                           
                              <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> </label>
-                                       
-                                        <div class="col-md-7">
-                                             
-                                        </div>
-                                    </div>
-                                </div>
+                               
                                 <div class="col-lg-12">
-                                    <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a>
+
+                                           
+                                        </div>
+                                         
+                                    </div>
                                 </div>
                             </div>
                             
@@ -551,7 +553,7 @@
                                         <div class="col-md-7">
                                               
                                             <select disabled class="form-control select2 syscoa" name="region" id="region"  style="width: 100%;">
-                                                    <option>Choississez la région</option>
+                                                      <option>Choississez la région</option>
                                     {% for tag in regions%}
                                     {% if repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id==tag.id%}
                                     <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
@@ -568,15 +570,15 @@
                                         <label class="col-md-5" for="basicpill-firstname-input"> Département:<span style="color:red">*</span></label>
                                         <div class="col-md-7">
                                             <select disabled class="form-control syscoa select2" name="departement" id="departement" style="width: 100%;">
-                                                        <option>Select</option>
-                                              
-                                    {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.departements%}
+                                                <option>Choississez le département</option>
+                                                 {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.departements%}
                                     {% if repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.id==tag.id%}
                                     <option value="{{tag.id}}" selected>{{tag.description}}</option>
                                     {%else%}
                                     <option value="{{tag.id}}" >{{tag.description}}</option>
                                     {%endif%}
-                                    {% endfor%}      
+                                    {% endfor%} 
+                                                    
                                              </select>
                                         </div>
                                     </div>
@@ -588,8 +590,9 @@
                                         <label class="col-md-5" for="basicpill-firstname-input">Commune/Arrondissement/Ville:<span style="color:red">*</span></label>
                                         <div class="col-md-7">
                                             <select disabled class="form-control syscoa select2" name="cav" id="cav" style="width: 100%;">
-                                                    <option>Select</option>
-                                                     {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.cAVs%}
+                                                    <option>Choississez le CAV</option>
+                                                     <option>Select</option>
+                                    {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.cAVs%}
                                     {% if repertoire.qvh.qvhCACRID.cacrCAVID.id==tag.id%}
                                     <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
                                     {%else%}
@@ -606,7 +609,7 @@
                                         <label class="col-md-5" for="basicpill-firstname-input"> Commune d'arrondissement/communauté rurale:<span style="color:red">*</span></label>
                                         <div class="col-md-7">
                                             <select disabled class="form-control syscoa select2" name="cacr" id="cacr"  style="width: 100%;">
-                                                  {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cACRs%}
+                                              {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cACRs%}
                                         {% if repertoire.qvh.qvhCACRID.id==tag.id%}
                                         <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
                                         {%else%}
@@ -624,9 +627,7 @@
                                         <label class="col-md-5" for="basicpill-firstname-input"> Quartier/Village/Hameau:<span style="color:red">*</span></label>
                                         <div class="col-md-7">
                                             <select disabled class="form-control syscoa select2" name="qvh" id="qvh"  style="width: 100%;">
-                                               <option></option>
-
-                                      {% for tag in repertoire.qvh.qvhCACRID.qVHs%}
+                                                 {% for tag in repertoire.qvh.qvhCACRID.qVHs%}
                                         {% if repertoire.qvh.id==tag.id%}
                                         <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
                                         {%else%}
@@ -658,7 +659,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-6" for="basicpill-firstname-input"> </label>
+                                        <div class="col-md-5" align="right">
+                                            <a  type="button" class="btn btn-secondary" id="btnPrecedentCoordonnee">Précédent</a>
+                                        </div>
+                                         <div class="col-md-1" align="right">
+                                            <a  type="button" class="btn btn-primary" id="btnSuivantCoordonnee">Suivant</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                     </div>
@@ -714,12 +723,12 @@
                                     <div class="mb-3 row" >
                                         <label class="col-md-12" for="basicpill-firstname-input">
                                             <br>
-                            <input class="form-check-input" type="radio" name="formRadiosRight"
-                                                id="formRadiosRight1" checked>
-                                        Cabinet Comptable
-                                <input class="form-check-input" type="radio" name="formRadiosRight"
-                                                id="formRadiosRight1" >Expert
-                        </label>
+                                            <input class="form-check-input" type="radio" name="formRadiosRight"
+                                                                id="formRadiosRight1" checked>
+                                                        Cabinet Comptable
+                                                <input class="form-check-input" type="radio" name="formRadiosRight"
+                                                                id="formRadiosRight2" >Expert
+                                        </label>
                                        
                                        
                                     </div>
@@ -729,41 +738,73 @@
                         <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.NomDuCabinet)}}:</label>
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                        <div class="cabinet" id="nomDuCabinetlabel">
+                                         {{form_label(form.NomDuCabinet)}}:
+                                         </div>  <br><br>
+                                        <div class="expert" id="prenomDuExpertlabel">
+                                         {{form_label(form.prenomDuExpert)}}:
+                                         </div> 
+                                        </label>
                                        
                                         <div class="col-md-7">
+                                            <div class="cabinet" id="nomDuCabinet">
                                               {{form_widget(form.NomDuCabinet)}}
-                                               
+                                            </div> 
+                                              <br>
+                                              <div class="expert" id="prenomDuExpert">
+                                              {{form_widget(form.prenomDuExpert)}}
+                                               </div> 
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                   
-                                      <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> </label>
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> <div class="cabinet1" id="telephoneDuCabinetlabel">
+                                            {{form_label(form.telephoneDuCabinet)}}:
+                                          </div> 
+                                            <br><br>
+                                         <div class="expert" id="nomDuExpertLabel">
+                                             {{form_label(form.nomDuExpert)}}:
+                                         </div> 
+                                         </label>
                                        
                                         <div class="col-md-7">
-                                             
+                                           <div class="cabinet"id="telephoneDuCabinet">
+                                              {{form_widget(form.telephoneDuCabinet)}}
+                                              </div> <br>
+                                              <div class="expert" id="nomDuExpert">
+                                                {{form_widget(form.nomDuExpert)}}
+                                              </div>
                                         </div>
                                     </div>
+                                   
+                                      
                                 </div>
                         </div>
                         <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.addresseDuCabinet)}}:</label>
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                        <div class="cabinet" id="addresseDuCabinetLabel"> {{form_label(form.addresseDuCabinet)}}:
+                                            </div>
+                                        </label>
                                         <div class="col-md-7">
-                                              {{form_widget(form.addresseDuCabinet)}}
+                                            <div class="cabinet" id="addresseDuCabinet">
+                                              {{form_widget(form.addresseDuCabinet)}} 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                    
-                                      <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.telephoneDuCabinet)}}:</label>
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        </label>
                                        
                                         <div class="col-md-7">
-                                              {{form_widget(form.telephoneDuCabinet)}}
+                                            
+                                             
                                         </div>
                                     </div>
                                 </div>
@@ -781,7 +822,7 @@
                                 <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="basicpill-address-input">
-                                       
+                                        
                                         </label>
                                         <div ><br><br>
                                             <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
@@ -797,22 +838,22 @@
                                                         <th></th>
                                                     </tr>
                                                 </thead>
-                    <tbody id="idCommissaire"  
-                           data-prototype="{{include('repertoire/commissaire.html.twig',{'form':form.commissairesComptes.vars.prototype})|e }}"
-                           data-index="{{ form.commissairesComptes|length > 0 ? form.commissairesComptes|last.vars.name + 1 : 0 }}">
+                                                <tbody id="idCommissaire"  
+                                                       data-prototype="{{include('repertoire/commissaire.html.twig',{'form':form.commissairesComptes.vars.prototype})|e }}"
+                                                       data-index="{{ form.commissairesComptes|length > 0 ? form.commissairesComptes|last.vars.name + 1 : 0 }}">
 
 
-                          
-                            {% for tag in form.commissairesComptes %}
-                            <tr>
-                                    <td>{{ form_widget(tag.nom) }}</td>
-                                    <td> {{ form_widget(tag.prenom) }}</td>
-                                    <td>{{ form_widget(tag.address) }}</td>
-                                    <td>{{ form_widget(tag.telephone) }}</td>
-                            </tr>
-                            {% endfor %}
-                           
-                    </tbody>
+                                                      
+                                                        {% for tag in form.commissairesComptes %}
+                                                        <tr>
+                                                                <td>{{ form_widget(tag.nom) }}</td>
+                                                                <td> {{ form_widget(tag.prenom) }}</td>
+                                                                <td>{{ form_widget(tag.address) }}</td>
+                                                                <td>{{ form_widget(tag.telephone) }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                       
+                                                </tbody>
                                             </table>
                                             {{ form_label(form.commissairesComptes) }}                         
                                         </div>
@@ -821,7 +862,13 @@
                         </div>
                         <div class="row">
                                 <div class="col-lg-12">
-                                    <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                       
+                                        <div class="col-md-12" align="right">
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
                                 </div>
                         </div>
                     </div>
@@ -898,235 +945,147 @@
                          </div>
                          <div class="row">
                                 <div class="col-lg-12">
-                                     <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                       
+                                        <div class="col-md-12" align="center">
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
                                 </div>
                          </div>
                     </div>
                     <div class="tab-pane" id="activites" role="tabpanel">
+
+                            
+
                             <div class="row">
                                 <div class="col-lg-12">
                                    
-                                       
+                                        <label for="basicpill-address-input">
+                                        
+                                        </label>
                                         <br>
-                                        <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
-                                            <label style="text-align: center;background:#efefef;">Activités principales et secondaires</label>
-                                        </div>
+                                        
                                     
+                     <table class="table table table-bordered dt-responsive" style="width: 100%;" >
+                                                <thead style="background:#efefef;">
+                                                    <tr style="width:100%;">
+                                                        <th width="100%;"></th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody  id="idActivities" 
+                                                        data-prototype="{{include('repertoire/activities.html.twig',{'form':form.activities.vars.prototype})|e }}"
+                                                        data-index="{{ form.activities|length > 0 ? form.activities|last.vars.name + 1 : 0 }}" >
+                                                </tbody>
+    {% for tag in form.activities %}
+       
+
+        {% if tag.vars.value.activitePrincipale==1 %}
+    <tr  >
+    
+    <td >
+
+        <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+                                            <label style="text-align: center;background:#efefef; font-size: 20px;">Activités  Principales</label>
+        </div>
+
+        <table class="table table table-bordered " width="80%">
+
+            <tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef; width: 80%;">
+                <td>Libellé</td>
+                <td>Chiffre d'affaire</td>
+                <td>Valeure ajoutée</td>
+                <td>Pourcentage</td>
+               
+            </tr>
+            <tr style="width:80%;">
+                <td width="10%;">{{ form_widget(tag.libelleActivitePrincipale) }}</td>
+                <td width="10%;">{{ form_widget(tag.chiffreAffaire) }}</td>
+                <td width="10%;">{{ form_widget(tag.valeurAjoutee) }}</td>
+                <td width="10%;">{{ form_widget(tag.pourcentage) }}</td>
+                
+            </tr>
+            
+        </table> 
+
+       
+        <div class="row">
+            <div class="col-md-6">SYSCOA <br> {{ form_widget(tag.sYSCOA) }}</div>
+            <div class="col-md-6">NAEMA <br> {{ form_widget(tag.nAEMA) }}</div>
+            <div class="col-md-6"><br>NAEMAS <br> {{ form_widget(tag.nAEMAS) }}</div>
+            <div class="col-md-6"><br>CITI <br>{{ form_widget(tag.cITI) }}</div>
+            
+        </div>
+      <div style="display: none;">{{ form_widget(tag.activitePrincipale) }}</div>
+     </td>
+    
+</tr>
+{%endif%}
+{%endfor%}
+
+
+ {% for tag in form.activities %}
+
+{% if tag.vars.value.activitePrincipale==0 %}
+
+<tr  >
+    
+    <td >
+
+       <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+            <label style="text-align: center;background:#efefef; font-size: 20px;">Activités  secondaires</label>
+        </div>
+        <table class="table table table-bordered " width="80%">
+
+            <tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef; width: 80%;">
+                <td>Libellé</td>
+                <td>Chiffre d'affaire</td>
+                <td>Valeure ajoutée</td>
+                <td>Pourcentage</td>
+            </tr>
+            <tr style="width:80%;">
+                <td width="10%;">{{ form_widget(tag.libelleActivitePrincipale) }}</td>
+                <td width="10%;">{{ form_widget(tag.chiffreAffaire) }}</td>
+                <td width="10%;">{{ form_widget(tag.valeurAjoutee) }}</td>
+                <td width="10%;">{{ form_widget(tag.pourcentage) }}</td>
+            </tr>
+            
+        </table> 
+
+       
+        <div class="row">
+            <div class="col-md-6">SYSCOA <br> {{ form_widget(tag.sYSCOA) }}</div>
+            <div class="col-md-6">NAEMA <br> {{ form_widget(tag.nAEMA) }}</div>
+            <div class="col-md-6"><br>NAEMAS <br> {{ form_widget(tag.nAEMAS) }}</div>
+            <div class="col-md-6"><br>CITI <br>{{ form_widget(tag.cITI) }}</div>
+            
+        </div>
+         <div style="display: none;">{{ form_widget(tag.activitePrincipale) }}</div>
+
+     </td>
+    
+</tr>
+{% endif%}
+
+{%endfor%}
+ </table>
                                                    
                                     
                                 </div>
                             </div>
-
-                                {%  for tag in repertoire.activities %}
-                                 <div class="row" style="border:1px solid #efefef;">
-            
-                                    <div class="col-lg-4">
-                                        <br><br>
-                                        <label>
-                                            Libelle
-                                        </label> <br>
-                                        <input type="text" disabled name="libelle" value="{{tag.libelleActivitePrincipale}}" class="form-control form-control-sm">
-                                        <br>
-                                        <br>
-
-
-                                    </div>
-
-                                    <div class="col-lg-2">
-                                        <br><br>
-                                        <label>
-                                            Chiffre d'affaire
-                                        </label> <br>
-                                        <input type="text" disabled name="chiffreAffaire" value="{{tag.chiffreAffaire}}" class="form-control form-control-sm">
-                                        <br>
-                                        <br>
-                                    </div>
-
-                                    <div class="col-lg-2">
-                                        <br><br>
-                                         <label>
-                                            Valeure ajoutée
-                                        </label> <br>
-                                        <input type="text" disabled name="valeurAjoutee" value="{{tag.valeurAjoutee}}" class="form-control form-control-sm">
-                                        <br><br>
-                                    </div>
-
-                                    <div class="col-lg-2">
-                                        <br><br>
-                                        <label>
-                                            Pourcentage
-                                        </label> <br>
-                                        <input type="text" disabled name="pourcentage" value="{{tag.pourcentage}}" class="form-control form-control-sm">
-                                        <br><br>
-                                    </div>
-
-
-                                     <div class="col-lg-2">
-                                        <br><br>
-                                         <label>
-                                            Activité principale
-                                        </label> <br>
-                                        {% if tag.activitePrincipale==1%}
-                                        <input type="checkbox" disabled name="activitePrincipale" class="" checked>
-                                        {% else%}
-
-                                         <input type="checkbox" disabled name="activitePrincipale" class="">
-
-                                        {% endif%}
-                                        <br>
-                                        <br>
-                                    </div>
-                                     
-
-                               
-            
-                                    <div class="col-lg-3">
-                                        <br><br>
-                                        <label>
-                                            SYSCOA
-                                        </label> <br>
-                            <select disabled class="form-control select2 syscoa" name="categorySyscoaA" id="categorySyscoaA"  style="width: 100%;">
-                                    <option>Selectionner la catégorie</option>
-                                    {% for key in categorySyscoa%}
-                                   {% if tag.sYSCOA.categorySyscoa.id==key.id%}
-                                    <option value="{{tag.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                    {%else%}
-                                    <option value="{{tag.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                    {%endif%}
-                                    {% endfor%}
-                            </select>
-
-                                <br><br>
-
-
-                            <select disabled  class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
-                                        <option></option>
-
-                             {% for key in tag.sYSCOA.categorySyscoa.syscoa%}
-                            {% if tag.sYSCOA.id==key.id%}
-                            <option value="{{key.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                            {%else%}
-                            <option value="{{tag.id}}" >{{key.id}}-{{key.libelle}}</option>
-                            {%endif%}
-                            {% endfor%}
-                                       
-                        </select>
-                        <br><br>
-
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                        <br><br>
-                                        <label>
-                                            NAEMA
-                                        </label> <br>
-                                         <select disabled class="form-control select2 syscoa" name="categoryNaemaA" id="categoryNaemaA"  style="width: 100%;">
-                                                    <option>Selectionner la catégorie</option>
-                                                    {% for key in categoryNaema%}
-
-                                                 {% if tag.nAEMA.categoryNaema.id==key.id%}
-                                                    <option value="{{key.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                                    {%else%}
-                                                    <option value="{{tag.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                                    {%endif%}
-                                                    
-                                                    {% endfor%}
-
-
-                                            </select>
-                                        <br>
-                                        <br>
-
-
-                                <select disabled class="form-control form-control-sm select2  syscoa" name="naemaA" id="idnaemaA"  style="width: 100%;">
-                                                    <option></option>
-
-                                        {% for key in tag.nAEMA.categoryNaema.naema%}
-                                        {% if tag.nAEMA.id==key.id%}
-                                        <option value="{{key.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                        {%else%}
-                                        <option value="{{key.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                        {%endif%}
-                                        {% endfor%}
-                                                   
-                                </select>
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                        <br><br>
-                                         <label>
-                                            NAEMAS
-                                        </label> <br>
-                                    <select disabled class="form-control form-control-sm select2 syscoa" name="categoryNaemasA" id="categoryNaemasA"  style="width: 100%;">
-                                                    <option>Selectionner la catégorie</option>
-                                                    {% for key in categoryNaemas%}
-
-                                                 {% if tag.nAEMAS.categoryNaemas.id==key.id%}
-                                                    <option value="{{key.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                                    {%else%}
-                                                    <option value="{{tag.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                                    {%endif%}
-                                                    
-                                                    {% endfor%}
-
-
-                                            </select>
-                                        <br><br>
-
-                                           <select disabled  class="form-control select2 syscoa" name="naemaA" id="idnaemaA"  style="width: 100%;">
-                                                    <option></option>
-
-                                        {% for key in tag.nAEMAS.categoryNaemas.naemas%}
-                                        {% if tag.nAEMAS.id==key.id%}
-                                        <option value="{{key.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                        {%else%}
-                                        <option value="{{key.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                        {%endif%}
-                                        {% endfor%}
-                                                   
-                                            </select>
-                                    </div>
-
-                                    <div class="col-lg-2">
-                                        <br><br>
-                                        <label>
-                                            CITI
-                                        </label> <br>
-                                        <select  class="form-control select2 syscoa" name="categoryCiti" id="categoryCiti"  style="width: 100%;">
-                                    <option>Selectionner la catégorie</option>
-                                    {% for key in categoryCiti%}
-                                    
-                                    {% if tag.cITI.categoryCiti.id==key.id%}
-                                        <option value="{{tag.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                        {%else%}
-                                        <option value="{{tag.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                        {%endif%}
-                                    {% endfor%}
-                            </select>
-                                        <br><br>
-
-                                 <select disabled class="form-control select2 syscoa" name="citi" id="idciti"  style="width: 100%;">
-                                {% for key in tag.cITI.categoryCiti.citi%}
-                                {% if tag.cITI.id==key.id%}
-                                <option value="{{tag.id}}" selected>{{key.id}}-{{key.libelle}}</option>
-                                {%else%}
-                                <option value="{{tag.id}}" >{{key.id}}-{{key.libelle}}</option>
-                                {%endif%}
-                                {% endfor%}
-                                           
-                            </select>
-                                    </div>
-
-
-                                     
-
-                                 </div>
-
-
-                                {% endfor %}
                             <div class="row">
                                 <div class="col-lg-12">
-                                     <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+                                            <br><br>
+                                            <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
                                 </div>
                            </div>
                     </div>
@@ -1134,7 +1093,9 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
-                                        
+                                        <label for="basicpill-address-input">
+                                       
+                                        </label>
                    
     <div>
     <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
@@ -1158,14 +1119,14 @@
             <tbody id="idDirigeant"
     data-prototype="{{include('repertoire/dirigeant.html.twig',{'form':form.dirigeants.vars.prototype})|e }}"
     data-index="{{ form.dirigeants|length > 0 ? form.dirigeants|last.vars.name + 1 : 0 }}">
-               {% for tag in form.dirigeants %}<tr>
+    {% for tag in form.dirigeants %}
     <td>{{ form_widget(tag.nom) }}</td>
     <td> {{ form_widget(tag.prenom) }}</td>
     <td>{{ form_widget(tag.position) }}</td>
     <td>{{ form_widget(tag.numero) }}</td>
     <td>{{ form_widget(tag.addresse) }}</td>
-    </tr>
-    {% endfor %}  
+    {% endfor %} 
+                
             </tbody>
                
             
@@ -1195,7 +1156,9 @@
                         <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
+                                        <label for="basicpill-address-input">
                                         
+                                        </label>
                    
 <div >
   <br>
@@ -1219,15 +1182,15 @@
         <tbody id="idActionnaire" 
     data-prototype="{{include('repertoire/actionnaire.html.twig',{'form':form.actionnaires.vars.prototype})|e }}"
     data-index="{{ form.actionnaires|length > 0 ? form.actionnaires|last.vars.name + 1 : 0 }}">
-        {% for tag in form.actionnaires %}
-        <tr>
+
+       {% for tag in form.actionnaires %}
             <td>{{ form_widget(tag.nom) }}</td>
             <td> {{ form_widget(tag.prenom) }}</td>
             <td>{{ form_widget(tag.nationality) }}</td>
             <td>{{ form_widget(tag.capital) }}</td>
             <td>{{ form_widget(tag.pourcentage) }}</td>
-        </tr>
-            {% endfor %}      
+        {% endfor %} 
+            
         </tbody>
             
         
@@ -1256,9 +1219,11 @@
         <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
-                                        
+                                        <label for="basicpill-address-input">
+                                       
+                                        </label>
                    
-<div >
+      <div >
     <br>
 
     <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
@@ -1278,16 +1243,15 @@
         <tbody id="idMembreConseil" 
     data-prototype="{{include('repertoire/membreConseil.html.twig',{'form':form.membreConseils.vars.prototype})|e }}"
     data-index="{{ form.membreConseils|length > 0 ? form.membreConseils|last.vars.name + 1 : 0 }}">
-           
-            {% for tag in form.membreConseils %}
-        <tr>
+
+
+    {% for tag in form.membreConseils %}
         <td>{{ form_widget(tag.nom) }}</td>
         <td> {{ form_widget(tag.prenom) }}</td>
         <td>{{ form_widget(tag.position) }}</td>
         <td>{{ form_widget(tag.addresse) }}</td>
-        </tr>
-        {% endfor %} 
-
+    {% endfor %}   
+            
         </tbody>
            
         
@@ -1303,17 +1267,28 @@
 
                              <div class="row">
                                 <div class="col-lg-12">
-                                     <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-6" for="basicpill-firstname-input"> </label>
+                                       
+                                        <div class="col-md-5" align="right">
+                                            <a  type="button" class="btn btn-secondary" id="btnPrecedentDirigent">Précédent</a>
+                                        </div>
+                                         <div class="col-md-1" align="right">
+                                            <a  type="button" class="btn btn-primary" id="btnSuivantDirigent">Suivant</a>
+                                        </div>
+                                    </div>
                                 </div>
                         </div>
 
                     </div>
                     <div class="tab-pane" id="filiales" role="tabpanel">
                        
-        <div class="row">
+                    <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
+                                        <label for="basicpill-address-input">
                                         
+                                        </label>
                    
 <div>
     <label style="text-align: center;"> </label><br>
@@ -1325,7 +1300,7 @@
         <table class="table table table-bordered dt-responsive" id="idtab" width="100%">
             <thead style="background:#efefef;">
                  <tr>
-                    <th>Dégination</th>
+                    <th>Désignation</th>
                     <th>Nationalité</th>
                     <th>Montant capital</th>
                     <th>Pourcentage capital</th>
@@ -1335,14 +1310,14 @@
             <tbody  id="idFiliales" 
     data-prototype="{{include('repertoire/filiales.html.twig',{'form':form.filiales.vars.prototype})|e }}"
     data-index="{{ form.filiales|length > 0 ? form.filiales|last.vars.name + 1 : 0 }}">
-                 {% for tag in form.filiales %}
-                 <tr>
+
+    {% for tag in form.filiales %}
     <td>{{ form_widget(tag.designation) }}</td>
     <td> {{ form_widget(tag.nationality) }}</td>
     <td>{{ form_widget(tag.capital) }}</td>
     <td>{{ form_widget(tag.pourcentage) }}</td>
-    </tr>
-    {% endfor %} 
+    {% endfor %}
+                
             </tbody>
                
             
@@ -1358,7 +1333,14 @@
 
                         <div class="row">
                                 <div class="col-lg-12">
-                                     <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+                                            <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
                                 </div>
                         </div>
 
@@ -1368,10 +1350,10 @@
                                 <div class="col-lg-6">
 
                                     <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.systeme)}}:</label>
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.systemeComptabilite)}}:</label>
                                        
                                         <div class="col-md-7">
-                                              {{form_widget(form.systeme)}}
+                                              {{form_widget(form.systemeComptabilite)}}
                                               
                                         </div>
                                     </div>
@@ -1414,7 +1396,7 @@
                         <div class="row">
                                 <div class="col-lg-6">
 
-                                    <div class="mb-3 row" >
+                                    <div class="mb-3 row"  >
                                         <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dateMiseAjour)}}:</label>
                                        
                                         <div class="col-md-7">
@@ -1425,6 +1407,24 @@
                                 <div class="col-lg-6">
                                    
                                       <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div  style="display: none;" id="iddateReactivationLabel">
+                                            {{form_label(form.dateReactivation)}}:
+                                        </div>
+                                        </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div  style="display: none;" id="iddateReactivation">
+                                              {{form_widget(form.dateReactivation)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                         <div class="row">
+                                <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
                                         <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.observation)}}:</label>
                                        
                                         <div class="col-md-7">
@@ -1432,10 +1432,61 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div style="display: none;" id="idraisonReactivationLabel">
+                                              {{form_label(form.raisonReactivation)}}:
+                                        </div>
+                                      </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div style="display: none;" id="idraisonReactivation">
+                                              {{form_widget(form.raisonReactivation)}}
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.raisonCessation)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.raisonCessation)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div style="display: none;" id="iddateCessationLabel">
+                                              {{form_label(form.dateCessation)}}:
+                                        </div>
+                                      </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div style="display: none;" id="iddateCessation">
+                                              {{form_widget(form.dateCessation)}}
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                      <div class="row">
                                 <div class="col-lg-12">
-                                    <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a></center>
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" id="sa-params" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
                                 </div>
                         </div>
                     </div>
@@ -1455,105 +1506,8 @@
 
 {% block javascript %}
 
-<script>
-
-</script>
-
-<script type="text/javascript">
 
 
-
-
-    
-  /*  window.onload=()=>{
-      
-       
-         var categorySyscoa = $('#repertoire_categorySyscoa');
-        
-          categorySyscoa.change(function() {
-          var form = this.closest('form');
-           
-          var data = {};
-          data= this.name +"="+ this.value;
-
-           fetch(form.action,{
-
-               method : form.getAttribute("method"),
-               body : data,
-               headers : {
-                "Content-Type" : "application/x-www-form-urlencoded; charset : UTF-8" 
-               }
-           }).then(response =>response.text()).then(html=>{
-                let content=document.createElement("html");
-
-                content.innerHTML=html;
-
-                let nouveauSelect=content.querySelector("#repertoire_syscoa");
-
-
-                // nouveauSelect.setAttribute("class", "syscoa");
-              
-                document.querySelector('#repertoire_syscoa').replaceWith(nouveauSelect);
-
-               
-           }
-
-           ).catch(error =>{
-
-               console.log(error);
-           }
-
-           )
-
-           });
-
-
-
-            var category= $('#repertoire_categoryNaema');
-        
-          category.change(function() {
-          var form = this.closest('form');
-           
-          var data = {};
-          data= this.name +"="+ this.value;
-
-           fetch(form.action,{
-
-               method : form.getAttribute("method"),
-               body : data,
-               headers : {
-                "Content-Type" : "application/x-www-form-urlencoded; charset : UTF-8" 
-               }
-           }).then(response =>response.text()).then(html=>{
-                let content=document.createElement("html");
-
-                content.innerHTML=html;
-
-                let nouveauSelect=content.querySelector("#repertoire_naema");
-
-
-                // nouveauSelect.setAttribute("class", "syscoa");
-              
-                document.querySelector('#repertoire_naema').replaceWith(nouveauSelect);
-
-               
-           }
-
-           ).catch(error =>{
-
-               console.log(error);
-           }
-
-           )
-
-           });
-
-    }*/
-
-
-    
-  
-</script>
 
 <script src="{{ asset('admin/dist/assets/libs/select2/js/select2.min.js')}}"></script>
 
@@ -1566,7 +1520,7 @@
 <script src="{{ asset('admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
 <script src="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}}"></script>
   <!-- Sweet Alerts js -->
-  <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
   <!-- Sweet alert init js-->
 <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
@@ -1582,473 +1536,99 @@
 
 
 <script type="text/javascript">
-
-         const newItemFiliales=(e)=>{
-        var collections=document.querySelector(e.currentTarget.dataset.collection);
-        let index=parseInt(collections.dataset.index);
-        let item=document.createElement("tr");
-       
-         
-        item.innerHTML=
-        collections.dataset.index=index+1;
-        let prototype=collections.dataset.prototype;
-         item.innerHTML=prototype.replace(/__name__/g,index);
-        
-        
-
-        item.querySelector(".btn-removeFiliales").addEventListener("click",()=>item.remove());
-         collections.appendChild(item);
-        
-    }
-
-    document.querySelectorAll(".ajouterFiliales").forEach(btn=>btn.addEventListener("click",newItemFiliales));
-
     
 
-     const newItemMembreConseil=(e)=>{
-        var collections=document.querySelector(e.currentTarget.dataset.collection);
-        let index=parseInt(collections.dataset.index);
-        let item=document.createElement("tr");
-      
-         
-        item.innerHTML=
-        collections.dataset.index=index+1;
-        let prototype=collections.dataset.prototype;
-         item.innerHTML=prototype.replace(/__name__/g,index);
-        
+
+
+
+
+
+
         
 
-        item.querySelector(".btn-removeMembreConseil").addEventListener("click",()=>item.remove());
-         collections.appendChild(item);
-        
-    }
-
-    document.querySelectorAll(".ajouterMembreConseil").forEach(btn=>btn.addEventListener("click",newItemMembreConseil));
-
-
-    const newItemActionnaire=(e)=>{
-        var collections=document.querySelector(e.currentTarget.dataset.collection);
-        let index=parseInt(collections.dataset.index);
-        let item=document.createElement("tr");
-        
-         
-        item.innerHTML=
-        collections.dataset.index=index+1;
-        let prototype=collections.dataset.prototype;
-         item.innerHTML=prototype.replace(/__name__/g,index);
-        
         
 
-        item.querySelector(".btn-removeActionnaire").addEventListener("click",()=>item.remove());
-         collections.appendChild(item);
-        
-    }
-
-    document.querySelectorAll(".ajouterActionnaire").forEach(btn=>btn.addEventListener("click",newItemActionnaire));
-
-      
-
-
-     const newItemDirigeant=(e)=>{
-        var collections=document.querySelector(e.currentTarget.dataset.collection);
-        let index=parseInt(collections.dataset.index);
-        let item=document.createElement("tr");
-       
-         
-       
-        collections.dataset.index=index+1;
-        let prototype=collections.dataset.prototype;
-         item.innerHTML=prototype.replace(/__name__/g,index);
-        
         
 
-        item.querySelector(".btn-removeDirigeant").addEventListener("click",()=>item.remove());
-         collections.appendChild(item);
-        
-    }
-    document.querySelectorAll(".ajouterDirigeant").forEach(btn=>btn.addEventListener("click",newItemDirigeant));
 
 
-    
-    const newItem=(e)=>{
-        var collections=document.querySelector(e.currentTarget.dataset.collection);
-        let index=parseInt(collections.dataset.index);
-        let item=document.createElement("tr");
-       
-         
-        item.innerHTML=
-        collections.dataset.index=index+1;
-        let prototype=collections.dataset.prototype;
-         item.innerHTML=prototype.replace(/__name__/g,index);
-        
-        
-
-        item.querySelector(".btn-remove").addEventListener("click",()=>item.remove());
-         collections.appendChild(item);
-        
-    }
-    document.querySelectorAll(".nouveauCommissaire").forEach(btn=>btn.addEventListener("click",newItem));
-
-
-    const deleteItem=(e)=>{
-        e.currentTarget.closest(".item").remove();
-        //var collections=document.querySelector(e.currentTarget.dataset.collection);
-       
-        
-    }
-
-
-
-
-
-
-   function activite(i){
-
-           var item = document.createElement("tr");
-    let select1_1=document.createElement('select');
-    let op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    select1_1.add(op);
-
-    {% for tag in categorySyscoa%}
-        op=document.createElement('option');
-        op.value="{{tag.id}}";
-        op.innerHTML="{{tag.libelle}}";
-        select1_1.add(op);                     
-    {% endfor%}
-    select1_1.setAttribute('name','select1'); 
-    select1_1.setAttribute('id','select1_1');                       
-    select1_1.setAttribute('class','form-control form-control-sm syscoa');              
-    select1_1.setAttribute('style','width:100%;');
- 
-    
-    let select2=document.createElement('select');
-    select2.setAttribute('name','select2');            
-    select2.setAttribute('id','select21');            
-    select2.setAttribute('class','form-control form-control-sm syscoa');              
-    select2.setAttribute('style','width:100%;');
-
-
-    let td1=document.createElement('td');  
-    var input1 = document.createElement("input"); 
-    input1.setAttribute('name','nom1');            
-    input1.setAttribute('class','form-control form-control-sm');            
-    let td2=document.createElement('td'); 
-
-    td1.appendChild(input1);
-    td2.appendChild(select1_1);
-    let br1=document.createElement('br');
-    let br2=document.createElement('br');
-    td2.appendChild(br1);
-    td2.appendChild(br2);
-    td2.appendChild(select2);
-    item.appendChild(td1);
-    item.appendChild(td2);
-
-
-
-   $('#idActivities').on('change', '#select1_1', function() {
-       let route="{{path('syscoa')}}"+"/"+ $('#select1_1').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("select21");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-
-
-
-   let select1_2=document.createElement('select');
-     op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    select1_2.add(op);
-
-    {% for tag in categoryNaema%}
-         op=document.createElement('option');
-        op.value="{{tag.id}}";
-        op.innerHTML="{{tag.libelle}}";
-        select1_2.add(op);  
-                      
-    {% endfor%}
-    select1_2.setAttribute('name','select1_2'); 
-    select1_2.setAttribute('id','select1_2');                       
-    select1_2.setAttribute('class','form-control form-control-sm syscoa');              
-    select1_2.setAttribute('style','width:100%;');
- 
-    
-    let select2_2=document.createElement('select');
-    select2_2.setAttribute('name','select2');            
-    select2_2.setAttribute('id','select2_2');            
-    select2_2.setAttribute('class','form-control form-control-sm syscoa');              
-    select2_2.setAttribute('style','width:100%;');
-
-
-    let td1_2=document.createElement('td');              
-    td1_2.appendChild(select1_2);
-
-    br1=document.createElement('br');
-    br2=document.createElement('br');
-    td1_2.appendChild(br1);
-    td1_2.appendChild(br2);
-    td1_2.appendChild(select2_2);
-    item.appendChild(td1_2);
-   
-
-
-
-   $('#idActivities').on('change', '#select1_2', function() {
-    
-       let route="{{path('naemacat')}}"+"/"+ $('#select1_2').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("select2_2");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-
-
-
-
-   let select1_3=document.createElement('select');
-     op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    select1_3.add(op);
-
-    {% for tag in categoryNaemas%}
-         op=document.createElement('option');
-        op.value="{{tag.id}}";
-        op.innerHTML="{{tag.libelle}}";
-        select1_3.add(op);  
-                        
-    {% endfor%}
-    select1_3.setAttribute('name','select1_3'); 
-    select1_3.setAttribute('id','select1_3');                       
-    select1_3.setAttribute('class','form-control form-control-sm syscoa');              
-    select1_3.setAttribute('style','width:100%;');
- 
-    
-    let select2_3=document.createElement('select');
-    select2_3.setAttribute('name','select2_3');            
-    select2_3.setAttribute('id','select2_3');            
-    select2_3.setAttribute('class','form-control form-control-sm syscoa');              
-    select2_3.setAttribute('style','width:100%;');
-
-
-    let td1_3=document.createElement('td');              
-    td1_3.appendChild(select1_3);
-
-    br1=document.createElement('br');
-    br2=document.createElement('br');
-    td1_3.appendChild(br1);
-    td1_3.appendChild(br2);
-    td1_3.appendChild(select2_3);
-    item.appendChild(td1_3);
-   
-
-
-
-   $('#idActivities').on('change', '#select1_3', function() {
-    
-       let route="{{path('naemascat')}}"+"/"+ $('#select1_3').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("select2_3");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-
-
-    let select1_4=document.createElement('select');
-     op=document.createElement('option');
-          op.innerHTML="Choissir ...";
-                    op.value='';
-                    select1_4.add(op);
-
-    {% for tag in categoryCiti%}
-         op=document.createElement('option');
-        op.value="{{tag.id}}";
-        op.innerHTML="{{tag.libelle}}";
-        select1_4.add(op);  
-                         
-    {% endfor%}
-    select1_4.setAttribute('name','select1_4'); 
-    select1_4.setAttribute('id','select1_4');                       
-    select1_4.setAttribute('class','form-control form-control-sm syscoa');              
-    select1_4.setAttribute('style','width:100%;');
- 
-    
-    let select2_4=document.createElement('select');
-    select2_4.setAttribute('name','select2_4');            
-    select2_4.setAttribute('id','select2_4');            
-    select2_4.setAttribute('class','form-control form-control-sm syscoa');              
-    select2_4.setAttribute('style','width:100%;');
-
-
-    let td1_4=document.createElement('td');              
-    td1_4.appendChild(select1_4);
-
-    br1=document.createElement('br');
-    br2=document.createElement('br');
-    td1_4.appendChild(br1);
-    td1_4.appendChild(br2);
-    td1_4.appendChild(select2_4);
-    item.appendChild(td1_4);
-   
-
-
-
-   $('#idActivities').on('change', '#select1_4', function() {
-    
-       let route="{{path('citicat')}}"+"/"+ $('#select1_4').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("select2_4");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-           });
-   });
-
-
-
-    td1=document.createElement('td');  
-    input1 = document.createElement("input"); 
-    input1.setAttribute('name','chiffre1');            
-    input1.setAttribute('id','chiffre1');            
-    input1.setAttribute('class','form-control form-control-sm');            
-    td1.appendChild(input1);
-    item.appendChild(td1);
-
-
-    td1=document.createElement('td');  
-    input1 = document.createElement("input"); 
-    input1.setAttribute('name','valeur1');            
-    input1.setAttribute('id','valeur1');            
-    input1.setAttribute('class','form-control form-control-sm');            
-    td1.appendChild(input1);
-    item.appendChild(td1);
-
-
-    td1=document.createElement('td');  
-    input1 = document.createElement("input"); 
-    input1.setAttribute('name','pourcantage1');            
-    input1.setAttribute('id','pourcantage1');            
-    input1.setAttribute('class','form-control form-control-sm');            
-    td1.appendChild(input1);
-    item.appendChild(td1);
-
-
-    td1=document.createElement('td');  
-    input1 = document.createElement("input"); 
-    input1.setAttribute('name','pourcantage1');            
-    input1.setAttribute('id','pourcantage1');            
-    input1.setAttribute('type','checkbox');            
-    input1.setAttribute('class','form-control form-control-sm');            
-    td1.appendChild(input1);
-    item.appendChild(td1);
-  
-
-
-
-    var nouveauMaillon = document.getElementById("idActivities").appendChild(item);
-
-   }
-
-
-   
 
    
 
     $(document).ready(function(){
 
-
-   
-    
       
-   
        
+           
+         if ($('#formRadiosRight1').val()==1) {   
+            
+             document.getElementById("nomDuCabinet").style.display = "block";
+             document.getElementById("addresseDuCabinetLabel").style.display = "block";
+             document.getElementById("addresseDuCabinet").style.display = "block";
+             document.getElementById("nomDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinet").style.display = "block";
+             document.getElementById("prenomDuExpert").style.display = "none";
+             document.getElementById("prenomDuExpertlabel").style.display = "none";
+             document.getElementById("nomDuExpertLabel").style.display = "none";
+             document.getElementById("nomDuExpert").style.display = "none";
 
-        
+
+
+
+             
+         }
+
+
+
+        if ($('#formRadiosRight2').val()==1) {
+
+             document.getElementById("nomDuCabinetlabel").style.display = "none";
+             document.getElementById("nomDuCabinet").style.display = "none";
+
+              document.getElementById("telephoneDuCabinetlabel").style.display = "none";
+             document.getElementById("telephoneDuCabinet").style.display = "none";
+
+            document.getElementById("prenomDuExpert").style.display = "block";
+             document.getElementById("prenomDuExpertlabel").style.display = "block";
+             document.getElementById("nomDuExpertLabel").style.display = "block";
+             document.getElementById("nomDuExpert").style.display = "block";
+
+             document.getElementById("addresseDuCabinetLabel").style.display = "none";
+             document.getElementById("addresseDuCabinet").style.display = "none";
+         }
+
+
+
+        if ($('#repertoire_edit_raisonCessation').val()==1) {
+
+             document.getElementById("iddateCessationLabel").style.display = "block";
+             document.getElementById("iddateCessation").style.display = "block";
+            
+         }else{
+
+             document.getElementById("iddateCessationLabel").style.display = "none";
+             document.getElementById("iddateCessation").style.display = "none";
+            
+         }
+
+
+
+        if ($('#repertoire_edit_reactivation').val()==0) {
+
+             document.getElementById("iddateReactivation").style.display = "block";
+             document.getElementById("iddateReactivationLabel").style.display = "block";
+             document.getElementById("idraisonReactivation").style.display = "block";
+             document.getElementById("idraisonReactivationLabel").style.display = "block";
+         }else{
+
+             document.getElementById("iddateReactivationLabel").style.display = "none";
+             document.getElementById("iddateReactivation").style.display = "none";
+             document.getElementById("idraisonReactivationLabel").style.display = "none";
+             document.getElementById("idraisonReactivation").style.display = "none";
+         }
+       
+   
      
 
         $(".syscoa").select2({
@@ -2057,594 +1637,8 @@
 
 
 
-        $('#categoryCiti').change(function(){
-            
-            let route="{{path('citicat')}}"+"/"+ $('#categoryCiti').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("idciti");
-                    departement.innerHTML="";
+    });
 
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-
-
-        $('#categoryNaemas').change(function(){
-            
-            let route="{{path('naemascat')}}"+"/"+ $('#categoryNaemas').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("idnaemas");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-
-
-        $('#categoryNaema').change(function(){
-            
-            let route="{{path('naemacat')}}"+"/"+ $('#categoryNaema').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("idnaema");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-
-
-        $('#categorySyscoa').change(function(){
-            
-            let route="{{path('syscoa')}}"+"/"+ $('#categorySyscoa').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("idsyscoa");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-       
-
-        $('#region').change(function(){
-            
-            let route="{{path('departementsRegion')}}"+"/"+ $('#region').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let departement=document.getElementById("departement");
-                    departement.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    departement.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                        departement.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-        $('#departement').change(function(){
-            
-            let route="{{path('cavDepartement')}}"+"/"+ $('#departement').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let cav=document.getElementById("cav");
-                    cav.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    cav.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                         cav.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-
-        $('#cav').change(function(){
-            
-            let route="{{path('cacrCav')}}"+"/"+ $('#cav').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let cacr=document.getElementById("cacr");
-                    cacr.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    cacr.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                         cacr.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-
-        $('#cacr').change(function(){
-            
-            let route="{{path('qvhCacr')}}"+"/"+ $('#cacr').val();
-            $.ajax({
-                type: 'GET',
-                url : route,
-                dataType : "json",
-                success: function(data){
-                    
-                    let qvh=document.getElementById("qvh");
-                    qvh.innerHTML="";
-
-                    let opt=document.createElement('option');
-                    opt.innerHTML="Choissir ...";
-                    opt.value='';
-                    qvh.add(opt);
-                    for (var i = data.length - 1; i >= 0; i--) {
-                      let opt=document.createElement('option');
-                        opt.value=data[i][0];
-                        opt.innerHTML=data[i][1];
-                         qvh.add(opt);
-                    }
-                } ,
-                error : function(error){
-                    console.log(error);
-                }
-            })
-        });
-
-        
-
-
-        $('#btnSuivantCoordonnee').click(function(){
-             
-            
-    
-           var tel1="";
-           if ($.trim($('#repertoire_telephone1').val()).length==0) {
-              tel1="Le téléphone est obligatoire";
-              $('#idtel1').text(tel1);
-              $('#repertoire_telephone1').addClass('has_error');
-           }else{
-              var tel1="";
-     
-              $('#idtypeninea').text(tel1);
-              $('#repertoire_telephone1').removeClass('has_error');
-           }
-
-           var qhv="";
-           if ($.trim($('#qvh').val()).length==0) {
-              qvh="Le Quartier/Village/Hameau  est obligatoire";
-              $('#idqvh').text(qvh);
-              $('#qvh').addClass('has_error');
-           }else{
-              var qvh="";
-              $('#idqvh').text(qvh);
-              $('#qvh').removeClass('has_error');
-           }
-
-          
-
-
-
-           
-
-          if (tel1!="" || qvh!="" ) {
-            return false ;
-          }else{
-                $('#coordonnee').removeClass('active ');
-                $('#coordonnees').removeClass('active ');
-
-                $('#contacts').addClass('active ');
-                $('#contacts').attr('href','#contact');
-                $('#contact').addClass('active');
-
-           }
-        });
-
-
-
-
-         $('#btnSuivantComplete').click(function(){
-             
-            
-    
-           var idformeJuridique="";
-           if ($.trim($('#repertoire_regimeJuridique').val()).length==0) {
-              idformeJuridique="La forme juridique est obligatoire";
-              $('#idformeJuridique').text(idformeJuridique);
-              $('#repertoire_regimeJuridique').addClass('has_error');
-           }else{
-              var idformeJuridique="";
-     
-              $('#idformeJuridique').text(idformeJuridique);
-              $('#repertoire_regimeJuridique').removeClass('has_error');
-           }
-
-           var idformeFiscal="";
-           if ($.trim($('#repertoire_regimeFiscal').val()).length==0) {
-              idformeFiscal="Le regime fiscal  est obligatoire";
-              $('#idformeFiscal').text(idformeFiscal);
-              $('#repertoire_regimeFiscal').addClass('has_error');
-           }else{
-              var idformeFiscal="";
-              $('#idformeFiscal').text(idformeFiscal);
-              $('#repertoire_regimeFiscal').removeClass('has_error');
-           }  
-
-          if (idformeJuridique!="" || idformeFiscal!="" ) {
-            return false ;
-          }else{
-                $('#complement').removeClass('active ');
-                $('#complements').removeClass('active ');
-
-                $('#activite').addClass('active ');
-                $('#activite').attr('href','#activites');
-                $('#activites').addClass('active');
-
-           }
-        });
-
-
-
-
-        $('#btnSuivantActivities').click(function(){
-                $('#activite').removeClass('active ');
-                $('#activites').removeClass('active ');
-                $('#dirigents').addClass('active ');
-                $('#dirigents').attr('href','#dirigent');
-                $('#dirigent').addClass('active');   
-        });
-        
-        $('#btnPrecedentActivities').click(function(){
-            $('#activite').removeClass('active ');
-            $('#activites').removeClass('active ');
-            $('#complement').addClass('active ');
-            $('#complements').attr('href','#complement');
-            $('#complements').addClass('active');
-        });
-
-
-        $('#btnSuivantDirigent').click(function(){
-                $('#dirigents').removeClass('active ');
-                $('#dirigent').removeClass('active ');
-                $('#filiales').addClass('active ');
-                $('#filiale').attr('href','#filiales');
-                $('#filiale').addClass('active');   
-        });
-        
-        $('#btnPrecedentDirigent').click(function(){
-            $('#dirigents').removeClass('active ');
-            $('#dirigent').removeClass('active ');
-            $('#activite').addClass('active ');
-            $('#activite').attr('href','#activites');
-            $('#activites').addClass('active');
-        });
-
-
-
-        $('#btnSuivantFiliales').click(function(){
-                $('#filiales').removeClass('active ');
-                $('#filiale').removeClass('active ');
-                $('#autres').addClass('active ');
-                $('#autre').attr('href','#autres');
-                $('#autre').addClass('active');   
-        });
-        
-        $('#btnPrecedentFiliales').click(function(){
-            $('#filiales').removeClass('active ');
-            $('#filiale').removeClass('active ');
-            $('#dirigents').addClass('active ');
-            $('#dirigents').attr('href','#dirigent');
-            $('#dirigent').addClass('active');
-        });
-
-
-
-         $('#btnPrecedentAutres').click(function(){
-            $('#autres').removeClass('active ');
-            $('#autre').removeClass('active ');
-            $('#filiale').addClass('active ');
-            $('#filiale').attr('href','#filiales');
-            $('#filiales').addClass('active');
-        });
-      
-
-
-         $('#btnPrecedentComplete').click(function(){
-            $('#complement').removeClass('active ');
-            $('#complements').removeClass('active ');
-            $('#contacts').addClass('active ');
-            $('#contacts').attr('href','#contact');
-            $('#contact').addClass('active');
-            });
-      
-        $('#repertoire_ninea').change(function(){
-           
-           
-
-            if($('#repertoire_typeNINEA').val()==1){
-                  
-                if ($.trim($('#repertoire_ninea').val()).length!=9) {
-                $('#repertoire_ninea').value="";
-                Swal.fire('Le NINEA est composé de 9 chiffres.');
-            }
-
-            }else{
-                if ($.trim($('#repertoire_ninea').val()).length!=13) {
-                $('#repertoire_ninea').value="";
-                Swal.fire('Le NINET est composé de 13 chiffres.');
-            }
-
-            }
-
-        });
-
-        $('#btnSuivantIdentification').click(function(){
-             
-            
-    
-           var typeninea="";
-           if ($.trim($('#repertoire_typeNINEA').val()).length==0) {
-              typeninea="Le type ninea est obligatoire";
-              $('#idtypeninea').text(typeninea);
-              $('#repertoire_typeNINEA').addClass('has_error');
-           }else{
-              var typeninea="";
-     
-              $('#idtypeninea').text(typeninea);
-              $('#repertoire_typeNINEA').removeClass('has_error');
-           }
-
-           var denominationSocial="";
-           if ($.trim($('#repertoire_denominationSocial').val()).length==0) {
-              denominationSocial="La denomination sociale  est obligatoire";
-              $('#denominationSocial').text(denominationSocial);
-              $('#repertoire_denominationSocial').addClass('has_error');
-           }else{
-              var denominationSocial="";
-              $('#denominationSocial').text(denominationSocial);
-              $('#repertoire_denominationSocial').removeClass('has_error');
-           }
-
-            var repertoireninea="";
-           if ($.trim($('#idninea').val()).length==0) {
-              repertoireninea="Le NINEA/NINET  est obligatoire";
-              $('#repertoireninea').text(repertoireninea);
-              $('#idninea').addClass('has_error');
-           }else{
-              var repertoireninea="";
-              $('#repertoireninea').text(repertoireninea);
-              $('#idninea').removeClass('has_error');
-           }
-
-            var numeroRegistreCommerce="";
-           if ($.trim($('#repertoire_numeroRegistreCommerce').val()).length==0) {
-              numeroRegistreCommerce="Le numéro de registre commerce  est obligatoire";
-              $('#numeroRegistreCommerce').text(numeroRegistreCommerce);
-              $('#repertoire_numeroRegistreCommerce').addClass('has_error');
-           }else{
-              var numeroRegistreCommerce="";
-              $('#numeroRegistreCommerce').text(numeroRegistreCommerce);
-              $('#repertoire_numeroRegistreCommerce').removeClass('has_error');
-           }
-
-
-
-           var activitePrincipale="";
-           if ($.trim($('#repertoire_activitePrincipale').val()).length==0) {
-              activitePrincipale="L'activité principale  est obligatoire";
-              $('#activitePrincipale').text(activitePrincipale);
-              $('#repertoire_activitePrincipale').addClass('has_error');
-           }else{
-              var activitePrincipale="";
-              $('#activitePrincipale').text(activitePrincipale);
-              $('#repertoire_activitePrincipale').removeClass('has_error');
-           }
-
-
-
-           var syscoa="";
-           if ($.trim($('#idsyscoa').val()).length==0) {
-              syscoa="Le syscoa  est obligatoire";
-              $('#syscoa').text(syscoa);
-              $('#idsyscoa').addClass('has_error');
-           }else{
-              var syscoa="";
-              $('#syscoa').text(syscoa);
-              $('#idsyscoa').removeClass('has_error');
-           }
-
-
-           var naema="";
-           if ($.trim($('#idnaema').val()).length==0) {
-              naema="Le naema  est obligatoire";
-              $('#naema').text(naema);
-              $('#idnaema').addClass('has_error');
-           }else{
-              var naema="";
-              $('#naema').text(naema);
-              $('#idnaema').removeClass('has_error');
-           }
-
-
-           var naemas="";
-           if ($.trim($('#idnaemas').val()).length==0) {
-              naemas="Le naemas  est obligatoire";
-              $('#naemas').text(naemas);
-              $('#idnaemas').addClass('has_error');
-           }else{
-              var naemas="";
-              $('#naemas').text(naemas);
-              $('#idnaemas').removeClass('has_error');
-           }
-
-
-           var citi="";
-           if ($.trim($('#idciti').val()).length==0) {
-              citi="Le citi  est obligatoire";
-              $('#citi').text(citi);
-              $('#idciti').addClass('has_error');
-           }else{
-              var citi="";
-              $('#citi').text(citi);
-              $('#idciti').removeClass('has_error');
-           }
-
-
-
-
-           
-
-          if (typeninea!="" || denominationSocial!="" || repertoireninea!="" || numeroRegistreCommerce!="" || activitePrincipale!="" || syscoa!="" || naema!="" || naemas!="" || citi!="") {
-            return false ;
-          }else{
-                $('#identification').removeClass('active ');
-                $('#home').removeClass('active ');
-                $('#coordonnee').addClass('active ');
-                $('#coordonnee').attr('href','#coordonnees');
-                $('#coordonnees').addClass('active');
-
-           }
-        });
-
-
-      
-
-
-
-        $('#btnPrecedentCoordonnee').click(function(){
-            $('#coordonnee').removeClass('active ');
-            $('#coordonnees').removeClass('active ');
-            $('#identification').addClass('active ');
-            $('#identification').attr('href','#home');
-            $('#home').addClass('active');
-            });
-        });
-
-        
-
-      $('#btnPrecedentContact').click(function(){
-            $('#contact').removeClass('active ');
-            $('#contacts').removeClass('active ');
-            $('#coordonnee').addClass('active ');
-            $('#coordonnee').attr('href','#coordonnees');
-            $('#coordonnees').addClass('active');
-      });
-
-       $('#btnSuivantContact').click(function(){
-            $('#contact').removeClass('active ');
-            $('#contacts').removeClass('active ');
-            $('#complement').addClass('active ');
-            $('#complements').attr('href','#complement');
-            $('#complements').addClass('active');
-      });
        
 
 

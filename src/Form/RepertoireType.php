@@ -8,7 +8,9 @@ use App\Entity\Departement;
 use App\Entity\CAV;
 use App\Entity\CACR;
 use App\Entity\Control;
+use App\Entity\Qualite;
 use App\Entity\Citi;
+use App\Entity\SystemeComptabilite;
 use App\Entity\Pays;
 use App\Entity\NAEMAS;
 use App\Entity\NAEMA;
@@ -17,6 +19,12 @@ use App\Entity\SYSCOA;
 use App\Entity\RegimeFiscal;
 use App\Entity\FormeJuridique;
 use App\Entity\CategorySyscoa;
+use App\Entity\CommissairesComptes;
+use App\Entity\Dirigeant;
+use App\Entity\Activities;
+use App\Entity\MembreConseil;
+use App\Entity\Actionnaire;
+use App\Entity\Filiales;
 
 
 
@@ -45,10 +53,7 @@ class RepertoireType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $syscoa=$options["syscoa"];
-        $naema=$options["naema"];
-        $naemas=$options["naemas"];
-        $citi=$options["citi"];
+      
         $builder
             ->add('sigle',TextType::class,
                    array('label'=>'Sigle ',
@@ -62,11 +67,6 @@ class RepertoireType extends AbstractType
                           'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
-
-            
-
-            
-
 
             ->add('dateReception', DateType::class, ['label'=>'Date de réception de la DSF',
                 'attr'=>array('class'=>'form-control form-control-sm'),
@@ -111,20 +111,21 @@ class RepertoireType extends AbstractType
             
 
 
-             ->add('systeme', ChoiceType::class, [
-                 'label'=>'Systeme de comptabilité ',
-                  'choices'  => [
-                      '' => "choissir...",
-                      'Teste' => "Teste"
-                  ],
-                   'required'=>true,
-              'attr'=>array('class'=>'form-control form-control-sm')
-              ])
+             ->add('systemeComptabilite', EntityType::class, [
+                 'class' => SystemeComptabilite::class,
+                'choice_label' => 'libelle',
+                'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
+               
+                'required'=>false,
+               
+                'label'=>'Systeme de comptabilité ',
+
+               ])
 
 
             ->add('formeJuridique', EntityType::class, [
                  'class' => FormeJuridique::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                 'required'=>false,
 
@@ -133,7 +134,7 @@ class RepertoireType extends AbstractType
 
              ->add('regimeFiscal', EntityType::class, [
                  'class' => RegimeFiscal::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                 'required'=>false,
 
@@ -155,27 +156,37 @@ class RepertoireType extends AbstractType
               ->add('etablissementsDansPays',IntegerType::class,
                    array('label'=>'Nombre d\'établissements dans le pays:',
                           'required'=>false,
-                          'attr'=>array('class'=>'form-control')              
+                          'attr'=>array(
+                              'class'=>'form-control',
+                              'min'=>"1"
+                       )              
             ))
 
 
              ->add('etablissementsHorsPays',IntegerType::class,
                    array('label'=>'Nombre d\'établissements hors du pays:',
                           'required'=>false,
-                          'attr'=>array('class'=>'form-control form-control-sm')              
+                          'attr'=>array(
+                               'class'=>'form-control form-control-sm',
+                               'min'=>"1"
+
+                        )              
             ))
 
 
               ->add('premiereAnneeExercice',IntegerType::class,
                    array('label'=>'Premiére année d\'éxercice',
                           'required'=>false,
-                          'attr'=>array('class'=>'form-control form-control-sm')              
+                          'attr'=>array(
+                            'class'=>'form-control form-control-sm',
+                            'min'=>"1"
+                   )              
             ))
 
 
             ->add('controle', EntityType::class, [
                  'class' => Control::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                
                 'required'=>false,
@@ -241,11 +252,16 @@ class RepertoireType extends AbstractType
             ))
 
 
-           ->add('fonctionDuContact',TextType::class,
-                   array('label'=>'Fonction/Qualité ',
-                          'required'=>false,
-                          'attr'=>array('class'=>'form-control form-control-sm')              
-            ))
+           ->add('fonctionDuContact', EntityType::class, [
+                 'class' => Qualite::class,
+                'choice_label' => 'getCodeLibelle',
+                'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
+               
+                'required'=>false,
+                'label'=>'Fonction/Qualité ',
+
+               ])
+
 
             ->add('NomDuCabinet',TextType::class,
                    array('label'=>'Nom du cabinet ',
@@ -306,6 +322,21 @@ class RepertoireType extends AbstractType
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
                 'widget' => 'single_text'])
+
+            
+
+            ->add('dateReactivation', DateType::class, ['label'=>'Date de Réactivation:',
+                'attr'=>array('class'=>'form-control form-control-sm'),
+                'required'=>false,
+                'widget' => 'single_text'])
+
+            
+
+            ->add('raisonReactivation',TextType::class,
+                   array('label'=>'Raison de Réactivation',
+                          'required'=>false,
+                          'attr'=>array('class'=>'form-control form-control-sm')              
+            ))
 
 
 
@@ -417,23 +448,63 @@ class RepertoireType extends AbstractType
 
 
             ))
+
+
+            ->add('activitePrincipaleRepeat',TextareaType::class,
+                   array('label'=>' ',
+                          'required'=>false,
+                          'mapped'=>false,
+                          'attr'=>array('class'=>'form-control form-control-sm')              
+            ))
+
+            ->add('chiffreAffaire',IntegerType::class,
+                   array('label'=>' ',
+                          'required'=>false,
+                          'mapped'=>false,
+                          'attr'=>array( "min"=>0,'class'=>'form-control form-control-sm')              
+            ))
+
+           ->add('valeurAjoutee',IntegerType::class,
+                   array('label'=>' ',
+                          'required'=>false,
+                          'mapped'=>false,
+                          'attr'=>array( "min"=>0,'class'=>'form-control form-control-sm')              
+            ))
+
+           ->add('pourcentage',IntegerType::class,
+                   array('label'=>' ',
+                          'required'=>false,
+                          'mapped'=>false,
+                          'attr'=>array('class'=>'form-control form-control-sm',
+                            "min"=>0,
+                            "max"=>100,
+                     )              
+            ))
+
             ->add('commissairesComptes',CollectionType::class,[
                  'entry_type' => CommissairesComptesType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
-                 'by_reference'=>false
+                 'by_reference'=>false,
+                  'delete_empty' => function (CommissairesComptes $commissairesComptes = null) {
+                            return null === $commissairesComptes || empty($commissairesComptes->getPrenom());
+                  },
 
             ])
 
-          /*  ->add('activities',CollectionType::class,[
+            ->add('activities',CollectionType::class,[
                  'entry_type' => ActivitiesType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
-                 'by_reference'=>false
+                 'by_reference'=>false,
+                 
+                 'delete_empty' => function (Activities $activities = null) {
+                            return null === $activities || empty($activities->getLibelleActivitePrincipale());
+                  },
 
-            ])*/
+            ])
 
 
              ->add('dirigeants',CollectionType::class,[
@@ -441,7 +512,10 @@ class RepertoireType extends AbstractType
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
-                 'by_reference'=>false
+                 'by_reference'=>false,
+                 'delete_empty' => function (Dirigeant $dirigeant = null) {
+                            return null === $dirigeant || empty($dirigeant->getPrenom());
+                 },
 
             ])
 
@@ -450,7 +524,10 @@ class RepertoireType extends AbstractType
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
-                 'by_reference'=>false
+                 'by_reference'=>false,
+                 'delete_empty' => function (Actionnaire $actionnaire = null) {
+                            return null === $actionnaire || empty($actionnaire->getPrenom());
+                 },
 
             ])
 
@@ -459,7 +536,10 @@ class RepertoireType extends AbstractType
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
-                 'by_reference'=>false
+                 'by_reference'=>false,
+                 'delete_empty' => function (MembreConseil $membreConseil = null) {
+                            return null === $membreConseil || empty($membreConseil->getPrenom());
+                 },
 
             ])
 
@@ -469,7 +549,10 @@ class RepertoireType extends AbstractType
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
-                 'by_reference'=>false
+                 'by_reference'=>false,
+                 'delete_empty' => function (Filiales $filiales = null) {
+                            return null === $filiales || empty($filiales->getDesignation());
+                 },
 
             ])
             
@@ -493,7 +576,7 @@ class RepertoireType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setRequired(['syscoa','naema','naemas','citi']);
+       
         
         $resolver->setDefaults([
             'data_class' => Repertoire::class,

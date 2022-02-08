@@ -124,8 +124,9 @@
                           
                            
                             <a href="{{ path('repertoire_edit', {'id': repertoire.id}) }}"  title="Modifier une unité"><i class="fa fa-edit"></i></a>
-
+                           {% if is_granted('ROLE_BREA_ADMIN')   %}
                              <a  href="{{ path('repertoire_delete', {'id': repertoire.id}) }}" class="supprimer"  title="Supprimer une unité"><i class="fa fa-trash "></i></a>
+                          {% endif%}
                            
                         </td>
                     </tr>

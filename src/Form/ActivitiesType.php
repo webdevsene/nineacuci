@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Activities;
 use App\Entity\SYSCOA;
 use App\Entity\NAEMA;
-use App\Entity\CategorySyscoa;
 use App\Entity\NAEMAS;
 use App\Entity\CITI;
 use Symfony\Component\Form\AbstractType;
@@ -13,11 +12,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
 
 
 
@@ -30,76 +28,64 @@ class ActivitiesType extends AbstractType
             ->add('chiffreAffaire',IntegerType::class,
                    array('label'=>'Chiffre d\'affaire  ',
                    'required'=>false,
-                   
-                   'attr'=>array('class'=>'form-control')))
+                   'attr'=>array('class'=>'form-control ','min'=>0)))
             ->add('pourcentage',IntegerType::class,
                    array('label'=>'Pourcentage ',
                    'required'=>false,
-                   'attr'=>array('class'=>'form-control')))
+                   'attr'=>array(
+                       'class'=>'form-control',
+                       'min'=>0,
+                       'max'=>100
+                    )))
             ->add('valeurAjoutee',IntegerType::class,
                    array('label'=>'Valeur ajoutée ',
                    'required'=>false,
-                   'attr'=>array('class'=>'form-control')))
-            ->add('libelleActivitePrincipale',TextType::class,
+                   'attr'=>array('class'=>'form-control','min'=>0)))
+            ->add('libelleActivitePrincipale',TextareaType::class,
                     array('label'=>'Libelle ',
                    'required'=>false,
                    'attr'=>array('class'=>'form-control')) )
-            ->add('activitePrincipale',CheckboxType::class,
-                    array('label'=>'Activite principale',
-                          'required'=>false,   
-                ))
             
-           
-
-            ->add('categorySyscoa', EntityType::class, [
-                 'class' => CategorySyscoa::class,
-                  'placeholder'=>'Sélectionner.......',
-                'choice_label' => 'libelle',
-                'attr'=>array('class'=>'form-control syscoa'),
+            
+            ->add('sYSCOA', EntityType::class, [
+                 'class' => SYSCOA::class,
+                'choice_label' => 'getCodeLibelle',
+                'attr'=>array('class'=>'form-control form-control-sm select2  syscoa', "style"=>"width:100%;"),
                 'required'=>false,
-                'mapped'=>false,
 
             ])
-
              ->add('cITI', EntityType::class, [
                  'class' => CITI::class,
-                'choice_label' => 'libelle',
-                'attr'=>array('class'=>'form-control syscoa'),
+                'choice_label' => 'getCodeLibelle',
+                'attr'=>array('class'=>'form-control form-control-sm select2  syscoa', "style"=>"width:100%;"),
                 'required'=>false,
 
             ])
+
+              ->add('activitePrincipale',CheckboxType::class,
+                    array('label'=>'Activite principale',
+                          'required'=>false,  
+                            'attr'=>array(), 
+                ))
 
              ->add('nAEMA', EntityType::class, [
                  'class' => NAEMA::class,
-                'choice_label' => 'libelle',
-                'attr'=>array('class'=>'form-control syscoa'),
+                'choice_label' => 'getCodeLibelle',
+                'attr'=>array('class'=>'form-control form-control-sm select2  syscoa', "style"=>"width:100%;"),
                 'required'=>false,
 
             ])
 
-            ->add('nAEMAS', EntityType::class, [
+              ->add('nAEMAS', EntityType::class, [
                  'class' => NAEMAS::class,
-                'choice_label' => 'libelle',
-                'attr'=>array('class'=>'form-control syscoa'),
+                'choice_label' => 'getCodeLibelle',
+                'attr'=>array('class'=>'form-control form-control-sm select2  syscoa', "style"=>"width:100%;"),
                 'required'=>false,
 
-            ]);
-
-
-    $formModifier = function (FormInterface $form, CategorySyscoa $categorysyscoa = null) {
-            $syscoa = null === $categorysyscoa ? [] : $categorysyscoa->getSyscoa();
-
-            $form->add('sYSCOA', EntityType::class, [
-                 'class' => SYSCOA::class,
-                'choice_label' => 'libelle',
-                'attr'=>array('class'=>'form-control syscoa'),
-                'required'=>false,
-                'choices' => $syscoa,
-
-            ]);
-        };
-
-       
+            ])
+            
+            
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
