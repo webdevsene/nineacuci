@@ -640,7 +640,7 @@
 
         }
         if(isInt(document.getElementById('RLnet1').value) == true){
-            sumXE = sumXE - parseInt(document.getElementById('RLnet1').value);
+            sumXE = sumXE + parseInt(document.getElementById('RLnet1').value);
 
         }
         if(isInt(document.getElementById('XEnet1').value) == true){
@@ -657,7 +657,7 @@
         }
 
         // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD
-        
+
         var sumXF = 0; // sumXF c'est ex sumXF = RM+RN+TK-TL-TM
         var ug = 0;
         if(isInt(document.getElementById('RMnet1').value) == true && 
@@ -689,16 +689,6 @@
                      
         }
 
-        // traitement sum resultat des activités ordinaires UI = TX +UG 
-        
-        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
-
-
-        var ui = 0;
-        if(isInt(document.getElementById('XGnet1').value) == true){
-            ui =  parseInt(document.getElementById('XGnet1').value);
-
-        }
         var testVar6 = "XG Resultat des activites ordinaires !";
         if(ui != sumXG){
 
@@ -709,6 +699,9 @@
         }else{
             
         }
+
+
+        
 
         // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
         var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
@@ -740,8 +733,8 @@
         }
 
         // traitement sum benef ou perte UZ = UI +UP +SQ +SR
-       var sumXI = sumXG+sumXH; //sumXI c'est ex sumXI=XG+XH-RQ-RS
-       var uz = 0;
+        var sumXI = sumXG+sumXH; //sumXI c'est ex sumXI=XG+XH-RQ-RS
+        var uz = 0;
         
         if(isInt(document.getElementById('RQnet1').value) == true && 
            isInt(document.getElementById('RSnet1').value) == true ){
@@ -763,6 +756,16 @@
 
             Swal.fire('Verifier les valeurs NET saisies pour '+testVar8);
                      
+        }
+        // traitement sum resultat des activités ordinaires UI = TX +UG 
+        
+        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
+
+
+        var ui = 0;
+        if(isInt(document.getElementById('XGnet1').value) == true){
+            ui =  parseInt(document.getElementById('XGnet1').value);
+
         }
 
 
