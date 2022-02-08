@@ -1,0 +1,814 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+{% endblock %}
+
+
+{% block body %}
+
+{# {{ include('compte_de_resultats/_formold.html.twig') }} #}
+
+
+<div class="row">
+    <div class="col-xl-12">
+
+        <!-- start page title -->
+       <div class="row">
+       <div class="col-12">
+       
+       
+           <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+               
+       
+               <div class="page-title-right">
+                   <ol class="breadcrumb m-0">
+                       <li class="breadcrumb-item"><a href="javascript: void(0);">Saisie des comptes de résultats</a></li>
+                       <li class="breadcrumb-item active">Nouvelle saisie</li>  <hr class="bg-info">
+                   </ol>
+               </div>
+       
+           </div>
+       </div>
+       </div>
+       <!-- end page title -->
+
+        <!-- debut form -->
+
+        
+{# {% block body %} #}
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte">
+    <div class="card-body " style="margin: 0%;padding: 0%;">
+        <div class="row">
+        <div class="col-xl-12"> 
+       
+        {# <form method="post" action="{{path('bilan_new')}}"> #}
+        <table class="table table-bordered mt-5">
+                 <tr>
+                  <td>Numéro d'identification :<span style="color:red">*</span>
+                      <input type="text"  class="form-control form-control-sm" name="idcuci" id="idcuci"></td>
+                  <td>Designation entité :<span style="color:red">*</span>
+                      <input type="text" disabled class="form-control form-control-sm" name="denomination" id="denomination"></td>
+                  <td>Année financière :<span style="color:red">*</span>
+                      <input type="text" class="form-control form-control-sm" name="annee" id="annee"></td>
+                 </tr>
+        </table>
+         
+             <div class="card">
+                 <div class="card-body">
+
+                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                         <button type="button" class="btn btn-secondary waves-effect waves-light">
+                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                         </button>
+                         <button type="submit" class="btn btn-success waves-effect waves-light">
+                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                         </button>
+                         {#<button type="button" class="btn btn-dark bg-soft opacity-25" name="valider" id="valider">#}
+                         <button type="button" class="btn btn-dark bt-soft waves-effect waves-light" name="valider" id="valider">
+                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                         </button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+         <div class="col-12">
+            <div class="table-responsive">
+                <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
+                    <thead>
+                        <tr class="bg-dark bg-soft opacity-65">
+                            <th scope="col" colspan="2" class="text-center ">
+                                REF
+                            </th>
+                            <th scope="col" colspan="3" class="text-center">
+                              Libelle<br>
+                            </th>
+                            <th colspan="4" scope="col" class="text-center">
+                              Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
+                              Exercice au 31/12/<span class="text-info" id="anneeN-1">2018</span>
+                            </th>
+                          </tr>
+                        <tr class="bg-dark bg-soft opacity-80">
+                            <th scope="col" colspan="5" class="text-center">
+                                
+                            </th>
+                           {#  <th colspan="1" scope="col" class="text-center">
+                              Brut
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
+                              Ammortissement
+                            </th> #}
+                            <th colspan="2" scope="col" class="text-center">
+                              NET1
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
+                              NET2
+                            </th>
+                          </tr>
+                    </thead>
+
+                    <!-- debut tbody inputs -->
+                    <tbody id="tbody">
+                
+                    
+                    
+                    </tbody>
+                    <!-- end tbody -->
+                </table>
+            </div>
+         </div>
+
+         </div>
+         <input type="hidden" name="type" value="1" >
+          <button type="submit" class="btn btn-success waves-effect waves-light">
+                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                         </button>
+                         
+                        </div>
+                    </form>
+</div>
+
+
+
+    
+{# {% endblock %} #}
+
+
+
+
+<!-- end formulaire -->
+
+</div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $('#idcuci').change(function(){
+            
+            let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                    denomination.value=data;
+                    
+                    
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        });
+
+
+        
+    $('#annee').change(function(e){
+
+        e.preventDefault();
+            
+        let route="{{path('bilanjson')}}"+"/"+ $('#annee').val(); //console.log(route);
+        $.ajax({
+            type: 'GET',
+            url : route,
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function(data){
+                //tbody=document.getElementById("tbody");
+                var tbody=document.getElementById("tbody");
+                    var ann=document.getElementById("annee");
+                    var anneeN_1=document.getElementById("anneeN-1");
+                    tbody.innerHTML="";
+                    ann.innerHTML="";
+                    anneeN_1.innerHTML="";
+
+                console.log(data);
+                
+
+                for (var i = data[2].length - 1; i >= 0; i--) {
+                    var tr=document.createElement('tr');
+                    tr.setAttribute('class',"bg-dark bg-soft opacity-65");           
+
+                    var td1=document.createElement('td');
+                    var td2=document.createElement('td');
+                   //var td3=document.createElement('td');
+                   //var td4=document.createElement('td');
+                     var td5=document.createElement('td');
+                     var td6=document.createElement('td');
+
+                    td1.setAttribute('colspan',2); 
+                    td1.setAttribute('scope',"col"); 
+                    td1.setAttribute('class',"text-center form");           
+                    td1.innerHTML=  data[2][i][0]; // sont stockés les ref
+                    tr.appendChild(td1) ;
+
+                    td2.setAttribute('colspan',2); 
+                    td2.setAttribute('scope',"col"); 
+                               
+                    td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
+                    tr.appendChild(td2) ;
+
+                   // td3.setAttribute('colspan',2); 
+                   // td3.setAttribute('scope',"col"); 
+                   // td3.setAttribute('class',"text-center"); 
+
+                   // var input3=document.createElement('input');  
+                   // input3.setAttribute('class','form-control form-control-sm'); 
+                   // input3.setAttribute('type','number'); 
+                   // input3.setAttribute('name',data[2][i][0]+"brut"); 
+                   // td3.appendChild(input3);
+                   // tr.appendChild(td3) ;
+
+
+                   // td4.setAttribute('colspan',2); 
+                   // td4.setAttribute('scope',"col"); 
+                   // td4.setAttribute('class',"text-center");           
+                   // 
+                   // var input4=document.createElement('input');  
+                   // input4.setAttribute('class','form-control form-control-sm');
+                   // input4.setAttribute('type','number'); 
+                   // input4.setAttribute('name',data[2][i][0]+"ammo"); 
+                   // td4.appendChild(input4);
+                   // tr.appendChild(td4) ;
+
+
+                    td5.setAttribute('colspan',3); 
+                    td5.setAttribute('scope',"col"); 
+                    td5.setAttribute('class',"text-center");
+                    var input1=document.createElement('input'); 
+                    input1.setAttribute('type','number'); 
+                    
+                    input1.setAttribute('name',data[2][i][0]+"net1"); 
+                    input1.setAttribute('id',data[2][i][0]+"net1"); 
+                    input1.setAttribute('class','form-control form-control-sm total net1 '+data[2][i][0]);   
+                    if(data[0][data[2][i][0]]){
+                        input1.setAttribute('value',data[0][data[2][i][0]][1]);
+                        // faut appeler la function sum ici
+                    }
+
+                    
+
+                    
+
+                    td5.appendChild(input1);
+                    tr.appendChild(td5) ;
+                    
+
+
+                    td6.setAttribute('colspan',3); 
+                    td6.setAttribute('scope',"col"); 
+                    td6.setAttribute('class',"text-center");           
+                    var input2=document.createElement('input'); 
+                    input2.setAttribute('type','number'); 
+                    input2.setAttribute('name',data[2][i][0]+"net2"); 
+                    input2.setAttribute('id',data[2][i][0]+"net2"); 
+                    input2.setAttribute('class','form-control form-control-sm total net2 '+data[2][i][0]);
+                    if(data[0][data[2][i][0]]){
+                        input2.setAttribute('value',data[0][data[2][i][0]][2]);
+                      }
+                            
+                    td6.appendChild(input2);
+                    tr.appendChild(td6) ;
+
+
+                    tbody.appendChild(tr);  
+
+                    for (var j = data[1].length - 1; j >= 0; j--) {
+                                  
+                        if (data[2][i][0]==data[1][j][2]) {
+
+                            var tr=document.createElement('tr');
+                            var td1=document.createElement('td');
+                            var td2=document.createElement('td');
+                            // var td3=document.createElement('td');
+                            // var td4=document.createElement('td');
+                            var td5=document.createElement('td');
+                            var td6=document.createElement('td');
+
+                            td1.setAttribute('colspan',2); 
+                            td1.setAttribute('scope',"col"); 
+                            td1.setAttribute('class',"text-center form");           
+                            td1.innerHTML=  data[1][j][0];
+                            tr.appendChild(td1) ;
+
+                            td2.setAttribute('colspan',2); 
+                            td2.setAttribute('scope',"col"); 
+                                      
+                            td2.innerHTML=  data[1][j][1];
+                            tr.appendChild(td2) ;
+
+                           //  td3.setAttribute('colspan',2); 
+                           //  td3.setAttribute('scope',"col"); 
+                           //  td3.setAttribute('class',"text-center"); 
+// 
+                           //  var input3=document.createElement('input'); 
+                           //   input3.setAttribute('type','number'); 
+                           //  input3.setAttribute('name',data[1][j][0]+"brut");  
+                           //  input3.setAttribute('class','form-control form-control-sm'); 
+                           //  td3.appendChild(input3);
+                           //  tr.appendChild(td3) ;
+// 
+// 
+                           //  td4.setAttribute('colspan',2); 
+                           //  td4.setAttribute('scope',"col"); 
+                           //  td4.setAttribute('class',"text-center");           
+                           // 
+                           //  var input4=document.createElement('input');  
+                           //  input4.setAttribute('class','form-control form-control-sm'); 
+                           //  input4.setAttribute('type','number'); 
+                           //  input4.setAttribute('name',data[1][j][0]+"ammo");
+                           //  td4.appendChild(input4);
+                           //  tr.appendChild(td4) ;
+
+
+                            td5.setAttribute('colspan',3); 
+                            td5.setAttribute('scope',"col"); 
+                            td5.setAttribute('class',"text-center");
+                            var input5=document.createElement('input');
+                            input5.setAttribute('type','number'); 
+                            input5.setAttribute('name',data[1][j][0]+"net1"); 
+                            input5.setAttribute('id',data[1][j][0]+"net1"); 
+                            input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                            input5.setAttribute('data-sousclasse',data[1][j][2]);
+                            if(data[0][data[1][j][0]]){
+                                input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                            }
+
+                            // input5.addEventListener ("change", function(e){
+                            //     var sousclasse= $(this).data('sousclasse');
+                            //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                            //     
+                            //     console.log(total);
+                            //     if($(this).hasClass('net1')){
+                            //          $('input.total.net1').val(total);
+                            //     }else{
+                            //         $('input.total.net2').val(total);
+                            //     }
+                            //    
+                            // });
+                            td5.appendChild(input5);
+                            tr.appendChild(td5) ;
+                            
+
+
+                            td6.setAttribute('colspan',3); 
+                            td6.setAttribute('scope',"col"); 
+                            td6.setAttribute('class',"text-center");           
+                            var input6=document.createElement('input');  
+                            input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                             input6.setAttribute('type','number'); 
+                            input6.setAttribute('name',data[1][j][0]+"net2"); 
+                            input6.setAttribute('id',data[1][j][0]+"net2"); 
+                            input6.setAttribute('data-sousclasse',data[1][j][2]);
+                            if(data[0][data[1][j][0]]){
+                            input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                            }
+
+                            // on commente cette partie pour tester la methode hard
+                            //input6.addEventListener ("change", function(e){
+                            //    var sousclasse= $(this).data('sousclasse');
+                            //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                            //    console.log(total);
+                            //    if($(this).hasClass('net2')){
+                            //         $('input.total.net1').val(total);
+                            //    }else{
+                            //        $('input.total.net2').val(total);
+                            //    }
+                            //    // my update here 
+                            //});
+                            td6.appendChild(input6);
+                            tr.appendChild(td6) ;
+
+
+                            tbody.appendChild(tr);  
+
+
+                        }
+                    }          
+                        
+                   
+                }
+               
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        })
+    });
+    
+    function remplacer(value){
+        value=value.replace(".", "");
+        value=value.replace(",", "");
+        return value;
+    }
+
+
+
+    // javascript function to verify integer value is
+    function isInt(value) {
+        return !isNaN(value) && 
+               parseInt(Number(value)) == value ;
+    }
+
+    $('#valider').click(function(e){
+
+        e.preventDefault();
+
+        var swalMsg = "Verifier les valeurs NET saisie pour ";
+        
+        var tagnet,net=0,somme=0, valider=1;
+        {% for tag in refAgg%}
+
+           console.log('{{tag.code}}');
+       
+
+        {% endfor %}
+
+        // adapter les id element
+
+        var sumXA = 0; // RA+RB+TA sumXA c'est sumXA= TA + RA - RB
+
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXA=sumXA+ parseInt(document.getElementById('TAnet1').value);
+        }
+
+        if(isInt(document.getElementById('RAnet1').value) == true){
+
+            sumXA=sumXA+parseInt(document.getElementById('RAnet1').value);
+
+        }
+        
+        if(isInt(document.getElementById('RBnet1').value) == true){
+
+            sumXA=sumXA-parseInt(document.getElementById('RBnet1').value);
+        }
+        
+        var tb = 0;
+        
+        
+        //if(isInt(document.getElementById('XAnet1').value) == true){
+        if(document.getElementById('XAnet1').value !=""){
+
+            tb= parseInt(document.getElementById('XAnet1').value);
+
+        }
+        
+        var testVar = "XA marge brute !";
+        if(tb == sumXA){
+
+            
+        }else{
+            valider=0;
+
+            Swal.fire(' Verifier les valeurs NET saisie pour ' + testVar);
+
+        }
+        
+        // traitement sum chiffre d'affaire TI = TA+TC+TD+TB
+        
+        var sumXB = 0; // sumXB c'est sumXB= TA+ TB+TC+TD
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXB = sumXB+parseInt(document.getElementById('TAnet1').value);
+
+        }
+        if(isInt(document.getElementById('TCnet1').value) == true ){
+
+            sumXB =sumXB+parseInt(document.getElementById('TCnet1').value); 
+                    
+        }
+
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXB =sumXB+parseInt(document.getElementById('TDnet1').value); 
+
+        }
+
+        if(isInt(document.getElementById('TBnet1').value == true)){
+            sumXB =sumXB+parseInt(document.getElementById('TBnet1').value); 
+
+        }
+
+
+       var ti = 0;
+        if(isInt(document.getElementById('XBnet1').value) == true){ // recuperer la valeur de TI
+            ti = parseInt(document.getElementById('XBnet1').value);
+        }
+        
+        var testVar1 = "XB chiffre d'affaires !";
+        if(ti != sumXB){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET saisie pour '+ testVar1); 
+                     
+        }
+
+        // traitement sum valeur ajoutee TN = TB+TI + TE+TF+TK+TL+TT+RC+RD+RE+RH+RI+RJ+RK+RL
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = sumXA+sumXB+TE+TF+TG+TH+TI- RC- RD- RE- RF- RG- RH- RI- RJ
+        
+        var sumXC = sumXA+sumXB; 
+        
+        if(isInt(document.getElementById('TEnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TEnet1').value) ;
+            
+        }
+        
+        if(isInt(document.getElementById('TFnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TFnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('TGnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TGnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('THnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('THnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('TInet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TInet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RCnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RCnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RDnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RDnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('REnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('REnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RHnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RHnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RInet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RInet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RJnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RJnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RFnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RGnet1').value) ;
+            
+        }
+                
+        var tn=0;
+
+        if(isInt(document.getElementById('XCnet1').value) == true){ 
+            tn = parseInt(document.getElementById('XCnet1').value); // recuperer la valeur de TN
+        }
+
+
+        var testVar2 = "XC valeur ajoutee !";
+
+        if(tn != sumXC){
+            
+            valider=0;
+            
+            Swal.fire('Verifier les valeurs NET saisie pour '+testVar2);
+                     
+        }
+
+
+        // traitement sum Excedent brute d'exploitation TQ= TN+RP
+
+        var tq = 0; 
+        var sumXD = sumXC;  // sumXD c'est sumXD = sumXC - RK
+
+
+        if(isInt(document.getElementById('RKnet1').value) == true){
+            sumXD = sumXD - parseInt(document.getElementById('RKnet1').value);
+
+        }
+        if(isInt(document.getElementById('XDnet1').value) == true){
+            tq =  parseInt(document.getElementById('XDnet1').value);
+
+        }
+        var testVar3 = "XD Excedent brute d'exploitation !"; 
+        if(tq != sumXD){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET saisie pour '+testVar3);
+                     
+        }
+        
+        // traitement sum resultat d'exploitation TX = sumXD+TS+RS
+
+        
+        var tx = 0; 
+        var sumXE = sumXD;  // sunTX c'est ex sumXE = sumXD + TJ+RL
+
+        if(isInt(document.getElementById('TJnet1').value) == true){
+            sumXE = sumXE + parseInt(document.getElementById('TJnet1').value);
+
+        }
+        if(isInt(document.getElementById('RLnet1').value) == true){
+            sumXE = sumXE - parseInt(document.getElementById('RLnet1').value);
+
+        }
+        if(isInt(document.getElementById('XEnet1').value) == true){
+            tx =  parseInt(document.getElementById('XEnet1').value);
+
+        }
+        var testVar4 = "XE Resultat d'exploitation !";
+        if(tx != sumXE){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET saisies pour  '+testVar4);
+                     
+        }
+
+        // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD
+        
+        var sumXF = 0; // sumXF c'est ex sumXF = RM+RN+TK-TL-TM
+        var ug = 0;
+        if(isInt(document.getElementById('RMnet1').value) == true && 
+           isInt(document.getElementById('RNnet1').value) == true && 
+           isInt(document.getElementById('TKnet1').value == true) &&
+           isInt(document.getElementById('TLnet1').value == true) &&
+           isInt(document.getElementById('TMnet1').value == true) ){
+
+            
+            sumXF = parseInt(document.getElementById('RMnet1').value)+
+                    parseInt(document.getElementById('RNnet1').value)+
+                    parseInt(document.getElementById('TKnet1').value)-
+                    parseInt(document.getElementById('TLnet1').value)-
+                    parseInt(document.getElementById('TMnet1').value)
+                    ;
+
+                    
+        }
+        if(isInt(document.getElementById('XFnet1').value) == true){
+            ug =  parseInt(document.getElementById('XFnet1').value);
+
+        }
+        var testVar5 = "XF Resultat financier !";
+        if(ug != sumXF){
+
+            valider=0;
+
+            Swal.fire('Verifier la saisie pour '+testVar5);
+                     
+        }
+
+        // traitement sum resultat des activités ordinaires UI = TX +UG 
+        
+        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
+
+
+        var ui = 0;
+        if(isInt(document.getElementById('XGnet1').value) == true){
+            ui =  parseInt(document.getElementById('XGnet1').value);
+
+        }
+        var testVar6 = "XG Resultat des activites ordinaires !";
+        if(ui != sumXG){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar6);
+                     
+        }else{
+            
+        }
+
+        // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
+        var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
+        var up = 0; 
+        if(isInt(document.getElementById('TNnet1').value) == true && 
+           isInt(document.getElementById('TOnet1').value) == true && 
+           isInt(document.getElementById('ROnet1').value == true) &&
+           isInt(document.getElementById('RPnet1').value == true) ){
+
+            
+            sumXH = parseInt(document.getElementById('TNnet1').value)+
+                    parseInt(document.getElementById('TOnet1').value)-
+                    parseInt(document.getElementById('ROnet1').value)-
+                    parseInt(document.getElementById('RPnet1').value)
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XHnet1').value) == true){
+            up =  parseInt(document.getElementById('XHnet1').value);
+
+        }
+        var testVar7 = "XH Resultat hors activites ordinaires !";
+        if(up != sumXH){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar7);
+                     
+        }
+
+        // traitement sum benef ou perte UZ = UI +UP +SQ +SR
+       var sumXI = sumXG+sumXH; //sumXI c'est ex sumXI=XG+XH-RQ-RS
+       var uz = 0;
+        
+        if(isInt(document.getElementById('RQnet1').value) == true && 
+           isInt(document.getElementById('RSnet1').value) == true ){
+
+            
+            sumXI = sumXI-parseInt(document.getElementById('RQnet1').value)-
+                    parseInt(document.getElementById('RSnet1').value)
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XInet1').value) == true){
+            uz =  parseInt(document.getElementById('XInet1').value);
+
+        }
+        var testVar8 = "XI résultat net !";
+        if(uz != sumXI){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar8);
+                     
+        }
+
+
+        if (valider==1) {
+
+                {
+                e.preventDefault();
+                var a=$(this);
+                Swal.fire({
+                title:"Confirmation",
+                text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                icon:"success",
+                showCancelButton:true,
+                confirmButtonText:"Oui",
+                cancelButtonText:"Non",
+                confirmButtonClass:"btn btn-success mt-2",
+                cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                buttonsStyling:!1}).then(function(t)
+                {
+                  if (t.value) {
+                     document.getElementById("idformcompte").submit()
+                  }else
+                      e.preventDefault();
+
+                })}
+        }
+
+    }); // end eventListner btn valider 
+
+
+    function somme(netnumber,sousclasseName){
+        var elemts =  $('input.calcul.'+netnumber+'.'+sousclasseName);
+        var sum =0;
+        for(var i = 0 ; i< elemts.length;i++){
+            sum+=parseInt(elemts[i].value);
+        }
+
+        return sum;
+
+    }
+
+        
+    });
+
+
+</script>
+
+
+{% endblock %}
