@@ -66,7 +66,8 @@
                          <button type="submit" class="btn btn-success waves-effect waves-light">
                              <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
                          </button>
-                         <button type="button" class="btn btn-dark bg-soft opacity-25" name="valider" id="valider">
+                         {#<button type="button" class="btn btn-dark bg-soft opacity-25" name="valider" id="valider">#}
+                         <button type="button" class="btn btn-dark bt-soft waves-effect waves-light" name="valider" id="valider">
                              <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
                          </button>
                      </div>
@@ -86,7 +87,7 @@
                               Libelle<br>
                             </th>
                             <th colspan="4" scope="col" class="text-center">
-                              Exercice au 31/12/<span class="text-info">2019</span> 
+                              Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
                             </th>
                             <th colspan="3" scope="col" class="text-center">
                               Exercice au 31/12/<span class="text-info" id="anneeN-1">2018</span>
@@ -450,175 +451,169 @@
 
         // adapter les id element
 
-        sumTB = 0; // RA+RB+TA sumTB c'est sumXA
+        var sumXA = 0; // RA+RB+TA sumXA c'est sumXA= TA + RA - RB
+
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXA=sumXA+ parseInt(document.getElementById('TAnet1').value);
+        }
 
         if(isInt(document.getElementById('RAnet1').value) == true){
 
-            sumTB=sumTB+ parseInt(document.getElementById('RAnet1').value);
+            sumXA=sumXA+parseInt(document.getElementById('RAnet1').value);
 
         }
         
         if(isInt(document.getElementById('RBnet1').value) == true){
 
-            sumTB=sumTB+ parseInt(document.getElementById('RBnet1').value);
-
-
+            sumXA=sumXA-parseInt(document.getElementById('RBnet1').value);
         }
         
-        if(isInt(document.getElementById('TAnet1').value) == true){
-
-            sumTB=sumTB+ parseInt(document.getElementById('TAnet1').value);
-        }
-        
-        tb = 0;
+        var tb = 0;
         
         
-        if(isInt(document.getElementById('XAnet1').value) == true){
+        //if(isInt(document.getElementById('XAnet1').value) == true){
+        if(document.getElementById('XAnet1').value !=""){
 
             tb= parseInt(document.getElementById('XAnet1').value);
 
         }
         
-        
         var testVar = "XA marge brute !";
-        if(tb != sumTB){
+        if(tb == sumXA){
 
+            
+        }else{
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
-                     
-        }else{
-            
+            Swal.fire(' Verifier les valeurs NET saisie pour ' + testVar);
+
         }
         
-        // traitement sum chiffre d'affaire TI = TA+TC+TD+TH
+        // traitement sum chiffre d'affaire TI = TA+TC+TD+TB
         
-        sumTI = 0; // sumTI c'est sumXB
+        var sumXB = 0; // sumXB c'est sumXB= TA+ TB+TC+TD
         if(isInt(document.getElementById('TAnet1').value) == true){
 
-            sumTI = parseInt(document.getElementById('TAnet1').value);
+            sumXB = sumXB+parseInt(document.getElementById('TAnet1').value);
 
         }
-        if(isInt(document.getElementById('TCnet1').value) == true && 
-                isInt(document.getElementById('TDnet1').value) == true && 
-                isInt(document.getElementById('TBnet1').value == true) ){
+        if(isInt(document.getElementById('TCnet1').value) == true ){
 
-            sumTI = parseInt(document.getElementById('TAnet1').value)+
-                    parseInt(document.getElementById('TCnet1').value)+
-                    parseInt(document.getElementById('TDnet1').value)+
-                    parseInt(document.getElementById('TBnet1').value)
-                    ;
+            sumXB =sumXB+parseInt(document.getElementById('TCnet1').value); 
+                    
+        }
+
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXB =sumXB+parseInt(document.getElementById('TDnet1').value); 
 
         }
 
-        ti = 0;
+        if(isInt(document.getElementById('TBnet1').value == true)){
+            sumXB =sumXB+parseInt(document.getElementById('TBnet1').value); 
+
+        }
+
+
+       var ti = 0;
         if(isInt(document.getElementById('XBnet1').value) == true){ // recuperer la valeur de TI
             ti = parseInt(document.getElementById('XBnet1').value);
         }
         
         var testVar1 = "XB chiffre d'affaires !";
-        if(ti != sumTI){
+        if(ti != sumXB){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar1,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier les valeurs NET saisie pour '+ testVar1); 
                      
-        }else{
-            
         }
 
         // traitement sum valeur ajoutee TN = TB+TI + TE+TF+TK+TL+TT+RC+RD+RE+RH+RI+RJ+RK+RL
-        // sumTN = 0; tn = 0;  sumTN c'est sumXC
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = sumXA+sumXB+TE+TF+TG+TH+TI- RC- RD- RE- RF- RG- RH- RI- RJ
         
-        sumTN = sumTB+sumTI; 
-
-        if(isInt(document.getElementById('TEnet1').value) == true && 
-                isInt(document.getElementById('TFnet1').value) == true && 
-                isInt(document.getElementById('TGnet1').value == true) &&
-                isInt(document.getElementById('THnet1').value == true) &&
-                isInt(document.getElementById('TInet1').value == true) &&
-                isInt(document.getElementById('RCnet1').value == true) &&
-                isInt(document.getElementById('RDnet1').value == true) &&
-                isInt(document.getElementById('REnet1').value == true) &&
-                isInt(document.getElementById('RHnet1').value == true) &&
-                isInt(document.getElementById('RInet1').value == true) &&
-                isInt(document.getElementById('RJnet1').value == true) &&
-                isInt(document.getElementById('RFnet1').value == true) &&
-                isInt(document.getElementById('RGnet1').value == true) ){
-
+        var sumXC = sumXA+sumXB; 
+        
+        if(isInt(document.getElementById('TEnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TEnet1').value) ;
             
-            sumTN = sumTN + parseInt(document.getElementById('TEnet1').value)+
-                    parseInt(document.getElementById('TFnet1').value)+
-                    parseInt(document.getElementById('TGnet1').value)+
-                    parseInt(document.getElementById('THnet1').value)+
-                    parseInt(document.getElementById('TInet1').value)+
-                    parseInt(document.getElementById('RCnet1').value)+
-                    parseInt(document.getElementById('RDnet1').value)+
-                    parseInt(document.getElementById('REnet1').value)+
-                    parseInt(document.getElementById('RHnet1').value)+
-                    parseInt(document.getElementById('RInet1').value)+
-                    parseInt(document.getElementById('RJnet1').value)+
-                    parseInt(document.getElementById('RFnet1').value)+
-                    parseInt(document.getElementById('RGnet1').value)
-                    ;
-
-                    
         }
-
         
-        tn=0;
+        if(isInt(document.getElementById('TFnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TFnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('TGnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TGnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('THnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('THnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('TInet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TInet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RCnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RCnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RDnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RDnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('REnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('REnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RHnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RHnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RInet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RInet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RJnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RJnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RFnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RGnet1').value) ;
+            
+        }
+                
+        var tn=0;
+
         if(isInt(document.getElementById('XCnet1').value) == true){ 
             tn = parseInt(document.getElementById('XCnet1').value); // recuperer la valeur de TN
         }
+
+
         var testVar2 = "XC valeur ajoutee !";
-        if(tn != sumTN){
 
-            valider=0;
-
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar2,
-                type: "error",
-                icon:"error",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
-                     
-        }else{
+        if(tn != sumXC){
             
+            valider=0;
+            
+            Swal.fire('Verifier les valeurs NET saisie pour '+testVar2);
+                     
         }
 
 
         // traitement sum Excedent brute d'exploitation TQ= TN+RP
 
-        tq = 0; 
-        sumTQ = tn;  // sumTQ c'est sumXD
+        var tq = 0; 
+        var sumXD = sumXC;  // sumXD c'est sumXD = sumXC - RK
+
 
         if(isInt(document.getElementById('RKnet1').value) == true){
-            sumTQ = sumTQ + parseInt(document.getElementById('RKnet1').value);
+            sumXD = sumXD - parseInt(document.getElementById('RKnet1').value);
 
         }
         if(isInt(document.getElementById('XDnet1').value) == true){
@@ -626,38 +621,26 @@
 
         }
         var testVar3 = "XD Excedent brute d'exploitation !"; 
-        if(tq != sumTQ){
+        if(tq != sumXD){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar3,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier les valeurs NET saisie pour '+testVar3);
                      
-        }else{
-            
         }
         
-        // traitement sum resultat d'exploitation TX = sumTQ+TS+RS
+        // traitement sum resultat d'exploitation TX = sumXD+TS+RS
 
         
-        tx = 0; 
-        sumTX = sumTQ;  // sunTX c'est ex sumXE = sumXD + TJ+RL
+        var tx = 0; 
+        var sumXE = sumXD;  // sunTX c'est ex sumXE = sumXD + TJ+RL
 
         if(isInt(document.getElementById('TJnet1').value) == true){
-            sumTX = sumTX + parseInt(document.getElementById('TJnet1').value);
+            sumXE = sumXE + parseInt(document.getElementById('TJnet1').value);
 
         }
         if(isInt(document.getElementById('RLnet1').value) == true){
-            sumTX = sumTX + parseInt(document.getElementById('RLnet1').value);
+            sumXE = sumXE - parseInt(document.getElementById('RLnet1').value);
 
         }
         if(isInt(document.getElementById('XEnet1').value) == true){
@@ -665,31 +648,18 @@
 
         }
         var testVar4 = "XE Resultat d'exploitation !";
-        console.log(sumTX);
-        if(tx != sumTX){
+        if(tx != sumXE){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar4,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier les valeurs NET saisies pour  '+testVar4);
                      
-        }else{
-            
         }
 
-        // traitement sum resultat financier UG = UA+ UD+ UE+ SA+ SD
+        // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD
         
-        sumUG = 0; // sumUG c'est ex sumXF = RM+RN+TK+TL+TM
-        ug = 0;
+        var sumXF = 0; // sumXF c'est ex sumXF = RM+RN+TK-TL-TM
+        var ug = 0;
         if(isInt(document.getElementById('RMnet1').value) == true && 
            isInt(document.getElementById('RNnet1').value) == true && 
            isInt(document.getElementById('TKnet1').value == true) &&
@@ -697,10 +667,10 @@
            isInt(document.getElementById('TMnet1').value == true) ){
 
             
-            sumUG = parseInt(document.getElementById('RMnet1').value)+
+            sumXF = parseInt(document.getElementById('RMnet1').value)+
                     parseInt(document.getElementById('RNnet1').value)+
-                    parseInt(document.getElementById('TKnet1').value)+
-                    parseInt(document.getElementById('TLnet1').value)+
+                    parseInt(document.getElementById('TKnet1').value)-
+                    parseInt(document.getElementById('TLnet1').value)-
                     parseInt(document.getElementById('TMnet1').value)
                     ;
 
@@ -711,67 +681,45 @@
 
         }
         var testVar5 = "XF Resultat financier !";
-        console.log(testVar);
-        if(ug != sumUG){
+        if(ug != sumXF){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar5,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier la saisie pour '+testVar5);
                      
-        }else{
-            
         }
 
         // traitement sum resultat des activités ordinaires UI = TX +UG 
         
-        sumUI = sumTX+sumUG; // sumUI c'est ex sumXG = XE+XF
+        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
 
-        ui = 0;
+
+        var ui = 0;
         if(isInt(document.getElementById('XGnet1').value) == true){
             ui =  parseInt(document.getElementById('XGnet1').value);
 
         }
         var testVar6 = "XG Resultat des activites ordinaires !";
-        if(ui != sumUI){
+        if(ui != sumXG){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar6,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar6);
                      
         }else{
             
         }
 
         // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
-        sumUP = 0; // sumUP c'est ex sumXH = TN+TO-RO-RP 
-        up = 0; 
+        var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
+        var up = 0; 
         if(isInt(document.getElementById('TNnet1').value) == true && 
            isInt(document.getElementById('TOnet1').value) == true && 
            isInt(document.getElementById('ROnet1').value == true) &&
            isInt(document.getElementById('RPnet1').value == true) ){
 
             
-            sumUP = parseInt(document.getElementById('TNnet1').value)+
+            sumXH = parseInt(document.getElementById('TNnet1').value)+
                     parseInt(document.getElementById('TOnet1').value)-
                     parseInt(document.getElementById('ROnet1').value)-
                     parseInt(document.getElementById('RPnet1').value)
@@ -783,35 +731,23 @@
 
         }
         var testVar7 = "XH Resultat hors activites ordinaires !";
-        if(up != sumUP){
+        if(up != sumXH){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar7,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar7);
                      
-        }else{
-            
         }
 
         // traitement sum benef ou perte UZ = UI +UP +SQ +SR
-        sumUZ = sumUI+sumUP; //sumUZ c'est ex sumXI=XG+XH-RQ-RS
-        uz = 0;
+       var sumXI = sumXG+sumXH; //sumXI c'est ex sumXI=XG+XH-RQ-RS
+       var uz = 0;
         
         if(isInt(document.getElementById('RQnet1').value) == true && 
            isInt(document.getElementById('RSnet1').value) == true ){
 
             
-            sumUZ = sumUZ-parseInt(document.getElementById('RQnet1').value)-
+            sumXI = sumXI-parseInt(document.getElementById('RQnet1').value)-
                     parseInt(document.getElementById('RSnet1').value)
                     ;
                     
@@ -821,26 +757,14 @@
 
         }
         var testVar8 = "XI résultat net !";
-        if(uz != sumUZ){
+        if(uz != sumXI){
 
             valider=0;
 
-            Swal.fire({
-                title: "Error!",
-                text: "Verifier les valeurs NET saisie pour " + testVar8,
-                type: "error",
-                icon:"warning",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-               });
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar8);
                      
-        }else{
-            
-            //swal("Aucune incoherence dans la saisie, penser à sauvegarder !");
         }
+
 
         if (valider==1) {
 
@@ -850,7 +774,7 @@
                 Swal.fire({
                 title:"Confirmation",
                 text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
-                icon:"warning",
+                icon:"success",
                 showCancelButton:true,
                 confirmButtonText:"Oui",
                 cancelButtonText:"Non",

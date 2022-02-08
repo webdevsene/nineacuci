@@ -87,7 +87,8 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="{{ asset('admin/dist/assets/images/users/avatar-1.jpg')}}"
+                                {#<img class="rounded-circle header-profile-user" src="{{ asset('admin/dist/assets/images/users/avatar-1.jpg')}}"#}
+                                <img class="rounded-circle header-profile-user" src="https://bootdey.com/img/Content/avatar/avatar7.png"
                                     alt="Header Avatar">
                                 <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.prenom}} {{app.user.nom}}</span>
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
@@ -95,6 +96,9 @@
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
                                 <a class="dropdown-item" href="{{path('user_change_password',{'id':app.user.id})}}"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Changer mot de passe</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('user_show', {'id': app.user.id}) }}"><i class=" bx bx-user-circle font-size-16 align-middle me-1"></i> <span key="t-logout">Profile</span></a>
+
                                 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{{path('app_logout')}}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Déconnexion</span></a>
@@ -279,12 +283,19 @@
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-sm-6">
-                                <script>document.write(new Date().getFullYear())</script> © 
+                            <div class="col-sm-6 d-flex justify-content-left">
+                                <p class="p-1">
+                                    © <script>document.write(new Date().getFullYear())</script>, 
+                                    
+                                    République du Sénégal, tous droits réservés.
+                                </p>
                             </div>
                             <div class="col-sm-6">
                                 <div class="text-sm-end d-none d-sm-block">
-                                    République du Sénégal . Tous droits réservés.
+                                    <a href="#">
+
+                                        designed by ONIT365
+                                    </a> 
                                 </div>
                             </div>
                         </div>
