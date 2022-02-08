@@ -469,8 +469,8 @@ class Repertoire
         $this->updatedAt=new \DateTime();
         $this->deleted=false;
         $this->bilans = new ArrayCollection();
-         $this->id = Uuid::v4();
-         $this->compte_de_resultats = new ArrayCollection();
+        $this->id = Uuid::v4();
+        $this->compte_de_resultats = new ArrayCollection();
     }
 
 
@@ -1565,6 +1565,8 @@ class Repertoire
     public function setSystemeComptabilite(?SystemeComptabilite $systemeComptabilite): self
     {
         $this->systemeComptabilite = $systemeComptabilite;
+    }
+    
 
     /**
      * @return Collection|CompteDeResultats[]
