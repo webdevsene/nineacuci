@@ -3,12 +3,15 @@
 namespace App\Form;
 
 use App\Entity\Filiales;
+use App\Entity\Pays;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 
 class FilialesShowType extends AbstractType
@@ -28,16 +31,15 @@ class FilialesShowType extends AbstractType
             'disabled'=>true,
             'attr'=>array('class'=>'form-control')))
            
-             ->add('nationality', ChoiceType::class, [
-                  'label'=>'Nationalité ',
-                  'attr'=>array('class'=>'form-control select2'),
-                  'choices'  => [
-                      '' => "choissir...",
-                      'Teste' => "Teste"
-                  ],
-                   'required'=>false,
-                   'disabled'=>true,
-              ])
+             ->add('nationality', EntityType::class, [
+                 'class' => Pays::class,
+                'choice_label' => 'libelle',
+                'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
+               
+                'required'=>false,
+                'label'=>'Nationalité ',
+
+               ])
             ->add('pourcentage',TextType::class,
             array('label'=>'Pourcentage  ',
             'required'=>false,
