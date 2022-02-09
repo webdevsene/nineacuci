@@ -63,12 +63,30 @@ class Filiales
      */
     private $repertoire;
 
+     /**
+     * @ORM\ManyToOne(targetEntity=Pays::class, inversedBy="filiales")
+     */
+    private $pays;
+
     public function __construct()
     {
         
         $this->id = Uuid::v4();
          $this->createdAt=new \DateTime();
         $this->updatedAt=new \DateTime();
+    }
+
+
+    public function getPays(): ?Pays
+    {
+        return $this->pays;
+    }
+
+    public function setPays(?Pays $pays): self
+    {
+        $this->pays = $pays;
+
+        return $this;
     }
 
     public function getId(): ?string
