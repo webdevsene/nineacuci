@@ -122,6 +122,8 @@ class BilanController extends AbstractController
                 }
 
            }
+
+           return $this->redirectToRoute('bilan_new', [], Response::HTTP_SEE_OTHER);
         }
 
 
@@ -201,6 +203,8 @@ class BilanController extends AbstractController
                 }
 
            }
+
+            return $this->redirectToRoute('bilan_new', [], Response::HTTP_SEE_OTHER);
         }
        
 
