@@ -124,13 +124,13 @@
          </div>
 
          </div>
-         <input type="hidden" name="type" value="1" >
-          <button type="submit" class="btn btn-success waves-effect waves-light">
-                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
-                         </button>
+            <!-- <input type="hidden" name="type" value="1" >
+            <button type="submit" class="btn btn-success waves-effect waves-light">
+                <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+            </button> -->
                          
-                        </div>
-                    </form>
+        </div>
+        </form>
 </div>
 
 
@@ -157,7 +157,41 @@
 <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+
+
+ $(document).ready(function(){
+
+    {% if app.session.get("codeCuci")!=""%}
+     
+       var value='{{app.session.get("codeCuci")}}';
+   
+       document.getElementById('idcuci').setAttribute('value',value);
+   
+       //let route="{{path('nineaNum')}}"+"/"+ value;
+       let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+
+               $.ajax({
+                   type: 'GET',
+                   url : route,
+                   dataType : "json",
+                   success: function(data){
+                       
+                       let denomination=document.getElementById("denomination");
+                       denomination.value=data;
+   
+                     
+                   } ,
+                   error : function(error){
+                       console.log(error);
+                   }
+       })
+   
+    {% endif %}
+   
+     });
+
+
+    //$(document).ready(function(){
 
         $('#idcuci').change(function(){
             
@@ -479,14 +513,15 @@
 
         }
         
-        var testVar = "XA marge brute !";
+        var testVar = "Marge brute ssur marchandises XA = TA+RA-RB !";
         if(tb == sumXA){
 
             
         }else{
             valider=0;
 
-            Swal.fire(' Verifier les valeurs NET saisie pour ' + testVar);
+            Swal.fire(' Verifier les valeurs NET saisie pour ' + testVar); 
+            return; // pour casser le flux d'execution
 
         }
         
@@ -520,12 +555,13 @@
             ti = parseInt(document.getElementById('XBnet1').value);
         }
         
-        var testVar1 = "XB chiffre d'affaires !";
+        var testVar1 = "chiffre d'affaires XB = TA+TB+TC+TD !";
         if(ti != sumXB){
 
             valider=0;
 
             Swal.fire('Verifier les valeurs NET saisie pour '+ testVar1); 
+            return ;
                      
         }
 
@@ -595,13 +631,14 @@
         }
 
 
-        var testVar2 = "XC valeur ajoutee !";
+        var testVar2 = "valeur ajoutée X= XA+XB+TE+TF+TG+TH+TI-RC-RD-RE-RF-RG-RH-RI-RJ !";
 
         if(tn != sumXC){
             
             valider=0;
             
             Swal.fire('Verifier les valeurs NET saisie pour '+testVar2);
+            return ;
                      
         }
 
@@ -620,12 +657,13 @@
             tq =  parseInt(document.getElementById('XDnet1').value);
 
         }
-        var testVar3 = "XD Excedent brute d'exploitation !"; 
+        var testVar3 = "Excedent brute d'exploitation XD = XC-RK !"; 
         if(tq != sumXD){
 
             valider=0;
 
             Swal.fire('Verifier les valeurs NET saisie pour '+testVar3);
+            return;
                      
         }
         
@@ -647,12 +685,13 @@
             tx =  parseInt(document.getElementById('XEnet1').value);
 
         }
-        var testVar4 = "XE Resultat d'exploitation !";
+        var testVar4 = "Resultat d'exploitation XE = XD+TJ+RL !";
         if(tx != sumXE){
 
             valider=0;
 
             Swal.fire('Verifier les valeurs NET saisies pour  '+testVar4);
+            return;
                      
         }
 
@@ -680,28 +719,33 @@
             ug =  parseInt(document.getElementById('XFnet1').value);
 
         }
-        var testVar5 = "XF Resultat financier !";
+        var testVar5 = "Resultat financier XF = RM+RN+TK-TL-TM!";
         if(ug != sumXF){
 
             valider=0;
 
             Swal.fire('Verifier la saisie pour '+testVar5);
+            return;
                      
         }
 
-        var testVar6 = "XG Resultat des activites ordinaires !";
+        
+        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
+        
+        
+        var ui = 0;
+        if(isInt(document.getElementById('XGnet1').value) == true){
+            ui =  parseInt(document.getElementById('XGnet1').value);
+            
+        }
+        var testVar6 = "Resultat des activites ordinaires XG = XE+XF !";
         if(ui != sumXG){
 
             valider=0;
 
-            Swal.fire('Verifier les valeurs NET saisies pour '+testVar6);
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar6); return;
                      
-        }else{
-            
         }
-
-
-        
 
         // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
         var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
@@ -723,12 +767,13 @@
             up =  parseInt(document.getElementById('XHnet1').value);
 
         }
-        var testVar7 = "XH Resultat hors activites ordinaires !";
+        var testVar7 = "XH = TN+TO-RO-RP Resultat hors activites ordinaires !";
         if(up != sumXH){
 
             valider=0;
 
             Swal.fire('Verifier les valeurs NET saisies pour '+testVar7);
+            return;
                      
         }
 
@@ -749,23 +794,13 @@
             uz =  parseInt(document.getElementById('XInet1').value);
 
         }
-        var testVar8 = "XI résultat net !";
+        var testVar8 = "résultat net XI=XG+XH-RQ-RS !";
         if(uz != sumXI){
 
             valider=0;
 
-            Swal.fire('Verifier les valeurs NET saisies pour '+testVar8);
+            Swal.fire('Verifier les valeurs NET saisies pour '+testVar8); return;
                      
-        }
-        // traitement sum resultat des activités ordinaires UI = TX +UG 
-        
-        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
-
-
-        var ui = 0;
-        if(isInt(document.getElementById('XGnet1').value) == true){
-            ui =  parseInt(document.getElementById('XGnet1').value);
-
         }
 
 
@@ -808,7 +843,7 @@
     }
 
         
-    });
+   // }); end dom
 
 
 </script>
