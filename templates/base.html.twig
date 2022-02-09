@@ -44,7 +44,7 @@
                     <div class="d-flex">
                         <!-- LOGO -->
                         <div class="navbar-brand-box">
-                            <a href="index.html" class="logo logo-dark">
+                            <a href="#" class="logo logo-dark">
                                 <span class="logo-sm">
                                     
                                 </span>
@@ -53,7 +53,7 @@
                                 </span>
                             </a>
 
-                            <a href="index.html" class="logo logo-light">
+                            <a href="#" class="logo logo-light">
                                 <span class="logo-sm">
                                     
                                 </span>
@@ -132,26 +132,19 @@
                                     </div>
                                 </li>
                                 {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}
+                                
+
+                                
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button"
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
                                     >
-                                        <i class="bx bx-tone me-2"></i>
-                                        <span key="t-ui-elements"> Administrations</span> 
-                                        <div class="arrow-down"></div>
+                                        <i class="bx bx-home-circle me-2"></i><span key="t-dashboards">Administration</span> <div class="arrow-down"></div>
                                     </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
 
-                                    <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl"
-                                        aria-labelledby="topnav-uielement">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div>
-                                                    <a href="{{path('user_index')}}" class="dropdown-item" key="t-alerts">Gestion des utilisateurs</a>
-                                                    
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
+                                        <a href="{{path('user_index')}}" class="dropdown-item" key="t-alerts">Gestion des utilisateurs</a>
 
+                                        
                                     </div>
                                 </li>
 
@@ -160,62 +153,51 @@
 
 
                              {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BREA_AGENT_SAISIE')  %}
+                               
+
+                                
+                                
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button"
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
                                     >
-                                    <i class="bx bx-folder-plus me-2"></i>
-                                    <span key="t-ui-elements"> Gestion des répertoires</span> 
-                                        <div class="arrow-down"></div>
+                                    <i class="bx bx-folder-plus me-2"></i><span key="t-dashboards">Gestion des répertoires</span> <div class="arrow-down"></div>
                                     </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
 
-                                    <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl"
-                                        aria-labelledby="topnav-uielement">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div>
-                                                    <a href="{{path('repertoire_index')}}" class="dropdown-item" key="t-alerts">Saisie et mise à jour d'une unité</a>
-                                                    
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
+                                        <a href="{{path('repertoire_index')}}" class="dropdown-item" key="t-alerts">Saisie et mise à jour d'une unité</a>
 
+                                        
                                     </div>
                                 </li>
 
                                 
                                                                   {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
                                                                 
-                                
-                                
                                                                 <li class="nav-item dropdown">
                                                                     <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
                                                                     >
-                                                                    <i class="bx bx-bar-chart-alt me-2"></i>
-                                                                    <span key="t-ui-elements">Etat financier</span> <div class="arrow-down"></div>
+                                                                    <i class="bx bx-bar-chart-alt me-2"></i><span key="t-dashboards">Etats financiers</span> <div class="arrow-down"></div>
                                                                     </a>
-                                                                    
-                                                                <!-- menu etats fin-->
+                                                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
                                 
-                                                                   <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl"
-                                                                       aria-labelledby="topnav-uielement">
+                                                                        
                                                                        <div class="row">
-                                                                           <div class="col-lg-4">
-                                                                               <div>
-                                                                                   <a href="{{path('bilan_new')}}" class="dropdown-item" key="t-alerts">Bilans comptables</a>
-                                                                                   
-                                                                               </div>
-                                                                               <div>
-                                                                                   <a href="{{path('compte_de_resultats_new')}}" class="dropdown-item" key="t-alerts">Compte de résultats</a>
-                                                                                   
-                                                                               </div>
-                                                                           </div>
-                                                                           
-                                                                       </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div>
+                                                                                <a href="{{path('bilan_new')}}" class="dropdown-item" key="t-alerts">Bilans comptables</a>
+                                                                                
+                                                                            </div>
+                                                                            <div>
+                                                                                <a href="{{path('compte_de_resultats_new')}}" class="dropdown-item" key="t-alerts">Compte de résultats</a>
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+
                                 
-                                                                   </div>
-                                                                <!-- end menu etats fin -->
-                                
+                                                                        
+                                                                    </div>
                                                                 </li>
                                 
                                                                  {% endif %}

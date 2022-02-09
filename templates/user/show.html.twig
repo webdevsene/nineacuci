@@ -8,32 +8,11 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-          {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN') %}
-            <h6 class="mb-sm-0 font-size-18"><i class="fa fa-list"></i> utilisateur</h6>
+            <h6 class="mb-sm-0 font-size-18"></h6>
           
-          {% endif %}  
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-               {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}    
-                <li class="breadcrumb-item">    <a  title="Retourner à la liste des utilisateurs" href="{{ path('user_index') }}"> Liste</a></li>
-
-              
-              {% if user.enabled==1%}
-              <li class="breadcrumb-item"> <a  title="Désactiver un compte" href="{{ path('user_desactiver',{id:user.id}) }}">Désactiver</a></li>
-              
-              {%else%}
-              <li class="breadcrumb-item"> <a  title="activer un compte" href="{{ path('user_activer',{id:user.id}) }}">Activer</a></li>
-              
-              {%endif%}
-             
-              
-              <li class="breadcrumb-item"> <a  title="Réinitialiser le mot de passe" href="{{ path('user_reinisialiser',{id:user.id}) }}">Réinitialiser</a></li>
-             
-
-              <li class="breadcrumb-item"><a  title="Modifier un compte utilisateur" href="{{ path('user_edit',{id:user.id}) }}">Modifier</a></li>
-
-              {% endif %}
                    
                 </ol>
             </div>

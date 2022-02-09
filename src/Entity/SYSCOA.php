@@ -91,6 +91,12 @@ class SYSCOA
     }
 
 
+     public function getCodeLibelle(): ?string
+    {
+        return $this->CODE_ACTIVITE."-".$this->libelle;
+    }
+
+
        /**
      * @return Collection|Repertoires[]
      */

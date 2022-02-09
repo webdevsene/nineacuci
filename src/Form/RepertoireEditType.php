@@ -49,7 +49,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
-class RepertoireShowType extends AbstractType
+class RepertoireEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -58,7 +58,6 @@ class RepertoireShowType extends AbstractType
             ->add('sigle',TextType::class,
                    array('label'=>'Sigle ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -72,7 +71,6 @@ class RepertoireShowType extends AbstractType
             ->add('dateReception', DateType::class, ['label'=>'Date de réception de la DSF',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
               
 
@@ -85,7 +83,6 @@ class RepertoireShowType extends AbstractType
                       'Inactif' => 0
                   ],
                    'required'=>true,
-                   'disabled'=>true,
               'attr'=>array('class'=>'form-control form-control-sm')
               ])
 
@@ -97,7 +94,6 @@ class RepertoireShowType extends AbstractType
                       'Concerné' => 0
                   ],
                    'required'=>true,
-                   'disabled'=>true,
               'attr'=>array('class'=>'form-control form-control-sm')
               ])
               
@@ -105,7 +101,6 @@ class RepertoireShowType extends AbstractType
               ->add('dateCessation', DateType::class, ['label'=>'Date de cessation',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
               ->add('raisonCessation', ChoiceType::class, [
@@ -119,7 +114,6 @@ class RepertoireShowType extends AbstractType
                       'Scission' => 4
                   ],
                    'required'=>false,
-                   'disabled'=>true,
               'attr'=>array('class'=>'form-control form-control-sm')
               ])
 
@@ -127,7 +121,6 @@ class RepertoireShowType extends AbstractType
               ->add('dateMiseAjour', DateType::class, ['label'=>'Date de mise à jour',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
            ->add('observation',TextareaType::class,
@@ -144,7 +137,7 @@ class RepertoireShowType extends AbstractType
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                
                 'required'=>false,
-                'disabled'=>true,
+                
               
                 'label'=>'Systeme de comptabilité ',
 
@@ -156,7 +149,6 @@ class RepertoireShowType extends AbstractType
                 'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                 'required'=>false,
-                'disabled'=>true,
 
                ])
 
@@ -166,7 +158,6 @@ class RepertoireShowType extends AbstractType
                 'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                 'required'=>false,
-                'disabled'=>true,
 
                ])
 
@@ -176,7 +167,6 @@ class RepertoireShowType extends AbstractType
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                
                 'required'=>false,
-                'disabled'=>true,
                 'label'=>'Pays du siége de l\'entreprise ',
 
                ])
@@ -187,7 +177,6 @@ class RepertoireShowType extends AbstractType
               ->add('etablissementsDansPays',IntegerType::class,
                    array('label'=>'Nombre d\'établissements dans le pays:',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array(
                               'class'=>'form-control',
                               'min'=>"1"
@@ -198,7 +187,6 @@ class RepertoireShowType extends AbstractType
              ->add('etablissementsHorsPays',IntegerType::class,
                    array('label'=>'Nombre d\'établissements hors du pays:',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array(
                                'class'=>'form-control form-control-sm',
                                'min'=>"1"
@@ -210,7 +198,6 @@ class RepertoireShowType extends AbstractType
               ->add('premiereAnneeExercice',IntegerType::class,
                    array('label'=>'Premiére année d\'éxercice',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array(
                             'class'=>'form-control form-control-sm',
                             'min'=>"1"
@@ -224,7 +211,6 @@ class RepertoireShowType extends AbstractType
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                
                 'required'=>false,
-                'disabled'=>true,
                 'label'=>'Controle ',
 
                ])
@@ -237,15 +223,26 @@ class RepertoireShowType extends AbstractType
                    array('label'=>'Libellé ',
 
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm',
                            'style' => 'width:100%;'),             
             ))
 
+
+
+
+
+
+
+
+
+
+
+
+            
+
             ->add('denominationSocial',TextType::class,
                    array('label'=>'Dénomination sociale ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm input-sm')              
             ))
 
@@ -253,14 +250,12 @@ class RepertoireShowType extends AbstractType
             ->add('ninea',IntegerType::class,
                    array('label'=>'NINEA/NINET ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm','min' => 1)              
             ))
 
            ->add('dateReactivation', DateType::class, ['label'=>'Date de Réactivation:',
                 'attr'=>array('class'=>'form-control form-control-sm',"visibility" => 'hidden'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
             
@@ -268,7 +263,6 @@ class RepertoireShowType extends AbstractType
             ->add('raisonReactivation',TextType::class,
                    array('label'=>'Raison de Réactivation',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm',"visibility" => 'hidden')              
             ))
 
@@ -277,21 +271,18 @@ class RepertoireShowType extends AbstractType
            ->add('NomDuContact',TextType::class,
                    array('label'=>'Nom ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
             ->add('prenomDuContact',TextType::class,
                    array('label'=>'Prénom ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
            ->add('addresseDuContact',TextType::class,
                    array('label'=>'addresse ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -302,7 +293,6 @@ class RepertoireShowType extends AbstractType
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                
                 'required'=>false,
-                'disabled'=>true,
                 'label'=>'Fonction/Qualité ',
 
                ])
@@ -311,7 +301,6 @@ class RepertoireShowType extends AbstractType
             ->add('NomDuCabinet',TextType::class,
                    array('label'=>'Nom du cabinet ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -319,7 +308,6 @@ class RepertoireShowType extends AbstractType
             ->add('addresseDuCabinet',TextType::class,
                    array('label'=>'Fonction/Qualité ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -327,7 +315,6 @@ class RepertoireShowType extends AbstractType
           ->add('prenomDuExpert',TextType::class,
                    array('label'=>'Prénom ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -335,7 +322,6 @@ class RepertoireShowType extends AbstractType
            ->add('nomDuExpert',TextType::class,
                    array('label'=>'Nom ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -344,7 +330,6 @@ class RepertoireShowType extends AbstractType
             ->add('telephoneDuCabinet',TextType::class,
                    array('label'=>'Tél',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm',
                        "visibility" => 'hidden')              
             ))
@@ -354,27 +339,23 @@ class RepertoireShowType extends AbstractType
             ->add('addresseComplete',TextType::class,
                    array('label'=>'Addresse complete',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
             ->add('dureeDeExercice',IntegerType::class,
                    array('label'=>'Durée de l\'excercice(mois)',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm','min' => 1)              
             ))
 
             ->add('clotureDeExercice', DateType::class, ['label'=>'Date de clôture de l\'excercice',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
             ->add('debutExerciceComptable', DateType::class, ['label'=>'Date de debut l\'excercice comptable:',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
 
@@ -382,7 +363,6 @@ class RepertoireShowType extends AbstractType
             ->add('finExerciceComptable', DateType::class, ['label'=>'Date de fin de l\'excercice comptable:',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
 
@@ -390,7 +370,6 @@ class RepertoireShowType extends AbstractType
             ->add('dateArreteEffectif', DateType::class, ['label'=>'Date d\'arret effectif des comptes:',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
 
@@ -398,7 +377,6 @@ class RepertoireShowType extends AbstractType
             ->add('clotureExercicePrecedent', DateType::class, ['label'=>'Date clôture de l\'excercice précédent:',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
-                'disabled'=>true,
                 'widget' => 'single_text'])
 
 
@@ -408,7 +386,6 @@ class RepertoireShowType extends AbstractType
             ->add('enseigne',TextType::class,
                    array('label'=>'Enseigne ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -416,7 +393,6 @@ class RepertoireShowType extends AbstractType
             ->add('dureeExercicePrecedent',IntegerType::class,
                    array('label'=>'Durée de l\'excercice précédent(mois):',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm','min' => 1)              
             ))
 
@@ -424,7 +400,6 @@ class RepertoireShowType extends AbstractType
             ->add('numeroRegistreCommerce',TextType::class,
                    array('label'=>'Numéro de registre de commerce: ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -433,14 +408,12 @@ class RepertoireShowType extends AbstractType
             ->add('numeroCaisseSociale',TextType::class,
                    array('label'=>'Numéro de caisse sociale ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
             ->add('codeImportateur',TextType::class,
                    array('label'=>'Numéro de code importateur ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -448,34 +421,30 @@ class RepertoireShowType extends AbstractType
             ->add('telephone1',TextType::class,
                    array('label'=>'Téléphone 1 ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
           ->add('telephone2',TextType::class,
                    array('label'=>'Téléphone 2 ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm'))
                )
 
            ->add('numeroTelecopie',TextType::class,
                    array('label'=>'Numéro de télécopie(fax) ',
                           'required'=>false,
-                         'disabled'=>true,
+
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
            ->add('boitePostale',TextType::class,
                    array('label'=>'Boite postale',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
             ->add('addresseDuCabinet',TextType::class,
                    array('label'=>'Addresse ',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -485,7 +454,6 @@ class RepertoireShowType extends AbstractType
              ->add('email',TextType::class,
                    array('label'=>'Addresse email',
                           'required'=>false,
-                          'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
 
@@ -496,7 +464,6 @@ class RepertoireShowType extends AbstractType
                 'choice_label'=>'libelle',
                 'attr'=>array('class'=>'form-control form-control-sm '),
                 'required'=>false,
-                'disabled'=>true,
                 'label'=>"Type"
 
 
@@ -507,7 +474,7 @@ class RepertoireShowType extends AbstractType
        
 
             ->add('commissairesComptes',CollectionType::class,[
-                 'entry_type' => CommissairesComptesShowType::class,
+                 'entry_type' => CommissairesComptesType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
@@ -519,7 +486,7 @@ class RepertoireShowType extends AbstractType
             ])
 
             ->add('activities',CollectionType::class,[
-                 'entry_type' => ActivitiesShowType::class,
+                 'entry_type' => ActivitiesType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
@@ -532,7 +499,7 @@ class RepertoireShowType extends AbstractType
 
 
              ->add('dirigeants',CollectionType::class,[
-                 'entry_type' => DirigeantShowType::class,
+                 'entry_type' => DirigeantType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
@@ -544,7 +511,7 @@ class RepertoireShowType extends AbstractType
             ])
 
              ->add('actionnaires',CollectionType::class,[
-                 'entry_type' => ActionnaireShowType::class,
+                 'entry_type' => ActionnaireType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
@@ -556,7 +523,7 @@ class RepertoireShowType extends AbstractType
             ])
 
             ->add('membreConseils',CollectionType::class,[
-                 'entry_type' => MembreConseilShowType::class,
+                 'entry_type' => MembreConseilType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,
@@ -569,7 +536,7 @@ class RepertoireShowType extends AbstractType
 
 
             ->add('filiales',CollectionType::class,[
-                 'entry_type' => FilialesShowType::class,
+                 'entry_type' => FilialesType::class,
                  'label'=>' ',
                  'allow_add'=> true,
                  'allow_delete'=>true,

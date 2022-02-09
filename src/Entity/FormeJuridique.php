@@ -51,6 +51,12 @@ class FormeJuridique
         return $this->code;
     }
 
+
+    public function getCodeLibelle(): ?string
+    {
+        return $this->code."-".$this->libelle;
+    }
+
     public function setCode(?string $code): self
     {
         $this->code = $code;

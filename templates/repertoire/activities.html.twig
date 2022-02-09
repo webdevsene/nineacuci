@@ -1,18 +1,38 @@
-
-	<td width="10%;">{{ form_widget(form.libelleActivitePrincipale) }}</td>
-	<td width="15%;"> 
-		{{ form_widget(form.sYSCOA) }} <br><br>
-		{{ form_widget(form.categorySyscoa) }} 
-
-	</td>
+<tr style="width: 100%;" >
 	
-	<td width="15%;">{{ form_widget(form.nAEMA) }}</td>
-	<td width="15%;">{{ form_widget(form.nAEMAS) }}</td>
-	<td width="15%;">{{ form_widget(form.cITI) }}</td>
-	<td width="10%;">{{ form_widget(form.chiffreAffaire) }}</td>
-	<td width="10%;"> {{ form_widget(form.valeurAjoutee) }}</td>
-	<td width="10%;">{{ form_widget(form.pourcentage) }}</td>
-	<td width="5%;">{{ form_widget(form.activitePrincipale) }}</td>
+	<td width="100%">
 
-	<td><button type="button" class="btn  btn-delete"><i class="fas fa-times-circle"></i></button>
+		<table class="table table table-bordered dt-responsive" width="100%">
+
+			<tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+				<td>Libellé</td>
+				<td>Chiffre d'affaire</td>
+				<td>Valeure ajoutée</td>
+				<td>Pourcentage</td>
+			</tr>
+			<tr>
+				<td>{{ form_widget(form.libelleActivitePrincipale) }}</td>
+				<td>{{ form_widget(form.chiffreAffaire) }}</td>
+				<td>{{ form_widget(form.valeurAjoutee) }}</td>
+				<td>{{ form_widget(form.pourcentage) }}</td>
+			</tr>
+			
+		</table> <br>
+
+
+
+		<div class="row">
+            <div class="col-md-3">SYSCOA <br> {{ form_widget(form.sYSCOA) }}</div>
+            <div class="col-md-3">NAEMA <br> {{ form_widget(form.nAEMA) }}</div>
+            <div class="col-md-3">NAEMAS <br> {{ form_widget(form.nAEMAS) }}</div>
+            <div class="col-md-3">CITI <br>{{ form_widget(form.cITI) }}</div>
+            <div class="col-md-3"><br><br><button type="button" class="btn btn-secondary  btn-delete" >Supprimer</button></div>
+            
+        </div>
+
+		
+
+     </td>
+	
+</tr>
 	

@@ -92,6 +92,7 @@ class Activities
         $this->id = Uuid::v4();
         $this->createdAt=new \DateTime();
         $this->updatedAt=new \DateTime();
+        $this->activitePrincipale=false;
     }
 
     public function getId(): ?string

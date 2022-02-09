@@ -42,6 +42,20 @@ class SYSCOAController extends AbstractController
         return new JsonResponse( $tab);
     }
 
+
+      /**
+     * @Route("/categorySyscoa/{id}", name="categorySyscoa", methods={"GET"})
+     */
+    public function categorySyscoa( $id="")
+    {
+         $tab=[];
+         $syscoa=$this->getDoctrine()->getRepository(Syscoa::class)->find($id);
+         $key=$syscoa->getCategorySyscoa();
+         array_push($tab,[$key->getId(),$key->getLibelle(),$key->getId()]);
+         
+        return new JsonResponse( $tab);
+    }
+
     /**
      * @Route("/new", name="s_y_s_c_o_a_new", methods={"GET", "POST"})
      */

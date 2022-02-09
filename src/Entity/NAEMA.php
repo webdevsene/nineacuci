@@ -51,6 +51,12 @@ class NAEMA
     }
 
 
+    public function getCodeLibelle(): ?string
+    {
+        return $this->code."-".$this->libelle;
+    }
+
+
 
 
        /**

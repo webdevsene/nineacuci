@@ -67,6 +67,12 @@ class NAEMAS
     }
 
 
+    public function getCodeLibelle(): ?string
+    {
+        return $this->id."-".$this->libelle;
+    }
+
+
     /**
      * @return Collection|Repertoires[]
      */

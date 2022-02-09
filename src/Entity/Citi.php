@@ -52,6 +52,12 @@ class Citi
         $this->repertoires = new ArrayCollection();
     }
 
+
+    public function getCodeLibelle(): ?string
+    {
+        return $this->code."-".$this->libelle;
+    }
+
     public function getId(): ?string
     {
         return $this->id;

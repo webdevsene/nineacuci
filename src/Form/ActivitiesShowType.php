@@ -49,7 +49,7 @@ class ActivitiesShowType extends AbstractType
             
             ->add('sYSCOA', EntityType::class, [
                  'class' => SYSCOA::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control select2'),
                 'required'=>false,
                 'disabled'=>true,
@@ -57,7 +57,7 @@ class ActivitiesShowType extends AbstractType
             ])
              ->add('cITI', EntityType::class, [
                  'class' => CITI::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control select2'),
                 'required'=>false,
                 'disabled'=>true,
@@ -66,7 +66,7 @@ class ActivitiesShowType extends AbstractType
 
              ->add('nAEMA', EntityType::class, [
                  'class' => NAEMA::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control select2'),
                 'required'=>false,
                 'disabled'=>true,
@@ -75,7 +75,7 @@ class ActivitiesShowType extends AbstractType
 
               ->add('nAEMAS', EntityType::class, [
                  'class' => NAEMAS::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control select2'),
                 'required'=>false,
                 'disabled'=>true,
