@@ -230,7 +230,7 @@ class BilanController extends AbstractController
 
 
       /**
-     * @Route("/bilanjson/{annee}", name="bilanjson", methods={"GET","POST"})
+     * @Route("/bilanjson/{annee}", name="bilansjson", methods={"GET","POST"})
      */
     public function bilanjson( $annee="")
     {

@@ -273,7 +273,7 @@
 
     $('#anneePassif').change(function(){
             
-            let route="{{path('bilanjson')}}"+"/"+ $('#anneePassif').val();
+            let route="{{path('bilansjson')}}"+"/"+ $('#anneePassif').val();
              var form = $(this).closest("form");
             $.ajax({
                 type: 'GET',

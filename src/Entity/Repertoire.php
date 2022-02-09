@@ -1562,7 +1562,7 @@ class Repertoire
         return $this->systemeComptabilite;
     }
 
-    public function setSystemeComptabilite(?SystemeComptabilite $systemeComptabilite): self
+    public function setSystemeComptabilite(?SystemeComptabilite $systemeComptabilite): void
     {
         $this->systemeComptabilite = $systemeComptabilite;
     }
