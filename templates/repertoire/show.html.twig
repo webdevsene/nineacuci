@@ -1120,11 +1120,13 @@
     data-prototype="{{include('repertoire/dirigeant.html.twig',{'form':form.dirigeants.vars.prototype})|e }}"
     data-index="{{ form.dirigeants|length > 0 ? form.dirigeants|last.vars.name + 1 : 0 }}">
     {% for tag in form.dirigeants %}
+    <tr>
     <td>{{ form_widget(tag.nom) }}</td>
     <td> {{ form_widget(tag.prenom) }}</td>
     <td>{{ form_widget(tag.position) }}</td>
     <td>{{ form_widget(tag.numero) }}</td>
     <td>{{ form_widget(tag.addresse) }}</td>
+    </tr>
     {% endfor %} 
                 
             </tbody>
@@ -1184,11 +1186,13 @@
     data-index="{{ form.actionnaires|length > 0 ? form.actionnaires|last.vars.name + 1 : 0 }}">
 
        {% for tag in form.actionnaires %}
+       <tr>
             <td>{{ form_widget(tag.nom) }}</td>
             <td> {{ form_widget(tag.prenom) }}</td>
             <td>{{ form_widget(tag.nationality) }}</td>
             <td>{{ form_widget(tag.capital) }}</td>
             <td>{{ form_widget(tag.pourcentage) }}</td>
+        </tr>
         {% endfor %} 
             
         </tbody>
@@ -1246,10 +1250,12 @@
 
 
     {% for tag in form.membreConseils %}
+    <tr>
         <td>{{ form_widget(tag.nom) }}</td>
         <td> {{ form_widget(tag.prenom) }}</td>
         <td>{{ form_widget(tag.position) }}</td>
         <td>{{ form_widget(tag.addresse) }}</td>
+    </tr>
     {% endfor %}   
             
         </tbody>
@@ -1312,10 +1318,12 @@
     data-index="{{ form.filiales|length > 0 ? form.filiales|last.vars.name + 1 : 0 }}">
 
     {% for tag in form.filiales %}
+    <tr>
     <td>{{ form_widget(tag.designation) }}</td>
     <td> {{ form_widget(tag.nationality) }}</td>
     <td>{{ form_widget(tag.capital) }}</td>
     <td>{{ form_widget(tag.pourcentage) }}</td>
+    </tr>
     {% endfor %}
                 
             </tbody>
