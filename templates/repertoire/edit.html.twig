@@ -1477,13 +1477,46 @@
                                 </div>
                         </div>
                         <div class="row">
+                                 <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">Cessation :</label>
+                                       
+                                        <div class="col-md-7">
+                                               <input class="form-check-input" type="radio" name="cessation"
+                                                                id="cessationRight" checked>
+                                                        Non
+                                                <input class="form-check-input" type="radio" name="cessation"
+                                                                id="cessationLeft" >OUI
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input">
+                                            <br>
+                                           
+                                        </label>
+                                       
+                                       
+                                    </div>
+                                </div>
+                               
+                        </div>
+                        <div class="row">
                                 <div class="col-lg-6">
 
                                    <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.raisonCessation)}}:</label>
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                         <div style="display: none;" id="raisonCessationLabelle"> {{form_label(form.raisonCessation)}}:
+                                          </div>
+                                         </label>
                                        
                                         <div class="col-md-7">
+                                            <div style="display: none;" id="raisonCessation">
                                               {{form_widget(form.raisonCessation)}}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1785,16 +1818,46 @@
          }
 
 
-
-        if ($('#repertoire_edit_raisonCessation').val()==1) {
-
-             document.getElementById("iddateCessationLabel").style.display = "block";
-             document.getElementById("iddateCessation").style.display = "block";
-            
-         }else{
+        $('#cessationRight').change(function(){
+           
+           
 
              document.getElementById("iddateCessationLabel").style.display = "none";
              document.getElementById("iddateCessation").style.display = "none";
+             document.getElementById("raisonCessationLabelle").style.display = "none";
+             document.getElementById("raisonCessation").style.display = "none";
+        });
+
+
+         $('#cessationLeft').change(function(){
+             
+              document.getElementById("iddateCessationLabel").style.display = "block";
+             document.getElementById("iddateCessation").style.display = "block";
+              document.getElementById("raisonCessationLabelle").style.display = "block";
+             document.getElementById("raisonCessation").style.display = "block";
+            
+
+        });
+
+
+
+
+         if ($('#cessationRight').val()==1) {
+
+             document.getElementById("iddateCessationLabel").style.display = "none";
+             document.getElementById("iddateCessation").style.display = "none";
+             document.getElementById("raisonCessationLabelle").style.display = "none";
+             document.getElementById("raisonCessation").style.display = "none";
+            
+         }
+
+
+        if ($('#cessationLeft').val()==1) {
+
+             document.getElementById("iddateCessationLabel").style.display = "block";
+             document.getElementById("iddateCessation").style.display = "block";
+              document.getElementById("raisonCessationLabelle").style.display = "block";
+             document.getElementById("raisonCessation").style.display = "block";
             
          }
 
