@@ -137,12 +137,14 @@ class RepertoireType extends AbstractType
                 'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                 'required'=>false,
+                'label'=>'Régime fiscal ',
+                
 
                ])
 
              ->add('paysDuEntreprise', EntityType::class, [
                  'class' => Pays::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'getCodeLibelle',
                 'attr'=>array('class'=>'form-control form-control-sm syscoa', "style"=>"width:100%;"),
                
                 'required'=>false,
@@ -318,7 +320,7 @@ class RepertoireType extends AbstractType
                 'required'=>false,
                 'widget' => 'single_text'])
 
-            ->add('debutExerciceComptable', DateType::class, ['label'=>'Date de debut l\'excercice comptable:',
+            ->add('debutExerciceComptable', DateType::class, ['label'=>'Date de début l\'excercice comptable:',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
                 'widget' => 'single_text'])
@@ -347,7 +349,7 @@ class RepertoireType extends AbstractType
 
 
 
-            ->add('dateArreteEffectif', DateType::class, ['label'=>'Date d\'arret effectif des comptes:',
+            ->add('dateArreteEffectif', DateType::class, ['label'=>'Date d\'arrêt effectif des comptes:',
                 'attr'=>array('class'=>'form-control form-control-sm'),
                 'required'=>false,
                 'widget' => 'single_text'])

@@ -40,9 +40,23 @@ class Pays
     private $repertoires;
 
 
+     /**
+     * @ORM\OneToMany(targetEntity=Actionnaire::class, mappedBy="pays")
+     */
+    private $actionnaires;
+
+
+     /**
+     * @ORM\OneToMany(targetEntity=Filiales::class, mappedBy="pays")
+     */
+    private $filiales;
+
+
     public function __construct()
     {
         $this->repertoires = new ArrayCollection();
+        $this->actionnaires = new ArrayCollection();
+        $this->filiales = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -50,7 +64,13 @@ class Pays
         return $this->id;
     }
 
-         /**
+
+     public function getCodeLibelle(): ?string
+    {
+        return $this->id."-".$this->libelle;
+    }
+
+    /**
      * @return Collection|Repertoires[]
      */
     public function getRepertoire()
@@ -70,7 +90,7 @@ class Pays
 
     public function removeRepertoire(Repertoire $repertoire): self
     {
-        if ($this->repertoire->removeElement($repertoire)) {
+        if ($this->repertoires->removeElement($repertoire)) {
             // set the owning side to null (unless already changed)
             if ($repertoire->getPaysDuEntreprise() === $this) {
                 $repertoire->setPaysDuEntreprise(null);
@@ -79,6 +99,71 @@ class Pays
 
         return $this;
     }
+
+
+       /**
+     * @return Collection|Actionnaire[]
+     */
+    public function getActionnaire(): Collection
+    {
+        return $this->actionnaires;
+    }
+
+    public function addActionnaire(Actionnaire $actionnaire): self
+    {
+        if (!$this->actionnaires->contains($actionnaire)) {
+            $this->actionnaires[] = $actionnaire;
+            $actionnaire->setPays($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionnaire(Actionnaire $actionnaire): self
+    {
+        if ($this->actionnaires->removeElement($actionnaire)) {
+            // set the owning side to null (unless already changed)
+            if ($actionnaire->getPays() === $this) {
+                $actionnaire->setPays(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+      /**
+     * @return Collection|Filiales[]
+     */
+    public function getFiliales(): Collection
+    {
+        return $this->filiales;
+    }
+
+    public function addFiliale(Filiales $filiale): self
+    {
+        if (!$this->filiales->contains($filiale)) {
+            $this->filiales[] = $filiale;
+            $filiales->setPays($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFiliales(Filiales $filiale): self
+    {
+        if ($this->filiales->removeElement($filiale)) {
+            // set the owning side to null (unless already changed)
+            if ($filiale->getPays() === $this) {
+                $filiale->setPays(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
     public function getCode(): ?string
     {

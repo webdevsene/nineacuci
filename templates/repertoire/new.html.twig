@@ -1497,6 +1497,9 @@
 
         item.querySelector(".btn-removeFiliales").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
 
@@ -1519,6 +1522,9 @@
 
         item.querySelector(".btn-removeMembreConseil").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
 
@@ -1540,6 +1546,9 @@
 
         item.querySelector(".btn-removeActionnaire").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
 
@@ -1563,6 +1572,9 @@
 
         item.querySelector(".btn-removeDirigeant").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
     document.querySelectorAll(".ajouterDirigeant").forEach(btn=>btn.addEventListener("click",newItemDirigeant));
@@ -1584,7 +1596,9 @@
 
         item.querySelector(".btn-remove").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
-        
+         $(".syscoa").select2({
+          theme: "classic"
+        });
     }
     document.querySelectorAll(".nouveauCommissaire").forEach(btn=>btn.addEventListener("click",newItem));
 
@@ -2109,7 +2123,7 @@
              if ($.trim($('#repertoire_activitePrincipaleRepeat').val())!=$.trim($('#repertoire_activitePrincipale').val())) {
                $('#repertoire_activitePrincipaleRepeat').addClass('has_error');
                 
-                Swal.fire('Le libellé  d\'activité principale doit etre le meme que celui que vous avez saisie dans l\'onglet identification.');
+                Swal.fire('Le libellé  d\'activité principale doit etre le même que celui que vous avez saisie dans l\'onglet identification.');
 
              }else{
                   $('#repertoire_activitePrincipaleRepeat').removeClass('has_error');
@@ -2124,7 +2138,7 @@
              if ($.trim($('#idsyscoaRepeat').val())!=$.trim($('#idsyscoa').val())) {
                $('#idsyscoaRepeat').addClass('has_error');
                 
-                Swal.fire('Le SYSCOA ne correspond pas à celui saisi précédement.');
+                Swal.fire('Le SYSCOA ne correspond pas à celui saisi précédemment.');
 
              }else{
                   $('#idsyscoaRepeat').removeClass('has_error');
@@ -2138,7 +2152,7 @@
              if ($.trim($('#idnaemaRepeat').val())!=$.trim($('#idnaema').val())) {
                $('#idnaemaRepeat').addClass('has_error');
                 
-                Swal.fire('Le NAEMA ne correspond pas à celui saisi précédement.');
+                Swal.fire('Le NAEMA ne correspond pas à celui saisi précédemment.');
 
              }else{
                   $('#idnaemaRepeat').removeClass('has_error');
@@ -2153,7 +2167,7 @@
              if ($.trim($('#idnaemasRepeat').val())!=$.trim($('#idnaemas').val())) {
                $('#idnaemasRepeat').addClass('has_error');
                 
-                Swal.fire('Le NAEMAS ne correspond pas à celui saisi précédement.');
+                Swal.fire('Le NAEMAS ne correspond pas à celui saisi précédemment.');
 
              }else{
                   $('#idnaemasRepeat').removeClass('has_error');
@@ -2169,7 +2183,7 @@
              if ($.trim($('#idcitiRepeat').val())!=$.trim($('#idciti').val())) {
                $('#idcitiRepeat').addClass('has_error');
                 
-                Swal.fire('Le CITI ne correspond pas à celui saisi précédement.');
+                Swal.fire('Le CITI ne correspond pas à celui saisi précédemment.');
 
              }else{
                   $('#idcitiRepeat').removeClass('has_error');

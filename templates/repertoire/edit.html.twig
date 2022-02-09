@@ -41,7 +41,7 @@
         <div class="page-title-right">
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a href="javascript: void(0);">Gestion des repertoires</a></li>
-                <li class="breadcrumb-item active">Nouvelle unité</li>
+                <li class="breadcrumb-item active">Modification unité</li>
             </ol>
         </div>
 
@@ -115,7 +115,7 @@
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#dirigent" id="dirigents" role="tab">
                             <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
-                            <span class="d-none d-sm-block">Dirigents ou Associés principaux</span>    
+                            <span class="d-none d-sm-block">Dirigaents ou Associés principaux</span>    
                         </a>
                     </li>
                     <li class="nav-item">
@@ -1010,7 +1010,7 @@
             <tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef; width: 80%;">
                 <td>Libellé</td>
                 <td>Chiffre d'affaire</td>
-                <td>Valeure ajoutée</td>
+                <td>Valeur ajoutée</td>
                 <td>Pourcentage</td>
                
             </tr>
@@ -1574,6 +1574,9 @@
 
         item.querySelector(".btn-removeFiliales").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
 
@@ -1596,6 +1599,9 @@
 
         item.querySelector(".btn-removeMembreConseil").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
 
@@ -1617,6 +1623,9 @@
 
         item.querySelector(".btn-removeActionnaire").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
 
@@ -1640,6 +1649,9 @@
 
         item.querySelector(".btn-removeDirigeant").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
     document.querySelectorAll(".ajouterDirigeant").forEach(btn=>btn.addEventListener("click",newItemDirigeant));
@@ -1661,6 +1673,9 @@
 
         item.querySelector(".btn-remove").addEventListener("click",()=>item.remove());
          collections.appendChild(item);
+          $(".syscoa").select2({
+          theme: "classic"
+        });
         
     }
     document.querySelectorAll(".nouveauCommissaire").forEach(btn=>btn.addEventListener("click",newItem));
