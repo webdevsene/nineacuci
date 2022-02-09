@@ -64,6 +64,12 @@ class Pays
         return $this->id;
     }
 
+
+     public function getCodeLibelle(): ?string
+    {
+        return $this->id."-".$this->libelle;
+    }
+
     /**
      * @return Collection|Repertoires[]
      */
