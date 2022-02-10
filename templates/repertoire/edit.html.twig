@@ -1779,8 +1779,10 @@
         document.getElementById("nomDuExpert").style.display = "none";
        
 
-         if ($('#formRadiosRight1').val()==1) {   
-            
+
+
+            if ($('#repertoire_edit_prenomDuExpert').val()=="") {
+
              document.getElementById("nomDuCabinet").style.display = "block";
              document.getElementById("addresseDuCabinetLabel").style.display = "block";
              document.getElementById("addresseDuCabinet").style.display = "block";
@@ -1791,31 +1793,31 @@
              document.getElementById("prenomDuExpertlabel").style.display = "none";
              document.getElementById("nomDuExpertLabel").style.display = "none";
              document.getElementById("nomDuExpert").style.display = "none";
-
-
-
-
-             
-         }
-
-
-
-        if ($('#formRadiosRight2').val()==1) {
-
-             document.getElementById("nomDuCabinetlabel").style.display = "none";
-             document.getElementById("nomDuCabinet").style.display = "none";
-
-              document.getElementById("telephoneDuCabinetlabel").style.display = "none";
-             document.getElementById("telephoneDuCabinet").style.display = "none";
+             radiobtn = document.getElementById("formRadiosRight1");
+             radiobtn.checked = true;
+            
+         }else{
+               
+            document.getElementById("nomDuCabinetlabel").style.display = "none";
+            document.getElementById("nomDuCabinet").style.display = "none";
+            document.getElementById("telephoneDuCabinetlabel").style.display = "none";
+            document.getElementById("telephoneDuCabinet").style.display = "none";
 
             document.getElementById("prenomDuExpert").style.display = "block";
-             document.getElementById("prenomDuExpertlabel").style.display = "block";
-             document.getElementById("nomDuExpertLabel").style.display = "block";
-             document.getElementById("nomDuExpert").style.display = "block";
+            document.getElementById("prenomDuExpertlabel").style.display = "block";
+            document.getElementById("nomDuExpertLabel").style.display = "block";
+            document.getElementById("nomDuExpert").style.display = "block";
 
-             document.getElementById("addresseDuCabinetLabel").style.display = "none";
-             document.getElementById("addresseDuCabinet").style.display = "none";
+            document.getElementById("addresseDuCabinetLabel").style.display = "none";
+            document.getElementById("addresseDuCabinet").style.display = "none";
+             radiobtn = document.getElementById("formRadiosRight2");
+             radiobtn.checked = true;
+
          }
+
+
+
+      
 
 
         $('#cessationRight').change(function(){
@@ -1842,23 +1844,26 @@
 
 
 
-         if ($('#cessationRight').val()==1) {
+        
 
-             document.getElementById("iddateCessationLabel").style.display = "none";
-             document.getElementById("iddateCessation").style.display = "none";
-             document.getElementById("raisonCessationLabelle").style.display = "none";
-             document.getElementById("raisonCessation").style.display = "none";
-            
-         }
-
-
-        if ($('#cessationLeft').val()==1) {
+        if ($('#repertoire_edit_raisonCessation').val()!="") {
 
              document.getElementById("iddateCessationLabel").style.display = "block";
              document.getElementById("iddateCessation").style.display = "block";
               document.getElementById("raisonCessationLabelle").style.display = "block";
              document.getElementById("raisonCessation").style.display = "block";
+             radiobtn = document.getElementById("cessationLeft");
+             radiobtn.checked = true;
             
+         }else{
+               
+             document.getElementById("iddateCessationLabel").style.display = "none";
+             document.getElementById("iddateCessation").style.display = "none";
+             document.getElementById("raisonCessationLabelle").style.display = "none";
+             document.getElementById("raisonCessation").style.display = "none";
+             radiobtn = document.getElementById("cessationRight");
+             radiobtn.checked = true;
+
          }
 
 
@@ -2297,21 +2302,7 @@
 
 
 
-         $('#repertoire_edit_raisonCessation').change(function(){
-             
-              if ($('#repertoire_edit_raisonCessation').val()==1) {
-
-             document.getElementById("iddateCessationLabel").style.display = "block";
-             document.getElementById("iddateCessation").style.display = "block";
-            
-         }else{
-
-             document.getElementById("iddateCessationLabel").style.display = "none";
-             document.getElementById("iddateCessation").style.display = "none";
-            
-         }
-
-        });
+ 
 
         
 

@@ -1458,13 +1458,46 @@
                                 </div>
                         </div>
                         <div class="row">
+                                 <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">Cessation :</label>
+                                       
+                                        <div class="col-md-7">
+                                               <input class="form-check-input" type="radio" name="cessation"
+                                                                id="cessationRight" checked>
+                                                        Non
+                                                <input class="form-check-input" type="radio" name="cessation"
+                                                                id="cessationLeft" >OUI
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input">
+                                            <br>
+                                           
+                                        </label>
+                                       
+                                       
+                                    </div>
+                                </div>
+                               
+                        </div>
+                        <div class="row">
                                 <div class="col-lg-6">
 
                                    <div class="mb-3 row" >
-                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.raisonCessation)}}:</label>
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                         <div style="display: none;" id="raisonCessationLabelle"> {{form_label(form.raisonCessation)}}:
+                                          </div>
+                                         </label>
                                        
                                         <div class="col-md-7">
+                                            <div style="display: none;" id="raisonCessation">
                                               {{form_widget(form.raisonCessation)}}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1565,10 +1598,111 @@
 
     $(document).ready(function(){
 
+
+
+            if ($('#repertoire_show_prenomDuExpert').val()=="") {
+
+             document.getElementById("nomDuCabinet").style.display = "block";
+             document.getElementById("addresseDuCabinetLabel").style.display = "block";
+             document.getElementById("addresseDuCabinet").style.display = "block";
+             document.getElementById("nomDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinet").style.display = "block";
+             document.getElementById("prenomDuExpert").style.display = "none";
+             document.getElementById("prenomDuExpertlabel").style.display = "none";
+             document.getElementById("nomDuExpertLabel").style.display = "none";
+             document.getElementById("nomDuExpert").style.display = "none";
+             radiobtn = document.getElementById("formRadiosRight1");
+             radiobtn.checked = true;
+            
+         }else{
+               
+            document.getElementById("nomDuCabinetlabel").style.display = "none";
+            document.getElementById("nomDuCabinet").style.display = "none";
+            document.getElementById("telephoneDuCabinetlabel").style.display = "none";
+            document.getElementById("telephoneDuCabinet").style.display = "none";
+
+            document.getElementById("prenomDuExpert").style.display = "block";
+            document.getElementById("prenomDuExpertlabel").style.display = "block";
+            document.getElementById("nomDuExpertLabel").style.display = "block";
+            document.getElementById("nomDuExpert").style.display = "block";
+
+            document.getElementById("addresseDuCabinetLabel").style.display = "none";
+            document.getElementById("addresseDuCabinet").style.display = "none";
+             radiobtn = document.getElementById("formRadiosRight2");
+             radiobtn.checked = true;
+
+         }
+
       
        
            
-         if ($('#formRadiosRight1').val()==1) {   
+        
+
+
+
+        
+
+
+
+
+
+
+        if ($('#repertoire_show_reactivation').val()==0) {
+
+             document.getElementById("iddateReactivation").style.display = "block";
+             document.getElementById("iddateReactivationLabel").style.display = "block";
+             document.getElementById("idraisonReactivation").style.display = "block";
+             document.getElementById("idraisonReactivationLabel").style.display = "block";
+         }else{
+
+             document.getElementById("iddateReactivationLabel").style.display = "none";
+             document.getElementById("iddateReactivation").style.display = "none";
+             document.getElementById("idraisonReactivationLabel").style.display = "none";
+             document.getElementById("idraisonReactivation").style.display = "none";
+         }
+
+
+
+
+        if ($('#repertoire_show_raisonCessation').val()!="") {
+
+             document.getElementById("iddateCessationLabel").style.display = "block";
+             document.getElementById("iddateCessation").style.display = "block";
+              document.getElementById("raisonCessationLabelle").style.display = "block";
+             document.getElementById("raisonCessation").style.display = "block";
+             radiobtn = document.getElementById("cessationLeft");
+             radiobtn.checked = true;
+            
+         }else{
+               
+             document.getElementById("iddateCessationLabel").style.display = "none";
+             document.getElementById("iddateCessation").style.display = "none";
+             document.getElementById("raisonCessationLabelle").style.display = "none";
+             document.getElementById("raisonCessation").style.display = "none";
+             radiobtn = document.getElementById("cessationRight");
+             radiobtn.checked = true;
+
+         }
+       
+   
+     
+
+        $(".syscoa").select2({
+          theme: "classic"
+        });
+
+
+
+    });
+
+
+    
+         $('#formRadiosRight1').change(function(){
+
+           
+           
+            
             
              document.getElementById("nomDuCabinet").style.display = "block";
              document.getElementById("addresseDuCabinetLabel").style.display = "block";
@@ -1585,11 +1719,10 @@
 
 
              
-         }
+         });
 
 
-
-        if ($('#formRadiosRight2').val()==1) {
+          $('#formRadiosRight2').change(function(){
 
              document.getElementById("nomDuCabinetlabel").style.display = "none";
              document.getElementById("nomDuCabinet").style.display = "none";
@@ -1604,48 +1737,8 @@
 
              document.getElementById("addresseDuCabinetLabel").style.display = "none";
              document.getElementById("addresseDuCabinet").style.display = "none";
-         }
+         });
 
-
-
-        if ($('#repertoire_edit_raisonCessation').val()==1) {
-
-             document.getElementById("iddateCessationLabel").style.display = "block";
-             document.getElementById("iddateCessation").style.display = "block";
-            
-         }else{
-
-             document.getElementById("iddateCessationLabel").style.display = "none";
-             document.getElementById("iddateCessation").style.display = "none";
-            
-         }
-
-
-
-        if ($('#repertoire_edit_reactivation').val()==0) {
-
-             document.getElementById("iddateReactivation").style.display = "block";
-             document.getElementById("iddateReactivationLabel").style.display = "block";
-             document.getElementById("idraisonReactivation").style.display = "block";
-             document.getElementById("idraisonReactivationLabel").style.display = "block";
-         }else{
-
-             document.getElementById("iddateReactivationLabel").style.display = "none";
-             document.getElementById("iddateReactivation").style.display = "none";
-             document.getElementById("idraisonReactivationLabel").style.display = "none";
-             document.getElementById("idraisonReactivation").style.display = "none";
-         }
-       
-   
-     
-
-        $(".syscoa").select2({
-          theme: "classic"
-        });
-
-
-
-    });
 
        
 
