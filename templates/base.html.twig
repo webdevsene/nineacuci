@@ -173,51 +173,11 @@
                                         </div>
                                     </div>
                                     </div>
-<<<<<<< HEAD
                                     </li>
                                 {% endif %}
 
                                 {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN') %}
                                     <li class="nav-item dropdown">
-=======
-                                </li>
-                             {% endif %}
-
-                                
-                     {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
-                                                                
-                                                                <li class="nav-item dropdown">
-                                                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
-                                                                    >
-                                                                    <i class="bx bx-bar-chart-alt me-2"></i><span key="t-dashboards">Etats financiers</span> <div class="arrow-down"></div>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
-                                
-                                                                        
-                                                                       <div class="row">
-                                                                        <div class="col-lg-4">
-                                                                            <div>
-                                                                                <a href="{{path('bilan_new')}}" class="dropdown-item" key="t-alerts">Bilans comptables</a>
-                                                                                
-                                                                            </div>
-                                                                            <div>
-                                                                                <a href="{{path('compte_de_resultats_new')}}" class="dropdown-item" key="t-alerts">Compte de résultats</a>
-                                                                                
-                                                                            </div>
-                                                                        </div>
-                                                                        
-                                                                    </div>
-
-                                
-                                                                        
-                                                                    </div>
-                                                                </li>
-                                
-                                                                 {% endif %}
-                                {% if is_granted('ROLE_BREA_ADMIN')   %}
-
-                                <li class="nav-item dropdown">
->>>>>>> 3f054aa2a757e1cc5ed8302c8337d81bda608f3c
                                     <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
                                     >
                                     <i class="bx bx-cog me-2"></i>
@@ -234,15 +194,6 @@
                                     </li>
                                 {% endif %}
 
-<<<<<<< HEAD
-=======
-                                </li>
-                                 {% endif %}
-
-                             {% endif %}
-
-                                
->>>>>>> 3f054aa2a757e1cc5ed8302c8337d81bda608f3c
 
                             {% endif %}
                             </ul>
