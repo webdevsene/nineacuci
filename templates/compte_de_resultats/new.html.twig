@@ -237,9 +237,13 @@
                 var tbody=document.getElementById("tbody");
                     var ann=document.getElementById("annee");
                     var anneeN_1=document.getElementById("anneeN-1");
+                    var anneeN=document.getElementById("anneeN");
                     tbody.innerHTML="";
                     ann.innerHTML="";
-                    anneeN_1.innerHTML="";
+                    anneeN.value = ann.value;
+                    anneeN.setAttribute('value', anneeN.value);
+                    anneeN.innerHTML=anneeN.value;
+                    anneeN_1.innerHTML=anneeN.value-1;
 
                 console.log(data);
                 
@@ -494,13 +498,13 @@
 
         if(isInt(document.getElementById('RAnet1').value) == true){
 
-            sumXA=sumXA+parseInt(document.getElementById('RAnet1').value);
+            sumXA=sumXA-parseInt(document.getElementById('RAnet1').value);
 
         }
         
         if(isInt(document.getElementById('RBnet1').value) == true){
 
-            sumXA=sumXA-parseInt(document.getElementById('RBnet1').value);
+            sumXA=sumXA+parseInt(document.getElementById('RBnet1').value);
         }
         
         var tb = 0;
@@ -566,7 +570,7 @@
         }
 
         // traitement sum valeur ajoutee TN = TB+TI + TE+TF+TK+TL+TT+RC+RD+RE+RH+RI+RJ+RK+RL
-        // sumXC = 0; tn = 0;  sumXC c'est sumXC = sumXA+sumXB+TE+TF+TG+TH+TI- RC- RD- RE- RF- RG- RH- RI- RJ
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = sumXA+sumXB+TE+TF+TG+TH+TI- RC + RD- RE+RF- RG- RH- RI- RJ
         
         var sumXC = sumXA+sumXB; 
         
@@ -596,11 +600,19 @@
             
         }
         if(isInt(document.getElementById('RDnet1').value) == true ){
-            sumXC = sumXC - parseInt(document.getElementById('RDnet1').value) ;
+            sumXC = sumXC + parseInt(document.getElementById('RDnet1').value) ;
             
         }
         if(isInt(document.getElementById('REnet1').value) == true ){
             sumXC = sumXC - parseInt(document.getElementById('REnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('RFnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet1').value) == true ){
+            sumXC = sumXC - parseInt(document.getElementById('RGnet1').value) ;
             
         }
         if(isInt(document.getElementById('RHnet1').value) == true ){
@@ -615,14 +627,6 @@
             sumXC = sumXC - parseInt(document.getElementById('RJnet1').value) ;
             
         }
-        if(isInt(document.getElementById('RFnet1').value) == true ){
-            sumXC = sumXC - parseInt(document.getElementById('RFnet1').value) ;
-            
-        }
-        if(isInt(document.getElementById('RGnet1').value) == true ){
-            sumXC = sumXC - parseInt(document.getElementById('RGnet1').value) ;
-            
-        }
                 
         var tn=0;
 
@@ -631,7 +635,7 @@
         }
 
 
-        var testVar2 = "valeur ajoutée X= XA+XB+TE+TF+TG+TH+TI-RC-RD-RE-RF-RG-RH-RI-RJ !";
+        var testVar2 = "valeur ajoutée XC= XA+XB+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
 
         if(tn != sumXC){
             
@@ -671,21 +675,21 @@
 
         
         var tx = 0; 
-        var sumXE = sumXD;  // sunTX c'est ex sumXE = sumXD + TJ+RL
+        var sumXE = sumXD;  // sunTX c'est ex sumXE = sumXD -RL+TJ
 
         if(isInt(document.getElementById('TJnet1').value) == true){
             sumXE = sumXE + parseInt(document.getElementById('TJnet1').value);
 
         }
         if(isInt(document.getElementById('RLnet1').value) == true){
-            sumXE = sumXE + parseInt(document.getElementById('RLnet1').value);
+            sumXE = sumXE - parseInt(document.getElementById('RLnet1').value);
 
         }
         if(isInt(document.getElementById('XEnet1').value) == true){
             tx =  parseInt(document.getElementById('XEnet1').value);
 
         }
-        var testVar4 = "Resultat d'exploitation XE = XD+TJ+RL !";
+        var testVar4 = "Resultat d'exploitation XE = XD+TJ-RL !";
         if(tx != sumXE){
 
             valider=0;
@@ -697,7 +701,7 @@
 
         // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD
 
-        var sumXF = 0; // sumXF c'est ex sumXF = RM+RN+TK-TL-TM
+        var sumXF = 0; // sumXF c'est ex sumXF = TK+TL+TM-RM-RN
         var ug = 0;
         if(isInt(document.getElementById('RMnet1').value) == true && 
            isInt(document.getElementById('RNnet1').value) == true && 
@@ -706,11 +710,11 @@
            isInt(document.getElementById('TMnet1').value == true) ){
 
             
-            sumXF = parseInt(document.getElementById('RMnet1').value)+
-                    parseInt(document.getElementById('RNnet1').value)+
-                    parseInt(document.getElementById('TKnet1').value)-
-                    parseInt(document.getElementById('TLnet1').value)-
-                    parseInt(document.getElementById('TMnet1').value)
+            sumXF=  parseInt(document.getElementById('TKnet1').value)+
+                    parseInt(document.getElementById('TLnet1').value)+
+                    parseInt(document.getElementById('TMnet1').value)-
+                    parseInt(document.getElementById('RMnet1').value)-
+                    parseInt(document.getElementById('RNnet1').value)
                     ;
 
                     
@@ -719,7 +723,7 @@
             ug =  parseInt(document.getElementById('XFnet1').value);
 
         }
-        var testVar5 = "Resultat financier XF = RM+RN+TK-TL-TM!";
+        var testVar5 = "Resultat financier XF = TK+TL+TM-RM-RN !";
         if(ug != sumXF){
 
             valider=0;
