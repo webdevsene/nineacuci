@@ -131,115 +131,71 @@
                                         
                                     </div>
                                 </li>
-                                {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}
-                                
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN')  %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                        >
+                                            <i class="bx bx-home-circle me-2"></i><span key="t-dashboards">Administration</span> <div class="arrow-down"></div>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+                                            <a href="{{path('user_index')}}" class="dropdown-item" key="t-alerts">Gestion des utilisateurs</a>
+                                        </div>
+                                    </li>                                    
+                                {% endif %}
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BREA_AGENT_SAISIE')  %}
+                                   <li class="nav-item dropdown">
+                                       <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                       >
+                                       <i class="bx bx-folder-plus me-2"></i><span key="t-dashboards">Gestion des répertoires</span> <div class="arrow-down"></div>
+                                       </a>
+                                       <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+                                           <a href="{{path('repertoire_index')}}" class="dropdown-item" key="t-alerts">Saisie et mise à jour d'une unité</a>
+                                       </div>
+                                   </li>                                
+                                {% endif %}
 
-                                
-                                <li class="nav-item dropdown">
+
+                                {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
+                                    <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
                                     >
-                                        <i class="bx bx-home-circle me-2"></i><span key="t-dashboards">Administration</span> <div class="arrow-down"></div>
+                                    <i class="bx bx-bar-chart-alt me-2"></i><span key="t-dashboards">Etats financiers</span> <div class="arrow-down"></div>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
-
-                                        <a href="{{path('user_index')}}" class="dropdown-item" key="t-alerts">Gestion des utilisateurs</a>
-
-                                        
+                                       <div class="row">
+                                        <div class="col-lg-4">
+                                            <div>
+                                                <a href="{{path('bilan_new')}}" class="dropdown-item" key="t-alerts">Bilans comptables</a>
+                                            </div>
+                                            <div>
+                                                <a href="{{path('compte_de_resultats_new')}}" class="dropdown-item" key="t-alerts">Compte de résultats</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </li>
-
-                                 {% endif %}
-
-
-
-                             {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BREA_AGENT_SAISIE')  %}
-                               
-
-                                
-                                
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
-                                    >
-                                    <i class="bx bx-folder-plus me-2"></i><span key="t-dashboards">Gestion des répertoires</span> <div class="arrow-down"></div>
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
-
-                                        <a href="{{path('repertoire_index')}}" class="dropdown-item" key="t-alerts">Saisie et mise à jour d'une unité</a>
-
-                                        
                                     </div>
-                                </li>
+                                    </li>
+                                {% endif %}
 
-                                
-                                                                  {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
-                                                                
-                                                                <li class="nav-item dropdown">
-                                                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
-                                                                    >
-                                                                    <i class="bx bx-bar-chart-alt me-2"></i><span key="t-dashboards">Etats financiers</span> <div class="arrow-down"></div>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
-                                
-                                                                        
-                                                                       <div class="row">
-                                                                        <div class="col-lg-4">
-                                                                            <div>
-                                                                                <a href="{{path('bilan_new')}}" class="dropdown-item" key="t-alerts">Bilans comptables</a>
-                                                                                
-                                                                            </div>
-                                                                            <div>
-                                                                                <a href="{{path('compte_de_resultats_new')}}" class="dropdown-item" key="t-alerts">Compte de résultats</a>
-                                                                                
-                                                                            </div>
-                                                                        </div>
-                                                                        
-                                                                    </div>
-
-                                
-                                                                        
-                                                                    </div>
-                                                                </li>
-                                
-                                                                 {% endif %}
-                                {% if is_granted('ROLE_BREA_ADMIN')   %}
-
-                                <li class="nav-item dropdown">
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN') %}
+                                    <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
                                     >
                                     <i class="bx bx-cog me-2"></i>
                                     <span key="t-ui-elements">Paramètres</span> <div class="arrow-down"></div>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
-
                                         <a href="{{path('region_new')}}" class="dropdown-item" key="t-default">Région</a>
-
                                          <a href="{{path('departement_new')}}" class="dropdown-item" key="t-default">Département</a>
-
                                           <a href="{{path('cav_new')}}" class="dropdown-item" key="t-default">Cav</a>
-
                                           <a href="{{path('cacr_new')}}" class="dropdown-item" key="t-default">Cacr</a>
-
                                           <a href="{{path('qvh_new')}}" class="dropdown-item" key="t-default">Qvh</a>
-
                                           <a href="{{path('ref_agg_index')}}" class="dropdown-item" key="t-default">Aggrégation</a>
-                                        
                                     </div>
-
-                                </li>
-                                 {% endif %}
-
-
-                            
-
-                                 {% endif %}
+                                    </li>
+                                {% endif %}
 
 
-
-
-                             {% endif %}
-
-                                
-
+                            {% endif %}
                             </ul>
                         </div>
                     </nav>

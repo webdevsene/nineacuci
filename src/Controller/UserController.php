@@ -116,7 +116,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="user_show", methods={"GET"})
-     * @Security("is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN')")
+     * @Security("is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_USER')")
      */
     public function show(User $user): Response
     {
