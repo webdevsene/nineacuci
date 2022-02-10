@@ -420,7 +420,7 @@
 
         // adapter les id element
 
-        var sumXA = 0; // RA+RB+TA sumXA c'est sumXA= TA + RA - RB
+        var sumXA = 0; // RA+RB+TA sumXA c'est sumXA= TA - RA + RB
 
         if(isInt(document.getElementById('TAnet1').value) == true){
 
@@ -448,7 +448,7 @@
 
         }
         
-        var testVar = "Marge brute ssur marchandises XA = TA+RA-RB !";
+        var testVar = "Marge brute ssur marchandises XA = TA-RA+RB !";
         if(tb == sumXA){
 
             
@@ -503,8 +503,20 @@
         // traitement sum valeur ajoutee TN = TB+TI + TE+TF+TK+TL+TT+RC+RD+RE+RH+RI+RJ+RK+RL
         // sumXC = 0; tn = 0;  sumXC c'est sumXC = sumXA+sumXB+TE+TF+TG+TH+TI- RC + RD- RE+RF- RG- RH- RI- RJ
         
-        var sumXC = sumXA+sumXB; 
+        var sumXC = sumXA; 
         
+        if(isInt(document.getElementById('TBnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TBnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('TCnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TCnet1').value) ;
+            
+        }
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXC = sumXC + parseInt(document.getElementById('TDnet1').value) ;
+            
+        }
         if(isInt(document.getElementById('TEnet1').value) == true ){
             sumXC = sumXC + parseInt(document.getElementById('TEnet1').value) ;
             
@@ -566,7 +578,7 @@
         }
 
 
-        var testVar2 = "valeur ajoutée XC= XA+XB+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
+        var testVar2 = "valeur ajoutée XC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
 
         if(tn != sumXC){
             
