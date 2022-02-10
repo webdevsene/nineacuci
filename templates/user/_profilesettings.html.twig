@@ -96,7 +96,7 @@
                                  Agent Saisie BREA,
                              {%else%}
                              {% if tag=="ROLE_BSE_AGENT_SAISIE" %}
-                                   Agent Saisie BREA
+                                   Agent Saisie BSE
 
                                {%endif%}
                                {%endif%}
@@ -112,8 +112,8 @@
                   <div class="row">
                     <div class="col-sm-12">
                       {% if is_granted('ROLE_BREA_ADMIN') or  is_granted('ROLE_BSE_ADMIN')  %}  
+                      <a  class="btn btn-info" title="Retourner à la liste des utilisateurs" href="{{ path('user_index') }}"> Liste</a>
                         {% if user.enabled==1%}
-                          <a  class="btn btn-info" title="Retourner à la liste des utilisateurs" href="{{ path('user_index') }}"> Liste</a>
 
                           <a  class="btn btn-info" title="Désactiver un compte" href="{{ path('user_desactiver',{id:user.id}) }}">Désactiver</a>
 

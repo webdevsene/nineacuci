@@ -8,9 +8,6 @@
 
 {% block body %}
 
-{# {{ include('compte_de_resultats/_formold.html.twig') }} #}
-
-
 <div class="row">
     <div class="col-xl-12">
 
@@ -35,16 +32,13 @@
        <!-- end page title -->
 
         <!-- debut form -->
-
         
-{# {% block body %} #}
 <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
     <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte">
     <div class="card-body " style="margin: 0%;padding: 0%;">
         <div class="row">
         <div class="col-xl-12"> 
        
-        {# <form method="post" action="{{path('bilan_new')}}"> #}
         <table class="table table-bordered mt-5">
                  <tr>
                   <td>Numéro d'identification :<span style="color:red">*</span>
@@ -90,19 +84,13 @@
                               Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
                             </th>
                             <th colspan="3" scope="col" class="text-center">
-                              Exercice au 31/12/<span class="text-info" id="anneeN-1">2018</span>
+                              Exercice au 31/12/<span class="text-info" id="anneeN-1"></span>
                             </th>
                           </tr>
                         <tr class="bg-dark bg-soft opacity-80">
                             <th scope="col" colspan="5" class="text-center">
                                 
                             </th>
-                           {#  <th colspan="1" scope="col" class="text-center">
-                              Brut
-                            </th>
-                            <th colspan="3" scope="col" class="text-center">
-                              Ammortissement
-                            </th> #}
                             <th colspan="2" scope="col" class="text-center">
                               NET1
                             </th>
@@ -132,14 +120,6 @@
         </div>
         </form>
 </div>
-
-
-
-    
-{# {% endblock %} #}
-
-
-
 
 <!-- end formulaire -->
 
@@ -254,8 +234,6 @@
 
                     var td1=document.createElement('td');
                     var td2=document.createElement('td');
-                   //var td3=document.createElement('td');
-                   //var td4=document.createElement('td');
                      var td5=document.createElement('td');
                      var td6=document.createElement('td');
 
@@ -270,29 +248,6 @@
                                
                     td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
                     tr.appendChild(td2) ;
-
-                   // td3.setAttribute('colspan',2); 
-                   // td3.setAttribute('scope',"col"); 
-                   // td3.setAttribute('class',"text-center"); 
-
-                   // var input3=document.createElement('input');  
-                   // input3.setAttribute('class','form-control form-control-sm'); 
-                   // input3.setAttribute('type','number'); 
-                   // input3.setAttribute('name',data[2][i][0]+"brut"); 
-                   // td3.appendChild(input3);
-                   // tr.appendChild(td3) ;
-
-
-                   // td4.setAttribute('colspan',2); 
-                   // td4.setAttribute('scope',"col"); 
-                   // td4.setAttribute('class',"text-center");           
-                   // 
-                   // var input4=document.createElement('input');  
-                   // input4.setAttribute('class','form-control form-control-sm');
-                   // input4.setAttribute('type','number'); 
-                   // input4.setAttribute('name',data[2][i][0]+"ammo"); 
-                   // td4.appendChild(input4);
-                   // tr.appendChild(td4) ;
 
 
                     td5.setAttribute('colspan',3); 
@@ -343,8 +298,7 @@
                             var tr=document.createElement('tr');
                             var td1=document.createElement('td');
                             var td2=document.createElement('td');
-                            // var td3=document.createElement('td');
-                            // var td4=document.createElement('td');
+
                             var td5=document.createElement('td');
                             var td6=document.createElement('td');
 
@@ -359,29 +313,6 @@
                                       
                             td2.innerHTML=  data[1][j][1];
                             tr.appendChild(td2) ;
-
-                           //  td3.setAttribute('colspan',2); 
-                           //  td3.setAttribute('scope',"col"); 
-                           //  td3.setAttribute('class',"text-center"); 
-// 
-                           //  var input3=document.createElement('input'); 
-                           //   input3.setAttribute('type','number'); 
-                           //  input3.setAttribute('name',data[1][j][0]+"brut");  
-                           //  input3.setAttribute('class','form-control form-control-sm'); 
-                           //  td3.appendChild(input3);
-                           //  tr.appendChild(td3) ;
-// 
-// 
-                           //  td4.setAttribute('colspan',2); 
-                           //  td4.setAttribute('scope',"col"); 
-                           //  td4.setAttribute('class',"text-center");           
-                           // 
-                           //  var input4=document.createElement('input');  
-                           //  input4.setAttribute('class','form-control form-control-sm'); 
-                           //  input4.setAttribute('type','number'); 
-                           //  input4.setAttribute('name',data[1][j][0]+"ammo");
-                           //  td4.appendChild(input4);
-                           //  tr.appendChild(td4) ;
 
 
                             td5.setAttribute('colspan',3); 
