@@ -51,6 +51,7 @@
                                       
                                 <table class="table table-bordered mt-5" style="margin-top: 0px; padding: 0px;">
                                                          <tr style="margin-top:0px;">
+                                                          
                                                           <td>Numéro d'identification :<span style="color:red">*</span>
                                                               <input type="text"  class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
                                                           <td>Désignation entité :<span style="color:red">*</span>
@@ -237,6 +238,8 @@
 
 <script>
 
+
+
  $(document).ready(function(){
 
  {% if app.session.get("codeCuci")!=""%}
@@ -334,6 +337,14 @@
                         if(data[0][data[2][i][0]]){
                           input3.setAttribute('value',data[0][data[2][i][0]][1]);
                         }
+
+
+                       var separator = " ";
+                       $(data[2][i][0]+"brut").on('change', function(e) {
+                          console.log('ok');
+                          var o = $(this).val().replace(new RegExp(separator, "g"), '')
+                         $(this).val( o.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1'+separator) )
+                        })
 
 
                         td3.appendChild(input3);
@@ -887,6 +898,8 @@
     });
 
 
+
+
  $('#idcuci').change(function(){
             
             let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
@@ -934,6 +947,9 @@
     }
 
 
+
+
+
     $('#valider').click(function(e){
 
 
@@ -943,6 +959,9 @@
            tagbrut='{{tag.code}}'+"brut";
            tagammo='{{tag.code}}'+"ammo";
            tagnet='{{tag.code}}'+"net1";  // code ref agg concaténé à net1
+
+          
+
            if(is_int(document.getElementById(tagbrut).value)==true){
               brut=parseInt(remplacer(document.getElementById(tagbrut).value));
            }else brut=0;
@@ -975,6 +994,8 @@
 
 
         {% endfor %}
+
+          
         
         var sommeAD=0;
         if(is_int(document.getElementById("AEbrut").value)==true){
@@ -1013,6 +1034,10 @@
                         sommeAI=sommeAI + parseInt(remplacer(document.getElementById("AKbrut").value));
                     }
 
+                    if(is_int(document.getElementById("APbrut").value)==true){
+                        sommeAI=sommeAI + parseInt(remplacer(document.getElementById("APbrut").value));
+                    }
+
                     if(is_int(document.getElementById("ALbrut").value)==true){
                        sommeAI=sommeAI + parseInt(remplacer(document.getElementById("ALbrut").value));
                     }
@@ -1031,7 +1056,7 @@
                     if(document.getElementById("AIbrut").value!="")
                         aibrut=remplacer(document.getElementById("AIbrut").value);
 
-
+                  
                     if (sommeAI==parseInt(aibrut)) {
                       ///////////////
                     var sommeAQ=0;
@@ -1049,7 +1074,7 @@
                         aqbrut=remplacer(document.getElementById("AQbrut").value);
 
 
-                    if (sommeAQ==parseInt(aibrut)) {
+                    if (sommeAQ==parseInt(aqbrut)) {
 
                        ///////
 

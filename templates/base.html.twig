@@ -87,7 +87,7 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {#<img class="rounded-circle header-profile-user" src="{{ asset('admin/dist/assets/images/users/avatar-1.jpg')}}"#}
+                               
                                 <img class="rounded-circle header-profile-user" src="https://bootdey.com/img/Content/avatar/avatar7.png"
                                     alt="Header Avatar">
                                 <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.prenom}} {{app.user.nom}}</span>
@@ -169,9 +169,10 @@
                                         
                                     </div>
                                 </li>
+                             {% endif %}
 
                                 
-                                                                  {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
+                     {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
                                                                 
                                                                 <li class="nav-item dropdown">
                                                                     <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
@@ -227,14 +228,6 @@
 
                                 </li>
                                  {% endif %}
-
-
-                            
-
-                                 {% endif %}
-
-
-
 
                              {% endif %}
 
