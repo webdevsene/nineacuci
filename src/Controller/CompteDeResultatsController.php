@@ -18,7 +18,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 
 /**
@@ -27,10 +26,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class CompteDeResultatsController extends AbstractController
 {
-    // declarer ici les variable Repository qui entre en jeux 
-   // private RepertoireRepository $reperRepo;
-   // private CompteDeResultatsRepository $cdrRepo;
-   // private RefAggRepository $refAggRepo;
    private $requestStack;
     
     public function __construct(RequestStack $requestStack, 
@@ -59,7 +54,6 @@ class CompteDeResultatsController extends AbstractController
     
     /**
      * @Route("/new", name="compte_de_resultats_new", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')")
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -146,63 +140,6 @@ class CompteDeResultatsController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="compte_de_resultats_new", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')")
-     */
-   /*  public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-
-        if ($request->get('annee')) {
-            // recuperer le code cuci
-            $codeCuci = $request->get('idcuci'); 
-             // recuperer l'annee meme
-            $annee = $request->get('annee'); 
-
-            // on recharge tous les champs du formulaires 
-            // si l'annee donnee existe dans le compte_de_resultat
-            $exists = $this->cdrRepo->findBy(array("annee_financiere" => $annee, "cuci_rep_code"=>$this->reperRepo->findOneBy(array("codeCuci" => $codeCuci))));
-             
-
-            if ($exists) {
-                // traitement restituer le formulaire avec les donnees des champs
-                return $this->renderForm("compte_de_resultats/show.html.twig", [
-                    "restituer" => $exists,
-                ]);
-            }
-
-            $refAgg = $this->refAggRepo
-                           ->findBy(array("category" => 2)); 
-            
-            $countSaving = 0;
-
-            foreach ($refAgg as $key) {
-                $compteResultat = new CompteDeResultats;
-
-                $compteResultat->setAnneeFinanciere($annee)
-                               ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
-                               ->setRefCode($key->getCode())
-                               ->setNet1($request->get($key->getCode()."net1"))
-                               ->setNet2($request->get($key->getCode()."net2"))
-                ;
-
-              $entityManager->persist($compteResultat);
-              $entityManager->flush();
-
-              $countSaving = $countSaving+1;
-
-
-            }
-
-            if ($countSaving > 0) {
-                $this->addFlash('notice', "Sauvegarde effectuée avec succès !");
-            }
-        }
-
-        return $this->renderForm('compte_de_resultats/new.html.twig', [
-        ]);
-    } */
-
-    /**
      * @Route("/{id}", name="compte_de_resultats_show", methods={"GET"})
      */
     public function show(CompteDeResultats $compteDeResultat): Response
@@ -282,9 +219,6 @@ class CompteDeResultatsController extends AbstractController
 
         $codeCuci= $session->get('codeCuci');   
 
-        
-        // $bilan=$this->getDoctrine()->getRepository(CompteDeResultats::class)->findByCodeCuci($codeCuci,$annee);
-
         $bilan = $this->cdrRepo->findByCodeCuci($codeCuci, $annee);
             
             foreach ($bilan as $key ) {
@@ -299,14 +233,10 @@ class CompteDeResultatsController extends AbstractController
                      $key->getNet2()]);  */
     
              } 
-            // $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>1,"surlignee"=>0],  array('code' => 'DESC'));
     
             $refAgg = $this->refAggRepo
-                           //->findBy(["category"=>2,"typeBilan"=>1,"surlignee"=>0],  array('code' => 'DESC'));
                            ->findBy(["category"=>2,"surlignee"=>0],  array('code' => 'DESC'));
-    
-            // $refAggParent=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>1,"surlignee"=>1],array('code' => 'DESC'));
-            
+                
             $refAggParent=$this->refAggRepo
                                ->findBy(["category"=>2,"surlignee"=>1],array('code' => 'DESC'));
     
