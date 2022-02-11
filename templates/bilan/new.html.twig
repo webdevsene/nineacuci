@@ -2164,6 +2164,10 @@
                     sommedz=sommedz + parseInt(remplacer(document.getElementById("DFPassifNet1").value));
                 }
 
+                if(is_int(document.getElementById("DVPassifNet1").value)==true){
+                    sommedz=sommedz + parseInt(remplacer(document.getElementById("DVPassifNet1").value));
+                }
+
                  if(is_int(document.getElementById("DPPassifNet1").value)==true){
                     sommedz=sommedz + parseInt(remplacer(document.getElementById("DPPassifNet1").value));
                 }
@@ -2197,7 +2201,7 @@
                   {
 
                      validerPassif=0;
-                   Swal.fire('Vérifier les valeurs Net1 saisie pour DZ (DZ=CP+DF+DP+DT).');
+                   Swal.fire('Vérifier les valeurs Net1 saisie pour DZ (DZ=CP+DF+DP+DT+DV).');
 
                   }
    
