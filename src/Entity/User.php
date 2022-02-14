@@ -182,10 +182,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $dirigeantsModifiedby;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Actionnaire::class, mappedBy="createdBy")
-     */
-    private $actionnaires;
+   
 
     /**
      * @ORM\OneToMany(targetEntity=Actionnaire::class, mappedBy="modifiedBy")
@@ -241,7 +238,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commissairesComtesModifiedBy = new ArrayCollection();
         $this->dirigeants = new ArrayCollection();
         $this->dirigeantsModifiedby = new ArrayCollection();
-        $this->actionnaires = new ArrayCollection();
+        
         $this->actionnairesModifiedBy = new ArrayCollection();
         $this->membreConseils = new ArrayCollection();
         $this->membreConseilsModifiedBy = new ArrayCollection();
@@ -809,35 +806,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Actionnaire[]
-     */
-    public function getActionnaires(): Collection
-    {
-        return $this->actionnaires;
-    }
 
-    public function addActionnaire(Actionnaire $actionnaire): self
-    {
-        if (!$this->actionnaires->contains($actionnaire)) {
-            $this->actionnaires[] = $actionnaire;
-            $actionnaire->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActionnaire(Actionnaire $actionnaire): self
-    {
-        if ($this->actionnaires->removeElement($actionnaire)) {
-            // set the owning side to null (unless already changed)
-            if ($actionnaire->getCreatedBy() === $this) {
-                $actionnaire->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Actionnaire[]
