@@ -19,10 +19,7 @@ class Actionnaire
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="actionnaires, nullable=true")
-     */
-    private $createdBy;
+   
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -100,17 +97,7 @@ class Actionnaire
         return $this->id;
     }
 
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
+  
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
