@@ -282,7 +282,7 @@ class RepertoireEditType extends AbstractType
             ))
 
            ->add('addresseDuContact',TextType::class,
-                   array('label'=>'addresse ',
+                   array('label'=>'adresse ',
                           'required'=>false,
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))

@@ -73,7 +73,7 @@
                                              <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
                                              Sauvegarder
                                          </a>
-                                         <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light">
+                                         <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
                                              <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
                                          </button>
                                      </div>
@@ -126,11 +126,29 @@
                                         </tbody>
                                         <!-- end tbody -->
                                     </table>
+                                     <br><br><br>
                                 </div>
-                            </div>           
+                            </div>
+
+
+                             <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+                                         <button type="button" class="btn btn-secondary waves-effect waves-light">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                        
+                                         <a href="" type="submit" class="btn btn-success waves-effect waves-light sauvegarderPassif">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </a>
+                                         <button id="valider2" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                     </div>           
 
                             </div>
                             <input type="hidden" name="type" value="1" >
+
                   
                 </form>
             </div>
@@ -160,7 +178,7 @@
                                                                  <button type="submit" class="btn btn-success waves-effect waves-light ">
                                                                      <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
                                                                  </button>
-                                                                 <button type="button" class="btn btn-dark bt-soft waves-effect waves-light"
+                                                                 <button type="button" class="btn btn-dark bt-soft waves-effect waves-light validerPassif"
                                                                   id="validerPassif">
                                                                      <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
                                                                  </button>
@@ -192,12 +210,13 @@
                                                                         
                                                                     </th>
                                                                     
-                                                                    <th colspan="1" scope="col" class="text-center">
+                                                                    <th colspan="2" scope="col" class="text-center">
                                                                       NETN
                                                                     </th>
                                                                     <th colspan="2" scope="col" class="text-center">
                                                                       NETN-1
                                                                     </th>
+                                                                    <th></th>
                                                                   </tr>
                                                             </thead>
 
@@ -209,6 +228,21 @@
                                                             </tbody>
                                                             <!-- end tbody -->
                                                         </table>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                         <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                                                 <button type="button" class="btn btn-secondary waves-effect waves-light">
+                                                                     <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                                                 </button>
+                                                                 <button type="submit" class="btn btn-success waves-effect waves-light ">
+                                                                     <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                                                                 </button>
+                                                                 <button type="button" class="btn btn-dark bt-soft waves-effect waves-light validerPassif"
+                                                                  id="validerPassif">
+                                                                     <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                                                 </button>
+                                                             </div>
                                                     </div>
                                                 </div>
 
@@ -950,7 +984,7 @@
 
 
 
-    $('#valider').click(function(e){
+    $('.valider').click(function(e){
 
 
         var tagbrut,tagammo,tagnet,brut=0,ammo=0,net=0,somme=0, valider=1;
@@ -2012,7 +2046,7 @@
 
     
 
-    $('#validerPassif').click(function(e){
+    $('.validerPassif').click(function(e){
 
 
         

@@ -454,6 +454,11 @@ class Repertoire
      */
     private $systemeComptabilite;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ImmoBrut::class, mappedBy="repertoire")
+     */
+    private $immoBruts;
+
 
 
 
@@ -467,10 +472,11 @@ class Repertoire
         $this->filiales = new ArrayCollection();
         $this->createdAt=new \DateTime();
         $this->updatedAt=new \DateTime();
-        $this->deleted=false;
+        $this->deleted=true;
         $this->bilans = new ArrayCollection();
         $this->id = Uuid::v4();
         $this->compte_de_resultats = new ArrayCollection();
+        $this->immoBruts = new ArrayCollection();
     }
 
 
@@ -1595,6 +1601,36 @@ class Repertoire
             }
         }
 
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ImmoBrut[]
+     */
+    public function getImmoBruts(): Collection
+    {
+        return $this->immoBruts;
+    }
+
+    public function addImmoBrut(ImmoBrut $immoBrut): self
+    {
+        if (!$this->immoBruts->contains($immoBrut)) {
+            $this->immoBruts[] = $immoBrut;
+            $immoBrut->setRepertoire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImmoBrut(ImmoBrut $immoBrut): self
+    {
+        if ($this->immoBruts->removeElement($immoBrut)) {
+            // set the owning side to null (unless already changed)
+            if ($immoBrut->getRepertoire() === $this) {
+                $immoBrut->setRepertoire(null);
+            }
+        }
 
         return $this;
     }
