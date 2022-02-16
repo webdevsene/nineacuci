@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ImmoBrut{% endblock %}
+
+{% block body %}
+    <h1>Edit ImmoBrut</h1>
+
+    {{ include('immo_brut/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('immo_brut_index') }}">back to list</a>
+
+    {{ include('immo_brut/_delete_form.html.twig') }}
+{% endblock %}

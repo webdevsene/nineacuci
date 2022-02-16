@@ -1,0 +1,869 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Bilan{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+    .larger{
+
+        width: 100%;
+
+    }
+ </style>
+
+
+         
+{% endblock %}
+{% block body %}
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-title">
+         
+    </div>
+    <div class="card-body " style="margin: 0%;padding: 0%;">
+                <form method="post" action="{{path('bilan_new')}}" id="idformpas" style="margin: 0px; padding: 0px;">
+                            <div class="row" style="margin-top: 0px; padding: 0px;">
+                             <div class="col-xl-12" style="margin-top: 0px; padding: 0px;"> 
+                                      
+                                <table class="table table-bordered mt-5" style="margin-top: 0px; padding: 0px;">
+                                                         <tr style="margin-top:0px;">
+                                                          
+                                                          <td>Numéro d'identification :<span style="color:red">*</span>
+                                                              <input type="text"  class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                                                          <td>Désignation entité :<span style="color:red">*</span>
+                                                              <input type="text" disabled class="form-control form-control-sm" name="" id="denomination"></td>
+                                                          <td>Année financière :<span style="color:red">*</span>
+                                                              <input type="text" class="form-control form-control-sm" name="annee" id="annee"></td>
+                                                         </tr>
+                                </table>
+                                         
+                                <div class="card">
+                                 <div class="card-body">
+
+                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                         <button type="button" class="btn btn-secondary waves-effect waves-light">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                        
+                                         <a href="" type="submit" class="btn btn-success waves-effect waves-light sauvegarderPassif">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </a>
+                                         <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                     </div>
+                                 </div>
+                                </div>
+                             </div>
+
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
+                                        <thead>
+                                            <tr class="bg-dark bg-soft opacity-65">
+                                                <th scope="col" colspan="2" class="text-center ">
+                                                    REF
+                                                </th>
+                                                <th scope="col" colspan="3" class="text-center">
+                                                  Libellé<br>
+                                                </th>
+                                                <th colspan="4" scope="col" class="text-center">
+                                                    <span class="text-info" id="annee"></span> 
+                                                </th>
+                                                <th colspan="3" scope="col" class="text-center">
+                                                  <span class="text-info" id="anneeN-1"></span>
+                                                </th>
+                                              </tr>
+                                            <tr class="bg-dark bg-soft opacity-80">
+                                                <th scope="col" colspan="5" class="text-center">
+                                                    
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                 Montant brut à l'ouverture de l'exercice
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                  Acquisitions Apports Créations
+                                                </th>
+                                                 <th colspan="1" scope="col" class="text-center">
+                                                  Virements de poste à poste
+                                                </th>
+                                                 <th colspan="1" scope="col" class="text-center">
+                                                  Suite à une réévaluation pratiquée au cours de l'exercice
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                  Cessions Scissions Hors service
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                 Virements de poste à poste
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                  Montant brut à la clôture de l'exercice
+                                                </th>
+                                              </tr>
+                                        </thead>
+
+                                        <!-- debut tbody inputs -->
+                                        <tbody id="tbody">
+                                    
+                                        
+                                        
+                                        </tbody>
+                                        <!-- end tbody -->
+                                    </table>
+                                </div>
+                            </div>           
+
+                            </div>
+                            <input type="hidden" name="type" value="1" >
+                  
+                </form>
+           
+
+    </div>
+</div>
+
+
+
+    
+{% endblock %}
+
+
+
+{% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+<script>
+
+
+
+ $(document).ready(function(){
+
+ {% if app.session.get("codeCuci")!=""%}
+  
+    var value='{{app.session.get("codeCuci")}}';
+
+    document.getElementById('idcuci').setAttribute('value',value);
+    document.getElementById('idcuciPassif').setAttribute('value',value);
+
+    let route="{{path('nineaNum')}}"+"/"+ value;
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                    let denominationPassif=document.getElementById("denominationPassif");
+                    denominationPassif.value=data;
+                    denomination.value=data;
+
+                  
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+    })
+
+ {% endif %}
+
+  });
+
+
+
+    $('#anneePassif').change(function(){
+            
+            let route="{{path('bilansjson')}}"+"/"+ $('#anneePassif').val();
+             var form = $(this).closest("form");
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(tab){
+                    var tbody=document.getElementById("tbody");
+                    var ann=document.getElementById("annee");
+                    var anneeN_1=document.getElementById("anneeN-1");
+                    tbody.innerHTML="";
+                    ann.innerHTML="";
+                    anneeN_1.innerHTML="";
+                    
+                    document.getElementById("annee").value=$('#anneePassif').val();
+                    
+                   
+                   
+
+                    var data=tab[0];
+
+
+
+                    for (var i = 0; i < data[2].length; i++) {
+                        var tr=document.createElement('tr');
+                        tr.setAttribute('class',"bg-dark bg-soft opacity-65");           
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                               
+                             
+                        td1.innerHTML=  data[2][i][0];
+                        tr.appendChild(td1) ;
+
+                        td2.setAttribute('colspan',2); 
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  data[2][i][1];
+                        tr.appendChild(td2) ;
+
+                        td3.setAttribute('colspan',2); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm'); 
+                        input3.setAttribute('type','number'); 
+                        input3.setAttribute('name',data[2][i][0]+"brut");
+                        input3.setAttribute('id',data[2][i][0]+"brut");
+                        if(data[0][data[2][i][0]]){
+                          input3.setAttribute('value',data[0][data[2][i][0]][1]);
+                        }
+
+
+                       var separator = " ";
+                       $(data[2][i][0]+"brut").on('change', function(e) {
+                          console.log('ok');
+                          var o = $(this).val().replace(new RegExp(separator, "g"), '')
+                         $(this).val( o.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1'+separator) )
+                        })
+
+
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+
+                      
+
+
+                        td4.setAttribute('colspan',2); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                       
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm');
+                        input4.setAttribute('type','number'); 
+                        input4.setAttribute('name',data[2][i][0]+"ammo");
+                        input4.setAttribute('id',data[2][i][0]+"ammo");
+                         if(data[0][data[2][i][0]]){
+                          input4.setAttribute('value',data[0][data[2][i][0]][2]);
+                        } 
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+                       
+
+
+                        td5.setAttribute('colspan',2); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");
+                        var input5=document.createElement('input'); 
+                        input5.setAttribute('type','number'); 
+                        input5.setAttribute('name',data[2][i][0]+"net1"); 
+                        input5.setAttribute('id',data[2][i][0]+"net1"); 
+                        input5.setAttribute('class','form-control form-control-sm');
+                        if(data[0][data[2][i][0]]){
+                          input5.setAttribute('value',data[0][data[2][i][0]][3]);
+                        } 
+                        td5.appendChild(input5);
+
+                        tr.appendChild(td5) ;
+                        
+                       
+
+
+                        td6.setAttribute('colspan',2); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                        var input6=document.createElement('input'); 
+                        input6.setAttribute('type','number'); 
+                        input6.setAttribute('name',data[2][i][0]+"net2"); 
+                        input6.setAttribute('id',data[2][i][0]+"net2"); 
+                        input6.setAttribute('class','form-control form-control-sm'); 
+                        if(data[0][data[2][i][0]]){
+                          input6.setAttribute('value',data[0][data[2][i][0]][4]);
+                        }
+                        td6.appendChild(input6);
+                        tr.appendChild(td6) ;
+
+
+                        tbody.appendChild(tr);  
+
+                        for (var j =0; j <data[1].length ; j++) {
+                                      
+                            if (data[2][i][0]==data[1][j][2]) {
+
+                                var tr=document.createElement('tr');
+                                var td1=document.createElement('td');
+                                var td2=document.createElement('td');
+                                var td3=document.createElement('td');
+                                var td4=document.createElement('td');
+                                var td5=document.createElement('td');
+                                var td6=document.createElement('td');
+
+                                td1.setAttribute('colspan',2); 
+                                td1.setAttribute('scope',"col"); 
+                                td1.setAttribute('class',"text-center form");           
+                                td1.innerHTML=  data[1][j][0];
+                                tr.appendChild(td1) ;
+
+                                td2.setAttribute('colspan',2); 
+                                td2.setAttribute('scope',"col"); 
+                                          
+                                td2.innerHTML=  data[1][j][1];
+                                tr.appendChild(td2) ;
+
+                                td3.setAttribute('colspan',2); 
+                                td3.setAttribute('scope',"col"); 
+                                td3.setAttribute('class',"text-center"); 
+
+                                var input3=document.createElement('input'); 
+                                 input3.setAttribute('type','number'); 
+                                input3.setAttribute('name',data[1][j][0]+"brut");  
+                                input3.setAttribute('id',data[1][j][0]+"brut");  
+                                input3.setAttribute('class','form-control form-control-sm'); 
+                                if(data[0][data[1][j][0]]){
+                                input3.setAttribute('value',data[0][data[1][j][0]][1]);
+                                }
+                                td3.appendChild(input3);
+                                tr.appendChild(td3) ;
+
+
+                                td4.setAttribute('colspan',2); 
+                                td4.setAttribute('scope',"col"); 
+                                td4.setAttribute('class',"text-center");           
+                               
+                                var input4=document.createElement('input');  
+                                input4.setAttribute('class','form-control form-control-sm'); 
+                                input4.setAttribute('type','number'); 
+                                input4.setAttribute('name',data[1][j][0]+"ammo");
+                                input4.setAttribute('id',data[1][j][0]+"ammo");
+                                if(data[0][data[1][j][0]]){
+                                input4.setAttribute('value',data[0][data[1][j][0]][2]);
+                                }
+                                td4.appendChild(input4);
+                                tr.appendChild(td4) ;
+
+
+                                td5.setAttribute('colspan',2); 
+                                td5.setAttribute('scope',"col"); 
+                                td5.setAttribute('class',"text-center");
+                                var input5=document.createElement('input');
+                                input5.setAttribute('type','number'); 
+                                input5.setAttribute('name',data[1][j][0]+"net1");  
+                                input5.setAttribute('id',data[1][j][0]+"net1");  
+                                input5.setAttribute('class','form-control form-control-sm'); 
+                                if(data[0][data[1][j][0]]){
+                                 input5.setAttribute('value',data[0][data[1][j][0]][3]);
+                                }
+                                td5.appendChild(input5);
+                                tr.appendChild(td5) ;
+                               
+
+
+                                td6.setAttribute('colspan',2); 
+                                td6.setAttribute('scope',"col"); 
+                                td6.setAttribute('class',"text-center");           
+                                var input6=document.createElement('input');  
+                                input6.setAttribute('class','form-control form-control-sm'); 
+                                 input6.setAttribute('type','number'); 
+                                input6.setAttribute('name',data[1][j][0]+"net2");
+                                input6.setAttribute('id',data[1][j][0]+"net2");
+                                if(data[0][data[1][j][0]]){
+                                input6.setAttribute('value',data[0][data[1][j][0]][4]);
+                                } 
+                                td6.appendChild(input6);
+                                tr.appendChild(td6) ;
+
+
+                                tbody.appendChild(tr);  
+
+
+                            }
+                        }          
+                            
+                       
+                    }
+
+                    var tbody=document.getElementById("tbodyPassif");
+
+                    tbody.innerHTML="";
+
+
+                    var dataPassif=tab[1];
+
+
+
+                    for (var i = 0; i < dataPassif[1].length; i++) {
+                        var tr=document.createElement('tr');
+                        if (dataPassif[1][i][4]==true) {
+                             tr.setAttribute('class',"bg-dark bg-soft opacity-65");
+                        }
+                                  
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                      
+
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                               
+                             
+                        td1.innerHTML=  dataPassif[1][i][0];
+                        tr.appendChild(td1) ;
+
+                        td2.setAttribute('colspan',2); 
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  dataPassif[1][i][1];
+                        tr.appendChild(td2) ;
+
+                        td3.setAttribute('colspan',2); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm'); 
+                        input3.setAttribute('type','number'); 
+                        input3.setAttribute('name',dataPassif[1][i][0]+"PassifNet1");
+                        input3.setAttribute('id',dataPassif[1][i][0]+"PassifNet1");
+                        if(dataPassif[0][dataPassif[1][i][0]]){
+                          input3.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][1]);
+                        }
+
+
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+
+                      
+
+
+                        td4.setAttribute('colspan',2); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                       
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm');
+                        input4.setAttribute('type','number'); 
+                        input4.setAttribute('name',dataPassif[1][i][0]+"PassifNet2");
+                        input4.setAttribute('id',dataPassif[1][i][0]+"PassifNet2");
+                         if(dataPassif[0][dataPassif[1][i][0]]){
+                          input4.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][2]);
+                        } 
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+
+                        tbody.appendChild(tr);  
+
+                                
+                            
+                       
+                    }
+
+
+                   
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+    });
+
+
+    $('#annee').change(function(){
+            
+            let route="{{path('bilansjson')}}"+"/"+ $('#annee').val();
+             var form = $(this).closest("form");
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(tab){
+                    var tbody=document.getElementById("tbody");
+                    var ann=document.getElementById("annee");
+                    var anneeN_1=document.getElementById("anneeN-1");
+                    tbody.innerHTML="";
+                    ann.innerHTML="";
+                    anneeN_1.innerHTML="";
+                    
+                    document.getElementById("anneePassif").value=$('#annee').val();
+                    
+                   
+                   
+
+                    var data=tab[0];
+
+
+
+                    for (var i = 0; i < data[2].length; i++) {
+                        var tr=document.createElement('tr');
+                        tr.setAttribute('class',"bg-dark bg-soft opacity-65");           
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                               
+                             
+                        td1.innerHTML=  data[2][i][0];
+                        tr.appendChild(td1) ;
+
+                        td2.setAttribute('colspan',2); 
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  data[2][i][1];
+                        tr.appendChild(td2) ;
+
+                        td3.setAttribute('colspan',2); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm'); 
+                        input3.setAttribute('type','number'); 
+                        input3.setAttribute('name',data[2][i][0]+"brut");
+                        input3.setAttribute('id',data[2][i][0]+"brut");
+                        if(data[0][data[2][i][0]]){
+                          input3.setAttribute('value',data[0][data[2][i][0]][1]);
+                        }
+
+
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+
+                      
+
+
+                        td4.setAttribute('colspan',2); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                       
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm');
+                        input4.setAttribute('type','number'); 
+                        input4.setAttribute('name',data[2][i][0]+"ammo");
+                        input4.setAttribute('id',data[2][i][0]+"ammo");
+                         if(data[0][data[2][i][0]]){
+                          input4.setAttribute('value',data[0][data[2][i][0]][2]);
+                        } 
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+                       
+
+
+                        td5.setAttribute('colspan',2); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");
+                        var input5=document.createElement('input'); 
+                        input5.setAttribute('type','number'); 
+                        input5.setAttribute('name',data[2][i][0]+"net1"); 
+                        input5.setAttribute('id',data[2][i][0]+"net1"); 
+                        input5.setAttribute('class','form-control form-control-sm');
+                        if(data[0][data[2][i][0]]){
+                          input5.setAttribute('value',data[0][data[2][i][0]][3]);
+                        } 
+                        td5.appendChild(input5);
+
+                        tr.appendChild(td5) ;
+                        
+                       
+
+
+                        td6.setAttribute('colspan',2); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                        var input6=document.createElement('input'); 
+                        input6.setAttribute('type','number'); 
+                        input6.setAttribute('name',data[2][i][0]+"net2"); 
+                        input6.setAttribute('id',data[2][i][0]+"net2"); 
+                        input6.setAttribute('class','form-control form-control-sm'); 
+                        if(data[0][data[2][i][0]]){
+                          input6.setAttribute('value',data[0][data[2][i][0]][4]);
+                        }
+                        td6.appendChild(input6);
+                        tr.appendChild(td6) ;
+
+
+                        tbody.appendChild(tr);  
+
+                        for (var j =0; j <data[1].length ; j++) {
+                                      
+                            if (data[2][i][0]==data[1][j][2]) {
+
+                                var tr=document.createElement('tr');
+                                var td1=document.createElement('td');
+                                var td2=document.createElement('td');
+                                var td3=document.createElement('td');
+                                var td4=document.createElement('td');
+                                var td5=document.createElement('td');
+                                var td6=document.createElement('td');
+
+                                td1.setAttribute('colspan',2); 
+                                td1.setAttribute('scope',"col"); 
+                                td1.setAttribute('class',"text-center form");           
+                                td1.innerHTML=  data[1][j][0];
+                                tr.appendChild(td1) ;
+
+                                td2.setAttribute('colspan',2); 
+                                td2.setAttribute('scope',"col"); 
+                                          
+                                td2.innerHTML=  data[1][j][1];
+                                tr.appendChild(td2) ;
+
+                                td3.setAttribute('colspan',2); 
+                                td3.setAttribute('scope',"col"); 
+                                td3.setAttribute('class',"text-center"); 
+
+                                var input3=document.createElement('input'); 
+                                 input3.setAttribute('type','number'); 
+                                input3.setAttribute('name',data[1][j][0]+"brut");  
+                                input3.setAttribute('id',data[1][j][0]+"brut");  
+                                input3.setAttribute('class','form-control form-control-sm'); 
+                                if(data[0][data[1][j][0]]){
+                                input3.setAttribute('value',data[0][data[1][j][0]][1]);
+                                }
+                                td3.appendChild(input3);
+                                tr.appendChild(td3) ;
+
+
+                                td4.setAttribute('colspan',2); 
+                                td4.setAttribute('scope',"col"); 
+                                td4.setAttribute('class',"text-center");           
+                               
+                                var input4=document.createElement('input');  
+                                input4.setAttribute('class','form-control form-control-sm'); 
+                                input4.setAttribute('type','number'); 
+                                input4.setAttribute('name',data[1][j][0]+"ammo");
+                                input4.setAttribute('id',data[1][j][0]+"ammo");
+                                if(data[0][data[1][j][0]]){
+                                input4.setAttribute('value',data[0][data[1][j][0]][2]);
+                                }
+                                td4.appendChild(input4);
+                                tr.appendChild(td4) ;
+
+
+                                td5.setAttribute('colspan',2); 
+                                td5.setAttribute('scope',"col"); 
+                                td5.setAttribute('class',"text-center");
+                                var input5=document.createElement('input');
+                                input5.setAttribute('type','number'); 
+                                input5.setAttribute('name',data[1][j][0]+"net1");  
+                                input5.setAttribute('id',data[1][j][0]+"net1");  
+                                input5.setAttribute('class','form-control form-control-sm'); 
+                                if(data[0][data[1][j][0]]){
+                                 input5.setAttribute('value',data[0][data[1][j][0]][3]);
+                                }
+                                td5.appendChild(input5);
+                                tr.appendChild(td5) ;
+                               
+
+
+                                td6.setAttribute('colspan',2); 
+                                td6.setAttribute('scope',"col"); 
+                                td6.setAttribute('class',"text-center");           
+                                var input6=document.createElement('input');  
+                                input6.setAttribute('class','form-control form-control-sm'); 
+                                 input6.setAttribute('type','number'); 
+                                input6.setAttribute('name',data[1][j][0]+"net2");
+                                input6.setAttribute('id',data[1][j][0]+"net2");
+                                if(data[0][data[1][j][0]]){
+                                input6.setAttribute('value',data[0][data[1][j][0]][4]);
+                                } 
+                                td6.appendChild(input6);
+                                tr.appendChild(td6) ;
+
+
+                                tbody.appendChild(tr);  
+
+
+                            }
+                        }          
+                            
+                       
+                    }
+
+                    var tbody=document.getElementById("tbodyPassif");
+
+                    tbody.innerHTML="";
+
+
+                    var dataPassif=tab[1];
+
+
+
+                    for (var i = 0; i < dataPassif[1].length; i++) {
+                        var tr=document.createElement('tr');
+                        if (dataPassif[1][i][4]==true) {
+                             tr.setAttribute('class',"bg-dark bg-soft opacity-65");
+                        }
+                                  
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                      
+
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                               
+                             
+                        td1.innerHTML=  dataPassif[1][i][0];
+                        tr.appendChild(td1) ;
+
+                        td2.setAttribute('colspan',2); 
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  dataPassif[1][i][1];
+                        tr.appendChild(td2) ;
+
+                        td3.setAttribute('colspan',2); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm'); 
+                        input3.setAttribute('type','number'); 
+                        input3.setAttribute('name',dataPassif[1][i][0]+"PassifNet1");
+                        input3.setAttribute('id',dataPassif[1][i][0]+"PassifNet1");
+                        if(dataPassif[0][dataPassif[1][i][0]]){
+                          input3.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][1]);
+                        }
+
+
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+
+                      
+
+
+                        td4.setAttribute('colspan',2); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                       
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm');
+                        input4.setAttribute('type','number'); 
+                        input4.setAttribute('name',dataPassif[1][i][0]+"PassifNet2");
+                        input4.setAttribute('id',dataPassif[1][i][0]+"PassifNet2");
+                         if(dataPassif[0][dataPassif[1][i][0]]){
+                          input4.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][2]);
+                        } 
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+
+                        tbody.appendChild(tr);  
+
+                                
+                            
+                       
+                    }
+
+
+                   
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+    });
+
+
+
+
+ $('#idcuci').change(function(){
+            
+            let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+             let codecuciPassif=document.getElementById("idcuciPassif");
+             codecuciPassif.value=$('#idcuci').val();
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                    denomination.value=data;
+
+                    let denominationPassif=document.getElementById("denominationPassif");
+                   
+                    denominationPassif.value=data;
+                    
+
+                  
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+    });
+    
+    function remplacer(value){
+        value=value.replace(".", "");
+        value=value.replace(",", "");
+        return value;
+    }
+
+
+    function is_int(value){
+        value=value.replace(".", "");
+        value=value.replace(",", "");
+      if((parseFloat(value) == parseInt(value)) && !isNaN(value)){ 
+          
+          return true;
+      } else {
+          
+          return false;
+      }
+    }
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+{% endblock %}
+

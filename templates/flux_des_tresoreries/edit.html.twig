@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit FluxDesTresoreries{% endblock %}
+
+{% block body %}
+    <h1>Edit FluxDesTresoreries</h1>
+
+    {{ include('flux_des_tresoreries/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('flux_des_tresoreries_index') }}">back to list</a>
+
+    {{ include('flux_des_tresoreries/_delete_form.html.twig') }}
+{% endblock %}

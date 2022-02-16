@@ -51,7 +51,7 @@
         {% endfor%}
     <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
       <div class="card-body " style="margin: 0%;padding: 0%;">
-        <table id="datatable" class="table table-bordered dt-responsive table-hover nowrap w-100">
+        <table id="datatable" class="table table-bordered dt-responsive table-hover nowrap w-100" width="100%">
             <thead style="background:#efefef; margin-top: 0px;">
             <tr>
                 <th> <center><b>NINEA</b><br> <input id="ninea" type="text" class="form-control filter"
@@ -103,18 +103,18 @@
             <tbody style="color: #5a5a5a; font-size: 12px;">
                  {% for repertoire in repertoires %}
                     <tr>
-                        <td>{{ repertoire.ninea }}</td>
-                        <td>{{ repertoire.CodeCuci }}</td>
-                        <td>{{ repertoire.DenominationSocial }}</td>
+                        <td style="width: 10%;">{{ repertoire.ninea }}</td>
+                        <td style="width: 10%;">{{ repertoire.CodeCuci }}</td>
+                        <td style="width: 10%;">{{ repertoire.DenominationSocial }}</td>
                         
-                        <td>{{ repertoire.NumeroRegistreCommerce }}</td>
-                        <td>{{ repertoire.syscoa }}</td>
-                        <td>{{ repertoire.addresseComplete }}</td>
-                        <td>{{ repertoire.activitePrincipale }}</td>
-                        <td>
+                        <td style="width: 10%;">{{ repertoire.NumeroRegistreCommerce }}</td>
+                        <td style="width: 10%;">{{ repertoire.syscoa }}</td>
+                        <td style="width: 10%;">{{ repertoire.addresseComplete }}</td>
+                        <td style="width: 5%;">{{ repertoire.activitePrincipale }}</td>
+                        <td style="width: 10%;">
                          {{ repertoire.statut ? "Oui" : "Non" }}
                         </td>
-                        <td>
+                        <td style="width: 10%;">
                             
                              <a href="{{ path('repertoire_show', {'id': repertoire.id}) }}"  title="Détails"><i class="fa fa-eye"></i></a>
                           

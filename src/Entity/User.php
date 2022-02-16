@@ -182,10 +182,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $dirigeantsModifiedby;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Actionnaire::class, mappedBy="createdBy")
-     */
-    private $actionnaires;
+   
 
     /**
      * @ORM\OneToMany(targetEntity=Actionnaire::class, mappedBy="modifiedBy")
@@ -222,6 +219,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $bilansModifiedby;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ImmoBrut::class, mappedBy="createdby")
+     */
+    private $immoBruts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ImmoBrut::class, mappedBy="modifiedby")
+     */
+    private $immoBrutBy;
+
    
 
    
@@ -241,7 +248,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commissairesComtesModifiedBy = new ArrayCollection();
         $this->dirigeants = new ArrayCollection();
         $this->dirigeantsModifiedby = new ArrayCollection();
-        $this->actionnaires = new ArrayCollection();
+        
         $this->actionnairesModifiedBy = new ArrayCollection();
         $this->membreConseils = new ArrayCollection();
         $this->membreConseilsModifiedBy = new ArrayCollection();
@@ -250,6 +257,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->bilans = new ArrayCollection();
         $this->bilansModifiedby = new ArrayCollection();
         $this->id = uniqid();
+        $this->immoBruts = new ArrayCollection();
+        $this->immoBrutBy = new ArrayCollection();
       
        
        
@@ -809,35 +818,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Actionnaire[]
-     */
-    public function getActionnaires(): Collection
-    {
-        return $this->actionnaires;
-    }
 
-    public function addActionnaire(Actionnaire $actionnaire): self
-    {
-        if (!$this->actionnaires->contains($actionnaire)) {
-            $this->actionnaires[] = $actionnaire;
-            $actionnaire->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActionnaire(Actionnaire $actionnaire): self
-    {
-        if ($this->actionnaires->removeElement($actionnaire)) {
-            // set the owning side to null (unless already changed)
-            if ($actionnaire->getCreatedBy() === $this) {
-                $actionnaire->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Actionnaire[]
@@ -1043,6 +1024,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($bilansModifiedby->getModifiedBy() === $this) {
                 $bilansModifiedby->setModifiedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ImmoBrut[]
+     */
+    public function getImmoBruts(): Collection
+    {
+        return $this->immoBruts;
+    }
+
+    public function addImmoBrut(ImmoBrut $immoBrut): self
+    {
+        if (!$this->immoBruts->contains($immoBrut)) {
+            $this->immoBruts[] = $immoBrut;
+            $immoBrut->setCreatedby($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImmoBrut(ImmoBrut $immoBrut): self
+    {
+        if ($this->immoBruts->removeElement($immoBrut)) {
+            // set the owning side to null (unless already changed)
+            if ($immoBrut->getCreatedby() === $this) {
+                $immoBrut->setCreatedby(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ImmoBrut[]
+     */
+    public function getImmoBrutBy(): Collection
+    {
+        return $this->immoBrutBy;
+    }
+
+    public function addImmoBrutBy(ImmoBrut $immoBrutBy): self
+    {
+        if (!$this->immoBrutBy->contains($immoBrutBy)) {
+            $this->immoBrutBy[] = $immoBrutBy;
+            $immoBrutBy->setModifiedby($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImmoBrutBy(ImmoBrut $immoBrutBy): self
+    {
+        if ($this->immoBrutBy->removeElement($immoBrutBy)) {
+            // set the owning side to null (unless already changed)
+            if ($immoBrutBy->getModifiedby() === $this) {
+                $immoBrutBy->setModifiedby(null);
             }
         }
 

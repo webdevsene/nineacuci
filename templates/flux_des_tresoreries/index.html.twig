@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FluxDesTresoreries index{% endblock %}
+
+{% block body %}
+    <h1>FluxDesTresoreries index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Annee_financiere</th>
+                <th>Ref_code</th>
+                <th>Net1</th>
+                <th>Net2</th>
+                <th>Status</th>
+                <th>Upload_file_name</th>
+                <th>Rank</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>CreatedBy</th>
+                <th>UpdatedBy</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for flux_des_tresorery in flux_des_tresoreries %}
+            <tr>
+                <td>{{ flux_des_tresorery.id }}</td>
+                <td>{{ flux_des_tresorery.anneeFinanciere }}</td>
+                <td>{{ flux_des_tresorery.refCode }}</td>
+                <td>{{ flux_des_tresorery.net1 }}</td>
+                <td>{{ flux_des_tresorery.net2 }}</td>
+                <td>{{ flux_des_tresorery.status }}</td>
+                <td>{{ flux_des_tresorery.uploadFileName }}</td>
+                <td>{{ flux_des_tresorery.rank }}</td>
+                <td>{{ flux_des_tresorery.createdAt ? flux_des_tresorery.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ flux_des_tresorery.updatedAt ? flux_des_tresorery.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ flux_des_tresorery.createdBy ? flux_des_tresorery.createdBy|date('Y-m-d') : '' }}</td>
+                <td>{{ flux_des_tresorery.updatedBy ? flux_des_tresorery.updatedBy|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('flux_des_tresoreries_show', {'id': flux_des_tresorery.id}) }}">show</a>
+                    <a href="{{ path('flux_des_tresoreries_edit', {'id': flux_des_tresorery.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('flux_des_tresoreries_new') }}">Create new</a>
+{% endblock %}
