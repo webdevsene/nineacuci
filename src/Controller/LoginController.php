@@ -13,7 +13,7 @@ use App\Entity\User;
 class LoginController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="login", methods={"GET","POST"})
      */
     public function index(AuthenticationUtils $authenticationUtils, EntityManagerInterface $entityManager): Response
     {

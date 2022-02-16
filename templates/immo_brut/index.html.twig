@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ImmoBrut index{% endblock %}
+
+{% block body %}
+    <h1>ImmoBrut index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdateAt</th>
+                <th>AnneeFinanciere</th>
+                <th>AugmentationB1</th>
+                <th>AugmentationB2</th>
+                <th>AugmentationB3</th>
+                <th>BrutA</th>
+                <th>BrutD</th>
+                <th>CodeCuci</th>
+                <th>DiminutionC1</th>
+                <th>DiminutionC2</th>
+                <th>RefCode</th>
+                <th>Submit</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for immo_brut in immo_bruts %}
+            <tr>
+                <td>{{ immo_brut.id }}</td>
+                <td>{{ immo_brut.createdAt ? immo_brut.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ immo_brut.updateAt ? immo_brut.updateAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ immo_brut.anneeFinanciere }}</td>
+                <td>{{ immo_brut.augmentationB1 }}</td>
+                <td>{{ immo_brut.augmentationB2 }}</td>
+                <td>{{ immo_brut.augmentationB3 }}</td>
+                <td>{{ immo_brut.brutA }}</td>
+                <td>{{ immo_brut.brutD }}</td>
+                <td>{{ immo_brut.codeCuci }}</td>
+                <td>{{ immo_brut.diminutionC1 }}</td>
+                <td>{{ immo_brut.diminutionC2 }}</td>
+                <td>{{ immo_brut.refCode }}</td>
+                <td>{{ immo_brut.submit }}</td>
+                <td>
+                    <a href="{{ path('immo_brut_show', {'id': immo_brut.id}) }}">show</a>
+                    <a href="{{ path('immo_brut_edit', {'id': immo_brut.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="15">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('immo_brut_new') }}">Create new</a>
+{% endblock %}
