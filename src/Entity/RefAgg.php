@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Component\Uid\Uuid;
 /**
  * @ORM\Entity(repositoryClass=RefAggRepository::class)
- * @ORM\Table(name="`CUCI_ALL_AGG`")
+ * @ORM\Table(name="`cuci_all_agg`")
  */
 class RefAgg
 {

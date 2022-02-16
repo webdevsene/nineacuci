@@ -12,6 +12,17 @@ use App\Entity\User;
 
 class LoginController extends AbstractController
 {
+
+     /**
+     * @Route("/", name="index")
+     */
+    public function login(EntityManagerInterface $entityManager): Response
+    {
+        
+            return $this->redirectToRoute('login', [], Response::HTTP_SEE_OTHER);
+       
+    }
+
     /**
      * @Route("/login", name="login", methods={"GET","POST"})
      */

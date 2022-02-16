@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=QVHRepository::class)
- * @ORM\Table(name="`CUCI_QVH`")
+ * @ORM\Table(name="`cuci_qvh`")
  */
 class QVH
 {

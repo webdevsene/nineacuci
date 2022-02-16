@@ -353,7 +353,7 @@ class RepertoireShowType extends AbstractType
 
 
             ->add('addresseComplete',TextType::class,
-                   array('label'=>'Addresse complete',
+                   array('label'=>'Adresse complete',
                           'required'=>false,
                           'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
@@ -474,7 +474,7 @@ class RepertoireShowType extends AbstractType
                           'attr'=>array('class'=>'form-control form-control-sm')              
             ))
             ->add('addresseDuCabinet',TextType::class,
-                   array('label'=>'Addresse ',
+                   array('label'=>'Adresse ',
                           'required'=>false,
                           'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              
@@ -484,7 +484,7 @@ class RepertoireShowType extends AbstractType
             
 
              ->add('email',TextType::class,
-                   array('label'=>'Addresse email',
+                   array('label'=>'Adresse email',
                           'required'=>false,
                           'disabled'=>true,
                           'attr'=>array('class'=>'form-control form-control-sm')              

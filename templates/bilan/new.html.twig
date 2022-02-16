@@ -4,6 +4,10 @@
 {% block stylesheets %}
  <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
 
+  <!-- Responsive Table css -->
+        <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+
 <style type="text/css">
    
 
@@ -83,14 +87,14 @@
 
                             <div class="col-12">
                                 <div class="table-responsive">
-                                    <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
+                                    <table name="form2" id="form1" class="table table-striped">
                                         <thead>
-                                            <tr class="bg-dark bg-soft opacity-65">
+                                            <tr class=" opacity-65" style="background: #008000;">
                                                 <th scope="col" colspan="2" class="text-center ">
-                                                    REF
+                                                   
                                                 </th>
                                                 <th scope="col" colspan="3" class="text-center">
-                                                  Libellé<br>
+                                                
                                                 </th>
                                                 <th colspan="4" scope="col" class="text-center">
                                                     <span class="text-info" id="annee"></span> 
@@ -99,20 +103,23 @@
                                                   <span class="text-info" id="anneeN-1"></span>
                                                 </th>
                                               </tr>
-                                            <tr class="bg-dark bg-soft opacity-80">
-                                                <th scope="col" colspan="5" class="text-center">
-                                                    
+                                            <tr class=" opacity-80" style="background: #82C46C;">
+                                                <th scope="col" colspan="2"  class="text-center">
+                                                    REF 
                                                 </th>
-                                                <th colspan="1" scope="col" class="text-center">
+                                                 <th scope="col" colspan="2"  class="text-center">
+                                                   Libellé  
+                                                </th>
+                                                <th  scope="col" colspan="2" style="text-align: right;">
                                                   Brut
                                                 </th>
-                                                <th colspan="3" scope="col" class="text-center">
+                                                <th  scope="col" colspan="2" class="text-center">
                                                   Amortissement/Provision
                                                 </th>
-                                                <th colspan="1" scope="col" class="text-center">
+                                                <th  scope="col" colspan="2" class="text-center">
                                                   NETN
                                                 </th>
-                                                <th colspan="2" scope="col" class="text-center">
+                                                <th  scope="col" colspan="2" class="text-center">
                                                   NETN-1
                                                 </th>
                                               </tr>
@@ -157,7 +164,7 @@
                             <div class="row">
                                                 <div class="col-xl-12"> 
                                               
-                                                        <table class="table table-bordered mt-5">
+                                                        <table id="tech-companies-1" class="table table-striped">
                                                                  <tr>
                                                                   <td>Numéro d'identification :<span style="color:red">*</span>
                                                                       <input type="text"  class="form-control form-control-sm" name="codecuciPassif" id="idcuciPassif"></td>
@@ -189,25 +196,29 @@
 
                                                 <div class="col-12">
                                                     <div class="table-responsive">
-                                                        <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
+                                                        <table name="form2" id="form2" class="table table-striped">
                                                             <thead>
-                                                                <tr class="bg-dark bg-soft opacity-65">
+                                                                <tr class=" opacity-65" style="background: #008000;">
                                                                     <th scope="col" colspan="2" class="text-center ">
-                                                                        REF
+                                                                      
                                                                     </th>
-                                                                    <th scope="col" colspan="3" class="text-center">
-                                                                      Libellé<br>
+                                                                    <th scope="col" colspan="2" class="text-center">
+                                                                    
                                                                     </th>
-                                                                    <th colspan="4" scope="col" class="text-center">
+                                                                    <th colspan="2" scope="col" class="text-center">
                                                                         <span class="text-info" id="annee"></span> 
                                                                     </th>
-                                                                    <th colspan="3" scope="col" class="text-center">
+                                                                    <th colspan="2" scope="col" class="text-center">
                                                                       <span class="text-info" id="anneeN-1"></span>
                                                                     </th>
                                                                   </tr>
-                                                                <tr class="bg-dark bg-soft opacity-80">
-                                                                    <th scope="col" colspan="5" class="text-center">
-                                                                        
+                                                                <tr class=" opacity-80" style="background: #82C46C;">
+                                                                    <th scope="col" colspan="2" class="text-center">
+                                                                         REF 
+                                                                    </th>
+
+                                                                    <th scope="col" colspan="2" class="text-center">
+                                                                        Libellé 
                                                                     </th>
                                                                     
                                                                     <th colspan="2" scope="col" class="text-center">
@@ -216,7 +227,7 @@
                                                                     <th colspan="2" scope="col" class="text-center">
                                                                       NETN-1
                                                                     </th>
-                                                                    <th></th>
+                                                                    
                                                                   </tr>
                                                             </thead>
 
@@ -266,6 +277,11 @@
 
 {% block javascript %}
 <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+
+        <!-- Init js -->
+<script src="{{ asset('admin/dist/assets/js/pages/table-responsive.init.js')}}"></script>
 
   <!-- Sweet alert init js-->
 <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
@@ -335,7 +351,10 @@
 
                     for (var i = 0; i < data[2].length; i++) {
                         var tr=document.createElement('tr');
-                        tr.setAttribute('class',"bg-dark bg-soft opacity-65");           
+                        tr.setAttribute('class'," opacity-65");   
+                        tr.setAttribute('style',"background: #82C46C;");   
+
+                             
 
                         var td1=document.createElement('td');
                         var td2=document.createElement('td');
@@ -547,7 +566,8 @@
                     for (var i = 0; i < dataPassif[1].length; i++) {
                         var tr=document.createElement('tr');
                         if (dataPassif[1][i][4]==true) {
-                             tr.setAttribute('class',"bg-dark bg-soft opacity-65");
+                             tr.setAttribute('class'," opacity-65");
+                              tr.setAttribute('style',"background: #82C46C;");
                         }
                                   
 
@@ -651,7 +671,7 @@
 
                     for (var i = 0; i < data[2].length; i++) {
                         var tr=document.createElement('tr');
-                        tr.setAttribute('class',"bg-dark bg-soft opacity-65");           
+                         tr.setAttribute('style',"background: #82C46C;");           
 
                         var td1=document.createElement('td');
                         var td2=document.createElement('td');
@@ -855,7 +875,8 @@
                     for (var i = 0; i < dataPassif[1].length; i++) {
                         var tr=document.createElement('tr');
                         if (dataPassif[1][i][4]==true) {
-                             tr.setAttribute('class',"bg-dark bg-soft opacity-65");
+                             tr.setAttribute('class'," opacity-65");
+                              tr.setAttribute('style',"background: #82C46C;");
                         }
                                   
 
