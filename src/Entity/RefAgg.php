@@ -24,7 +24,7 @@ class RefAgg
     private $parent;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\Column(type="string", length=7, nullable=true)
      */
     private $code;
 

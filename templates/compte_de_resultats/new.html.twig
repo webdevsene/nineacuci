@@ -34,7 +34,7 @@
         <!-- debut form -->
         
 <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
-    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte">
+    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte" name="idformcompte">
     <div class="card-body " style="margin: 0%;padding: 0%;">
         <div class="row">
         <div class="col-xl-12"> 
@@ -54,7 +54,7 @@
                  <div class="card-body">
 
                      <div class="d-flex flex-wrap gap-2 justify-content-center">
-                         <button type="button" class="btn btn-secondary waves-effect waves-light">
+                         <button type="button" class="btn btn-secondary waves-effect waves-light" name="resetBtn" id="resetBtn">
                              <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
                          </button>
                          <button type="submit" class="btn btn-success waves-effect waves-light">
@@ -777,7 +777,40 @@
 
     }); // end eventListner btn valider 
 
+    
+    
+    $('#resetBtn').click(function(e){
+        
+        // e.preventDefault(); 
+        //$("#idformcompte")[0].reset.click();
+        
+        {
+            e.preventDefault();
+            var a=$(this);
+            Swal.fire({
+            title:"Confirmation",
+            text:"Êtes-vous sûr de vouloir effacer les données de cet enrégistrement ?",
+            icon:"warning",
+            showCancelButton:true,
+            confirmButtonText:"Oui",
+            cancelButtonText:"Non",
+            confirmButtonClass:"btn btn-success mt-2",
+            cancelButtonClass:"btn btn-danger ms-2 mt-2",
+            buttonsStyling:!1}).then(function(t)
+            {
+                if (t.value) {
+                 //document.getElementById("idformcompte")[0].reset.click()
+                    document.getElementById("idformcompte").reset();
+                    // window.location.reload(); return;
 
+              }else
+                  e.preventDefault();
+
+            })}
+
+    });    
+
+    
     function somme(netnumber,sousclasseName){
         var elemts =  $('input.calcul.'+netnumber+'.'+sousclasseName);
         var sum =0;

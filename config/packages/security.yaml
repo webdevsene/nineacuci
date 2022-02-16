@@ -70,6 +70,8 @@ security:
         - { path: ^/ref, roles: ROLE_USER }
         - { path: ^/repertoire, roles: ROLE_USER }
         - { path: ^/syscoa, roles: ROLE_USER }
+        - { path: ^/flux/tresoreries, roles: ROLE_USER }
+        - { path: ^/compte/resultats, roles: ROLE_USER }
 
 when@test:
     security:

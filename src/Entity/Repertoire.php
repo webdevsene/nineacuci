@@ -454,6 +454,11 @@ class Repertoire
      */
     private $systemeComptabilite;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FluxDesTresoreries::class, mappedBy="cuci_rep_code")
+     */
+    private $fluxDesTresoreries;
+
 
 
 
@@ -471,6 +476,7 @@ class Repertoire
         $this->bilans = new ArrayCollection();
         $this->id = Uuid::v4();
         $this->compte_de_resultats = new ArrayCollection();
+        $this->fluxDesTresoreries = new ArrayCollection();
     }
 
 
@@ -1595,6 +1601,36 @@ class Repertoire
             }
         }
 
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FluxDesTresoreries[]
+     */
+    public function getFluxDesTresoreries(): Collection
+    {
+        return $this->fluxDesTresoreries;
+    }
+
+    public function addFluxDesTresorery(FluxDesTresoreries $fluxDesTresorery): self
+    {
+        if (!$this->fluxDesTresoreries->contains($fluxDesTresorery)) {
+            $this->fluxDesTresoreries[] = $fluxDesTresorery;
+            $fluxDesTresorery->setCuciRepCode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFluxDesTresorery(FluxDesTresoreries $fluxDesTresorery): self
+    {
+        if ($this->fluxDesTresoreries->removeElement($fluxDesTresorery)) {
+            // set the owning side to null (unless already changed)
+            if ($fluxDesTresorery->getCuciRepCode() === $this) {
+                $fluxDesTresorery->setCuciRepCode(null);
+            }
+        }
 
         return $this;
     }
