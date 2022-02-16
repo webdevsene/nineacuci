@@ -455,15 +455,14 @@ class Repertoire
     private $systemeComptabilite;
 
     /**
-<<<<<<< HEAD
      * @ORM\OneToMany(targetEntity=FluxDesTresoreries::class, mappedBy="cuci_rep_code")
      */
     private $fluxDesTresoreries;
-=======
+    
+    /*
      * @ORM\OneToMany(targetEntity=ImmoBrut::class, mappedBy="repertoire")
      */
     private $immoBruts;
->>>>>>> 8021aeaa4c8cbf7736ecfd2e8fc0c815b6df1671
 
 
 
@@ -482,11 +481,8 @@ class Repertoire
         $this->bilans = new ArrayCollection();
         $this->id = Uuid::v4();
         $this->compte_de_resultats = new ArrayCollection();
-<<<<<<< HEAD
         $this->fluxDesTresoreries = new ArrayCollection();
-=======
         $this->immoBruts = new ArrayCollection();
->>>>>>> 8021aeaa4c8cbf7736ecfd2e8fc0c815b6df1671
     }
 
 
@@ -1616,7 +1612,6 @@ class Repertoire
     }
 
     /**
-<<<<<<< HEAD
      * @return Collection|FluxDesTresoreries[]
      */
     public function getFluxDesTresoreries(): Collection
@@ -1629,7 +1624,12 @@ class Repertoire
         if (!$this->fluxDesTresoreries->contains($fluxDesTresorery)) {
             $this->fluxDesTresoreries[] = $fluxDesTresorery;
             $fluxDesTresorery->setCuciRepCode($this);
-=======
+    
+        }
+    } 
+    
+    
+    /*
      * @return Collection|ImmoBrut[]
      */
     public function getImmoBruts(): Collection
@@ -1642,27 +1642,26 @@ class Repertoire
         if (!$this->immoBruts->contains($immoBrut)) {
             $this->immoBruts[] = $immoBrut;
             $immoBrut->setRepertoire($this);
->>>>>>> 8021aeaa4c8cbf7736ecfd2e8fc0c815b6df1671
         }
 
         return $this;
     }
 
-<<<<<<< HEAD
     public function removeFluxDesTresorery(FluxDesTresoreries $fluxDesTresorery): self
     {
         if ($this->fluxDesTresoreries->removeElement($fluxDesTresorery)) {
             // set the owning side to null (unless already changed)
             if ($fluxDesTresorery->getCuciRepCode() === $this) {
                 $fluxDesTresorery->setCuciRepCode(null);
-=======
+            }
+        }
+    }
     public function removeImmoBrut(ImmoBrut $immoBrut): self
     {
         if ($this->immoBruts->removeElement($immoBrut)) {
             // set the owning side to null (unless already changed)
             if ($immoBrut->getRepertoire() === $this) {
                 $immoBrut->setRepertoire(null);
->>>>>>> 8021aeaa4c8cbf7736ecfd2e8fc0c815b6df1671
             }
         }
 
