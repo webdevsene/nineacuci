@@ -73,6 +73,7 @@
                             <td>{{form_errors(form.numeroRegistreCommerce)}} </td>
                           
                             <td> {{form_errors(form.telephone1)}}</td>
+                            <td> {{form_errors(form.ninea)}}</td>
                            
                            
                             <td> {{form_errors(form.addresseComplete)}}</td>
@@ -333,19 +334,21 @@
                                 </div>
                                 <div class="col-lg-3">
                                    SYCOA <span style="color:red">*</span><br>
-                                    <select class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;" disabled>
-                                                    
-                                     </select>
-
-                                                <br><br>
-                                            
-                                    <select class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
+                                   <select class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
                                                     <option value="">Selectionner le code SYSCOA</option>
                                                     {% for tag in syscoa%}
                                                     <option value="{{tag.id}}">{{tag.CODEACTIVITE}}-{{tag.libelle}}</option>
                                                     {% endfor%}
                                                    
                                      </select>
+                                     <br><br>
+                                    <select class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;" disabled>
+                                                    
+                                     </select>
+
+                                                
+                                            
+                                    
 
                                     <span style="color: red;" id="syscoa" > </span>
                                 </div>
@@ -932,12 +935,7 @@
                             <div class="row">
                                 <div class="col-lg-3">
                                    SYCOA <span style="color:red">*</span><br>
-                                    <select class="form-control select2 syscoa" name="categorySyscoaRepeat" id="categorySyscoaRepeat"  style="width: 100%;" disabled>
-                                                    
-                                     </select>
 
-                                                <br><br>
-                                            
                                     <select class="form-control select2 syscoa" name="syscoaRepeat" id="idsyscoaRepeat"  style="width: 100%;">
                                                     <option value="">Selectionner le code SYSCOA</option>
                                                     {% for tag in syscoa%}
@@ -945,6 +943,14 @@
                                                     {% endfor%}
                                                    
                                      </select>
+                                      <br><br>
+                                    <select class="form-control select2 syscoa" name="categorySyscoaRepeat" id="categorySyscoaRepeat"  style="width: 100%;" disabled>
+                                                    
+                                     </select>
+
+                                               
+                                            
+                                    
 
                                     <span style="color: red;" id="syscoaRepeat" > </span>
                                 </div>
@@ -1642,7 +1648,22 @@
 
 
 
+   
 
+    $('#repertoire_pourcentage').change(function(){
+
+         
+           if ($('#repertoire_pourcentage').val()=="100") {
+             
+             $('#btnAjouterActivities').prop('disabled', true);
+             
+           }else
+             $('#btnAjouterActivities').prop('disabled', false);
+
+        
+
+
+     });
 
 
 

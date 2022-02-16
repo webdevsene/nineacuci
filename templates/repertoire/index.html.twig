@@ -105,16 +105,16 @@
                     <tr>
                         <td style="width: 10%;">{{ repertoire.ninea }}</td>
                         <td style="width: 10%;">{{ repertoire.CodeCuci }}</td>
-                        <td style="width: 10%;">{{ repertoire.DenominationSocial }}</td>
+                        <td style="width: 15%;">{{ repertoire.DenominationSocial }}</td>
                         
                         <td style="width: 10%;">{{ repertoire.NumeroRegistreCommerce }}</td>
-                        <td style="width: 10%;">{{ repertoire.syscoa }}</td>
+                        <td style="width: 15%;">{{ repertoire.syscoa }}</td>
                         <td style="width: 10%;">{{ repertoire.addresseComplete }}</td>
-                        <td style="width: 5%;">{{ repertoire.activitePrincipale }}</td>
-                        <td style="width: 10%;">
+                        <td style="width: 15%;">{{ repertoire.activitePrincipale }}</td>
+                        <td style="width: 7%;">
                          {{ repertoire.statut ? "Oui" : "Non" }}
                         </td>
-                        <td style="width: 10%;">
+                        <td style="width: 8%;">
                             
                              <a href="{{ path('repertoire_show', {'id': repertoire.id}) }}"  title="Détails"><i class="fa fa-eye"></i></a>
                           
@@ -160,7 +160,7 @@
 <script src="{{ asset('admin/dist/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
 
 <!-- Datatable init js -->
-<script src="{{ asset('admin/dist/assets/js/pages/dataTables.init.js')}}"></script>  
+<script src="{{ asset('admin/dist/assets/js/pages/datatables.init.js')}}"></script>  
 
 <script src="{{ asset('admin/dist/assets/libs/select2/js/select2.min.js')}}"></script>
 

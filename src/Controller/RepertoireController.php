@@ -217,6 +217,7 @@ class RepertoireController extends AbstractController
                 $entityManager->persist($repertoire);
                 $entityManager->persist($activities);
                 $entityManager->flush();
+                $request->getSession()->getFlashBag()->add('message',"l'oppération de saisi d'une nouvelle unité a été éffectué avec succès");
                 return $this->redirectToRoute('repertoire_index', [], Response::HTTP_SEE_OTHER);
             }
         }
@@ -378,7 +379,7 @@ class RepertoireController extends AbstractController
     public function restaurer(Request $request, Repertoire $repertoire, EntityManagerInterface $entityManager): Response
     {
        
-        $request->getSession()->getFlashBag()->add('message',"la restauration a été activé avec succés");
+        $request->getSession()->getFlashBag()->add('message',"la restauration a été éffectué avec succès");
         $repertoire->setDeleted(true);
         $entityManager->flush();
       
@@ -392,7 +393,7 @@ class RepertoireController extends AbstractController
     public function delete(Request $request, Repertoire $repertoire, EntityManagerInterface $entityManager): Response
     {
        
-        $request->getSession()->getFlashBag()->add('message',"l'oppération a été activé avec succés");
+        $request->getSession()->getFlashBag()->add('message',"l'oppération a été activé avec succès");
         $repertoire->setDeleted(false);
         $entityManager->flush();
       
