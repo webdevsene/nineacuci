@@ -1,0 +1,203 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New FluxDesTresoreries{% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+{% endblock %}
+
+{% block body %}
+
+    
+
+<div class="row">
+    <div class="col-xl-12">
+
+        <!-- start page title -->
+       <div class="row">
+       <div class="col-12">
+       
+       
+           <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+               
+       
+               <div class="page-title-right">
+                   <ol class="breadcrumb m-0">
+                       <li class="breadcrumb-item"><a href="javascript: void(0);">Saisie des états des flux des trésoreries</a></li>
+                       <li class="breadcrumb-item active">Nouvelle saisie</li>  <hr class="bg-info">
+                   </ol>
+               </div>
+       
+           </div>
+       </div>
+       </div>
+       <!-- end page title -->
+
+        <!-- debut form -->
+        
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte" name="idformcompte">
+    <div class="card-body " style="margin: 0%;padding: 0%;">
+        <div class="row">
+        <div class="col-xl-12"> 
+       
+        <table class="table table-bordered mt-5">
+                 <tr>
+                  <td>Numéro d'identification :<span style="color:red">*</span>
+                      <input type="text"  class="form-control form-control-sm" name="idcuci" id="idcuci"></td>
+                  <td>Designation entité :<span style="color:red">*</span>
+                      <input type="text" disabled class="form-control form-control-sm" name="denomination" id="denomination"></td>
+                  <td>Année financière :<span style="color:red">*</span>
+                      <input type="text" class="form-control form-control-sm" name="annee" id="annee"></td>
+                 </tr>
+        </table>
+         
+             <div class="card">
+                 <div class="card-body">
+
+                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                         <button type="button" class="btn btn-secondary waves-effect waves-light" name="resetBtn" id="resetBtn">
+                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                         </button>
+                         <button type="submit" class="btn btn-success waves-effect waves-light" id="saveBtn" name="saveBtn">
+                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                         </button>
+                         {#<button type="button" class="btn btn-dark bg-soft opacity-25" name="valider" id="valider">#}
+                         <button type="button" class="btn btn-dark bt-soft waves-effect waves-light" name="valider" id="valider">
+                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                         </button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+         <div class="col-12">
+            <div class="table-responsive">
+                <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
+                    <thead>
+                        <tr class="bg-dark bg-soft opacity-65">
+                            <th scope="col" colspan="2" class="text-center ">
+                                REF
+                            </th>
+                            <th scope="col" colspan="3" class="text-center">
+                              Libelle<br>
+                            </th>
+                            <th colspan="4" scope="col" class="text-center">
+                              Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
+                              Exercice au 31/12/<span class="text-info" id="anneeN-1"></span>
+                            </th>
+                          </tr>
+                        <tr class="bg-dark bg-soft opacity-80">
+                            <th scope="col" colspan="5" class="text-center">
+                                
+                            </th>
+                            <th colspan="2" scope="col" class="text-center">
+                              NET1
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
+                              NET2
+                            </th>
+                          </tr>
+                    </thead>
+
+                    <!-- debut tbody inputs -->
+                    <tbody id="tbody">
+                
+                    
+                    
+                    </tbody>
+                    <!-- end tbody -->
+                </table>
+            </div>
+         </div>
+
+         </div>
+            <!-- <input type="hidden" name="type" value="1" >
+            <button type="submit" class="btn btn-success waves-effect waves-light">
+                <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+            </button> -->
+                         
+        </div>
+        </form>
+</div>
+
+<!-- end formulaire -->
+
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function(){
+   
+       {% if app.session.get("codeCuci")!=""%}
+        
+          var value='{{app.session.get("codeCuci")}}';
+      
+          document.getElementById('idcuci').setAttribute('value',value);
+      
+          let route="{{path('cucicodeNum')}}"+"/"+ $('#idcuci').val();
+   
+                  $.ajax({
+                      type: 'GET',
+                      url : route,
+                      dataType : "json",
+                      success: function(data){
+                          
+                          let denomination=document.getElementById("denomination");
+                          denomination.value=data;
+      
+                        
+                      } ,
+                      error : function(error){
+                          console.log(error);
+                      }
+          })
+      
+       {% endif %}
+      
+    });
+
+    $('#idcuci').change(function(){
+        
+        let route="{{path('cucicodeNum')}}"+"/"+ $('#idcuci').val();
+        $.ajax({
+            type: 'GET',
+            url : route,
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function(data){
+                
+                let denomination=document.getElementById("denomination");
+                denomination.value=data;
+                
+                
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        })
+    });
+
+</script>
+
+
+
+{% endblock %}

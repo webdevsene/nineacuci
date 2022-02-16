@@ -455,6 +455,11 @@ class Repertoire
     private $systemeComptabilite;
 
     /**
+     * @ORM\OneToMany(targetEntity=FluxDesTresoreries::class, mappedBy="cuci_rep_code")
+     */
+    private $fluxDesTresoreries;
+    
+    /*
      * @ORM\OneToMany(targetEntity=ImmoBrut::class, mappedBy="repertoire")
      */
     private $immoBruts;
@@ -476,6 +481,7 @@ class Repertoire
         $this->bilans = new ArrayCollection();
         $this->id = Uuid::v4();
         $this->compte_de_resultats = new ArrayCollection();
+        $this->fluxDesTresoreries = new ArrayCollection();
         $this->immoBruts = new ArrayCollection();
     }
 
@@ -1606,6 +1612,24 @@ class Repertoire
     }
 
     /**
+     * @return Collection|FluxDesTresoreries[]
+     */
+    public function getFluxDesTresoreries(): Collection
+    {
+        return $this->fluxDesTresoreries;
+    }
+
+    public function addFluxDesTresorery(FluxDesTresoreries $fluxDesTresorery): self
+    {
+        if (!$this->fluxDesTresoreries->contains($fluxDesTresorery)) {
+            $this->fluxDesTresoreries[] = $fluxDesTresorery;
+            $fluxDesTresorery->setCuciRepCode($this);
+    
+        }
+    } 
+    
+    
+    /*
      * @return Collection|ImmoBrut[]
      */
     public function getImmoBruts(): Collection
@@ -1623,6 +1647,15 @@ class Repertoire
         return $this;
     }
 
+    public function removeFluxDesTresorery(FluxDesTresoreries $fluxDesTresorery): self
+    {
+        if ($this->fluxDesTresoreries->removeElement($fluxDesTresorery)) {
+            // set the owning side to null (unless already changed)
+            if ($fluxDesTresorery->getCuciRepCode() === $this) {
+                $fluxDesTresorery->setCuciRepCode(null);
+            }
+        }
+    }
     public function removeImmoBrut(ImmoBrut $immoBrut): self
     {
         if ($this->immoBruts->removeElement($immoBrut)) {

@@ -208,4 +208,24 @@ class Pays
     {
         return $this->repertoires;
     }
+
+    /**
+     * @return Collection|Actionnaire[]
+     */
+    public function getActionnaires(): Collection
+    {
+        return $this->actionnaires;
+    }
+
+    public function removeFiliale(Filiales $filiale): self
+    {
+        if ($this->filiales->removeElement($filiale)) {
+            // set the owning side to null (unless already changed)
+            if ($filiale->getPays() === $this) {
+                $filiale->setPays(null);
+            }
+        }
+
+        return $this;
+    }
 }
