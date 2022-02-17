@@ -234,11 +234,13 @@ class CompteDeResultatsController extends AbstractController
     
              } 
     
+            // $refAgg = $this->refAggRepo
+            //                ->findBy(["category"=>2,"surlignee"=>0],  array('code' => 'DESC'));
             $refAgg = $this->refAggRepo
-                           ->findBy(["category"=>2,"surlignee"=>0],  array('code' => 'DESC'));
+                           ->findBy(["category"=>2,"surlignee"=>0],  array('ordre' => 'ASC'));
                 
             $refAggParent=$this->refAggRepo
-                               ->findBy(["category"=>2,"surlignee"=>1],array('code' => 'DESC'));
+                               ->findBy(["category"=>2,"surlignee"=>1],array('code' => 'ASC'));
     
             foreach ($refAgg as $key ) {
     
@@ -257,8 +259,6 @@ class CompteDeResultatsController extends AbstractController
              array_push($tab,$tab3);
         
        
-    
-              
         return new JsonResponse( $tab);
     }
 }

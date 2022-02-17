@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\FluxDesTresoreries;
 use App\Form\FluxDesTresoreriesType;
-use App\Repository\CompteDeResultatsRepository;
 use App\Repository\FluxDesTresoreriesRepository;
 use App\Repository\RefAggRepository;
 use App\Repository\RepertoireRepository;
@@ -25,12 +24,12 @@ class FluxDesTresoreriesController extends AbstractController
      
      public function __construct(RequestStack $requestStack, 
                                  RepertoireRepository $reperRepo, 
-                                 CompteDeResultatsRepository $cdtRepo,
+                                 FluxDesTresoreriesRepository $fdtRepo,
                                  RefAggRepository $refAggRepo)
      {
          $this->requestStack = $requestStack;
          $this->reperRepo = $reperRepo;
-         $this->cdtRepo = $cdtRepo;
+         $this->fdtRepo = $fdtRepo;
          $this->refAggRepo = $refAggRepo;
      }
 
@@ -131,5 +130,56 @@ class FluxDesTresoreriesController extends AbstractController
     
               
         return new JsonResponse( $rep->getDenominationSocial());
+    }
+
+    
+    /**
+     * @Route("/fluxtresorjson/{annee}", name="fluxtresorjson", methods={"GET","POST"})
+     */
+    public function fluxtresorjson( $annee="")
+    {
+        $tab=[];
+        $tab1=[];
+        $tab2=[];
+        $tab3=[];
+        $category = 3;
+
+        $session = $this->requestStack->getSession();
+
+        $codeCuci= $session->get('codeCuci');   
+
+        //$flux = $this->fdtRepo->findByCodeCuci($codeCuci, $annee);
+        $flux = $this->fdtRepo->findByCodeCuciAnneeAndCategory($codeCuci, $annee);
+            
+            foreach ($flux as $key ) {
+
+                 $tab1[$key->getRefCode()] = [$key->getRefCode(),$key->getNet1(), $key->getNet2()];
+                
+    
+            } 
+    
+            $refAgg = $this->refAggRepo
+                           ->findBy(["category"=>3,"surlignee"=>0],  array('code' => 'DESC'));
+                
+            $refAggParent=$this->refAggRepo
+                               ->findBy(["category"=>3,"surlignee"=>1],array('code' => 'DESC'));
+    
+            foreach ($refAgg as $key ) {
+    
+                 array_push($tab2,[$key->getCode(),$key->getLibelle(),$key->getParent(),$key->getOrdre(),$key->getSurlignee()]); // c'est ici qu'on ajoutera la note et le signe
+            } 
+    
+    
+            foreach ($refAggParent as $key ) {
+    
+                 array_push($tab3,[$key->getCode(),$key->getLibelle(),$key->getParent(),$key->getOrdre(),$key->getSurlignee()]);
+            } 
+    
+    
+             array_push($tab,$tab1);
+             array_push($tab,$tab2);
+             array_push($tab,$tab3);
+        
+        return new JsonResponse( $tab);
     }
 }

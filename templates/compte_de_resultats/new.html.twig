@@ -73,12 +73,10 @@
             <div class="table-responsive">
                 <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
                     <thead>
-                        <tr class="bg-dark bg-soft opacity-65">
+                        <tr class=" opacity-65" style="background: #008000;">
                             <th scope="col" colspan="2" class="text-center ">
-                                REF
                             </th>
                             <th scope="col" colspan="3" class="text-center">
-                              Libelle<br>
                             </th>
                             <th colspan="4" scope="col" class="text-center">
                               Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
@@ -87,11 +85,14 @@
                               Exercice au 31/12/<span class="text-info" id="anneeN-1"></span>
                             </th>
                           </tr>
-                        <tr class="bg-dark bg-soft opacity-80">
-                            <th scope="col" colspan="5" class="text-center">
-                                
+                        <tr class=" opacity-80" style="background: #82C46C;">
+                            <th scope="col" colspan="2" class="text-center">
+                                REF
                             </th>
-                            <th colspan="2" scope="col" class="text-center">
+                            <th scope="col" colspan="2" class="text-center">
+                                Libelle
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
                               NET1
                             </th>
                             <th colspan="3" scope="col" class="text-center">
@@ -107,17 +108,32 @@
                     
                     </tbody>
                     <!-- end tbody -->
-                </table>
+                </table> <br><br><br>
             </div>
-         </div>
-
-         </div>
+        </div>
+        
+        
+        
+    </div>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+       <button type="button" class="btn btn-secondary waves-effect waves-light">
+           <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+       </button>
+       <button type="submit" class="btn btn-success waves-effect waves-light ">
+           <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+       </button>
+       <button type="button" class="btn btn-dark bt-soft waves-effect waves-light validerPassif"
+        id="validerPassif">
+           <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+       </button>
+   </div>
             <!-- <input type="hidden" name="type" value="1" >
             <button type="submit" class="btn btn-success waves-effect waves-light">
                 <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
             </button> -->
                          
         </div>
+        <input type="hidden" name="typePassif" value="2" >
         </form>
 </div>
 
@@ -215,35 +231,130 @@
             success: function(data){
                 //tbody=document.getElementById("tbody");
                 var tbody=document.getElementById("tbody");
-                    var ann=document.getElementById("annee");
-                    var anneeN_1=document.getElementById("anneeN-1");
-                    var anneeN=document.getElementById("anneeN");
-                    tbody.innerHTML="";
-                    ann.innerHTML="";
-                    anneeN.value = ann.value;
-                    anneeN.setAttribute('value', anneeN.value);
-                    anneeN.innerHTML=anneeN.value;
-                    anneeN_1.innerHTML=anneeN.value-1;
+                var ann=document.getElementById("annee");
+                var anneeN_1=document.getElementById("anneeN-1");
+                var anneeN=document.getElementById("anneeN");
+                tbody.innerHTML="";
+                ann.innerHTML="";
+                anneeN.value = ann.value;
+                anneeN.setAttribute('value', anneeN.value);
+                anneeN.innerHTML=anneeN.value;
+                anneeN_1.innerHTML=anneeN.value-1;
 
-                console.log(data);
-                
+                // console.log(data[1]); return;         
+                    
+               
+                   
+                //for (var i = data[2].length - 1; i >= 0; i--) {
+                for (var i = 0; i < data[2].length; i++) {
+                    
+                      //for (var j = data[1].length - 1; j >= 0; j--) {
+                      for (var j = 0; j < data[1].length; j++) {
+                                    
+                          if (data[2][i][0]==data[1][j][2]) {
+      
+                              var tr=document.createElement('tr');
+                              var td1=document.createElement('td');
+                              var td2=document.createElement('td');
+      
+                              var td5=document.createElement('td');
+                              var td6=document.createElement('td');
+      
+                              td1.setAttribute('colspan',2); 
+                              td1.setAttribute('scope',"col"); 
+                              td1.setAttribute('class',"text-center form");           
+                              td1.innerHTML=  data[1][j][0];
+                              tr.appendChild(td1) ;
+                              
+                              td2.setAttribute('colspan',2); 
+                              td2.setAttribute('class',"text-center form");           
+                              td2.setAttribute('scope',"col"); 
+                                        
+                              td2.innerHTML=  data[1][j][1];
+                              tr.appendChild(td2) ;
+      
+      
+                              td5.setAttribute('colspan',3); 
+                              td5.setAttribute('scope',"col"); 
+                              td5.setAttribute('class',"text-center");
+                              var input5=document.createElement('input');
+                              input5.setAttribute('type','number'); 
+                              input5.setAttribute('name',data[1][j][0]+"net1"); 
+                              input5.setAttribute('id',data[1][j][0]+"net1"); 
+                              input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                              input5.setAttribute('data-sousclasse',data[1][j][2]);
+                              if(data[0][data[1][j][0]]){
+                                  input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                              }
+      
+                              // input5.addEventListener ("change", function(e){
+                              //     var sousclasse= $(this).data('sousclasse');
+                              //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                              //     
+                              //     console.log(total);
+                              //     if($(this).hasClass('net1')){
+                              //          $('input.total.net1').val(total);
+                              //     }else{
+                              //         $('input.total.net2').val(total);
+                              //     }
+                              //    
+                              // });
+                              td5.appendChild(input5);
+                              tr.appendChild(td5) ;
+                              
+      
+      
+                              td6.setAttribute('colspan',3); 
+                              td6.setAttribute('scope',"col"); 
+                              td6.setAttribute('class',"text-center");           
+                              var input6=document.createElement('input');  
+                              input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                              input6.setAttribute('type','number'); 
+                              input6.setAttribute('name',data[1][j][0]+"net2"); 
+                              input6.setAttribute('id',data[1][j][0]+"net2"); 
+                              input6.setAttribute('data-sousclasse',data[1][j][2]);
+                              if(data[0][data[1][j][0]]){
+                              input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                              }
+      
+                              // on commente cette partie pour tester la methode hard
+                              //input6.addEventListener ("change", function(e){
+                              //    var sousclasse= $(this).data('sousclasse');
+                              //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                              //    console.log(total);
+                              //    if($(this).hasClass('net2')){
+                              //         $('input.total.net1').val(total);
+                              //    }else{
+                              //        $('input.total.net2').val(total);
+                              //    }
+                              //    // my update here 
+                              //});
+                              td6.appendChild(input6);
+                              tr.appendChild(td6) ;
+                              tbody.appendChild(tr);  
+      
+                           
+                          }
+                      } 
 
-                for (var i = data[2].length - 1; i >= 0; i--) {
                     var tr=document.createElement('tr');
-                    tr.setAttribute('class',"bg-dark bg-soft opacity-65");           
+                    // tr.setAttribute('class',"bg-dark bg-soft opacity-65");                    
+                    tr.setAttribute('class'," opacity-65");
+                    tr.setAttribute('style',"background: #82C46C;");         
 
                     var td1=document.createElement('td');
                     var td2=document.createElement('td');
-                     var td5=document.createElement('td');
-                     var td6=document.createElement('td');
+                    var td5=document.createElement('td');
+                    var td6=document.createElement('td');
 
                     td1.setAttribute('colspan',2); 
                     td1.setAttribute('scope',"col"); 
                     td1.setAttribute('class',"text-center form");           
                     td1.innerHTML=  data[2][i][0]; // sont stockés les ref
                     tr.appendChild(td1) ;
-
+                    
                     td2.setAttribute('colspan',2); 
+                    td2.setAttribute('class',"text-center form");           
                     td2.setAttribute('scope',"col"); 
                                
                     td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
@@ -285,102 +396,14 @@
                         input2.setAttribute('value',data[0][data[2][i][0]][2]);
                       }
                             
-                    td6.appendChild(input2);
-                    tr.appendChild(td6) ;
+                      td6.appendChild(input2);
+                      tr.appendChild(td6) ;
+                      tbody.appendChild(tr);  
 
 
-                    tbody.appendChild(tr);  
 
-                    for (var j = data[1].length - 1; j >= 0; j--) {
-                                  
-                        if (data[2][i][0]==data[1][j][2]) {
+                    
 
-                            var tr=document.createElement('tr');
-                            var td1=document.createElement('td');
-                            var td2=document.createElement('td');
-
-                            var td5=document.createElement('td');
-                            var td6=document.createElement('td');
-
-                            td1.setAttribute('colspan',2); 
-                            td1.setAttribute('scope',"col"); 
-                            td1.setAttribute('class',"text-center form");           
-                            td1.innerHTML=  data[1][j][0];
-                            tr.appendChild(td1) ;
-
-                            td2.setAttribute('colspan',2); 
-                            td2.setAttribute('scope',"col"); 
-                                      
-                            td2.innerHTML=  data[1][j][1];
-                            tr.appendChild(td2) ;
-
-
-                            td5.setAttribute('colspan',3); 
-                            td5.setAttribute('scope',"col"); 
-                            td5.setAttribute('class',"text-center");
-                            var input5=document.createElement('input');
-                            input5.setAttribute('type','number'); 
-                            input5.setAttribute('name',data[1][j][0]+"net1"); 
-                            input5.setAttribute('id',data[1][j][0]+"net1"); 
-                            input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
-                            input5.setAttribute('data-sousclasse',data[1][j][2]);
-                            if(data[0][data[1][j][0]]){
-                                input5.setAttribute('value',data[0][data[1][j][0]][1]);
-                            }
-
-                            // input5.addEventListener ("change", function(e){
-                            //     var sousclasse= $(this).data('sousclasse');
-                            //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
-                            //     
-                            //     console.log(total);
-                            //     if($(this).hasClass('net1')){
-                            //          $('input.total.net1').val(total);
-                            //     }else{
-                            //         $('input.total.net2').val(total);
-                            //     }
-                            //    
-                            // });
-                            td5.appendChild(input5);
-                            tr.appendChild(td5) ;
-                            
-
-
-                            td6.setAttribute('colspan',3); 
-                            td6.setAttribute('scope',"col"); 
-                            td6.setAttribute('class',"text-center");           
-                            var input6=document.createElement('input');  
-                            input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
-                             input6.setAttribute('type','number'); 
-                            input6.setAttribute('name',data[1][j][0]+"net2"); 
-                            input6.setAttribute('id',data[1][j][0]+"net2"); 
-                            input6.setAttribute('data-sousclasse',data[1][j][2]);
-                            if(data[0][data[1][j][0]]){
-                            input6.setAttribute('value',data[0][data[1][j][0]][2]);
-                            }
-
-                            // on commente cette partie pour tester la methode hard
-                            //input6.addEventListener ("change", function(e){
-                            //    var sousclasse= $(this).data('sousclasse');
-                            //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
-                            //    console.log(total);
-                            //    if($(this).hasClass('net2')){
-                            //         $('input.total.net1').val(total);
-                            //    }else{
-                            //        $('input.total.net2').val(total);
-                            //    }
-                            //    // my update here 
-                            //});
-                            td6.appendChild(input6);
-                            tr.appendChild(td6) ;
-
-
-                            tbody.appendChild(tr);  
-
-
-                        }
-                    }          
-                        
-                   
                 }
                
             } ,

@@ -19,6 +19,27 @@ class FluxDesTresoreriesRepository extends ServiceEntityRepository
         parent::__construct($registry, FluxDesTresoreries::class);
     }
 
+    
+    public function findByCodeCuciAnneeAndCategory($codeCuci,$annee)
+    {
+        return $this->createQueryBuilder('f')
+
+            ->innerJoin('f.cuci_rep_code','r')
+            ->addSelect('r')
+            ->andWhere('f.annee_financiere = :annee')
+            ->andWhere('r.codeCuci = :codeCuci')
+            ->setParameter('annee', $annee)
+            ->setParameter('codeCuci', $codeCuci)
+            
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    
+    
+
     // /**
     //  * @return FluxDesTresoreries[] Returns an array of FluxDesTresoreries objects
     //  */

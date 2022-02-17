@@ -37,7 +37,7 @@
         <!-- debut form -->
         
 <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
-    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte" name="idformcompte">
+    <form method="post" action="{{path('flux_des_tresoreries_new')}}" id="idformfluxtresor" name="idformfluxtresor">
     <div class="card-body " style="margin: 0%;padding: 0%;">
         <div class="row">
         <div class="col-xl-12"> 
@@ -76,12 +76,10 @@
             <div class="table-responsive">
                 <table name="form2" id="form2" class="table table-striped|sm|hover|inverse table-inverse table-responsive mb-0">
                     <thead>
-                        <tr class="bg-dark bg-soft opacity-65">
+                        <tr class=" opacity-80" style="background: #008000;">
                             <th scope="col" colspan="2" class="text-center ">
-                                REF
                             </th>
                             <th scope="col" colspan="3" class="text-center">
-                              Libelle<br>
                             </th>
                             <th colspan="4" scope="col" class="text-center">
                               Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
@@ -90,11 +88,16 @@
                               Exercice au 31/12/<span class="text-info" id="anneeN-1"></span>
                             </th>
                           </tr>
-                        <tr class="bg-dark bg-soft opacity-80">
-                            <th scope="col" colspan="5" class="text-center">
-                                
+                          <tr class=" opacity-80" style="background: #82C46C;">
+
+                            <th scope="col" colspan="2" class="text-center">
+                                REF
                             </th>
-                            <th colspan="2" scope="col" class="text-center">
+
+                            <th scope="col" colspan="2" class="text-center">
+                                Libellé
+                            </th>
+                            <th colspan="3" scope="col" class="text-center">
                               NET1
                             </th>
                             <th colspan="3" scope="col" class="text-center">
@@ -195,6 +198,202 @@
             }
         })
     });
+
+
+    ////// ecouteur sur le input annee fin generer le formulaire
+    $('#annee').change(function(e){
+
+        e.preventDefault();
+            
+        let route="{{path('fluxtresorjson')}}"+"/"+ $('#annee').val(); 
+        
+        $.ajax({
+            type: 'GET',
+            url : route,
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function(data){
+                var tbody=document.getElementById("tbody");
+                var ann=document.getElementById("annee");
+                var anneeN_1=document.getElementById("anneeN-1");
+                var anneeN=document.getElementById("anneeN");
+                tbody.innerHTML="";
+                ann.innerHTML="";
+                anneeN.value = ann.value;
+                anneeN.setAttribute('value', anneeN.value);
+                anneeN.innerHTML=anneeN.value;
+                anneeN_1.innerHTML=anneeN.value-1;
+
+                ////////
+                //console.log(data[2]); return;                
+
+                for (var i = data[2].length - 1; i >= 0; i--) {
+                    
+
+                    for (var j = data[1].length - 1; j >= 0; j--) {
+                                  
+                        if (data[2][i][0]==data[1][j][2]) {
+
+                            var tr=document.createElement('tr');
+                            var td1=document.createElement('td');
+                            var td2=document.createElement('td');
+
+                            var td5=document.createElement('td');
+                            var td6=document.createElement('td');
+
+                            td1.setAttribute('colspan',2); 
+                            td1.setAttribute('scope',"col"); 
+                            td1.setAttribute('class',"text-center form");           
+                            td1.innerHTML=  data[1][j][0];
+                            tr.appendChild(td1) ;
+                            
+                            td2.setAttribute('colspan',2); 
+                            td2.setAttribute('class',"text-center form");           
+                            td2.setAttribute('scope',"col"); 
+                                      
+                            td2.innerHTML=  data[1][j][1];
+                            tr.appendChild(td2) ;
+
+
+                            td5.setAttribute('colspan',3); 
+                            td5.setAttribute('scope',"col"); 
+                            td5.setAttribute('class',"text-center");
+                            var input5=document.createElement('input');
+                            input5.setAttribute('type','number'); 
+                            input5.setAttribute('name',data[1][j][0]+"net1"); 
+                            input5.setAttribute('id',data[1][j][0]+"net1"); 
+                            input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                            input5.setAttribute('data-sousclasse',data[1][j][2]);
+                            if(data[0][data[1][j][0]]){
+                                input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                            }
+
+                            // input5.addEventListener ("change", function(e){
+                            //     var sousclasse= $(this).data('sousclasse');
+                            //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                            //     
+                            //     console.log(total);
+                            //     if($(this).hasClass('net1')){
+                            //          $('input.total.net1').val(total);
+                            //     }else{
+                            //         $('input.total.net2').val(total);
+                            //     }
+                            //    
+                            // });
+                            td5.appendChild(input5);
+                            tr.appendChild(td5) ;
+                            
+
+
+                            td6.setAttribute('colspan',3); 
+                            td6.setAttribute('scope',"col"); 
+                            td6.setAttribute('class',"text-center");           
+                            var input6=document.createElement('input');  
+                            input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                            input6.setAttribute('type','number'); 
+                            input6.setAttribute('name',data[1][j][0]+"net2"); 
+                            input6.setAttribute('id',data[1][j][0]+"net2"); 
+                            input6.setAttribute('data-sousclasse',data[1][j][2]);
+                            if(data[0][data[1][j][0]]){
+                            input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                            }
+
+                            // on commente cette partie pour tester la methode hard
+                            //input6.addEventListener ("change", function(e){
+                            //    var sousclasse= $(this).data('sousclasse');
+                            //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                            //    console.log(total);
+                            //    if($(this).hasClass('net2')){
+                            //         $('input.total.net1').val(total);
+                            //    }else{
+                            //        $('input.total.net2').val(total);
+                            //    }
+                            //    // my update here 
+                            //});
+                            td6.appendChild(input6);
+                            tr.appendChild(td6) ;
+
+
+                            tbody.appendChild(tr);  
+
+
+                        }
+                    }
+                    
+                    var tr=document.createElement('tr');
+                    // tr.setAttribute('class',"bg-dark bg-soft opacity-65");                     
+                    tr.setAttribute('class'," opacity-65");
+                    tr.setAttribute('style',"background: #82C46C;");           
+
+                    var td1=document.createElement('td');
+                    var td2=document.createElement('td');
+                    var td5=document.createElement('td');
+                    var td6=document.createElement('td');
+
+                    td1.setAttribute('colspan',2); 
+                    td1.setAttribute('scope',"col"); 
+                    td1.setAttribute('class',"text-center form");           
+                    td1.innerHTML=  data[2][i][0]; // sont stockés les ref
+                    tr.appendChild(td1) ;
+                    
+                    td2.setAttribute('colspan',2); 
+                    td2.setAttribute('class',"text-center form");           
+                    td2.setAttribute('scope',"col"); 
+                               
+                    td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
+                    tr.appendChild(td2) ;
+
+
+                    td5.setAttribute('colspan',3); 
+                    td5.setAttribute('scope',"col"); 
+                    td5.setAttribute('class',"text-center");
+                    var input1=document.createElement('input'); 
+                    input1.setAttribute('type','number'); 
+                    
+                    input1.setAttribute('name',data[2][i][0]+"net1"); 
+                    input1.setAttribute('id',data[2][i][0]+"net1"); 
+                    input1.setAttribute('class','form-control form-control-sm total net1 '+data[2][i][0]);   
+                    if(data[0][data[2][i][0]]){
+                        input1.setAttribute('value',data[0][data[2][i][0]][1]);
+                        // faut appeler la function sum ici
+                    }
+
+                    td5.appendChild(input1);
+                    tr.appendChild(td5) ;
+                    
+
+
+                    td6.setAttribute('colspan',3); 
+                    td6.setAttribute('scope',"col"); 
+                    td6.setAttribute('class',"text-center");           
+                    var input2=document.createElement('input'); 
+                    input2.setAttribute('type','number'); 
+                    input2.setAttribute('name',data[2][i][0]+"net2"); 
+                    input2.setAttribute('id',data[2][i][0]+"net2"); 
+                    input2.setAttribute('class','form-control form-control-sm total net2 '+data[2][i][0]);
+                    if(data[0][data[2][i][0]]){
+                        input2.setAttribute('value',data[0][data[2][i][0]][2]);
+                      }
+                            
+                    td6.appendChild(input2);
+                    tr.appendChild(td6) ;
+
+
+                    tbody.appendChild(tr);  
+                        
+                   
+                }
+               
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        })
+    });
+    ///// end generer formulaire
 
 </script>
 
