@@ -42,7 +42,7 @@ class ImmoBrutRepository extends ServiceEntityRepository
 
             ->innerJoin('i.repertoire','r')
             ->addSelect('r')
-            ->andWhere('b.anneeFinanciere = :annee')
+            ->andWhere('i.anneeFinanciere = :annee')
             ->andWhere('r.codeCuci = :codeCuci')
             ->setParameter('annee', $annee)
             ->setParameter('codeCuci', $codeCuci)  

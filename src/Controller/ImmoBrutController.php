@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\ImmoBrut;
+use App\Entity\Repertoire;
+use App\Entity\RefAgg;
 use App\Form\ImmoBrutType;
 use App\Repository\ImmoBrutRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/immo/brut")
@@ -31,20 +35,109 @@ class ImmoBrutController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $immoBrut = new ImmoBrut();
-        $form = $this->createForm(ImmoBrutType::class, $immoBrut);
-        $form->handleRequest($request);
+        
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($immoBrut);
-            $entityManager->flush();
+         $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>4]);
+       
 
-            return $this->redirectToRoute('immo_brut_index', [], Response::HTTP_SEE_OTHER);
+
+
+        if($request->get('annee')){
+           
+           $codeCuci=$request->get('codecuci');
+           $type=$request->get('type');
+           $annee=$request->get('annee');
+
+
+           $immoBruts=$this->getDoctrine()->getRepository(ImmoBrut::class)->findByCodeCuci($codeCuci,$annee);
+
+           $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+           if(count($immoBruts)>1){
+               foreach ($refAgg as $key ) {
+                  
+                  $immobrut =$this->getDoctrine()->getRepository(ImmoBrut::class)->findOneBy(["repertoire"=>$repertoire,"anneeFinanciere"=>$annee,"refCode"=>$key->getCode()]);
+
+                 
+                  if($immobrut){
+
+                      $immobrut->setAnneeFinanciere($annee);
+
+                      $immobrut->setRefCode($key->getCode());
+
+                      $immobrut->setRepertoire($repertoire);
+                      $immobrut->setBrutA($request->get($key->getCode()."brutA"));
+                      $immobrut->setAugmentationB3($request->get($key->getCode()."augmentationB3"));
+                      $immobrut->setAugmentationB2($request->get($key->getCode()."augmentationB2"));
+                      $immobrut->setAugmentationB1($request->get($key->getCode()."augmentationB1"));
+                      $immobrut->setBrutD($request->get($key->getCode()."brutD"));
+                      $immobrut->setDiminutionC1($request->get($key->getCode()."diminutionC1"));
+                      $immobrut->setDiminutionC2($request->get($key->getCode()."diminutionC2"));
+                     
+                      $immobrut->setModifiedby($this->getUser());
+                     
+                      $entityManager->flush();
+                  }
+                else{
+
+                      $immobrut = new ImmoBrut();
+
+                      $immobrut->setAnneeFinanciere($annee);
+
+                      $immobrut->setRefCode($key->getCode());
+
+
+                      $immobrut->setRepertoire($this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]));
+                      $immobrut->setBrutA($request->get($key->getCode()."brutA"));
+                      $immobrut->setAugmentationB3($request->get($key->getCode()."augmentationB3"));
+                      $immobrut->setAugmentationB2($request->get($key->getCode()."augmentationB2"));
+                      $immobrut->setAugmentationB1($request->get($key->getCode()."augmentationB1"));
+                      $immobrut->setBrutD($request->get($key->getCode()."brutD"));
+                      $immobrut->setDiminutionC1($request->get($key->getCode()."diminutionC1"));
+                      $immobrut->setDiminutionC2($request->get($key->getCode()."diminutionC2"));
+                      $immobrut->setCreatedby($this->getUser());
+                      $immobrut->setModifiedby($this->getUser());
+                      $entityManager->persist($immobrut);
+                      $entityManager->flush();
+
+
+                }
+                }
+           }else{
+
+                 foreach ($refAgg as $key ) {
+                 
+                  $immobrut = new ImmoBrut();
+
+                  $immobrut->setAnneeFinanciere($annee);
+
+                  $immobrut->setRefCode($key->getCode());
+
+
+                  $immobrut->setRepertoire($this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]));
+                   $immobrut->setBrutA($request->get($key->getCode()."brutA"));
+                      $immobrut->setAugmentationB3($request->get($key->getCode()."augmentationB3"));
+                      $immobrut->setAugmentationB2($request->get($key->getCode()."augmentationB2"));
+                      $immobrut->setAugmentationB1($request->get($key->getCode()."augmentationB1"));
+                      $immobrut->setBrutD($request->get($key->getCode()."brutD"));
+                      $immobrut->setDiminutionC1($request->get($key->getCode()."diminutionC1"));
+                      $immobrut->setDiminutionC2($request->get($key->getCode()."diminutionC2"));
+                  $immobrut->setCreatedby($this->getUser());
+                  $immobrut->setModifiedby($this->getUser());
+                  $entityManager->persist($immobrut);
+                  $entityManager->flush();
+                }
+
+           }
+
+           return $this->redirectToRoute('immo_brut_new', [], Response::HTTP_SEE_OTHER);
         }
 
+
+      
+
         return $this->renderForm('immo_brut/new.html.twig', [
-            'immo_brut' => $immoBrut,
-            'form' => $form,
+            'refAgg' => $refAgg,
+           
         ]);
     }
 
@@ -90,15 +183,24 @@ class ImmoBrutController extends AbstractController
         $codeCuci= $session->get('codeCuci');
         
         $immoBrut=$this->getDoctrine()->getRepository(ImmoBrut::class)->findByCodeCuci($codeCuci,$annee);
+        
+
+
+        foreach ($immoBrut as $key ) {
+
+              
+              $tab1[$key->getRefCode()]=[$key->getRefCode(),$key->getBrutA(),$key->getAugmentationB1(),$key->getAugmentationB2(),$key->getAugmentationB3(),$key->getDiminutionC1(),$key->getDiminutionC2(),$key->getBrutD()];
+             
+        } 
        
 
 
         $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
 
 
-        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>4,"surlignee"=>0],  array('code' => 'ASC'));
+        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>4],  array('ordre' => 'ASC'));
 
-        $refAggParent=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>4,"surlignee"=>1],array('code' => 'ASC'));
+       
 
       
 
@@ -108,14 +210,9 @@ class ImmoBrutController extends AbstractController
         } 
 
 
-        foreach ($refAggParent as $key ) {
-
-             array_push($tab3,[$key->getCode(),$key->getLibelle(),$key->getParent(),$key->getOrdre(),$key->getSurlignee()]);
-        } 
   
-         array_push($tab,$tab2);
-         array_push($tab,$tab3);
-
+        array_push($tab,$tab2);
+        array_push($tab,$tab1);
               
         return new JsonResponse( $tab);
     }

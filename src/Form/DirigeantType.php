@@ -21,7 +21,7 @@ class DirigeantType extends AbstractType
         $builder
             
             ->add('addresse',TextType::class,
-            array('label'=>'Addresse  ',
+            array('label'=>'Adresse  ',
             'required'=>false,
             'attr'=>array('class'=>'form-control')))
             ->add('nom',TextType::class,

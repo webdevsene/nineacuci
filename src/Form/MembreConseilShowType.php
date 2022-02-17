@@ -22,7 +22,7 @@ class MembreConseilShowType extends AbstractType
         $builder
             
             ->add('addresse',TextType::class,
-            array('label'=>'Addresse  ',
+            array('label'=>'Adresse  ',
             'required'=>false,
             'disabled'=>true,
             'attr'=>array('class'=>'form-control')))

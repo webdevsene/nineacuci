@@ -8,8 +8,9 @@ use Symfony\Component\Uid\Uuid;
 
 
 /**
- * @ORM\Table(name="`CUCI_IMMO_BRUT`")
+ * 
  * @ORM\Entity(repositoryClass=ImmoBrutRepository::class)
+ * @ORM\Table(name="cuci_immo_brut")
  */
 class ImmoBrut
 {
@@ -96,8 +97,12 @@ class ImmoBrut
      */
     private $repertoire;
 
+   
+
      public function __construct()
     {
+        $this->createdAt=new \DateTime();
+        $this->updatedAt=new \DateTime();
        
          $this->id = Uuid::v4();
     }
@@ -288,4 +293,5 @@ class ImmoBrut
 
         return $this;
     }
+
 }

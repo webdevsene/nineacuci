@@ -17,7 +17,7 @@ class CommissairesComptesShowType extends AbstractType
         $builder
             
             ->add('address',TextType::class,
-            array('label'=>'Addresse  ',
+            array('label'=>'Adresse  ',
             'required'=>false,
              'disabled'=>true,
             'attr'=>array('class'=>'form-control')))

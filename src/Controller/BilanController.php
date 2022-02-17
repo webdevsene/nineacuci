@@ -56,10 +56,10 @@ class BilanController extends AbstractController
 
             $bn=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
 
-
+             $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
            if(count($bn)>1){
                foreach ($refAgg as $key ) {
-                  $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+                 
                   $bilan =$this->getDoctrine()->getRepository(Bilan::class)->findOneBy(["repertoire"=>$repertoire,"anneeFinanciere"=>$annee,"type"=>"Actif","refCode"=>$key->getCode()]);
 
                  
@@ -279,7 +279,7 @@ class BilanController extends AbstractController
               $tab1[$key->getRefCode()]=[$key->getRefCode(),$key->getBrut(),$key->getAmortPR(),$key->getNet1(),$bln->getNet1()];
               else
                  $tab1[$key->getRefCode()]=[$key->getRefCode(),$key->getBrut(),$key->getAmortPR(),$key->getNet1(),$key->getNet2()];
-         } 
+        } 
 
 
         $refAggPassif=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>2],  array('code' => 'ASC'));
