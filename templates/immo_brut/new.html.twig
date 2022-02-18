@@ -57,7 +57,7 @@
                                              <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
                                              Sauvegarder
                                          </a>
-                                         <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light">
+                                         <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
                                              <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
                                          </button>
                                      </div>
@@ -169,6 +169,9 @@
 
 
 
+
+
+
  $(document).ready(function(){
 
  {% if app.session.get("codeCuci")!=""%}
@@ -203,7 +206,11 @@
 
 
 
-    $('#annee').change(function(){
+$('#annee').change(function(){
+
+      
+
+        
             
             let route="{{path('immoBrutjson')}}"+"/"+ $('#annee').val();
              var form = $(this).closest("form");
@@ -218,7 +225,7 @@
                     tbody.innerHTML="";
 
 
-                    console.log(data);
+                  
 
 
 
@@ -367,7 +374,21 @@
                             
                        
                     }
+                  
+    $(".form-control").bind("keypress", function(e) {
 
+        if (e.keyCode == 13) {
+            var inps = $("input"); //add select too
+            for (var x = 0; x < inps.length; x++) {
+                if (inps[x] == this) {
+                    while ((inps[x]).name == (inps[x + 1]).name) {
+                    x++;
+                    }
+                    if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                }
+            }   e.preventDefault();
+        }
+    });
 
                    
                 } ,
@@ -375,15 +396,8 @@
                     console.log(error);
                 }
             })
-    });
-
-
-
-
-
-
-
- $('#idcuci').change(function(){
+});
+$('#idcuci').change(function(){
             
             let route="{{path('nineaNumImmoBrut')}}"+"/"+ $('#idcuci').val();
              
@@ -402,7 +416,7 @@
                     console.log(error);
                 }
             })
-    });
+});
     
     function remplacer(value){
         value=value.replace(".", "");
@@ -424,7 +438,37 @@
     }
 
 
+$('.valider').click(function(e){
 
+
+        var valider=1;
+
+        if (valider==1) {
+
+                {
+                e.preventDefault();
+                var a=$(this);
+                Swal.fire({
+                title:"Confirmation",
+                text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                icon:"warning",
+                showCancelButton:true,
+                confirmButtonText:"Oui",
+                cancelButtonText:"Non",
+                confirmButtonClass:"btn btn-success mt-2",
+                cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                buttonsStyling:!1}).then(function(t)
+                {
+                  if (t.value) {
+                     document.getElementById("idformpas").submit()
+                  }else
+                      e.preventDefault();
+
+                })}
+        }
+
+       
+    });
 
 
 

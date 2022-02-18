@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @ORM\Table(name="`CUCI_BILAN`")
+ * @ORM\Table(name="`cuci_bilan`")
  * @ORM\Entity(repositoryClass=BilanRepository::class)
  */
 class Bilan

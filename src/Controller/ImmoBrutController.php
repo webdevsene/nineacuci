@@ -113,9 +113,13 @@ class ImmoBrutController extends AbstractController
                   $immobrut->setRefCode($key->getCode());
 
 
+
+
+
                   $immobrut->setRepertoire($this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]));
-                   $immobrut->setBrutA($request->get($key->getCode()."brutA"));
-                      $immobrut->setAugmentationB3($request->get($key->getCode()."augmentationB3"));
+                   
+                  $immobrut->setBrutA($request->get($key->getCode()."brutA"));
+                  $immobrut->setAugmentationB3($request->get($key->getCode()."augmentationB3"));
                       $immobrut->setAugmentationB2($request->get($key->getCode()."augmentationB2"));
                       $immobrut->setAugmentationB1($request->get($key->getCode()."augmentationB1"));
                       $immobrut->setBrutD($request->get($key->getCode()."brutD"));
