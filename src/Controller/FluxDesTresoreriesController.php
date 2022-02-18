@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\FluxDesTresoreries;
+use App\Entity\RefAgg;
+use App\Entity\Repertoire;
 use App\Form\FluxDesTresoreriesType;
 use App\Repository\FluxDesTresoreriesRepository;
 use App\Repository\RefAggRepository;
@@ -49,22 +51,86 @@ class FluxDesTresoreriesController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $fluxDesTresorery = new FluxDesTresoreries();
-        $form = $this->createForm(FluxDesTresoreriesType::class, $fluxDesTresorery);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($fluxDesTresorery);
-            $entityManager->flush();
+        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>3]); 
+        if($request->get('annee')){
+          
+           $codeCuci=$request->get('idcuci');
+           // $type=$request->get('type');
+            $type= 1;
+           $annee=$request->get('annee');
 
-            return $this->redirectToRoute('flux_des_tresoreries_index', [], Response::HTTP_SEE_OTHER);
+            # $bn = $this->cdrRepo->findByCodeCuci($codeCuci, $annee); 
+            $bn = $this->fdtRepo->findByCodeCuciAnneeAndCategory($codeCuci, $annee); 
+
+            $countSaving = 0; // pour le control message flash
+
+           if(count($bn)>1){
+               foreach ($refAgg as $key ) {
+                  $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+                  $bilan =$this->getDoctrine()->getRepository(FluxDesTresoreries::class)->findOneBy(["cuci_rep_code"=>$repertoire,"annee_financiere"=>$annee,"ref_code"=>$key->getCode()]);
+
+                  //dd($bilan);
+                  if($bilan){ // si le compte existe, c'est une mise à jour
+
+                      $bilan->setAnneeFinanciere($annee)
+                            ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
+                            ->setRefCode($key->getCode())
+                            ->setNet1($request->get($key->getCode()."net1"))
+                            ->setNet2($request->get($key->getCode()."net2")) ;
+                      $entityManager->flush();
+                  }else{ // si l'annee n'existe pas, c'est une nouvelle creation
+
+                      $bilan = new FluxDesTresoreries();
+                      $bilan->setAnneeFinanciere($annee)
+                            ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
+                            ->setRefCode($key->getCode())
+                            ->setNet1($request->get($key->getCode()."net1"))
+                            ->setNet2($request->get($key->getCode()."net2")) ;
+                            
+                            // $bilan->setCreatedBy($this->getUser());
+                            // $bilan->setModifiedBy($this->getUser());
+                            
+                            $entityManager->persist($bilan);
+                            $entityManager->flush();
+
+                            $countSaving = $countSaving+1;
+                        }
+                }  // end for 
+                    
+            }else{
+                    
+                foreach ($refAgg as $key ) {
+                    
+                    $bilan = new FluxDesTresoreries();
+
+                    $bilan->setAnneeFinanciere($annee)
+                          ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
+                          ->setRefCode($key->getCode())
+                          ->setNet1($request->get($key->getCode()."net1"))
+                          ->setNet2($request->get($key->getCode()."net2")) ;
+
+
+                  $entityManager->persist($bilan);
+                  $entityManager->flush();
+                  $countSaving= $countSaving+1;
+                }
+
+           } // end first if loop
+
+           if ($countSaving>0) {
+               $this->addFlash("notice", "Sauvegarde effectuée avec succès !");
+           }
         }
+       
+
 
         return $this->renderForm('flux_des_tresoreries/new.html.twig', [
-            'flux_des_tresorery' => $fluxDesTresorery,
-            'form' => $form,
+            
+          "refAgg" => $refAgg,
         ]);
     }
+
 
     /**
      * @Route("/{id}", name="flux_des_tresoreries_show", methods={"GET"})
