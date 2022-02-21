@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @Route("/flux/tresoreries")
@@ -262,34 +263,52 @@ class FluxDesTresoreriesController extends AbstractController
         $session = $this->requestStack->getSession();
         $codeCuci = $session->get("codeCuci");
         
-        $repertoire = $this->reperRepo->findOneBy(array("codeCuci"=>$codeCuci));  
+        $repertoire = $this->reperRepo->findOneBy(array("codeCuci"=>$id));  
         $type = "Actif";
         $typePassif = "Passif";
         $refCode = "BT";
         $refCodePassif = "DT";
-
-
-        $bilanActif = $this->getDoctrine()->getRepository(Bilan::class)
-                           ->findOneBy([
-                               "repertoire"=>$repertoire,
-                               "anneeFinanciere"=>$id,
-                            ]);
+        $tableau = [
+            "refCode"=>$refCode,
+            "type"=>$type,
+        ];
         
-        dd($bilanActif);
-
-        $bilanPassif = $this->bilanRep
-                            ->findOneBy(array(
-                               "repertoire"=>$repertoire, 
-                               "anneeFinanciere"=>$id, 
-                               "type"=>$typePassif,
-                               "refCode"=>$refCodePassif
-                            ));
-                            
-
         
-        $tab = $bilanActif->getNet2()  - $bilanPassif->getNet2();  
+        
+        $net2BT = "";
+        
+        
+        //// recuperer la valeur nette saisie n-1 DT
+        $bilanPassif = $this->bilanRep->findOneBy(array(
+            "refCode"=>$refCodePassif,
+            "type"=>$typePassif,
+        ));
+        
+        $bilanActif = $this->actifBTNet2($tableau); /// recuperer la valeur nette n-1 saisie BT actif
+        
+        foreach ($bilanActif as $key) {
+            
+            if ($key->getRepertoire()->getId() != $repertoire->getId()) {
+            }else{
+                
+                $net2BT = $key->getNet2();
+                
+            }
+        }      
+        
+        $tab = (int)$net2BT - (int)$bilanPassif->getNet2();
         
         // return new JsonResponse([25858906 ,31025601]);
         return new JsonResponse($tab);
+    }
+
+
+    public function actifBTNet2($tab)
+    {
+        
+        $bilanActif = $this->bilanRep
+        ->findBy($tab);
+
+        return $bilanActif;
     }
 }

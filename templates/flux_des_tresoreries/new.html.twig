@@ -727,28 +727,55 @@
             
             //// ici traitement de sumZA Trésorerie nette au 1er janvier
             // sumZA = tresorerie actif n-1(BT) - tresorerie passif n-1(DT) 
+            
+                     
+            let route="{{path('sumZA')}}"+"/"+ $('#idcuci').val();
+            $.ajax({
+                   type: 'GET',
+                   url : route,
+                   dataType : "json",
+                   processData: false,
+                   contentType: false,
+                   cache: false,
+                   timeout: 800000,
+                   success: function(data){ 
 
-            {
-                e.preventDefault();
-                var a=$(this);
-                Swal.fire({
-                title:"Confirmation",
-                text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
-                icon:"success",
-                showCancelButton:true,
-                confirmButtonText:"Oui",
-                cancelButtonText:"Non",
-                confirmButtonClass:"btn btn-success mt-2",
-                cancelButtonClass:"btn btn-danger ms-2 mt-2",
-                buttonsStyling:!1}).then(function(t)
-                {
-                  if (t.value) {
-                     document.getElementById("idformfluxtresor").submit()
-                  }else
-                      e.preventDefault();
+                        //if(JSON.stringify(data) === JSON.stringify(xin)){
 
-                })
-            }
+                       if(parseInt (data) != parseInt(document.getElementById('ZAnet1').value) ){
+                              
+                           valider=0;
+                           Swal.fire('Verifier les valeurs NET saisies pour Trésorerie nette au 1er janvier ZA = tresorerie actif n-1(BT) - tresorerie passif n-1(DT) '); return;
+                       }else{
+
+                           {
+                           e.preventDefault();
+                           var a=$(this);
+                           Swal.fire({
+                           title:"Confirmation",
+                           text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                           icon:"success",
+                           showCancelButton:true,
+                           confirmButtonText:"Oui",
+                           cancelButtonText:"Non",
+                           confirmButtonClass:"btn btn-success mt-2",
+                           cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                           buttonsStyling:!1}).then(function(t)
+                           {
+                             if (t.value) {
+                                document.getElementById("idformcompte").submit()
+                             }else
+                                 e.preventDefault();
+           
+                           })}
+                       }
+                                          
+                       
+                   } ,
+                   error : function(error){
+                       console.log(error);
+                   }
+               });
 
         }
     });

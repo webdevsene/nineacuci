@@ -222,6 +222,10 @@ class CompteDeResultatsController extends AbstractController
 
         $codeCuci= $session->get('codeCuci');   
 
+        $session = $this->requestStack->getSession();
+        // stores an attribute in the session for later reuse
+        $session->set('annee', $annee);
+
         $bilan = $this->cdrRepo->findByCodeCuci($codeCuci, $annee);
             
             foreach ($bilan as $key ) {

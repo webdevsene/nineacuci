@@ -211,6 +211,9 @@
                     
                     let denomination=document.getElementById("denomination");
                     denomination.value=data;
+                    //// ici recuperer l'annee de session
+                    document.getElementById("annee").value=$('#annee').val();
+
                     
                     
                 } ,
@@ -248,10 +251,7 @@
                 anneeN.innerHTML=anneeN.value;
                 anneeN_1.innerHTML=anneeN.value-1;
 
-                // console.log(data[1]); return;         
                     
-               
-                   
                 //for (var i = data[2].length - 1; i >= 0; i--) {
                 for (var i = 0; i < data[2].length; i++) {
                     
