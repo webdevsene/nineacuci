@@ -181,7 +181,7 @@
     document.getElementById('idcuci').setAttribute('value',value);
   
 
-    let route="{{path('nineaNumImmoBrut')}}"+"/"+ value;
+    var  route="{{path('nineaNumImmoBrut')}}"+"/"+ value;
             $.ajax({
                 type: 'GET',
                 url : route,
@@ -198,6 +198,215 @@
                     console.log(error);
                 }
     })
+
+
+    {% if app.session.get("annee")!=""%}
+           document.getElementById("annee").value='{{app.session.get("annee")}}';
+           route="{{path('immoBrutjson')}}"+"/"+ '{{app.session.get("annee")}}';
+             var form = $(this).closest("form");
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    var tbody=document.getElementById("tbody");
+                    tbody.innerHTML="";
+                    for (var i = 0; i < data[0].length; i++) {
+                        var tr=document.createElement('tr');
+                        if (data[0][i][4]) {
+                             tr.setAttribute('class'," opacity-65");
+                              tr.setAttribute('style',"background: #82C46C;");
+                        }
+                                  
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+                        var td7=document.createElement('td');
+                        var td8=document.createElement('td');
+                        var td9=document.createElement('td');
+                      
+
+                        td1.setAttribute('colspan',1); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                               
+                             
+                        td1.innerHTML=  data[0][i][0];
+                        tr.appendChild(td1) ;
+
+                        td2.setAttribute('colspan',1); 
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  data[0][i][1];
+                        tr.appendChild(td2) ;
+
+                        td3.setAttribute('colspan',1); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm'); 
+                        input3.setAttribute('type','number'); 
+                        input3.setAttribute('name',data[0][i][0]+"brutA");
+                        input3.setAttribute('id',data[0][i][0]+"brutA");
+                        
+
+                        if(data[1][data[0][i][0]]){
+                          input3.setAttribute('value',data[1][data[0][i][0]][1]);
+                        }
+
+
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+
+                      
+
+
+                        td4.setAttribute('colspan',1); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                       
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm');
+                        input4.setAttribute('type','number'); 
+                        input4.setAttribute('name',data[0][i][0]+"augmentationB1");
+                        input4.setAttribute('id',data[0][i][0]+"augmentationB1");
+
+
+                        if(data[1][data[0][i][0]]){
+                          input4.setAttribute('value',data[1][data[0][i][0]][2]);
+                        }
+                         
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+
+
+                        td5.setAttribute('colspan',1); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");           
+                       
+                        var input5=document.createElement('input');  
+                        input5.setAttribute('class','form-control form-control-sm');
+                        input5.setAttribute('type','number'); 
+                        input5.setAttribute('name',data[0][i][0]+"augmentationB2");
+                        input5.setAttribute('id',data[0][i][0]+"augmentationB2");
+
+                        if(data[1][data[0][i][0]]){
+                          input5.setAttribute('value',data[1][data[0][i][0]][3]);
+                        }
+                         
+                        td5.appendChild(input5);
+                        tr.appendChild(td5) ;
+
+
+                        td6.setAttribute('colspan',1); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                       
+                        var input6=document.createElement('input');  
+                        input6.setAttribute('class','form-control form-control-sm');
+                        input6.setAttribute('type','number'); 
+                        input6.setAttribute('name',data[0][i][0]+"augmentationB3");
+                        input6.setAttribute('id',data[0][i][0]+"augmentationB3");
+
+                        if(data[1][data[0][i][0]]){
+                          input6.setAttribute('value',data[1][data[0][i][0]][4]);
+                        }
+                         
+                        td6.appendChild(input6);
+                        tr.appendChild(td6) ;
+
+
+                        td7.setAttribute('colspan',1); 
+                        td7.setAttribute('scope',"col"); 
+                        td7.setAttribute('class',"text-center");           
+                       
+                        var input7=document.createElement('input');  
+                        input7.setAttribute('class','form-control form-control-sm');
+                        input7.setAttribute('type','number'); 
+                        input7.setAttribute('name',data[0][i][0]+"diminutionC1");
+                        input7.setAttribute('id',data[0][i][0]+"diminutionC1");
+
+                        if(data[1][data[0][i][0]]){
+                          input7.setAttribute('value',data[1][data[0][i][0]][5]);
+                        }
+                         
+                        td7.appendChild(input7);
+                        tr.appendChild(td7) ;
+
+
+                        td8.setAttribute('colspan',1); 
+                        td8.setAttribute('scope',"col"); 
+                        td8.setAttribute('class',"text-center");           
+                       
+                        var input8=document.createElement('input');  
+                        input8.setAttribute('class','form-control form-control-sm');
+                        input8.setAttribute('type','number'); 
+                        input8.setAttribute('name',data[0][i][0]+"diminutionC2");
+                        input8.setAttribute('id',data[0][i][0]+"diminutionC2");
+
+                        if(data[1][data[0][i][0]]){
+                          input8.setAttribute('value',data[1][data[0][i][0]][6]);
+                        }
+                         
+                        td8.appendChild(input8);
+                        tr.appendChild(td8) ;
+
+
+                        td9.setAttribute('colspan',1); 
+                        td9.setAttribute('scope',"col"); 
+                        td9.setAttribute('class',"text-center");           
+                       
+                        var input9=document.createElement('input');  
+                        input9.setAttribute('class','form-control form-control-sm');
+                        input9.setAttribute('type','number'); 
+                        input9.setAttribute('name',data[0][i][0]+"brutD");
+                        input9.setAttribute('id',data[0][i][0]+"brutD");
+
+
+                        if(data[1][data[0][i][0]]){
+                          input9.setAttribute('value',data[1][data[0][i][0]][7]);
+                        }
+                         
+                        td9.appendChild(input9);
+                        tr.appendChild(td9) ;
+
+                        tbody.appendChild(tr);  
+
+                                
+                            
+                       
+                    }
+                  
+                    $(".form-control").bind("keypress", function(e) {
+
+                        if (e.keyCode == 13) {
+                            var inps = $("input"); //add select too
+                            for (var x = 0; x < inps.length; x++) {
+                                if (inps[x] == this) {
+                                    while ((inps[x]).name == (inps[x + 1]).name) {
+                                    x++;
+                                    }
+                                    if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                                }
+                            }   e.preventDefault();
+                        }
+                    });
+
+                   
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+    
+
+    {% endif %}
 
  {% endif %}
 
@@ -294,6 +503,11 @@ $('#annee').change(function(){
                         input4.setAttribute('type','number'); 
                         input4.setAttribute('name',data[0][i][0]+"augmentationB1");
                         input4.setAttribute('id',data[0][i][0]+"augmentationB1");
+
+
+                        if(data[1][data[0][i][0]]){
+                          input4.setAttribute('value',data[1][data[0][i][0]][2]);
+                        }
                          
                         td4.appendChild(input4);
                         tr.appendChild(td4) ;
@@ -308,6 +522,10 @@ $('#annee').change(function(){
                         input5.setAttribute('type','number'); 
                         input5.setAttribute('name',data[0][i][0]+"augmentationB2");
                         input5.setAttribute('id',data[0][i][0]+"augmentationB2");
+
+                        if(data[1][data[0][i][0]]){
+                          input5.setAttribute('value',data[1][data[0][i][0]][3]);
+                        }
                          
                         td5.appendChild(input5);
                         tr.appendChild(td5) ;
@@ -322,6 +540,10 @@ $('#annee').change(function(){
                         input6.setAttribute('type','number'); 
                         input6.setAttribute('name',data[0][i][0]+"augmentationB3");
                         input6.setAttribute('id',data[0][i][0]+"augmentationB3");
+
+                        if(data[1][data[0][i][0]]){
+                          input6.setAttribute('value',data[1][data[0][i][0]][4]);
+                        }
                          
                         td6.appendChild(input6);
                         tr.appendChild(td6) ;
@@ -336,6 +558,10 @@ $('#annee').change(function(){
                         input7.setAttribute('type','number'); 
                         input7.setAttribute('name',data[0][i][0]+"diminutionC1");
                         input7.setAttribute('id',data[0][i][0]+"diminutionC1");
+
+                        if(data[1][data[0][i][0]]){
+                          input7.setAttribute('value',data[1][data[0][i][0]][5]);
+                        }
                          
                         td7.appendChild(input7);
                         tr.appendChild(td7) ;
@@ -350,6 +576,10 @@ $('#annee').change(function(){
                         input8.setAttribute('type','number'); 
                         input8.setAttribute('name',data[0][i][0]+"diminutionC2");
                         input8.setAttribute('id',data[0][i][0]+"diminutionC2");
+
+                        if(data[1][data[0][i][0]]){
+                          input8.setAttribute('value',data[1][data[0][i][0]][6]);
+                        }
                          
                         td8.appendChild(input8);
                         tr.appendChild(td8) ;
@@ -364,6 +594,11 @@ $('#annee').change(function(){
                         input9.setAttribute('type','number'); 
                         input9.setAttribute('name',data[0][i][0]+"brutD");
                         input9.setAttribute('id',data[0][i][0]+"brutD");
+
+
+                        if(data[1][data[0][i][0]]){
+                          input9.setAttribute('value',data[1][data[0][i][0]][7]);
+                        }
                          
                         td9.appendChild(input9);
                         tr.appendChild(td9) ;
@@ -375,20 +610,20 @@ $('#annee').change(function(){
                        
                     }
                   
-    $(".form-control").bind("keypress", function(e) {
+                    $(".form-control").bind("keypress", function(e) {
 
-        if (e.keyCode == 13) {
-            var inps = $("input"); //add select too
-            for (var x = 0; x < inps.length; x++) {
-                if (inps[x] == this) {
-                    while ((inps[x]).name == (inps[x + 1]).name) {
-                    x++;
-                    }
-                    if ((x + 1) < inps.length) $(inps[x + 1]).focus();
-                }
-            }   e.preventDefault();
-        }
-    });
+                        if (e.keyCode == 13) {
+                            var inps = $("input"); //add select too
+                            for (var x = 0; x < inps.length; x++) {
+                                if (inps[x] == this) {
+                                    while ((inps[x]).name == (inps[x + 1]).name) {
+                                    x++;
+                                    }
+                                    if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                                }
+                            }   e.preventDefault();
+                        }
+                    });
 
                    
                 } ,

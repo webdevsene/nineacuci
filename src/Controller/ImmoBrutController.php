@@ -60,6 +60,8 @@ class ImmoBrutController extends AbstractController
                  
                   if($immobrut){
 
+
+
                       $immobrut->setAnneeFinanciere($annee);
 
                       $immobrut->setRefCode($key->getCode());
@@ -74,6 +76,8 @@ class ImmoBrutController extends AbstractController
                       $immobrut->setDiminutionC2($request->get($key->getCode()."diminutionC2"));
                      
                       $immobrut->setModifiedby($this->getUser());
+
+                      
                      
                       $entityManager->flush();
                   }

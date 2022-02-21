@@ -252,6 +252,9 @@ class BilanController extends AbstractController
 
         $session=new Session();
         $codeCuci= $session->get('codeCuci');
+
+
+        $session->set('annee',$annee);
         
         $bilan=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Actif");
         $bilanPassif=$this->getDoctrine()->getRepository(Bilan::class)->findByCodeCuci($codeCuci,$annee,"Passif");
