@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Bilan;
 use App\Entity\FluxDesTresoreries;
 use App\Entity\RefAgg;
 use App\Entity\Repertoire;
 use App\Form\FluxDesTresoreriesType;
+use App\Repository\BilanRepository;
 use App\Repository\FluxDesTresoreriesRepository;
 use App\Repository\RefAggRepository;
 use App\Repository\RepertoireRepository;
@@ -27,12 +29,14 @@ class FluxDesTresoreriesController extends AbstractController
      public function __construct(RequestStack $requestStack, 
                                  RepertoireRepository $reperRepo, 
                                  FluxDesTresoreriesRepository $fdtRepo,
-                                 RefAggRepository $refAggRepo)
+                                 RefAggRepository $refAggRepo,
+                                 BilanRepository $bilanRep)
      {
          $this->requestStack = $requestStack;
          $this->reperRepo = $reperRepo;
          $this->fdtRepo = $fdtRepo;
          $this->refAggRepo = $refAggRepo;
+         $this->bilanRep = $bilanRep;
      }
 
 
@@ -247,5 +251,45 @@ class FluxDesTresoreriesController extends AbstractController
              array_push($tab,$tab3);
         
         return new JsonResponse( $tab);
+    }
+
+    
+    /**
+     * @Route("/sumZA/{id}", name="sumZA", methods={"GET","POST"})
+     */
+    public function sumZA($id="")
+    {
+        $session = $this->requestStack->getSession();
+        $codeCuci = $session->get("codeCuci");
+        
+        $repertoire = $this->reperRepo->findOneBy(array("codeCuci"=>$codeCuci));  
+        $type = "Actif";
+        $typePassif = "Passif";
+        $refCode = "BT";
+        $refCodePassif = "DT";
+
+
+        $bilanActif = $this->getDoctrine()->getRepository(Bilan::class)
+                           ->findOneBy([
+                               "repertoire"=>$repertoire,
+                               "anneeFinanciere"=>$id,
+                            ]);
+        
+        dd($bilanActif);
+
+        $bilanPassif = $this->bilanRep
+                            ->findOneBy(array(
+                               "repertoire"=>$repertoire, 
+                               "anneeFinanciere"=>$id, 
+                               "type"=>$typePassif,
+                               "refCode"=>$refCodePassif
+                            ));
+                            
+
+        
+        $tab = $bilanActif->getNet2()  - $bilanPassif->getNet2();  
+        
+        // return new JsonResponse([25858906 ,31025601]);
+        return new JsonResponse($tab);
     }
 }

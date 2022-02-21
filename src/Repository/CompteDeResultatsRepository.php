@@ -58,7 +58,7 @@ class CompteDeResultatsRepository extends ServiceEntityRepository
     }
     
 
-    public function findByCodeCuciAnneeType($codeCuci,$annee,$type)
+    public function findByType($codeCuci,$annee,$type, $refCode)
     {
         return $this->createQueryBuilder('b')
 
@@ -66,10 +66,12 @@ class CompteDeResultatsRepository extends ServiceEntityRepository
             ->addSelect('r')
             ->andWhere('b.anneeFinanciere = :annee')
             ->andWhere('b.type = :type')
+            ->andWhere('b.refCode = :refCode')
             ->andWhere('r.codeCuci = :codeCuci')
             ->setParameter('annee', $annee)
             ->setParameter('type', $type)
             ->setParameter('codeCuci', $codeCuci)
+            ->setParameter('refCode', $refCode)
             
             ->getQuery()
             ->getResult()

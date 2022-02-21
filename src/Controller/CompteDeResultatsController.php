@@ -6,6 +6,7 @@ use App\Entity\CompteDeResultats;
 use App\Entity\RefAgg;
 use App\Entity\Repertoire;
 use App\Form\CompteDeResultatsType;
+use App\Repository\BilanRepository;
 use App\Repository\CompteDeResultatsRepository;
 use App\Repository\RefAggRepository;
 use App\Repository\RepertoireRepository;
@@ -31,12 +32,14 @@ class CompteDeResultatsController extends AbstractController
     public function __construct(RequestStack $requestStack, 
                                 RepertoireRepository $reperRepo, 
                                 CompteDeResultatsRepository $cdrRepo,
-                                RefAggRepository $refAggRepo)
+                                RefAggRepository $refAggRepo,
+                                BilanRepository $bilanRep)
     {
         $this->requestStack = $requestStack;
         $this->reperRepo = $reperRepo;
         $this->cdrRepo = $cdrRepo;
         $this->refAggRepo = $refAggRepo;
+        $this->bilanRep = $bilanRep;
     }
 
 
@@ -260,5 +263,34 @@ class CompteDeResultatsController extends AbstractController
         
        
         return new JsonResponse( $tab);
+    }
+
+
+    /**
+     * @Route("/compareCiXi/{id}", name="compareCiXi", methods={"GET","POST"})
+     */
+    public function compareCiXi($id="")
+    {
+        $session = $this->requestStack->getSession();
+        $codeCuci = $session->get("codeCuci");
+        
+        $repertoire = $this->reperRepo->findOneBy(array("codeCuci"=>$codeCuci));  
+        $type = "Passif";
+        $refCode = "CI";
+        
+        $bilanPassif = $this->bilanRep
+                            ->findOneBy(array(
+                                "repertoire"=>$repertoire, 
+                                "anneeFinanciere"=>$id, 
+                                "type"=>$type,
+                                "refCode"=>$refCode
+                            ));
+        
+        $tab = [];
+        
+        array_push($tab, [$bilanPassif->getNet1(), $bilanPassif->getNet2()]);
+
+        // return new JsonResponse([25858906 25858906,31025601]);
+        return new JsonResponse($tab);
     }
 }
