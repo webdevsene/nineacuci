@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Bilan;
 use App\Entity\FluxDesTresoreries;
+use App\Entity\RefAgg;
+use App\Entity\Repertoire;
 use App\Form\FluxDesTresoreriesType;
+use App\Repository\BilanRepository;
 use App\Repository\FluxDesTresoreriesRepository;
 use App\Repository\RefAggRepository;
 use App\Repository\RepertoireRepository;
@@ -14,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @Route("/flux/tresoreries")
@@ -25,12 +30,14 @@ class FluxDesTresoreriesController extends AbstractController
      public function __construct(RequestStack $requestStack, 
                                  RepertoireRepository $reperRepo, 
                                  FluxDesTresoreriesRepository $fdtRepo,
-                                 RefAggRepository $refAggRepo)
+                                 RefAggRepository $refAggRepo,
+                                 BilanRepository $bilanRep)
      {
          $this->requestStack = $requestStack;
          $this->reperRepo = $reperRepo;
          $this->fdtRepo = $fdtRepo;
          $this->refAggRepo = $refAggRepo;
+         $this->bilanRep = $bilanRep;
      }
 
 
@@ -49,22 +56,86 @@ class FluxDesTresoreriesController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $fluxDesTresorery = new FluxDesTresoreries();
-        $form = $this->createForm(FluxDesTresoreriesType::class, $fluxDesTresorery);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($fluxDesTresorery);
-            $entityManager->flush();
+        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>3]); 
+        if($request->get('annee')){
+          
+           $codeCuci=$request->get('idcuci');
+           // $type=$request->get('type');
+            $type= 1;
+           $annee=$request->get('annee');
 
-            return $this->redirectToRoute('flux_des_tresoreries_index', [], Response::HTTP_SEE_OTHER);
+            # $bn = $this->cdrRepo->findByCodeCuci($codeCuci, $annee); 
+            $bn = $this->fdtRepo->findByCodeCuciAnneeAndCategory($codeCuci, $annee); 
+
+            $countSaving = 0; // pour le control message flash
+
+           if(count($bn)>1){
+               foreach ($refAgg as $key ) {
+                  $repertoire=$this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+                  $bilan =$this->getDoctrine()->getRepository(FluxDesTresoreries::class)->findOneBy(["cuci_rep_code"=>$repertoire,"annee_financiere"=>$annee,"ref_code"=>$key->getCode()]);
+
+                  //dd($bilan);
+                  if($bilan){ // si le compte existe, c'est une mise à jour
+
+                      $bilan->setAnneeFinanciere($annee)
+                            ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
+                            ->setRefCode($key->getCode())
+                            ->setNet1($request->get($key->getCode()."net1"))
+                            ->setNet2($request->get($key->getCode()."net2")) ;
+                      $entityManager->flush();
+                  }else{ // si l'annee n'existe pas, c'est une nouvelle creation
+
+                      $bilan = new FluxDesTresoreries();
+                      $bilan->setAnneeFinanciere($annee)
+                            ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
+                            ->setRefCode($key->getCode())
+                            ->setNet1($request->get($key->getCode()."net1"))
+                            ->setNet2($request->get($key->getCode()."net2")) ;
+                            
+                            // $bilan->setCreatedBy($this->getUser());
+                            // $bilan->setModifiedBy($this->getUser());
+                            
+                            $entityManager->persist($bilan);
+                            $entityManager->flush();
+
+                            $countSaving = $countSaving+1;
+                        }
+                }  // end for 
+                    
+            }else{
+                    
+                foreach ($refAgg as $key ) {
+                    
+                    $bilan = new FluxDesTresoreries();
+
+                    $bilan->setAnneeFinanciere($annee)
+                          ->setCuciRepCode($this->reperRepo->findOneBy(array("codeCuci" => $codeCuci)))
+                          ->setRefCode($key->getCode())
+                          ->setNet1($request->get($key->getCode()."net1"))
+                          ->setNet2($request->get($key->getCode()."net2")) ;
+
+
+                  $entityManager->persist($bilan);
+                  $entityManager->flush();
+                  $countSaving= $countSaving+1;
+                }
+
+           } // end first if loop
+
+           if ($countSaving>0) {
+               $this->addFlash("notice", "Sauvegarde effectuée avec succès !");
+           }
         }
+       
+
 
         return $this->renderForm('flux_des_tresoreries/new.html.twig', [
-            'flux_des_tresorery' => $fluxDesTresorery,
-            'form' => $form,
+            
+          "refAgg" => $refAgg,
         ]);
     }
+
 
     /**
      * @Route("/{id}", name="flux_des_tresoreries_show", methods={"GET"})
@@ -181,5 +252,63 @@ class FluxDesTresoreriesController extends AbstractController
              array_push($tab,$tab3);
         
         return new JsonResponse( $tab);
+    }
+
+    
+    /**
+     * @Route("/sumZA/{id}", name="sumZA", methods={"GET","POST"})
+     */
+    public function sumZA($id="")
+    {
+        $session = $this->requestStack->getSession();
+        $codeCuci = $session->get("codeCuci");
+        
+        $repertoire = $this->reperRepo->findOneBy(array("codeCuci"=>$id));  
+        $type = "Actif";
+        $typePassif = "Passif";
+        $refCode = "BT";
+        $refCodePassif = "DT";
+        $tableau = [
+            "refCode"=>$refCode,
+            "type"=>$type,
+        ];
+        
+        
+        
+        $net2BT = "";
+        
+        
+        //// recuperer la valeur nette saisie n-1 DT
+        $bilanPassif = $this->bilanRep->findOneBy(array(
+            "refCode"=>$refCodePassif,
+            "type"=>$typePassif,
+        ));
+        
+        $bilanActif = $this->actifBTNet2($tableau); /// recuperer la valeur nette n-1 saisie BT actif
+        
+        foreach ($bilanActif as $key) {
+            
+            if ($key->getRepertoire()->getId() != $repertoire->getId()) {
+            }else{
+                
+                $net2BT = $key->getNet2();
+                
+            }
+        }      
+        
+        $tab = (int)$net2BT - (int)$bilanPassif->getNet2();
+        
+        // return new JsonResponse([25858906 ,31025601]);
+        return new JsonResponse($tab);
+    }
+
+
+    public function actifBTNet2($tab)
+    {
+        
+        $bilanActif = $this->bilanRep
+        ->findBy($tab);
+
+        return $bilanActif;
     }
 }
