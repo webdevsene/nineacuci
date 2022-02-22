@@ -287,7 +287,7 @@ class BilanController extends AbstractController
 
         $refAggPassif=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>2],  array('code' => 'ASC'));
 
-        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>1,"surlignee"=>0],  array('id' => 'ASC'));
+        $refAgg=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>1,"surlignee"=>0],  array('code' => 'ASC'));
 
         $refAggParent=$this->getDoctrine()->getRepository(RefAgg::class)->findBy(["category"=>1,"typeBilan"=>1,"surlignee"=>1],array('code' => 'ASC'));
 
