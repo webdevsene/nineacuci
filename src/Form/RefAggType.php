@@ -45,6 +45,16 @@ class RefAggType extends AbstractType
                     array('label'=>'Libelle ',
                    'required'=>false,
                    'attr'=>array('class'=>'form-control')) )
+                   
+             ->add('signes',TextType::class,
+                    array('label'=>'Signe s ',
+                   'required'=>false,
+                   'attr'=>array('class'=>'form-control')) )
+
+             ->add('notes',TextType::class,
+                    array('label'=>'Note ',
+                   'required'=>false,
+                   'attr'=>array('class'=>'form-control')) )
            
 
             ->add('surlignee',CheckboxType::class,

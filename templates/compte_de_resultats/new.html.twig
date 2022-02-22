@@ -81,18 +81,24 @@
                             <th scope="col" colspan="3" class="text-center">
                             </th>
                             <th colspan="4" scope="col" class="text-center text-white">
-                              Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
+                              Exercice au 31/12/<span class="text" id="anneeN"></span> 
                             </th>
                             <th colspan="3" scope="col" class="text-center text-white">
-                              Exercice au 31/12/<span class="text-info" id="anneeN-1"></span>
+                              Exercice au 31/12/<span class="text" id="anneeN-1"></span>
                             </th>
                           </tr>
                         <tr class=" opacity-80" style="background: #008000;">
                             <th scope="col" colspan="2" class="text-center text-white">
                                 REF
                             </th>
-                            <th scope="col" colspan="2" class="text-center text-white">
+                            <th scope="col" colspan="" class="text-center text-white">
                                 Libelle
+                            </th>
+                            <th scope="col" colspan="2" class="text-center text-white">
+                                Signe
+                            </th>
+                            <th scope="col" colspan="" class="text-center text-white">
+                                Note
                             </th>
                             <th colspan="3" scope="col" class="text-center text-white">
                               NET1
@@ -266,21 +272,44 @@
       
                               var td5=document.createElement('td');
                               var td6=document.createElement('td');
+
+                              var tsignes = document.createElement('td');
+                              var tnotes = document.createElement('td');
+
+
       
                               td1.setAttribute('colspan',2); 
                               td1.setAttribute('scope',"col"); 
-                              td1.setAttribute('class',"text-center form");           
+                              td1.setAttribute('class',"text-center form");  
+                                     
                               td1.innerHTML=  data[1][j][0];
                               tr.appendChild(td1) ;
                               
-                              td2.setAttribute('colspan',2); 
-                              td2.setAttribute('class',"text-center form");           
+                              td2.setAttribute('colspan',1); 
+                              td2.setAttribute('class',"text-left form");           
                               td2.setAttribute('scope',"col"); 
                                         
                               td2.innerHTML=  data[1][j][1];
                               tr.appendChild(td2) ;
-      
-      
+
+
+                              tsignes.setAttribute('colspan',2); 
+                              tsignes.setAttribute('class',"text-center form");           
+                              tsignes.setAttribute('scope',"col"); 
+                                        
+                              tsignes.innerHTML=  '-/+'; //data[1][j][2]
+                              tr.appendChild(tsignes) ;
+
+
+                              tnotes.setAttribute('colspan',1); 
+                              tnotes.setAttribute('class',"text-center form");           
+                              tnotes.setAttribute('scope',"col"); 
+                                        
+                              tnotes.innerHTML=  '20'; // data[1][j][3]
+                              tr.appendChild(tnotes) ;
+
+
+                              
                               td5.setAttribute('colspan',3); 
                               td5.setAttribute('scope',"col"); 
                               td5.setAttribute('class',"text-center");
@@ -354,18 +383,38 @@
                     var td5=document.createElement('td');
                     var td6=document.createElement('td');
 
+                    var tsignes = document.createElement('td');
+                    var tnotes = document.createElement('td');
+
+
                     td1.setAttribute('colspan',2); 
                     td1.setAttribute('scope',"col"); 
-                    td1.setAttribute('class',"text-center form");           
+                    td1.setAttribute('class',"text-left form");           
                     td1.innerHTML=  data[2][i][0]; // sont stockés les ref
                     tr.appendChild(td1) ;
                     
-                    td2.setAttribute('colspan',2); 
-                    td2.setAttribute('class',"text-center form");           
+                    td2.setAttribute('colspan',1); 
+                    td2.setAttribute('class',"text-left form");           
                     td2.setAttribute('scope',"col"); 
                                
                     td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
                     tr.appendChild(td2) ;
+
+                    
+                    tsignes.setAttribute('colspan',2); 
+                    tsignes.setAttribute('class',"text-center form");           
+                    tsignes.setAttribute('scope',"col"); 
+                              
+                    tsignes.innerHTML=  '-/+'; // afffiche les valeur du signe depuis la base tab RefAgg data[2][i][2]
+                    tr.appendChild(tsignes) ;
+
+
+                    tnotes.setAttribute('colspan',1); 
+                    tnotes.setAttribute('class',"text-center form");           
+                    tnotes.setAttribute('scope',"col"); 
+                              
+                    tnotes.innerHTML=  '20'; // sont affichées les valeurs des notes data[2][i][3]
+                    tr.appendChild(tnotes) ;
 
 
                     td5.setAttribute('colspan',3); 
@@ -383,9 +432,6 @@
                     }
 
                     
-
-                    
-
                     td5.appendChild(input1);
                     tr.appendChild(td5) ;
                     

@@ -53,6 +53,16 @@ class RefAgg
      */
     private $surlignee;
 
+    /**
+     * @ORM\Column(type="string", length=5, nullable=true)
+     */
+    private $signes;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $notes;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
@@ -145,6 +155,30 @@ class RefAgg
     public function setSurlignee(?bool $surlignee): self
     {
         $this->surlignee = $surlignee;
+
+        return $this;
+    }
+
+    public function getSignes(): ?string
+    {
+        return $this->signes;
+    }
+
+    public function setSignes(?string $signes): self
+    {
+        $this->signes = $signes;
+
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
 
         return $this;
     }

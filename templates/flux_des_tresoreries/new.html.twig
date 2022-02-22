@@ -84,10 +84,10 @@
                             <th scope="col" colspan="3" class="text-center">
                             </th>
                             <th colspan="4" scope="col" class="text-center text-white">
-                              Exercice au 31/12/<span class="text-info" id="anneeN"></span> 
+                              Exercice au 31/12/<span class="text" id="anneeN"></span> 
                             </th>
                             <th colspan="3" scope="col" class="text-center text-white">
-                              Exercice au 31/12/<span class="text-info" id="anneeN-1"></span>
+                              Exercice au 31/12/<span class="text" id="anneeN-1"></span>
                             </th>
                           </tr>
                           <tr class=" opacity-80" style="background: #008000;">
@@ -270,7 +270,7 @@
                             tr.appendChild(td1) ;
                             
                             td2.setAttribute('colspan',2); 
-                            td2.setAttribute('class',"text-center form");           
+                            td2.setAttribute('class',"text-left form");           
                             td2.setAttribute('scope',"col"); 
                                       
                             td2.innerHTML=  data[1][j][1];
@@ -359,7 +359,7 @@
                     tr.appendChild(td1) ;
                     
                     td2.setAttribute('colspan',2); 
-                    td2.setAttribute('class',"text-center form");           
+                    td2.setAttribute('class',"text-left form");           
                     td2.setAttribute('scope',"col"); 
                                
                     td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
@@ -743,7 +743,7 @@
                         //if(JSON.stringify(data) === JSON.stringify(xin)){
 
                        if(parseInt (data) != parseInt(document.getElementById('ZAnet1').value) ){
-                              
+                           console.log(data);
                            valider=0;
                            Swal.fire('Verifier les valeurs NET saisies pour Trésorerie nette au 1er janvier ZA = tresorerie actif n-1(BT) - tresorerie passif n-1(DT) '); return;
                        }else{

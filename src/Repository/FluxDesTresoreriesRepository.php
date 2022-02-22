@@ -36,24 +36,6 @@ class FluxDesTresoreriesRepository extends ServiceEntityRepository
         ;
     }
 
-    
-    public function findByCodeCuci($codeCuci,$annee,$type)
-    {
-        return $this->createQueryBuilder('b')
-
-            ->innerJoin('b.repertoire','r')
-            ->addSelect('r')
-            ->andWhere('b.anneeFinanciere = :annee')
-            ->andWhere('b.type = :type')
-            ->andWhere('r.codeCuci = :codeCuci')
-            ->setParameter('annee', $annee)
-            ->setParameter('type', $type)
-            ->setParameter('codeCuci', $codeCuci)
-            
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 
 
     
