@@ -1,0 +1,76 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NiFormeunite index{% endblock %}
+
+{% block body %}
+
+                  
+<a href="{{ path('app_ni_formeunite_new') }}" class="btn btn-primary mt-lg-3">+ Ajouter  forme unité</a>
+
+<div class="box mt-lg-2">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                   Liste forme unité
+                   
+				</a>
+			</li>
+
+            <li>
+				
+			</li>
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                        <table class="table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Libelle</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ni_formeunite in ni_formeunites %}
+            <tr>
+                <td>{{ ni_formeunite.id }}</td>
+                <td>{{ ni_formeunite.libelle }}</td>
+                <td>
+                    <a href="{{ path('app_ni_formeunite_edit', {'id': ni_formeunite.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                                
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+    
+
+    
+
+   
+{% endblock %}

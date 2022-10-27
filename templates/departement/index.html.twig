@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Departement index{% endblock %}
+
+{% block body %}
+    <h1>Departement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>DepId</th>
+                <th>DepActiveF</th>
+                <th>DepCDATE</th>
+                <th>DepCUSER</th>
+                <th>DepCD</th>
+                <th>DepCDMIG</th>
+                <th>DepDescription</th>
+                <th>DepMDATE</th>
+                <th>DepMUSER</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for departement in departements %}
+            <tr>
+                <td>{{ departement.id }}</td>
+                <td>{{ departement.depId }}</td>
+                <td>{{ departement.depActiveF }}</td>
+                <td>{{ departement.depCDATE ? departement.depCDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ departement.depCUSER }}</td>
+                <td>{{ departement.depCD }}</td>
+                <td>{{ departement.depCDMIG }}</td>
+                <td>{{ departement.depDescription }}</td>
+                <td>{{ departement.depMDATE ? departement.depMDATE|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ departement.depMUSER }}</td>
+                <td>
+                    <a href="{{ path('departement_show', {'id': departement.id}) }}">show</a>
+                    <a href="{{ path('departement_edit', {'id': departement.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('departement_new') }}">Create new</a>
+{% endblock %}

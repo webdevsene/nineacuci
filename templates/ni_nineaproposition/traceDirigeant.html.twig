@@ -1,0 +1,91 @@
+
+<form action="{{path('tracerDirigeant',{id:app.request.attributes.get('id')})}}" method="post">
+
+	<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+		<div class="card-body">
+			<div class="row">
+	
+     			<div class="col-lg-12">
+					<fieldset class="border p-2">
+						<legend class=" float-none w-auto p-2">		Traçabilité de 	{{prenom}}  {{nom}}	</legend>
+						<table class="table">
+						    <thead style="background:#efefef;">
+									   <tr>
+										   <th>Prénom</th>
+										   <th>Nom</th>
+										   <th>CNI</th>
+										   <th>NINEA</th>
+										   <th>Dénomination Sociale</th>
+										   <th>Qualité</th>
+										   <th></th>
+									   </tr>
+							</thead>
+							<tbody>
+                          	{% for personne in personnePhysiques%}
+
+								<tr>
+									<td >
+										<label for="basicpill-firstname-input" class="TXT">{{personne.ninPrenom}}</label>
+									</td>
+									<td >
+										<label for="basicpill-firstname-input" class="TXT">{{personne.ninNom}}</label>
+									</td>
+									<td >
+										<label for="basicpill-firstname-input" class="TXT">{{personne.ninCNI}}</label>
+									</td>
+									<td >
+										<label class="TXT" for="basicpill-firstname-input">{{personne.ninNinea ? personne.ninNinea.ninNinea : ""}}</label>
+												
+									</td>
+									<td >
+										<label class="TXT" for="basicpill-firstname-input">{{personne.ninNinea ? personne.ninNinea.ninEnseigne : ""}}</label>
+												
+									</td>
+									<td >
+										<label class="TXT" for="basicpill-firstname-input">Propriétaire</label>
+									</td>
+										
+								 </tr>
+							 {% endfor %}
+
+							 	{% for dirigeant in dirigeants%}
+
+								<tr>
+									<td >
+										<label for="basicpill-firstname-input" class="TXT">{{dirigeant.ninPrenom}}</label>
+									</td>
+									<td >
+										<label for="basicpill-firstname-input" class="TXT">{{dirigeant.ninNom}}</label>
+									</td>
+									<td >
+										<label for="basicpill-firstname-input" class="TXT">{{dirigeant.ninCni}}</label>
+									</td>
+									<td >
+                      				<label class="TXT" for="basicpill-firstname-input">{{ dirigeant.nINinea ? dirigeant.nINinea.ninNinea: "" }}</label>
+												
+									</td>
+									<td >
+										<label class="TXT" for="basicpill-firstname-input">{{dirigeant.nINinea ? personne.nINinea.ninEnseigne : ""}}</label>
+												
+									</td>
+									<td >
+										<label class="TXT" for="basicpill-firstname-input">{{dirigeant.ninPosition ? dirigeant.ninPosition.libelle : ""}}</label>
+									</td>
+										
+								 </tr>
+							 {% endfor %}
+							</tbody>
+							
+						</table>
+
+					</fieldset>
+
+				</div>
+				<div class="col-lg-8">		</div>
+				<div class="col-lg-4v mt-3" align="right">
+					<input type="submit" value="Quiter" name="quitter">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

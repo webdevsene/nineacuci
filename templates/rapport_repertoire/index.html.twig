@@ -1,0 +1,380 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RapportRepertoireController!{% endblock %}
+
+{% block body %}
+<div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+            
+                    <center>
+                    <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="get" >
+                    
+                        <table width="100%">
+                        <tr>
+                            
+                            <td width="20%"> <input class="form-control form-control-sm" type="date" name="dateDebut" 
+                            {% if dateDebut!=""%}
+                                value={{dateDebut|date("Y-m-d")}}
+                            {% endif %}
+                            ><br></td>
+                            <td width="20%"> <input class="form-control form-control-sm" type="date" name="dateFin"
+                            {% if dateFin!=""%}
+                                value={{dateFin|date("Y-m-d")}}
+                            {% endif %} ><br></td>
+                            <td width="10%">
+                               <button type="submit" value="1" class="btn btn-secondary btn-sm valider " name="filtrer"> Filtrer</button><br><br>
+                            </td>
+                             <td width="10%">
+                               <button type="submit" value="1" class="btn btn-secondary btn-sm valider " name="exporter"> Exporter</button><br><br>
+                            </td>
+                            
+                            <td width="40%" >
+                               <center> <b >Nombre de repertoires : {{repertoire}}</b></center>
+                               <br>
+                            </td>
+                        </tr>
+                        </table>
+                        </form>
+                        </center>
+            </div>
+        </div>
+            
+   
+<!-- end page title -->
+
+<div class="row" style="border:3px solid #eeeeee;">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-4">Regions</h4>
+
+               
+
+                <canvas id="myChart"  height="90"></canvas>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-4">Departements</h4>
+
+                
+                <canvas id="dep" height="90"></canvas>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+
+<div class="row" style="border:3px solid #eeeeee;">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-4">Forme juridique</h4>
+
+                
+
+                <canvas id="fj" height="100"> </canvas>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-4">Control</h4>
+
+               
+
+                <canvas id="cont" height="200"></canvas>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+<div class="row" style="border:3px solid #eeeeee;">
+   
+    
+     <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-4">Activités</h4>
+
+                
+
+                <canvas id="act" height="100"> </canvas>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <!-- end col -->
+</div> <!-- end row -->
+{% endblock %}
+
+{% block javascript %}
+ 
+ <script src="{{ asset('admin/dist/assets/libs/chart.js/Chart.bundle.min.js')}}"></script>
+
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels:{{regionLabel |json_encode()| raw }},
+        datasets: [{
+            label: 'Nombre repertoire ',
+            data: {{regions |json_encode()| raw }},
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+               
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const dep = document.getElementById('dep').getContext('2d');
+const myChartdep = new Chart(dep, {
+    type: 'bar',
+    data: {
+        labels:{{departementLibelle |json_encode()| raw }},
+        datasets: [{
+            label: 'Nombre repertoire ',
+            data: {{departementNombre |json_encode()| raw }},
+            backgroundColor: [
+                
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+             
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+              
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const cont = document.getElementById('cont').getContext('2d');
+const myChartcont = new Chart(cont, {
+    type: 'pie',
+    data: {
+        labels:{{controlLibelle |json_encode()| raw }},
+        datasets: [{
+            label: 'Nombre repertoire ',
+            data: {{controlNombre |json_encode()| raw }},
+            backgroundColor: [
+                 "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"
+            ],
+            borderColor: [
+              "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+const fj = document.getElementById('fj').getContext('2d');
+const myChartfj = new Chart(fj, {
+    type: 'bar',
+    data: {
+        labels:{{fjLibelle |json_encode()| raw }},
+        datasets: [{
+            label: 'Nombre repertoire ',
+            data: {{fjNombre |json_encode()| raw }},
+            backgroundColor: [
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                
+            ],
+            borderColor: [
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                 'rgba(544, 262, 235, 0.2)',
+                
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+const act = document.getElementById('act').getContext('2d');
+const myChartact = new Chart(act, {
+    type: 'bar',
+    data: {
+        labels:{{activiterLibelle |json_encode()| raw }},
+        datasets: [{
+            label: 'Nombre repertoire ',
+            data: {{activiterNombre |json_encode()| raw }},
+            backgroundColor: [
+                
+            ],
+            borderColor: [
+              
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

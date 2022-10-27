@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NiDirigeant{% endblock %}
+
+{% block body %}
+    <h1>NiDirigeant</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ni_dirigeant.id }}</td>
+            </tr>
+            <tr>
+                <th>NinPrenom</th>
+                <td>{{ ni_dirigeant.ninPrenom }}</td>
+            </tr>
+            <tr>
+                <th>NinNom</th>
+                <td>{{ ni_dirigeant.ninNom }}</td>
+            </tr>
+            <tr>
+                <th>NinNumero</th>
+                <td>{{ ni_dirigeant.ninNumero }}</td>
+            </tr>
+            <tr>
+                <th>NinAddresse</th>
+                <td>{{ ni_dirigeant.ninAddresse }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ ni_dirigeant.createdAt ? ni_dirigeant.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ ni_dirigeant.updatedAt ? ni_dirigeant.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ni_dirigeant_index') }}">back to list</a>
+
+    <a href="{{ path('app_ni_dirigeant_edit', {'id': ni_dirigeant.id}) }}">edit</a>
+
+    {{ include('ni_dirigeant/_delete_form.html.twig') }}
+{% endblock %}

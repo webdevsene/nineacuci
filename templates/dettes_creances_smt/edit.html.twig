@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit DettesCreancesSmt{% endblock %}
+
+{% block body %}
+    <h1>Edit DettesCreancesSmt</h1>
+
+    {{ include('dettes_creances_smt/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_dettes_creances_smt_index') }}">back to list</a>
+
+    {{ include('dettes_creances_smt/_delete_form.html.twig') }}
+{% endblock %}

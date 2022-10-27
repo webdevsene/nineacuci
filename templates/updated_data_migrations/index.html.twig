@@ -1,0 +1,240 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Migration des mises à jour {% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+    .box {
+       width: 800px;
+       margin: auto;
+    }
+    .active_tab1{
+       background-color: #fff;
+       color: #333;
+       font-weight: 600;
+    }
+    .inactive_tab1{
+       background-color: #f5f5f5;
+       color: #333;
+       cursor: not-allowed;
+    }
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+ </style>
+{% endblock %}
+{% block body %}
+
+    {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-outline me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endfor %}
+
+        <div class=" mt-lg-1">
+
+            <div class="box-header">
+                <ul class="nav nav-tabs nav-tabs-left">
+                    <li class="active">
+                        <a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                            Importation des corrections par table
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+                <div class="box-content padded">
+
+                    <div class="tab-content">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <form name="myForm" class="repeater" enctype="multipart/form-data" method="post" action="{{ path('app_updated_data_migrations')}}">
+                                    <div data-repeater-list="group-a">
+                                        <div data-repeater-item class="row">
+                                            <div  class="mb-3 col-lg-4">
+                                                <label for="subject">Choisir un taleau</label>
+                                                
+                                                <select id="format-input" required name="table" class=" form-select form-select-sm">
+                                                    <option value="">Choisir un tableau...</option>
+                                                    <option value="1">Bilan Actif</option>
+                                                    <option value="2">Bilan Passif</option>
+                                                    <option value="3">Compte de Résultats </option>
+                                                    <option value="4">Etat des Flux de trésoreries </option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3 col-lg-4">
+                                                <label for="resume">Téléverser le template</label>
+                                                <input type="file" name="_resume" title="Charger le template" required class="form-control form-control-sm" id="_resume">
+                                            </div>
+                                            
+                                            <div class="col-lg-2 mt-2 align-self-center">
+                                                <div class="d-grid">
+                                                    <input id="submit-templ" name="submit-templ" type="submit" class="btn btn-secondary bg-secondary  btn-sm" value="Charger les mises à jour"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 mt-2 align-self-center">
+                                                <div class="d-grid">
+                                                    <input id="submit-creation" name="submit-creation" type="submit" class="btn btn-primaty bg-primary bg-soft btn-sm" value="Charger les créations"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+            		</div>
+                </div>
+        </div>
+                                                               
+ <div class="mt-1">
+     <div class="d-flex flex-wrap">
+         <h5 class="font-size-16 me-3">Tous les Templates</h5>
+         <div class="ms-auto">
+             <a href="javascript: void(0);" class="fw-medium text-reset"></a>
+         </div>
+     </div>
+     <hr class="mt-2">
+     <div class="table-responsive">
+         <table class="table align-middle table-nowrap table-hover mb-0">
+             <thead>
+                 <tr>
+                   <th scope="col">Nom</th>
+                   <th scope="col" colspan="2">Taille</th>
+                 </tr>
+               </thead>
+             <tbody>
+                 <tr>
+                     <td><a href="{{path('app_telecharger_template_etat_financier')}}" class="text-dark fw-medium"><i class="mdi mdi-text-box font-size-16 align-middle text-info me-2"></i> template_bilan_actif.xlsx</a></td>
+                     <td>
+                            <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                 115 KB
+                            </a>
+                    </td>
+                     <td>
+                         <div class="dropdown">
+                             <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                             </a>
+                             
+                             
+                         </div>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td><a href="{{path('app_telecharger_template_etat_financier1')}}" class="text-dark fw-medium"><i class="mdi mdi-text-box font-size-16 align-middle text-info me-2"></i> template_bilan_passif.xlsx</a></td>
+                     <td>
+                            <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                 115 KB
+                            </a>
+                    </td>
+                     <td>
+                         <div class="dropdown">
+                             <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                             </a>
+                             
+                             
+                         </div>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td><a href="{{path('app_telecharger_template_etat_financier2')}}" class="text-dark fw-medium"><i class="mdi mdi-text-box font-size-16 align-middle text-info me-2"></i> template_compte_de_résultats.xlsx</a></td>
+                     <td>
+                        <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                 86 KB
+                        </a>
+                     </td>
+                     <td>
+                         <div class="dropdown">
+                             <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                             </a>
+                            
+                         </div>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td><a href="{{ path('app_telecharger_template_etat_financier3') }}" class="text-dark fw-medium"><i class="mdi mdi-text-box font-size-16 align-middle text-info me-2"></i> template_flux_de_trésoreries.xlsx</a></td>
+                     <td>
+                            <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                 100 KB
+                             </a>
+                                
+                     </td>
+                     <td>
+                         <div class="dropdown">
+                             <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                             </a>
+                             
+                             
+                         </div>
+                     </td>
+                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    <!-- Sweet alert init js-->
+    <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+
+
+    <script>
+
+        $("#submit-templ").click(function(e){
+
+            if($("#format-input").val() == "" || $("#_resume").val() == "" ){
+                Swal.fire("Choisir une table et le template correspondant !"); return false;
+            }else{
+
+
+            }
+
+        });
+
+        $("#submit-creation").click(function(e){
+
+            if($("#format-input").val() == "" || $("#_resume").val() == "" ){
+                Swal.fire("Choisir une table et le template correspondant !"); return false;
+            }else{
+
+
+            }
+
+        });
+
+
+        function validateForm() {
+            let x = document.forms["myForm"]["format-input"].value;
+            let y = document.forms["myForm"]["_resume"].value;
+            if (x == "" || y == "") {
+              Swal.fire("Choisir une table et le template correspondant !");
+              return false;
+            }
+        }        
+    
+        // Auto Close Bootstrap alerts
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 2000); 
+
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CommissairesComptes index{% endblock %}
+
+{% block body %}
+    <h1>CommissairesComptes index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Address</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Telephone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commissaires_compte in commissaires_comptes %}
+            <tr>
+                <td>{{ commissaires_compte.id }}</td>
+                <td>{{ commissaires_compte.createdAt ? commissaires_compte.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ commissaires_compte.updatedAt ? commissaires_compte.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ commissaires_compte.address }}</td>
+                <td>{{ commissaires_compte.nom }}</td>
+                <td>{{ commissaires_compte.prenom }}</td>
+                <td>{{ commissaires_compte.telephone }}</td>
+                <td>
+                    <a href="{{ path('commissaires_comptes_show', {'id': commissaires_compte.id}) }}">show</a>
+                    <a href="{{ path('commissaires_comptes_edit', {'id': commissaires_compte.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('commissaires_comptes_new') }}">Create new</a>
+{% endblock %}

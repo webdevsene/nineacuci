@@ -1,0 +1,39 @@
+image: wagnerstephan/bitbucket-git-ftp:latest
+
+pipelines:
+  custom:
+    init:
+    - step:
+        caches:
+          - composer
+        script:
+          - composer install --no-interaction --no-scripts
+          - npm install
+          - npm run test
+          - git reset --hard
+          - git ftp init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST
+    deploy:
+    - step:
+        caches:
+          - composer
+        script:
+          - composer install --no-interaction --no-scripts
+          - npm install
+          - npm run gulp
+          - npm run test
+          - git reset --hard
+          - git ftp push -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST --all
+  branches:
+    master:
+    - step:
+        name: Deploy production
+        deployment: production
+        caches:
+          - composer
+        script:
+          - composer install --no-interaction --no-scripts
+          - npm install
+          - npm run gulp
+          - npm run test
+          - git reset --hard
+          - git ftp push -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST

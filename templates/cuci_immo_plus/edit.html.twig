@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit CuciImmoPlus{% endblock %}
+
+{% block body %}
+    <h1>Edit CuciImmoPlus</h1>
+
+    {{ include('cuci_immo_plus/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('cuci_immo_plus_index') }}">back to list</a>
+
+    {{ include('cuci_immo_plus/_delete_form.html.twig') }}
+{% endblock %}

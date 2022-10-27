@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DettesCreancesSmt index{% endblock %}
+
+{% block body %}
+    <h1>DettesCreancesSmt index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>DateJ</th>
+                <th>Nom</th>
+                <th>Montant1</th>
+                <th>Montant2</th>
+                <th>Variation</th>
+                <th>AnneeFinanciere</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dettes_creances_smt in dettes_creances_smts %}
+            <tr>
+                <td>{{ dettes_creances_smt.id }}</td>
+                <td>{{ dettes_creances_smt.type }}</td>
+                <td>{{ dettes_creances_smt.dateJ ? dettes_creances_smt.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ dettes_creances_smt.nom }}</td>
+                <td>{{ dettes_creances_smt.montant1 }}</td>
+                <td>{{ dettes_creances_smt.montant2 }}</td>
+                <td>{{ dettes_creances_smt.variation }}</td>
+                <td>{{ dettes_creances_smt.anneeFinanciere }}</td>
+                <td>{{ dettes_creances_smt.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ dettes_creances_smt.status }}</td>
+                <td>{{ dettes_creances_smt.createdAt ? dettes_creances_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ dettes_creances_smt.updatedAt ? dettes_creances_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_dettes_creances_smt_show', {'id': dettes_creances_smt.id}) }}">show</a>
+                    <a href="{{ path('app_dettes_creances_smt_edit', {'id': dettes_creances_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_dettes_creances_smt_new') }}">Create new</a>
+{% endblock %}

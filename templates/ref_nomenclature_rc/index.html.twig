@@ -1,0 +1,151 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}RefNomenclatureRc index{% endblock %}
+
+{% block body %}
+
+
+<a href="{{ path('app_ref_nomenclature_rc_new') }}" class="btn btn-primary btn-sm mt-lg-5">Ajouter nomenclature RC (juridiction RC) </a>
+
+<div class="box ">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste des juridictions Régistre de commerce
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                        
+                            <table class="table" id="rcList">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Libelle</th>
+                                        <th>actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for ref_nomenclature_rc in ref_nomenclature_rcs %}
+                                    <tr>
+                                        <td>{{ ref_nomenclature_rc.id }}</td>
+                                        <td>{{ ref_nomenclature_rc.libelle }}</td>
+                                        <td>
+                                            <a href="{{ path('app_ref_nomenclature_rc_edit', {'id': ref_nomenclature_rc.id}) }}" title="Modifier"  class="btn btn-outline-success btn-sm showjf" id="showjf"><i class="fas fa-pencil-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+<script>
+
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+    $("#rcList").DataTable({
+         columnDefs: [
+            { type: 'date-uk', targets: 1 }
+          ],
+          
+          "order": [1, "desc" ],
+
+
+        "sDom": 'f<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+</script>
+
+
+{% endblock %}

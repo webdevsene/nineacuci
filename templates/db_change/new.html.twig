@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New DbChange{% endblock %}
+
+{% block body %}
+    <h1>Create new DbChange</h1>
+
+    {{ include('db_change/_form.html.twig') }}
+
+    <a href="{{ path('app_db_change_index') }}">back to list</a>
+{% endblock %}

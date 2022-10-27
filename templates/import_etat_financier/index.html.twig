@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ImportEtatFinancierController!{% endblock %}
+
+{% block body %}
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-12">
+                        <!-- begin to upload file -->
+                <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="post" action="{{ path('import_etat_financier')}}">
+                    <div class="form-group">
+                        <!-- <label for="_file" class="control-label col-sm-3">Charger le template</label> -->
+                        <div class="col-sm-9">
+                            <input class="form-control form-control-sm" type="file" name="_file" id="_file" title="Charger un template">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6-offset-2">
+                            
+                            <button type="submit" value="1" class="btn btn-secondary btn-sm valider "> <span class="" role="status" id="idspan" aria-hidden="true"></span><i class="bx bx-cloud-upload"></i>Importer</button>
+                        </div>
+                    </div>
+                   
+                </form>
+            </div> <!-- end col -->
+           <div class="col-xl-12">
+           <br>
+           <br>
+               {% for message in app.session.flashbag.get('message')%}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div> 
+
+               {% endfor%}
+               {% for message in app.session.flashbag.get('messageSuccess')%}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div> 
+
+               {% endfor%}
+               
+           </div>
+           <div class="col-xl-12">
+                <table id="datatable" class="table table-bordered  table-hover nowrap w-100">
+            <thead style="background:#efefef; margin-top: 0px;">
+            <tr>
+                <th> <center><b>Fichier log</b></center> </th>
+                <th>
+                   <center>  <b>Date</b>
+                   </center>
+                </th>
+                <th>
+                    <center>
+                    <b>Action</b>
+                    </center>
+                </th>
+             
+            </tr>
+            </thead>
+            <tbody style="color: #5a5a5a; font-size: 12px;">
+                 {% for tag in cuciMigLog %}
+                     <tr>
+                        
+                        <td>{{ tag.logFile }}</td>
+                        <td>{{ tag.createdDate |date("d/m/Y h:i") }}</td>
+                        <td>
+                         <a href="{{path('telecharger_etat_financier',{id:tag.id})}}">Télécharger </a>
+                        </td>
+                        
+                        
+                    </tr>
+                   
+                {% else %}
+                    <tr>
+                        <td colspan="18">no records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+           </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function(){
+            $('.valider').click(function(e){
+                  $('#idspan').addClass('spinner-border');
+                  $('#idspan').addClass('spinner-border-sm');
+                      
+            });
+        });
+    </script>
+{% endblock %}

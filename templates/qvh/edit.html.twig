@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit QVH{% endblock %}
+
+{% block body %}
+    <h1>Edit QVH</h1>
+
+    {{ include('qvh/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('q_v_h_index') }}">back to list</a>
+
+    {{ include('qvh/_delete_form.html.twig') }}
+{% endblock %}

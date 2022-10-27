@@ -1,0 +1,52 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}New NiFormejuridique{% endblock %}
+
+{% block body %}
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Nouveau forme juridique
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+  
+
+                            {{ include('ni_formejuridique/_form.html.twig') }}
+
+                        <a href="{{ path('app_ni_formejuridique_index') }}"> Liste forme juridique</a>
+                                
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+  
+
+   
+
+   
+{% endblock %}

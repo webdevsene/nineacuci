@@ -1,0 +1,3584 @@
+{% extends 'base.html.twig' %}
+{% block title %}New Repertoire
+{% endblock %}
+{% block stylesheets %}
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+	</style>
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}">
+{% endblock %}
+{% block body %}
+
+
+	<!-- end row -->
+	{{ form_start(form) }}
+	<div class="row">
+		<div class="col-xl-12">
+			{% for message in app.session.flashbag.get('messageRepertoire')%}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					{{message}}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+
+				{% endfor%}
+
+				<div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+					<div class="card-body">
+						<span style="color: red;">
+							<table>
+								<tr>
+									<td>
+										{{form_errors(form.activitePrincipale)}}</td>
+									<td>{{form_errors(form.denominationSocial)}}
+									</td>
+									<td>{{form_errors(form.numeroRegistreCommerce)}}
+									</td>
+
+									<td>
+										{{form_errors(form.telephone1)}}</td>
+									<td>
+										{{form_errors(form.ninea)}}</td>
+
+
+									<td>
+										{{form_errors(form.addresseComplete)}}</td>
+								</tr>
+							</table>
+						</span>
+
+						<!-- Nav tabs -->
+						<ul class="nav nav-tabs" role="tablist" style="background: #eeeeee;">
+							<li class="nav-item">
+								<a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab" id="identification">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-home"></i>
+									</span>
+									<span class="d-none d-sm-block">Identifications</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link " id="coordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" id="coordonnee">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-home"></i>
+									</span>
+									<span class="d-none d-sm-block">Coordonnées entreprise</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab" id="contacts">
+									<span class="d-block d-sm-none">
+										<i class="far fa-user"></i>
+									</span>
+									<span class="d-none d-sm-block">Contact</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-bs-toggle="tab" href="#complement" role="tab" id="complements">
+									<span class="d-block d-sm-none">
+										<i class="far fa-envelope"></i>
+									</span>
+									<span class="d-none d-sm-block">Complement Identification</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="activite" data-bs-toggle="tab" href="#activites" role="tab">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-cog"></i>
+									</span>
+									<span class="d-none d-sm-block">Activités principale et secondaires</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-bs-toggle="tab" href="#dirigent" id="dirigents" role="tab">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-cog"></i>
+									</span>
+									<span class="d-none d-sm-block">Dirigeants ou Associés principaux</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-bs-toggle="tab" href="#filiales" id="filiale" role="tab">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-cog"></i>
+									</span>
+									<span class="d-none d-sm-block">Filiales et participations</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-bs-toggle="tab" href="#autres" role="tab" id="autre">
+									<span class="d-block d-sm-none">
+										<i class="far fa-envelope"></i>
+									</span>
+									<span class="d-none d-sm-block">Autres informations</span>
+								</a>
+							</li>
+						</ul>
+
+						<!-- Tab panes -->
+						<div class="tab-content p-3 text-muted" style="border:3px solid #eeeeee;">
+							<div class="tab-pane active" id="home" role="tabpanel">
+
+								<div class="row">
+									<div class="col-lg-6">
+
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.codeCuci)}}:</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.codeCuci)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.denominationSocial)}}:<span style="color:red">*</span>
+											</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.denominationSocial)}}
+
+												<span style="color: red;" id="denominationSocial"></span>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.sigle)}}:</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.sigle)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.enseigne)}}:</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.enseigne)}}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.typeNINEA)}}:<span style="color:red">*</span>
+											</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.typeNINEA)}}
+												<span style="color: red;" id="idtypeninea"></span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.ninea)}}:<span style="color:red">*</span>
+											</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.ninea)}}
+												<span style="color: red;" id="repertoireninea"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.clotureDeExercice)}}:</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.clotureDeExercice)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.dureeDeExercice)}}:</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.dureeDeExercice)}}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.debutExerciceComptable)}}</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.debutExerciceComptable)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.finExerciceComptable)}}</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.finExerciceComptable)}}
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.dateArreteEffectif)}}</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.dateArreteEffectif)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.clotureExercicePrecedent)}}</label>
+
+											<div class="col-md-7" >
+												{{form_widget(form.clotureExercicePrecedent)}}
+											
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.dureeExercicePrecedent)}}</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.dureeExercicePrecedent)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.numeroRegistreCommerce)}}<span style="color:red">*</span>
+											</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.numeroRegistreCommerce)}}
+												<span style="color: red;" id="numeroRegistreCommerce"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.numeroCaisseSociale)}}</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.numeroCaisseSociale)}}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 row">
+											<label class="col-md-5" for="basicpill-firstname-input">
+												{{form_label(form.codeImportateur)}}</label>
+
+											<div class="col-md-7">
+												{{form_widget(form.codeImportateur)}}
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="mb-3 row">
+											<label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+												<br>
+												Activité principale</label>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										Libellé<span style="color:red">*</span><br>
+										{{form_widget(form.activitePrincipale)}}
+
+										<span style="color: red;" id="activitePrincipale"></span><br>
+									</div>
+									<div class="col-lg-3"></div>
+									<div class="col-lg-3"></div>
+									<div class="col-lg-3"></div>
+									<div class="col-lg-3">
+										SYCOA
+										<span style="color:red">*</span><br>
+										<select class="form-control select2 syscoa" name="syscoa" id="idsyscoa" style="width: 100%;">
+											<option value="">Selectionner le code SYSCOA</option>
+											{% for tag in syscoa%}
+												<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+												{% endfor%}
+
+											</select>
+											<br><br>
+											<select class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa" style="width: 100%;" disabled></select>
+
+
+											<span style="color: red;" id="syscoa"></span>
+										</div>
+										<div class="col-lg-3">
+											NAEMA
+											<span style="color:red">*</span><br>
+											<select class="form-control select2 syscoa" name="categoryNaema" id="categoryNaema" style="width: 100%;">
+												<option>Selectionner la catégorie</option>
+												{% for tag in categoryNaema%}
+													<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+													{% endfor%}
+												</select>
+
+
+												<br>
+												<br>
+
+												<select class="form-control select2 syscoa" name="naema" id="idnaema" style="width: 100%;">
+													<option value="">Selectionner le code NAEMA</option>
+
+
+												</select>
+
+
+												<span style="color: red;" id="naema"></span>
+
+
+											</div>
+											<div class="col-lg-3">
+												NAEMAS
+												<span style="color:red">*</span><br>
+
+												<select class="form-control select2 syscoa" name="categoryNaemas" id="categoryNaemas" style="width: 100%;">
+													<option>Selectionner la catégorie</option>
+													{% for tag in categoryNaemas%}
+														<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+														{% endfor%}
+													</select>
+
+
+													<br>
+													<br>
+
+													<select class="form-control select2 syscoa" name="naemas" id="idnaemas" style="width: 100%;">
+														<option value="">Selectionner le code NAEMAS</option>
+
+
+													</select>
+
+													<span style="color: red;" id="naemas"></span>
+
+												</div>
+												<div class="col-lg-3">
+													CITI
+													<span style="color:red">*</span><br>
+													<select class="form-control select2 syscoa" name="categoryCiti" id="categoryCiti" style="width: 100%;">
+														<option>Selectionner la catégorie</option>
+														{% for tag in categoryCiti%}
+															<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+															{% endfor%}
+														</select>
+
+
+														<br>
+														<br>
+
+														<select class="form-control select2 syscoa" name="citi" id="idciti" style="width: 100%;">
+															<option value="">Selectionner le code CITI</option>
+
+
+														</select>
+
+
+														<span style="color: red;" id="citi"></span>
+														<br>
+														<br>
+														<br>
+
+													</div>
+
+												</div>
+												<div class="row">
+													<div class="col-lg-6">
+														<div class="mb-3 row">
+															<label class="col-md-5" for="basicpill-firstname-input"></label>
+
+															<div class="col-md-7"></div>
+														</div>
+													</div>
+													<div class="col-lg-6">
+														<div class="mb-3 row">
+															<label class="col-md-6" for="basicpill-firstname-input"></label>
+
+															<div class="col-md-4" align="right">
+
+																<a href="{{ path('repertoire_index') }}" class="btn btn-secondary" id="listrep">Retourner</a>
+
+
+															</div>
+															<div class="col-md-2" align="right">
+																<a type="button" class="btn btn-primary" id="btnSuivantIdentification">Suivant</a>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+											<div class="tab-pane" id="coordonnees" role="tabpanel">
+
+												<div class="row">
+													<div class="col-lg-6">
+
+														<div class="mb-3 row">
+															<label class="col-md-5" for="basicpill-firstname-input">
+																{{form_label(form.telephone1)}}:<span style="color:red">*</span>
+															</label>
+
+															<div class="col-md-7">
+																{{form_widget(form.telephone1)}}
+																<span style="color: red;" id="idtel1"></span>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-6">
+
+														<div class="mb-3 row">
+															<label class="col-md-5" for="basicpill-firstname-input">
+																{{form_label(form.telephone2)}}:</label>
+
+															<div class="col-md-7">
+																{{form_widget(form.telephone2)}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-lg-6">
+
+														<div class="mb-3 row">
+															<label class="col-md-5" for="basicpill-firstname-input">
+																{{form_label(form.numeroTelecopie)}}:</label>
+
+															<div class="col-md-7">
+																{{form_widget(form.numeroTelecopie)}}
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-6">
+
+														<div class="mb-3 row">
+															<label class="col-md-5" for="basicpill-firstname-input">
+																{{form_label(form.boitePostale)}}:</label>
+
+															<div class="col-md-7">
+																{{form_widget(form.boitePostale)}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-lg-6">
+
+														<div class="mb-3 row">
+															<label class="col-md-5" for="basicpill-firstname-input">Région:<span style="color:red">*</span>
+															</label>
+
+															<div class="col-md-7">
+
+																<select class="form-control select2 syscoa" name="region" id="region" style="width: 100%;">
+																	<option>Choississez la région</option>
+																	{% for tag in regions%}
+																		<option value="{{tag.id}}">{{tag.libelle}}</option>
+																		{% endfor%}
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	Département:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	<select class="form-control syscoa select2" name="departement" id="departement" style="width: 100%;">
+																		<option>Select</option>
+
+																	</select>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">Commune/Arrondissement/Ville:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	<select class="form-control syscoa select2" name="cav" id="cav" style="width: 100%;">
+																		<option>Select</option>
+																	</select>
+																	<span style="color: red;" id="idqvh"></span>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	Commune d'arrondissement/communauté rurale:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	<select class="form-control syscoa select2" name="cacr" id="cacr" style="width: 100%;">
+																		<option></option>
+																	</select>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	Quartier/Village/Hameau:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	<select class="form-control syscoa select2" name="qvh" id="qvh" style="width: 100%;">
+																		<option></option>
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.addresseComplete)}}:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	{{form_widget(form.addresseComplete)}}
+																	<span style="color: red;" id="add"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.email)}}:</label>
+																<div class="col-md-7">
+																	{{form_widget(form.email)}}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="mb-3 row">
+																<label class="col-md-6" for="basicpill-firstname-input"></label>
+																<div class="col-md-5" align="right">
+																	<a type="button" class="btn btn-secondary" id="btnPrecedentCoordonnee">Précédent</a>
+																</div>
+																<div class="col-md-1" align="right">
+																	<a type="button" class="btn btn-primary" id="btnSuivantCoordonnee">Suivant</a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane" id="contact" role="tabpanel">
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.NomDuContact)}}:</label>
+																<div class="col-md-7">
+																	{{form_widget(form.NomDuContact)}}
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.prenomDuContact)}}:</label>
+
+																<div class="col-md-7">
+																	{{form_widget(form.prenomDuContact)}}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.addresseDuContact)}}:</label>
+																<div class="col-md-7">
+																	{{form_widget(form.addresseDuContact)}}
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.fonctionDuContact)}}:</label>
+																<div class="col-md-7">
+																	{{form_widget(form.fonctionDuContact)}}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="mb-3 row">
+																<label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+																	<br>
+																	Détails de Cabinet Comptable ou Expert</label>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-12" for="basicpill-firstname-input">
+																	<br>
+																	<input class="form-check-input" type="radio" name="formRadiosRight" id="formRadiosRight1" checked>
+																	Cabinet Comptable
+																	<input class="form-check-input" type="radio" name="formRadiosRight" id="formRadiosRight2">Expert
+																</label>
+
+
+															</div>
+														</div>
+
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	<div class="cabinet" id="nomDuCabinetlabel">
+																		{{form_label(form.NomDuCabinet)}}:
+																	</div>
+																	<div class="expert" id="prenomDuExpertlabel">
+																		{{form_label(form.prenomDuExpert)}}:
+																	</div>
+																</label>
+
+																<div class="col-md-7">
+																	<div class="cabinet" id="nomDuCabinet">
+																		{{form_widget(form.NomDuCabinet)}}
+																	</div>
+
+																	<div class="expert" id="prenomDuExpert">
+																		{{form_widget(form.prenomDuExpert)}}
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	<div class="cabinet1" id="telephoneDuCabinetlabel">
+																		{{form_label(form.telephoneDuCabinet)}}:
+																	</div>
+																</label>
+
+																<div class="col-md-7">
+																	<div class="cabinet" id="telephoneDuCabinet">
+																		{{form_widget(form.telephoneDuCabinet)}}
+																	</div>
+
+																</div>
+															</div>
+														</div>
+														
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	<div class="cabinet" id="addresseDuCabinetLabel">
+																		{{form_label(form.addresseDuCabinet)}}:
+																	</div>
+																</label>
+																<div class="col-md-7">
+																	<div class="cabinet" id="addresseDuCabinet">
+																		{{form_widget(form.addresseDuCabinet)}}
+																	</div>
+																</div>
+															</div>
+														</div>
+														
+
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+
+
+																	<div class="expert" id="nomDuExpertLabel">
+																		{{form_label(form.nomDuExpert)}}:
+																	</div>
+																</label>
+
+																<div class="col-md-7">
+
+																	<div class="expert" id="nomDuExpert">
+																		{{form_widget(form.nomDuExpert)}}
+																	</div>
+																</div>
+															</div>
+
+
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="mb-3 row">
+																<label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+																	<br>
+																	Commissaire(s) aux comptes</label>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="mb-3">
+																<label for="basicpill-address-input">
+																	<button type="button" class="btn btn-secondary nouveauCommissaire" id="btnAjouterCommissaireCompte" data-collection="#idCommissaire">Ajouter</button>
+																</label>
+																<div><br><br>
+																	<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																		<label style="text-align: center;background:#efefef;">
+																			Commissaire(s) aux comptes</label>
+																	</div>
+																	<table class="table table table-bordered dt-responsive" id="idtab" width="100%">
+																		<thead style="background:#efefef;">
+																			<tr>
+																				<th>Nom</th>
+																				<th>Prénom</th>
+																				<th>Tél</th>
+																				<th>Adresse</th>
+																				<th></th>
+																			</tr>
+																		</thead>
+																		<tbody id="idCommissaire" data-prototype="{{include('repertoire/commissaire.html.twig',{'form':form.commissairesComptes.vars.prototype})|e }}" data-index="{{ form.commissairesComptes|length > 0 ? form.commissairesComptes|last.vars.name + 1 : 0 }}">
+
+
+																			{% for tag in form.commissairesComptes %}
+																				<tr>
+																					<td>{{ form_widget(tag.nom) }}</td>
+																					<td>
+																						{{ form_widget(tag.prenom) }}</td>
+																					<td>{{ form_widget(tag.address) }}</td>
+																					<td>{{ form_widget(tag.telephone) }}</td>
+																				</tr>
+																			{% endfor %}
+
+																		</tbody>
+																	</table>
+																	{{ form_label(form.commissairesComptes) }}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="mb-3 row">
+																<label class="col-md-6" for="basicpill-firstname-input"></label>
+																<div class="col-md-5" align="right">
+																	<a type="button" class="btn btn-secondary" id="btnPrecedentContact">Précédent</a>
+																</div>
+																<div class="col-md-1" align="right">
+																	<a type="button" class="btn btn-primary" id="btnSuivantContact">Suivant</a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="tab-pane" id="complement" role="tabpanel">
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.formeJuridique)}}:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	{{form_widget(form.formeJuridique)}}
+																	<span style="color: red;" id="idformeJuridique"></span>
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.regimeFiscal)}}:<span style="color:red">*</span>
+																</label>
+																<div class="col-md-7">
+																	{{form_widget(form.regimeFiscal)}}
+																	<span style="color: red;" id="idformeFiscal"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.paysDuEntreprise)}}:</label>
+
+																<div class="col-md-7">
+																	{{form_widget(form.paysDuEntreprise)}}
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.etablissementsDansPays)}}</label>
+
+																<div class="col-md-7">
+																	{{form_widget(form.etablissementsDansPays)}}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.etablissementsHorsPays)}}</label>
+																<div class="col-md-7">
+																	{{form_widget(form.etablissementsHorsPays)}}
+																</div>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.premiereAnneeExercice)}}:</label>
+																<div class="col-md-7">
+																	{{form_widget(form.premiereAnneeExercice)}}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="mb-3 row">
+																<label class="col-md-5" for="basicpill-firstname-input">
+																	{{form_label(form.controle)}}:</label>
+																<div class="col-md-7">
+																	{{form_widget(form.controle)}}
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<div class="mb-3 row">
+																<label class="col-md-6" for="basicpill-firstname-input"></label>
+																<div class="col-md-5" align="right">
+																	<a type="button" class="btn btn-secondary" id="btnPrecedentComplete">Précédent</a>
+																</div>
+																<div class="col-md-1" align="right">
+																	<a type="button" class="btn btn-primary" id="btnSuivantComplete">Suivant</a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="tab-pane" id="activites" role="tabpanel">
+													<div class="row">
+														<div class="col-lg-12">
+
+															<br>
+															<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																<label style="text-align: center;background:#efefef; font-size: 20px;">Activité principale
+																</label>
+															</div>
+
+															<table class="table table table-bordered dt-responsive" style="width: 100%;">
+																<tr style="width: 100%;">
+
+																	<td width="100%">
+
+																		<table class="table table table-bordered dt-responsive" width="100%">
+
+																			<tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																				<td>Libellé</td>
+																				<td>Chiffre d'affaires</td>
+																				<td>Valeur ajoutée</td>
+																				<td>Pourcentage</td>
+																			</tr>
+																			<tr>
+																				<td>
+																					{{form_widget(form.activitePrincipaleRepeat)}}
+																				</td>
+																				<td>
+																					{{form_widget(form.chiffreAffaire)}}
+																				</td>
+																				<td>
+																					{{form_widget(form.valeurAjoutee)}}
+																				</td>
+																				<td>
+																					{{form_widget(form.pourcentage)}}
+																				</td>
+																			</tr>
+
+																		</table>
+																		<br>
+																		<div class="row">
+																			<div class="col-lg-3">
+																				SYCOA
+																				<span style="color:red">*</span><br>
+
+																				<select class="form-control select2 syscoa" name="syscoaRepeat" id="idsyscoaRepeat" style="width: 100%;">
+																					<option value="">Selectionner le code SYSCOA</option>
+																					{% for tag in syscoa%}
+																						<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+																						{% endfor%}
+
+																					</select>
+																					<br><br>
+																					<select class="form-control select2 syscoa" name="categorySyscoaRepeat" id="categorySyscoaRepeat" style="width: 100%;" disabled></select>
+
+
+																					<span style="color: red;" id="syscoaRepeat"></span>
+																				</div>
+																				<div class="col-lg-3">
+																					NAEMA
+																					<span style="color:red">*</span><br>
+																					<select class="form-control select2 syscoa" name="categoryNaemaRepeat" id="categoryNaemaRepeat" style="width: 100%;">
+																						<option>Selectionner la catégorie</option>
+																						{% for tag in categoryNaema%}
+																							<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+																							{% endfor%}
+																						</select>
+
+
+																						<br>
+																						<br>
+
+																						<select class="form-control select2 syscoa" name="naemaRepeat" id="idnaemaRepeat" style="width: 100%;">
+																							<option value="">Selectionner le code NAEMA</option>
+
+
+																						</select>
+
+
+																						<span style="color: red;" id="naemaRepeat"></span>
+
+
+																					</div>
+																					<div class="col-lg-3">
+																						NAEMAS
+																						<span style="color:red">*</span><br>
+
+																						<select class="form-control select2 syscoa" name="categoryNaemasRepeat" id="categoryNaemasRepeat" style="width: 100%;">
+																							<option>Selectionner la catégorie</option>
+																							{% for tag in categoryNaemas%}
+																								<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+																								{% endfor%}
+																							</select>
+
+
+																							<br>
+																							<br>
+
+																							<select class="form-control select2 syscoa" name="naemasRepeat" id="idnaemasRepeat" style="width: 100%;">
+																								<option value="">Selectionner le code NAEMAS</option>
+
+
+																							</select>
+
+																							<span style="color: red;" id="naemasRepeat"></span>
+
+																						</div>
+																						<div class="col-lg-3">
+																							CITI
+																							<span style="color:red">*</span><br>
+																							<select class="form-control select2 syscoa" name="categoryCitiRepeat" id="categoryCitiRepeat" style="width: 100%;">
+																								<option>Selectionner la catégorie</option>
+																								{% for tag in categoryCiti %}
+																									<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+																									{% endfor%}
+																								</select>
+
+
+																								<br>
+																								<br>
+
+																								<select class="form-control select2 syscoa" name="citiRepeat" id="idcitiRepeat" style="width: 100%;">
+																									<option value="">Selectionner le code CITI</option>
+
+
+																								</select>
+
+
+																								<span style="color: red;" id="citiRepeat"></span>
+																								<br>
+																								<br>
+																								<br>
+
+																							</div>
+
+																						</div>
+
+
+																					</td>
+
+																				</tr>
+																			</table>
+																			<br><br>
+
+
+																		</div>
+																	</td>
+																</tr>
+															</div>
+
+
+															<div class="row">
+																<div class="col-lg-12">
+
+																	<label for="basicpill-address-input">
+																		<button type="button" class="btn btn-secondary ajouterActivities" id="btnAjouterActivities" data-collection="#idActivities">Ajouter une activité secondaire</button>
+																	</label>
+																	<br>
+																	<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																		<label style="text-align: center;background:#efefef; font-size: 20px;">Activités  secondaires</label>
+																	</div>
+
+																	<table class="table table table-bordered dt-responsive" id="tabActivite" style="width: 100%;">
+																		<thead style="background:#efefef;">
+																			<tr style="width:100%;">
+																				<th width="100%;"></th>
+
+																			</tr>
+																		</thead>
+																		<tbody id="idActivities" data-prototype="{{include('repertoire/activities.html.twig',{'form':form.activities.vars.prototype})|e }}" data-index="{{ form.activities|length > 0 ? form.activities|last.vars.name + 1 : 0 }}"></tbody>
+																	</table>
+
+
+																</div>
+															</div>
+
+
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3 row">
+																		<label class="col-md-6" for="basicpill-firstname-input"></label>
+
+																		<div class="col-md-5" align="right">
+																			<br><br>
+																			<a type="button" class="btn btn-secondary" id="btnPrecedentActivities">Précédent</a>
+																		</div>
+																		<div class="col-md-1" align="right">
+																			<br><br>
+																			<a type="button" class="btn btn-primary" id="btnSuivantActivities">Suivant</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+
+														<div class="tab-pane" id="dirigent" role="tabpanel">
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3">
+																		<label for="basicpill-address-input">
+																			<button type="button" class="btn btn-secondary ajouterDirigeant" id="btnAjouterDirigeant" data-collection="#idDirigeant">Ajouter</button>
+																		</label>
+
+																		<div>
+																			<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																				<label style="text-align: center;background:#efefef;">Dirigeants</label>
+																			</div>
+
+
+																			<table class="table table table-bordered dt-responsive" width="100%">
+																				<thead style="background:#efefef;">
+																					<tr>
+																						<th>Nom</th>
+																						<th>Prénom</th>
+																						<th>Fonction/Qualité</th>
+																						<th>Numero d'identification fiscale</th>
+																						<th>Adresse</th>
+																						<th></th>
+
+																					</tr>
+
+																				</thead>
+																				<tbody id="idDirigeant" data-prototype="{{include('repertoire/dirigeant.html.twig',{'form':form.dirigeants.vars.prototype})|e }}" data-index="{{ form.dirigeants|length > 0 ? form.dirigeants|last.vars.name + 1 : 0 }}"></tbody>
+
+
+																			</table>
+
+																			{{ form_label(form.dirigeants) }}
+																		</div>
+
+
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-lg-12">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid #efefef;">
+																			<br>
+																			Actionnaire ou associés principaux</label>
+
+
+																	</div>
+																</div>
+
+															</div>
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3">
+																		<label for="basicpill-address-input">
+																			<button type="button" class="btn btn-secondary ajouterActionnaire" id="btnAjouterActionnaire" data-collection="#idActionnaire">Ajouter</button>
+																		</label>
+
+																		<div>
+																			<br>
+
+																			<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																				<label style="text-align: center;background:#efefef;">Actionnaires ou Associés principaux</label>
+																			</div>
+
+																			<table class="table table table-bordered dt-responsive" width="100%" id="tabactionnaire">
+																				<thead style="background:#efefef;">
+																					<tr>
+																						<th>Nom</th>
+																						<th>Prénom</th>
+																						<th>Nationalité</th>
+																						<th>Montant capital</th>
+																						<th>Pourcentage capital</th>
+																						<th></th>
+
+																					</tr>
+																				</thead>
+																				<tbody id="idActionnaire" data-prototype="{{include('repertoire/actionnaire.html.twig',{'form':form.actionnaires.vars.prototype})|e }}" data-index="{{ form.actionnaires|length > 0 ? form.actionnaires|last.vars.name + 1 : 0 }}"></tbody>
+
+
+																			</table>
+
+																			{{ form_label(form.actionnaires) }}
+																		</div>
+
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-lg-12">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+																			<br>
+																			Membres du conceil d'administration</label>
+
+
+																	</div>
+																</div>
+
+															</div>
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3">
+																		<label for="basicpill-address-input">
+																			<button type="button" class="btn btn-secondary ajouterMembreConseil" id="btnAjouterMembreConseil" data-collection="#idMembreConseil">Ajouter</button>
+																		</label>
+
+																		<div>
+																			<br>
+
+																			<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																				<label style="text-align: center;background:#efefef;">
+																					Membres du conseil d'administration</label>
+																			</div>
+
+																			<table class="table table table-bordered dt-responsive" id="idtab" width="100%">
+																				<thead style="background:#efefef;">
+																					<tr>
+																						<th>Nom</th>
+																						<th>Prénom</th>
+																						<th>Fonction/Qualité</th>
+																						<th>Adresse</th>
+																						<th></th>
+																					</tr>
+																				</thead>
+																				<tbody id="idMembreConseil" data-prototype="{{include('repertoire/membreConseil.html.twig',{'form':form.membreConseils.vars.prototype})|e }}" data-index="{{ form.membreConseils|length > 0 ? form.membreConseils|last.vars.name + 1 : 0 }}"></tbody>
+
+
+																			</table>
+
+																			{{ form_label(form.membreConseils) }}
+																		</div>
+
+
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3 row">
+																		<label class="col-md-6" for="basicpill-firstname-input"></label>
+
+																		<div class="col-md-5" align="right">
+																			<a type="button" class="btn btn-secondary" id="btnPrecedentDirigent">Précédent</a>
+																		</div>
+																		<div class="col-md-1" align="right">
+																			<a type="button" class="btn btn-primary" id="btnSuivantDirigent">Suivant</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+														</div>
+														<div class="tab-pane" id="filiales" role="tabpanel">
+
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3">
+																		<label for="basicpill-address-input">
+																			<button type="button" class="btn btn-secondary ajouterFiliales" id="btnAjouterFiliales" data-collection="#idFiliales">Ajouter</button>
+																		</label>
+
+																		<div>
+																			<label style="text-align: center;"></label><br>
+
+																			<div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+																				<label style="text-align: center;background:#efefef;">Filiales et Participations</label>
+																			</div>
+
+																			<table class="table table table-bordered dt-responsive" id="filialetab" width="100%">
+																				<thead style="background:#efefef;">
+																					<tr>
+																						<th>Désignation</th>
+																						<th>Nationalité</th>
+																						<th>Montant capital</th>
+																						<th>Pourcentage capital</th>
+																						<th></th>
+																					</tr>
+																				</thead>
+																				<tbody id="idFiliales" data-prototype="{{include('repertoire/filiales.html.twig',{'form':form.filiales.vars.prototype})|e }}" data-index="{{ form.filiales|length > 0 ? form.filiales|last.vars.name + 1 : 0 }}"></tbody>
+
+
+																			</table>
+
+																			{{ form_label(form.membreConseils) }}
+																		</div>
+
+
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3 row">
+																		<label class="col-md-6" for="basicpill-firstname-input"></label>
+
+																		<div class="col-md-5" align="right">
+																			<a type="button" class="btn btn-secondary" id="btnPrecedentFiliales">Précédent</a>
+																		</div>
+																		<div class="col-md-1" align="right">
+																			<a type="button" class="btn btn-primary" id="btnSuivantFiliales">Suivant</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+														</div>
+														<div class="tab-pane" id="autres" role="tabpanel">
+															<div class="row">
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			{{form_label(form.systemeComptabilite)}}:</label>
+
+																		<div class="col-md-7">
+																			{{form_widget(form.systemeComptabilite)}}
+
+																		</div>
+																	</div>
+																</div>
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			{{form_label(form.dateReception)}}:</label>
+
+																		<div class="col-md-7">
+																			{{form_widget(form.dateReception)}}
+
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			{{form_label(form.statut)}}:</label>
+
+																		<div class="col-md-7">
+																			{{form_widget(form.statut)}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			{{form_label(form.reactivation)}}:</label>
+
+																		<div class="col-md-7">
+																			{{form_widget(form.reactivation)}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			{{form_label(form.dateMiseAjour)}}:</label>
+
+																		<div class="col-md-7">
+																			{{form_widget(form.dateMiseAjour)}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			<div style="display: none;" id="iddateReactivationLabel">
+																				{{form_label(form.dateReactivation)}}:
+																			</div>
+																		</label>
+
+																		<div class="col-md-7">
+																			<div style="display: none;" id="iddateReactivation">
+																				{{form_widget(form.dateReactivation)}}
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			{{form_label(form.observation)}}:</label>
+
+																		<div class="col-md-7">
+																			{{form_widget(form.observation)}}
+																		</div>
+																	</div>
+																</div>
+																<div class="col-lg-6">
+
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input">
+																			<div style="display: none;" id="idraisonReactivationLabel">
+																				{{form_label(form.raisonReactivation)}}:
+																			</div>
+																		</label>
+
+																		<div class="col-md-7">
+																			<div style="display: none;" id="idraisonReactivation">
+																				{{form_widget(form.raisonReactivation)}}
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3 row">
+																		<label class="col-md-5" for="basicpill-firstname-input"></label>
+																		<input type="hidden" name="taille" value="0" id="taille">
+
+																		<div class="col-md-5" align="right">
+																			<a type="button" class="btn btn-secondary" id="btnPrecedentAutres">Précédent</a>
+																		</div>
+																		<div class="col-md-1" align="left">
+
+																			<button id="btnSauvegarder" type="button" class="btn btn-primary">Sauvegarder</button>
+																			<span id="sauv" style="color:red;"></span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									  <input name="submited" id="submited" type="text" value="0" style="display:none;"/>
+									  <input name="notsubmited" id="notsubmited" type="text" value="0" style="display:none;"/>
+									{{ form_end(form) }}
+								{% endblock %}
+								{% block javascript %}
+
+
+									<script src="{{ asset('admin/dist/assets/libs/select2/js/select2.min.js')}}"></script>
+                                    
+									<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+											<!-- form mask init -->
+									<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+
+									<script src="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+									<script src="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}}"></script>
+									<script src="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}}"></script>
+									<script src="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}}"></script>
+									<script src="{{ asset('admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+									<script src="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}}"></script>
+									<!-- Sweet Alerts js -->
+									<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+									<!-- Sweet alert init js-->
+									<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+									
+
+
+									<!-- form advanced init -->
+									<script src="{{ asset('admin/dist/assets/js/pages/form-advanced.init.js')}}"></script>
+
+<script type="text/javascript">
+
+let dateInputs = document.querySelectorAll('[type="date"]');
+
+dateInputs.forEach(el => {
+    // register double click event to change date input to text input and select the value
+    el.addEventListener('dblclick', () => {
+        el.type = "text";
+        
+        // After changing input type with JS .select() wont work as usual
+        // Needs timeout fn() to make it work
+        setTimeout(() => {
+          el.select();
+        })
+    });
+    
+    // register the focusout event to reset the input back to a date input field
+    el.addEventListener('focusout', () => {
+        el.type = "date";
+    });
+});
+function formatPhoneNumber(phoneNumberString) {
+var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+var match = cleaned.match(/^(\(33|77|78|72|75|76|36|33|32|70)[0-9]{7}$/);
+if (match) {
+return 1;
+}
+return 0;
+}
+
+function mois(date1, date2) {
+var date1 = new Date(date1);
+var date2 = new Date(date2);
+
+var year1 = date1.getFullYear();
+var year2 = date2.getFullYear();
+var month1 = date1.getMonth();
+var month2 = date2.getMonth();
+if (month1 === 0) { // Have to take into account
+month1++;
+month2++;
+}
+var numberOfMonths = (year2 - year1) * 12 + (month2 - month1) + 1;
+return numberOfMonths;
+
+
+}
+
+
+
+$('#btnSauvegarder').click(function (e) {
+var error = 0,
+telephoneDuCabinet = 0,
+telephone2 = 0,
+telephone1 = 0,
+typeNINEA = 0;
+
+if ($.trim($('#repertoire_telephoneDuCabinet').val()) != "") {
+
+if (formatPhoneNumber($.trim($('#repertoire_telephoneDuCabinet').val())) == 0) {
+telephoneDuCabinet = 1;
+Swal.fire('Le numéro téléphone n\'est pas valide.');
+
+} else 
+telephoneDuCabinet = 0;
+
+
+}
+if ($.trim($('#repertoire_telephone2').val()) != "") {
+
+if (formatPhoneNumber($.trim($('#repertoire_telephone2').val())) == 0) {
+telephone2 = 1;
+Swal.fire('Le numéro téléphone n\'est pas valide.');
+
+} else 
+telephone2 = 0;
+
+
+}
+
+if ($.trim($('#repertoire_telephone1').val()) != "") {
+
+if (formatPhoneNumber($.trim($('#repertoire_telephone1').val())) == 0) {
+telephone1 = 1;
+Swal.fire('Le numéro téléphone n\'est pas valide.');
+
+} else 
+telephone1 = 0;
+
+
+}
+
+var repertoireninea = "";
+if ($('#repertoire_typeNINEA').val() == 1) {
+
+var s1,
+s2,
+tab = $.trim($('#repertoire_ninea').val()).split("");
+
+s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
+s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
+var rest = 10 - (s1 + (2 * s2)) % 10;
+
+
+ if(rest==10)
+    rest=0;
+if (parseInt(tab[8]) != rest) {
+typeNINEA = 5;
+repertoireninea = 'Le NINEA n\'est pas valide .';
+Swal.fire(repertoireninea);
+$('#repertoireninea').text(repertoireninea);
+$('#repertoire_ninea').addClass('has_error');
+
+} else {
+typeNINEA = 0;
+$('#repertoireninea').text(repertoireninea);
+$('#repertoire_ninea').removeClass('has_error');
+}
+} else {
+
+var s1,
+s2,
+tab = $.trim($('#repertoire_ninea').val()).split("");
+
+s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]) + parseInt(tab[8]) + parseInt(tab[10]);
+s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]) + parseInt(tab[9]) + parseInt(tab[11]);
+var rest = 10 - (s1 + (2 * s2)) % 10;
+ if(rest==0){
+    rest=0;
+
+ }
+if (parseInt(tab[12]) != rest) {
+typeNINEA = 7;
+Swal.fire('Le NINET n\'est pas valide .');
+
+} else {
+
+	typeNINEA = 0;
+}
+
+}
+
+
+let route = "{{ path('rechercheParNinea') }}" + "/" + $('#repertoire_ninea').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+           if (data == 1) {
+			   typeNINEA = 7;
+			  
+
+			} else {
+				 document.getElementById("btnSauvegarder").disabled = false;
+				typeNINEA = 0;
+			}
+}
+});
+
+
+
+
+var duree = 0;
+
+
+if ($('#repertoire_debutExerciceComptable').val() != "" && $('#repertoire_finExerciceComptable').val() != "") {
+if (parseInt( $.trim($('#repertoire_dureeDeExercice').val().replace("_",""))) != mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+$('#repertoire_dureeDeExercice').addClass('has_error');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+
+duree = 1;
+
+Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+
+} else {
+duree = 0
+$('#repertoire_dureeDeExercice').removeClass('has_error');
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+
+}
+}
+
+var debutExerciceComptable = 0;
+if ($('#repertoire_debutExerciceComptable').val() != "" && $('#repertoire_finExerciceComptable').val() != "") {
+if (parseInt( $.trim($('#repertoire_dureeDeExercice').val().replace("_",""))) != mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+$('#repertoire_dureeDeExercice').addClass('has_error');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+
+debutExerciceComptable = 1;
+
+Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+
+} else {
+debutExerciceComptable = 0
+$('#repertoire_dureeDeExercice').removeClass('has_error');
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+
+}
+}
+
+var finExerciceComptable = 0;
+if ($('#repertoire_finExerciceComptable').val() != "") {
+
+var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+var date2 = new Date($('#repertoire_finExerciceComptable').val());
+
+if (date1 > date2) {
+
+efinExerciceComptablerror = 2;
+Swal.fire('La   date de début l\'excercice comptable doit être posterieure  à la date de fin de l\'excercice comptable.');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+
+} else {
+
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+if ($.trim($('#repertoire_dureeDeExercice').val()) != "") {
+if (parseInt( $.trim($('#repertoire_dureeDeExercice').val().replace("_",""))) != mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+$('#repertoire_dureeDeExercice').addClass('has_error');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+finExerciceComptable = 3;
+Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+
+} else {
+$('#repertoire_dureeDeExercice').removeClass('has_error');
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+finExerciceComptable = 0;
+
+}
+}
+}
+}
+
+if ($('#repertoire_debutExerciceComptable').val() != "") {
+
+var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+var date2 = new Date($('#repertoire_finExerciceComptable').val());
+
+if (date1 > date2) {
+error = 4;
+Swal.fire('La   date de début l\'excercice comptable doit être posterieure  à la date de fin de l\'excercice comptable.');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+
+
+} else {
+
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+if ($.trim($('#repertoire_dureeDeExercice').val()) != "") {
+if (parseInt( $.trim($('#repertoire_dureeDeExercice').val().replace("_","")))!= mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+$('#repertoire_dureeDeExercice').addClass('has_error');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+error = 5;
+Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+
+} else {
+$('#repertoire_dureeDeExercice').removeClass('has_error');
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+error = 0;
+
+}
+}
+}
+
+}
+
+var precedent=0;
+
+ if ($('#repertoire_debutExerciceComptable').val() != "") {
+	 if ($('#repertoire_clotureExercicePrecedent').val() != "") {
+   var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+   var date2 = new Date($('#repertoire_clotureExercicePrecedent').val());
+   if (date2 > date1) {
+      
+	  Swal.fire('la date de fin de l\'exercice precedente doit etre toujours posterieure a la date de debut de l\'exercice comptable.');
+		$('#repertoire_debutExerciceComptable').addClass('has_error');
+		$('#repertoire_clotureExercicePrecedent').addClass('has_error');
+		precedent = 6;
+	
+  	}else{
+      	$('#repertoire_debutExerciceComptable').removeClass('has_error');
+		$('#repertoire_clotureExercicePrecedent').removeClass('has_error');
+		precedent = 0;
+  	}
+ }
+ }
+ 
+
+if ($.trim($('#idcitiRepeat').val()) != $.trim($('#idciti').val())) {
+   error=1;
+   Swal.fire('Le CITI ne correspond pas à celui saisi précédemment.');
+}
+
+if ($.trim($('#idnaemasRepeat').val()) != $.trim($('#idnaemas').val())) {
+	error=1;
+	Swal.fire('Le NAEMAS ne correspond pas à celui saisi précédemment.');
+}
+
+if ($.trim($('#idnaemaRepeat').val()) != $.trim($('#idnaema').val())) {
+	error=1;
+	Swal.fire('Le NAEMA ne correspond pas à celui saisi précédemment.');
+} 
+if ($.trim($('#idsyscoaRepeat').val()) != $.trim($('#idsyscoa').val())) {
+	error=1;
+	Swal.fire('Le SYSCOA ne correspond pas à celui saisi précédemment.');
+}
+if ($.trim($('#repertoire_activitePrincipaleRepeat').val()) != $.trim($('#repertoire_activitePrincipale').val())) {
+   error=1;
+   Swal.fire('Le libellé  d\'activité principale doit etre le même que celui que vous avez saisie dans l\'onglet identification.');
+}
+
+
+if (precedent == 0 && error == 0 && telephoneDuCabinet == 0 && telephone2 == 0 && telephone1 == 0 && typeNINEA == 0 && duree == 0 && debutExerciceComptable == 0 && finExerciceComptable == 0) {
+$(this).closest('form').submit()
+
+}
+
+});
+
+
+/*
+$('#repertoire_clotureExercicePrecedent').change(function () {
+  if ($('#repertoire_debutExerciceComptable').val() != "") {
+   var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+   var date2 = new Date($('#repertoire_clotureExercicePrecedent').val());
+   if (date2 > date1) {
+      
+	  Swal.fire('la date de fin de l\'exercice precedente doit etre toujours posterieure a la date de debut de l\'exercice comptable.');
+		$('#repertoire_debutExerciceComptable').addClass('has_error');
+		$('#repertoire_clotureExercicePrecedent').addClass('has_error');
+	
+  	}else{
+      	$('#repertoire_debutExerciceComptable').removeClass('has_error');
+		$('#repertoire_clotureExercicePrecedent').removeClass('has_error');
+  	}
+
+}
+});
+
+
+/*
+$('#repertoire_debutExerciceComptable').change(function () {
+
+
+ if ($('#repertoire_clotureExercicePrecedent').val() != "") {
+   var date11 = new Date($('#repertoire_debutExerciceComptable').val());
+   var date22 = new Date($('#repertoire_clotureExercicePrecedent').val());
+   if (date22 > date11) {
+      
+	  Swal.fire('la date de fin de l\'exercice precedente doit etre toujours posterieure a la date de debut de l\'exercice comptable.');
+		$('#repertoire_debutExerciceComptable').addClass('has_error');
+		$('#repertoire_clotureExercicePrecedent').addClass('has_error');
+	
+  	}else{
+      	$('#repertoire_debutExerciceComptable').removeClass('has_error');
+		$('#repertoire_clotureExercicePrecedent').removeClass('has_error');
+  	}
+
+}
+
+if ($('#repertoire_finExerciceComptable').val() != "") {
+
+var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+var date2 = new Date($('#repertoire_finExerciceComptable').val());
+
+if (date1 > date2) {
+
+duree = 2;
+Swal.fire('La   date de début l\'excercice comptable doit être posterieure  à la date de fin de l\'excercice comptable.');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+
+} else {
+
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+if ($.trim($('#repertoire_dureeDeExercice').val()) != "") {
+if (parseInt( $.trim($('#repertoire_dureeDeExercice').val().replace("_",""))) != mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+$('#repertoire_dureeDeExercice').addClass('has_error');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+duree = 3;
+Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+
+} else {
+$('#repertoire_dureeDeExercice').removeClass('has_error');
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+duree = 0;
+
+}
+}
+}
+
+}
+
+});
+
+/*
+
+$('#repertoire_finExerciceComptable').change(function () {
+
+		if ($('#repertoire_debutExerciceComptable').val() != "") {
+
+		var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+		var date2 = new Date($('#repertoire_finExerciceComptable').val());
+
+		if (date1 > date2) {
+
+		Swal.fire('La   date de début l\'excercice comptable doit être posterieure  à la date de fin de l\'excercice comptable.');
+		$('#repertoire_debutExerciceComptable').addClass('has_error');
+		$('#repertoire_finExerciceComptable').addClass('has_error');
+		duree = 4;
+
+		} else {
+
+		$('#repertoire_debutExerciceComptable').removeClass('has_error');
+		$('#repertoire_finExerciceComptable').removeClass('has_error');
+		if ($.trim($('#repertoire_dureeDeExercice').val()) != "") {
+		if (parseInt( $.trim($('#repertoire_dureeDeExercice').val().replace("_","")))!= mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+		$('#repertoire_dureeDeExercice').addClass('has_error');
+		$('#repertoire_debutExerciceComptable').addClass('has_error');
+		$('#repertoire_finExerciceComptable').addClass('has_error');
+
+		Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+		duree = 5;
+		} else {
+		$('#repertoire_dureeDeExercice').removeClass('has_error');
+		$('#repertoire_debutExerciceComptable').removeClass('has_error');
+		$('#repertoire_finExerciceComptable').removeClass('has_error');
+		duree = 0
+
+		}
+		}
+		}
+
+		}
+
+});
+*/
+
+/*
+$('#repertoire_dureeDeExercice').change(function () {
+
+	if ($('#repertoire_debutExerciceComptable').val() != "") {
+
+	var date1 = new Date($('#repertoire_debutExerciceComptable').val());
+	var date2 = new Date($('#repertoire_finExerciceComptable').val());
+
+	if (date1 > date2) {
+
+	Swal.fire('La   date de début l\'excercice comptable doit être posterieure  à la date de fin de l\'excercice comptable.');
+	$('#repertoire_debutExerciceComptable').addClass('has_error');
+	$('#repertoire_finExerciceComptable').addClass('has_error');
+	duree = 4;
+
+} else {
+
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+if ($.trim($('#repertoire_dureeDeExercice').val()) != "") {
+if ($.trim($('#repertoire_dureeDeExercice').val()) != mois($('#repertoire_debutExerciceComptable').val(), $('#repertoire_finExerciceComptable').val())) {
+$('#repertoire_dureeDeExercice').addClass('has_error');
+$('#repertoire_debutExerciceComptable').addClass('has_error');
+$('#repertoire_finExerciceComptable').addClass('has_error');
+
+Swal.fire('La durée de l\'excercice n\'est pas la même durée entre la date de début l\'excercice comptable  et la date de fin de l\'excercice comptable.');
+duree = 5;
+} else {
+$('#repertoire_dureeDeExercice').removeClass('has_error');
+$('#repertoire_debutExerciceComptable').removeClass('has_error');
+$('#repertoire_finExerciceComptable').removeClass('has_error');
+duree = 0
+
+}
+}
+}
+
+}
+
+});
+*/
+
+function sommfiliale(tab){
+	var som=0;
+	for(i=1;i<tab.rows.length;i++){
+		som=som+parseInt(tab.rows[i].querySelector('.capitalfiliale').value);
+	}
+	for(i=1;i<tab.rows.length;i++){
+		tab.rows[i].querySelector('.pourcentagefiliale').value=Math.round(parseInt(tab.rows[i].querySelector('.capitalfiliale').value)/som * 100);
+	}
+	return som;
+}
+
+const newItemFiliales = (e) => {
+var collections = document.querySelector(e.currentTarget.dataset.collection);
+let index = parseInt(collections.dataset.index);
+let item = document.createElement("tr");
+
+
+item.innerHTML = collections.dataset.index = index + 1;
+let prototype = collections.dataset.prototype;
+item.innerHTML = prototype.replace(/__name__/g, index);
+
+
+item.querySelector(".btn-removeFiliales").addEventListener("click", () =>{ 
+	item.remove();
+	var tab=document.getElementById('filialetab');
+	var  ch2=sommfiliale(tab) ;
+	});
+
+item.querySelector('.capitalfiliale').addEventListener("change",function(){
+	
+	var tab=document.getElementById('filialetab');
+	var  ch2=sommfiliale(tab) ;
+
+})
+collections.appendChild(item);
+$(".syscoa").select2({theme: "classic"});
+$(".form-control").bind("keypress", function (e) {
+
+		if (e.keyCode == 13) {
+		var inps = $("input"); // add select too
+		for (var x = 0; x < inps.length; x++) {
+		if (inps[x] == this) {
+		while ((inps[x]).name == (inps[x + 1]).name) {
+		x++;
+		}
+		if ((x + 1) < inps.length) 
+		$(inps[x + 1]).focus();
+
+		}
+		}
+		e.preventDefault();
+		}
+});
+
+}
+
+document.querySelectorAll(".ajouterFiliales").forEach(btn => btn.addEventListener("click", newItemFiliales));
+
+
+const newItemMembreConseil = (e) => {
+var collections = document.querySelector(e.currentTarget.dataset.collection);
+let index = parseInt(collections.dataset.index);
+let item = document.createElement("tr");
+
+
+item.innerHTML = collections.dataset.index = index + 1;
+let prototype = collections.dataset.prototype;
+item.innerHTML = prototype.replace(/__name__/g, index);
+
+
+item.querySelector(".btn-removeMembreConseil").addEventListener("click", () => item.remove());
+collections.appendChild(item);
+$(".syscoa").select2({theme: "classic"});
+$(".form-control").bind("keypress", function (e) {
+
+		if (e.keyCode == 13) {
+		var inps = $("input"); // add select too
+		for (var x = 0; x < inps.length; x++) {
+		if (inps[x] == this) {
+		while ((inps[x]).name == (inps[x + 1]).name) {
+		x++;
+		}
+		if ((x + 1) < inps.length) 
+		$(inps[x + 1]).focus();
+
+		}
+		}
+		e.preventDefault();
+		}
+});
+
+}
+
+
+document.querySelectorAll(".ajouterMembreConseil").forEach(btn => btn.addEventListener("click", newItemMembreConseil));
+
+function sommcapitalactionnaire(tab){
+	var som=0;
+	for(i=1;i<tab.rows.length;i++){
+		som=som+parseInt(tab.rows[i].querySelector('.capitalactionnaire').value);
+	}
+	for(i=1;i<tab.rows.length;i++){
+		tab.rows[i].querySelector('.pourcentageactionnaire').value=Math.round(parseInt(tab.rows[i].querySelector('.capitalactionnaire').value)/som * 100);
+	}
+	return som;
+}
+
+const newItemActionnaire = (e) => {
+var collections = document.querySelector(e.currentTarget.dataset.collection);
+let index = parseInt(collections.dataset.index);
+let item = document.createElement("tr");
+
+
+item.innerHTML = collections.dataset.index = index + 1;
+let prototype = collections.dataset.prototype;
+item.innerHTML = prototype.replace(/__name__/g, index);
+
+
+item.querySelector(".btn-removeActionnaire").addEventListener("click", () => {
+	 item.remove();
+	 var tab=document.getElementById('tabactionnaire');
+	 var  ch2=sommcapitalactionnaire(tab) ;
+	});
+collections.appendChild(item);
+
+item.querySelector('.capitalactionnaire').addEventListener("change",function(){
+	
+	var tab=document.getElementById('tabactionnaire');
+	var  ch2=sommcapitalactionnaire(tab) ;
+
+})
+$(".syscoa").select2({theme: "classic"});
+$(".form-control").bind("keypress", function (e) {
+
+		if (e.keyCode == 13) {
+		var inps = $("input"); // add select too
+		for (var x = 0; x < inps.length; x++) {
+		if (inps[x] == this) {
+		while ((inps[x]).name == (inps[x + 1]).name) {
+		x++;
+		}
+		if ((x + 1) < inps.length) 
+		$(inps[x + 1]).focus();
+
+		}
+		}
+		e.preventDefault();
+		}
+});
+
+}
+
+document.querySelectorAll(".ajouterActionnaire").forEach(btn => btn.addEventListener("click", newItemActionnaire));
+
+const newItemDirigeant = (e) => {
+var collections = document.querySelector(e.currentTarget.dataset.collection);
+let index = parseInt(collections.dataset.index);
+let item = document.createElement("tr");
+
+
+collections.dataset.index = index + 1;
+let prototype = collections.dataset.prototype;
+item.innerHTML = prototype.replace(/__name__/g, index);
+
+
+item.querySelector(".btn-removeDirigeant").addEventListener("click", () => item.remove());
+collections.appendChild(item);
+$(".syscoa").select2({theme: "classic"});
+$(".form-control").bind("keypress", function (e) {
+
+		if (e.keyCode == 13) {
+		var inps = $("input"); // add select too
+		for (var x = 0; x < inps.length; x++) {
+		if (inps[x] == this) {
+		while ((inps[x]).name == (inps[x + 1]).name) {
+		x++;
+		}
+		if ((x + 1) < inps.length) 
+		$(inps[x + 1]).focus();
+
+		}
+		}
+		e.preventDefault();
+		}
+});
+
+}
+document.querySelectorAll(".ajouterDirigeant").forEach(btn => btn.addEventListener("click", newItemDirigeant));
+
+
+const newItem = (e) => {
+var collections = document.querySelector(e.currentTarget.dataset.collection);
+let index = parseInt(collections.dataset.index);
+let item = document.createElement("tr");
+
+
+item.innerHTML = collections.dataset.index = index + 1;
+let prototype = collections.dataset.prototype;
+item.innerHTML = prototype.replace(/__name__/g, index);
+
+
+item.querySelector(".btn-remove").addEventListener("click", () => item.remove());
+collections.appendChild(item);
+$(".syscoa").select2({theme: "classic"});
+$(".form-control").bind("keypress", function (e) {
+
+		if (e.keyCode == 13) {
+		var inps = $("input"); // add select too
+		for (var x = 0; x < inps.length; x++) {
+		if (inps[x] == this) {
+		while ((inps[x]).name == (inps[x + 1]).name) {
+		x++;
+		}
+		if ((x + 1) < inps.length) 
+		$(inps[x + 1]).focus();
+
+		}
+		}
+		e.preventDefault();
+		}
+});
+}
+document.querySelectorAll(".nouveauCommissaire").forEach(btn => btn.addEventListener("click", newItem));
+
+
+const deleteItem = (e) => {
+e.currentTarget.closest(".item").remove();
+// var collections=document.querySelector(e.currentTarget.dataset.collection);
+
+
+}
+
+function sommchiffreAffaire(tab){
+	var som=parseInt(document.getElementById('repertoire_chiffreAffaire').value);
+	for(i=1;i<tab.rows.length;i++){
+		if(tab.rows[i].querySelector('.chiffreAffaire').value!="")
+		 som=som+parseInt(tab.rows[i].querySelector('.chiffreAffaire').value);
+	}
+	
+
+	
+	for(i=1;i<tab.rows.length;i++){
+		var ch=0;
+		if(tab.rows[i].querySelector('.chiffreAffaire').value!="")
+		  ch=parseInt(tab.rows[i].querySelector('.chiffreAffaire').value);
+		tab.rows[i].querySelector('.pourcentageActivite').value=Math.round(ch/som * 100);
+	}
+
+	return som;
+
+}
+
+function sommValeurAjouter(tab){
+	var som=parseInt(document.getElementById('repertoire_valeurAjoutee').value);
+	for(i=1;i<tab.rows.length;i++){
+		if(tab.rows[i].querySelector('.valeurAjoutee').value!="")
+		som=som+parseInt(tab.rows[i].querySelector('.valeurAjoutee').value);
+	}
+	for(i=1;i<tab.rows.length;i++){
+		var ch=0;
+		if(tab.rows[i].querySelector('.valeurAjoutee').value!="")
+		  ch=parseInt(tab.rows[i].querySelector('.valeurAjoutee').value);
+		tab.rows[i].querySelector('.pourcentageActivite').value=Math.round(ch/som * 100);
+	}
+
+	return som;
+
+}
+const newItemActivities = (e) => {
+var collections = document.querySelector(e.currentTarget.dataset.collection);
+let index = parseInt(collections.dataset.index);
+let item = document.createElement("tr");
+
+
+item.innerHTML = collections.dataset.index = index + 1;
+let prototype = collections.dataset.prototype;
+item.innerHTML = prototype.replace(/__name__/g, index);
+
+
+item.querySelector(".btn-delete").addEventListener("click", () => {
+	item.remove();
+	if(document.getElementById('repertoire_chiffreAffaire').value!=""){
+	var tab=document.getElementById('tabActivite');
+	var  ch2=0;
+	if(document.getElementById('repertoire_chiffreAffaire').value!="")
+	  ch2=parseInt(document.getElementById('repertoire_chiffreAffaire').value);
+	document.getElementById('repertoire_pourcentage').value=Math.round(ch2/sommchiffreAffaire(tab) *100);
+	}
+	else{
+		var tab=document.getElementById('tabActivite');
+	var  ch2=0;
+	
+	if(document.getElementById('repertoire_valeurAjoutee').value!="")
+	  ch2=parseInt(document.getElementById('repertoire_valeurAjoutee').value);
+	document.getElementById('repertoire_pourcentage').value=Math.round(ch2/sommValeurAjouter(tab) *100);
+	}
+
+
+});
+
+if(document.getElementById('repertoire_chiffreAffaire').value!="")
+	   item.querySelector('.valeurAjoutee').disabled=true;
+else
+   if(document.getElementById('repertoire_valeurAjoutee').value!="")
+	   item.querySelector('.chiffreAffaire').disabled=true;
+	else
+	{
+	  item.querySelector('.valeurAjoutee').disabled=false;	
+	   item.querySelector('.chiffreAffaire').disabled=false;
+	}
+
+item.querySelector('.chiffreAffaire').addEventListener("change",function(){
+	
+	var tab=document.getElementById('tabActivite');
+	var  ch2=0;
+	if(document.getElementById('repertoire_chiffreAffaire').value!="")
+	  ch2=parseInt(document.getElementById('repertoire_chiffreAffaire').value);
+	document.getElementById('repertoire_pourcentage').value=Math.round(ch2/sommchiffreAffaire(tab) *100);
+
+})
+
+item.querySelector('.valeurAjoutee').addEventListener("change",function(){
+	
+	var tab=document.getElementById('tabActivite');
+	var ch2=0;
+		if(tab.rows[i].querySelector('.valeurAjoutee').value!="")
+		  ch2=parseInt(tab.rows[i].querySelector('.valeurAjoutee').value);
+	document.getElementById('repertoire_pourcentage').value=ch2/sommValeurAjouter(tab) *100;
+
+})
+collections.appendChild(item);
+
+var ind="repertoire_activities_"+index+"_chiffreAffaire"; 
+
+
+
+$(".syscoa").select2({theme: "classic"});
+$(".form-control").bind("keypress", function (e) {
+
+		if (e.keyCode == 13) {
+		var inps = $("input"); // add select too
+		for (var x = 0; x < inps.length; x++) {
+		if (inps[x] == this) {
+		while ((inps[x]).name == (inps[x + 1]).name) {
+		x++;
+		}
+		if ((x + 1) < inps.length) 
+		$(inps[x + 1]).focus();
+
+		}
+		}
+		e.preventDefault();
+		}
+});
+
+}
+document.querySelectorAll(".ajouterActivities").forEach(btn => btn.addEventListener("click", newItemActivities));
+
+
+$('#repertoire_pourcentage').change(function () {
+
+
+if ($('#repertoire_pourcentage').val() == "100") {
+
+$('#btnAjouterActivities').prop('disabled', true);
+
+} else 
+$('#btnAjouterActivities').prop('disabled', false);
+
+
+
+});
+
+
+$('#repertoire_telephone2').change(function () {
+
+if (formatPhoneNumber($.trim($('#repertoire_telephone2').val())) == 0) {
+Swal.fire('Le numéro téléphone n\'est pas valide.');
+}
+
+});
+
+$('#repertoire_telephone1').change(function () {
+
+if (formatPhoneNumber($.trim($('#repertoire_telephone1').val())) == 0) {
+Swal.fire('Le numéro téléphone n\'est pas valide.');
+}
+
+});
+
+
+$('#repertoire_telephoneDuCabinet').change(function () {
+
+if (formatPhoneNumber($.trim($('#repertoire_telephoneDuCabinet').val())) == 0) {
+Swal.fire('Le numéro téléphone n\'est pas valide.');
+}
+
+});
+
+
+
+
+$(document).ready(function () {
+  var $tabPourcentage=[];
+$('#repertoire_chiffreAffaire').change(function () {
+
+if($tabPourcentage.length<1){
+	document.getElementById('repertoire_pourcentage').value=100;
+	document.getElementById('repertoire_pourcentage').innerHtml = 100;
+}
+ 
+if ($('#repertoire_chiffreAffaire').val() != "") {
+
+$('#repertoire_valeurAjoutee').prop('disabled', true);
+
+} else {
+	document.getElementById('repertoire_pourcentage').innerHtml = 100;
+
+	$('#repertoire_valeurAjoutee').prop('disabled', false);
+}
+
+});
+
+$('#repertoire_valeurAjoutee').change(function () {
+
+if ($('#repertoire_valeurAjoutee').val() != "") {
+
+$('#repertoire_chiffreAffaire').prop('disabled', true);
+
+} else {
+$('#repertoire_chiffreAffaire').prop('disabled', false);
+}
+});
+
+
+$('#repertoire_activitePrincipaleRepeat').keyup(function () {
+$(this).val($(this).val().toUpperCase());
+});
+
+
+$('#repertoire_activitePrincipale').keyup(function () {
+$(this).val($(this).val().toUpperCase());
+});
+
+
+$(".form-control").bind("keypress", function (e) {
+
+if (e.keyCode == 13) {
+var inps = $("input"); // add select too
+for (var x = 0; x < inps.length; x++) {
+if (inps[x] == this) {
+while ((inps[x]).name == (inps[x + 1]).name) {
+x++;
+}
+if ((x + 1) < inps.length) 
+$(inps[x + 1]).focus();
+
+}
+}
+e.preventDefault();
+}
+});
+
+document.getElementById("prenomDuExpert").style.display = "none";
+document.getElementById("prenomDuExpertlabel").style.display = "none";
+document.getElementById("nomDuExpertLabel").style.display = "none";
+document.getElementById("nomDuExpert").style.display = "none";
+
+
+document.getElementById("taille").value = 1;
+
+
+$('#btnAjouterCommissaireCompte').click();
+
+$('#btnAjouterDirigeant').click();
+$('#btnAjouterActionnaire').click();
+$('#btnAjouterMembreConseil').click();
+$('#btnAjouterFiliales').click();
+
+$(".syscoa").select2({theme: "classic"});
+
+
+$('#categoryCiti').change(function () {
+
+let route = "{{ path('citicat') }}" + "/" + $('#categoryCiti').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("idciti");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][0] + "-" + data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#categoryCitiRepeat').change(function () {
+
+let route = "{{ path('citicat') }}" + "/" + $('#categoryCitiRepeat').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("idcitiRepeat");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][0] + "-" + data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#categoryNaemasRepeat').change(function () {
+
+let route = "{{ path('naemascat') }}" + "/" + $('#categoryNaemasRepeat').val();
+console.log($('#categoryNaemas').val());
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("idnaemasRepeat");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][0] + "-" + data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#categoryNaemas').change(function () {
+
+let route = "{{ path('naemascat') }}" + "/" + $('#categoryNaemas').val();
+console.log($('#categoryNaemas').val());
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("idnaemas");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][0] + "-" + data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#categoryNaema').change(function () {
+
+let route = "{{ path('naemacat') }}" + "/" + $('#categoryNaema').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("idnaema");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#categoryNaemaRepeat').change(function () {
+
+let route = "{{ path('naemacat') }}" + "/" + $('#categoryNaemaRepeat').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("idnaemaRepeat");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#idsyscoa').change(function () {
+
+let route = "{{ path('categorySyscoa') }}" + "/" + $('#idsyscoa').val();
+
+
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+
+let selectcategorySyscoa = document.getElementById("categorySyscoa");
+selectcategorySyscoa.innerHTML = "";
+
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][2] + "-" + data[i][1];
+selectcategorySyscoa.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+});
+
+
+});
+
+
+$('#idsyscoaRepeat').change(function () {
+
+let route = "{{ path('categorySyscoa') }}" + "/" + $('#idsyscoaRepeat').val();
+
+
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+
+let selectcategorySyscoa = document.getElementById("categorySyscoaRepeat");
+selectcategorySyscoa.innerHTML = "";
+
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][2] + "-" + data[i][1];
+selectcategorySyscoa.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+});
+
+
+});
+
+
+$('#categorySyscoa').change(function () {
+
+
+let route = "{{ path('syscoa') }}" + "/" + $('#categorySyscoa').val();
+
+
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+
+let departement = document.getElementById("idsyscoa");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][2] + "-" + data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#region').change(function () {
+
+let route = "{{ path('departementsRegion') }}" + "/" + $('#region').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let departement = document.getElementById("departement");
+departement.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+departement.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][1];
+departement.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+$('#departement').change(function () {
+
+let route = "{{ path('cavDepartement') }}" + "/" + $('#departement').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let cav = document.getElementById("cav");
+cav.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+cav.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][1];
+cav.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#cav').change(function () {
+
+let route = "{{ path('cacrCav') }}" + "/" + $('#cav').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let cacr = document.getElementById("cacr");
+cacr.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+cacr.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][1];
+cacr.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#repertoire_reactivation').change(function () {
+
+if ($('#repertoire_reactivation').val() == 0) {
+
+document.getElementById("iddateReactivation").style.display = "block";
+document.getElementById("iddateReactivationLabel").style.display = "block";
+document.getElementById("idraisonReactivation").style.display = "block";
+document.getElementById("idraisonReactivationLabel").style.display = "block";
+} else {
+
+document.getElementById("iddateReactivationLabel").style.display = "none";
+document.getElementById("iddateReactivation").style.display = "none";
+document.getElementById("idraisonReactivationLabel").style.display = "none";
+document.getElementById("idraisonReactivation").style.display = "none";
+}
+
+});
+
+
+$('#formRadiosRight1').change(function () {
+
+document.getElementById("nomDuCabinet").style.display = "block";
+document.getElementById("addresseDuCabinetLabel").style.display = "block";
+document.getElementById("addresseDuCabinet").style.display = "block";
+document.getElementById("nomDuCabinetlabel").style.display = "block";
+document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+document.getElementById("telephoneDuCabinet").style.display = "block";
+document.getElementById("prenomDuExpert").style.display = "none";
+document.getElementById("prenomDuExpertlabel").style.display = "none";
+document.getElementById("nomDuExpertLabel").style.display = "none";
+document.getElementById("nomDuExpert").style.display = "none";
+
+
+});
+
+
+$('#formRadiosRight2').change(function () {
+
+document.getElementById("nomDuCabinetlabel").style.display = "none";
+document.getElementById("nomDuCabinet").style.display = "none";
+
+document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+document.getElementById("telephoneDuCabinet").style.display = "block";
+
+document.getElementById("prenomDuExpert").style.display = "block";
+document.getElementById("prenomDuExpertlabel").style.display = "block";
+document.getElementById("nomDuExpertLabel").style.display = "block";
+document.getElementById("nomDuExpert").style.display = "block";
+
+document.getElementById("addresseDuCabinetLabel").style.display = "block";
+document.getElementById("addresseDuCabinet").style.display = "block";
+});
+
+
+$('#repertoire_activitePrincipaleRepeat').change(function () {
+
+if ($.trim($('#repertoire_activitePrincipaleRepeat').val()) != $.trim($('#repertoire_activitePrincipale').val())) {
+$('#repertoire_activitePrincipaleRepeat').addClass('has_error');
+
+Swal.fire('Le libellé  d\'activité principale doit etre le même que celui que vous avez saisie dans l\'onglet identification.');
+
+} else {
+$('#repertoire_activitePrincipaleRepeat').removeClass('has_error');
+}
+
+});
+
+
+$('#idsyscoaRepeat').change(function () {
+
+if ($.trim($('#idsyscoaRepeat').val()) != $.trim($('#idsyscoa').val())) {
+$('#idsyscoaRepeat').addClass('has_error');
+
+Swal.fire('Le SYSCOA ne correspond pas à celui saisi précédemment.');
+
+} else {
+$('#idsyscoaRepeat').removeClass('has_error');
+}
+
+});
+
+
+$('#idnaemaRepeat').change(function () {
+
+if ($.trim($('#idnaemaRepeat').val()) != $.trim($('#idnaema').val())) {
+$('#idnaemaRepeat').addClass('has_error');
+
+Swal.fire('Le NAEMA ne correspond pas à celui saisi précédemment.');
+
+} else {
+$('#idnaemaRepeat').removeClass('has_error');
+}
+
+});
+
+
+$('#idnaemasRepeat').change(function () {
+
+if ($.trim($('#idnaemasRepeat').val()) != $.trim($('#idnaemas').val())) {
+$('#idnaemasRepeat').addClass('has_error');
+
+Swal.fire('Le NAEMAS ne correspond pas à celui saisi précédemment.');
+
+} else {
+$('#idnaemasRepeat').removeClass('has_error');
+}
+
+});
+
+
+$('#idcitiRepeat').change(function () {
+
+if ($.trim($('#idcitiRepeat').val()) != $.trim($('#idciti').val())) {
+$('#idcitiRepeat').addClass('has_error');
+
+Swal.fire('Le CITI ne correspond pas à celui saisi précédemment.');
+
+} else {
+$('#idcitiRepeat').removeClass('has_error');
+}
+
+});
+
+
+$('#cacr').change(function () {
+
+let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr').val();
+$.ajax({
+type: 'GET',
+url: route,
+dataType: "json",
+success: function (data) {
+
+let qvh = document.getElementById("qvh");
+qvh.innerHTML = "";
+
+let opt = document.createElement('option');
+opt.innerHTML = "Choissir ...";
+opt.value = '';
+qvh.add(opt);
+for (var i = data.length - 1; i >= 0; i--) {
+let opt = document.createElement('option');
+opt.value = data[i][0];
+opt.innerHTML = data[i][1];
+qvh.add(opt);
+}
+},
+error: function (error) {
+console.log(error);
+}
+})
+});
+
+
+$('#btnSuivantCoordonnee').click(function () {
+
+
+var tel1 = "";
+
+
+if ($.trim($('#repertoire_telephone1').val()).length == 0) {
+tel1 = "Le téléphone est obligatoire";
+$('#idtel1').text(tel1);
+$('#repertoire_telephone1').addClass('has_error');
+} else {
+$('#repertoire_telephone1').removeClass('has_error');
+if (formatPhoneNumber($.trim($('#repertoire_telephone1').val())) == 0) {
+tel1 = "Le numéro téléphone n'est pas valide";
+$('#idtel1').text(tel1);
+$('#repertoire_telephone1').addClass('has_error');
+} else {
+
+var tel1 = "";
+
+$('#idtel1').text(tel1);
+$('#repertoire_telephone1').removeClass('has_error');
+}
+}
+
+var qhv = "";
+if ($.trim($('#qvh').val()).length == 0) {
+qvh = "Le Quartier/Village/Hameau  est obligatoire";
+$('#idqvh').text(qvh);
+$('#qvh').addClass('has_error');
+} else {
+var qvh = "";
+$('#idqvh').text(qvh);
+$('#qvh').removeClass('has_error');
+}
+
+
+var add = "";
+if ($.trim($('#repertoire_addresseComplete').val()).length == 0) {
+add = "L'adresse complete est obligatoire";
+$('#add').text(add);
+$('#repertoire_addresseComplete').addClass('has_error');
+} else {
+var add = "";
+
+$('#add').text(add);
+$('#repertoire_addresseComplete').removeClass('has_error');
+}
+
+
+if (tel1 != "" || qvh != "" || add != "") {
+return false;
+} else {
+$('#coordonnee').removeClass('active ');
+$('#coordonnees').removeClass('active ');
+
+$('#contacts').addClass('active ');
+$('#contacts').attr('href', '#contact');
+$('#contact').addClass('active');
+
+}
+});
+
+
+$('#btnSuivantComplete').click(function () {
+
+
+var idformeJuridique = "";
+if ($.trim($('#repertoire_formeJuridique').val()).length == 0) {
+idformeJuridique = "La forme juridique est obligatoire";
+$('#idformeJuridique').text(idformeJuridique);
+$('#repertoire_formeJuridique').addClass('has_error');
+} else {
+var idformeJuridique = "";
+
+$('#idformeJuridique').text(idformeJuridique);
+$('#repertoire_formeJuridique').removeClass('has_error');
+}
+
+var idformeFiscal = "";
+if ($.trim($('#repertoire_formeJuridique').val()).length == 0) {
+idformeFiscal = "Le regime fiscal  est obligatoire";
+$('#idformeFiscal').text(idformeFiscal);
+$('#repertoire_formeJuridique').addClass('has_error');
+} else {
+var idformeFiscal = "";
+$('#idformeFiscal').text(idformeFiscal);
+$('#repertoire_formeJuridique').removeClass('has_error');
+}
+
+if (idformeJuridique != "" || idformeFiscal != "") {
+return false;
+} else {
+$('#complement').removeClass('active ');
+$('#complements').removeClass('active ');
+
+$('#activite').addClass('active ');
+$('#activite').attr('href', '#activites');
+$('#activites').addClass('active');
+
+}
+});
+
+
+$('#btnSuivantActivities').click(function () {
+var error=0;
+
+if ($.trim($('#idcitiRepeat').val()) != $.trim($('#idciti').val())) {
+   error=1;
+   Swal.fire('Le CITI ne correspond pas à celui saisi précédemment.');
+}
+
+if ($.trim($('#idnaemasRepeat').val()) != $.trim($('#idnaemas').val())) {
+	error=1;
+	Swal.fire('Le NAEMAS ne correspond pas à celui saisi précédemment.');
+}
+
+if ($.trim($('#idnaemaRepeat').val()) != $.trim($('#idnaema').val())) {
+	error=1;
+	Swal.fire('Le NAEMA ne correspond pas à celui saisi précédemment.');
+} 
+if ($.trim($('#idsyscoaRepeat').val()) != $.trim($('#idsyscoa').val())) {
+	error=1;
+	Swal.fire('Le SYSCOA ne correspond pas à celui saisi précédemment.');
+}
+if ($.trim($('#repertoire_activitePrincipaleRepeat').val()) != $.trim($('#repertoire_activitePrincipale').val())) {
+   error=1;
+   Swal.fire('Le libellé  d\'activité principale doit etre le même que celui que vous avez saisie dans l\'onglet identification.');
+}
+
+
+
+
+
+if(error==0){
+	$('#activite').removeClass('active ');
+	$('#activites').removeClass('active ');
+	$('#dirigents').addClass('active ');
+	$('#dirigents').attr('href', '#dirigent');
+	$('#dirigent').addClass('active');
+}
+
+
+});
+
+$('#btnPrecedentActivities').click(function () {
+$('#activite').removeClass('active ');
+$('#activites').removeClass('active ');
+$('#complement').addClass('active ');
+$('#complements').attr('href', '#complement');
+$('#complements').addClass('active');
+});
+
+
+$('#btnSuivantDirigent').click(function () {
+$('#dirigents').removeClass('active ');
+$('#dirigent').removeClass('active ');
+$('#filiales').addClass('active ');
+$('#filiale').attr('href', '#filiales');
+$('#filiale').addClass('active');
+});
+
+$('#btnPrecedentDirigent').click(function () {
+$('#dirigents').removeClass('active ');
+$('#dirigent').removeClass('active ');
+$('#activite').addClass('active ');
+$('#activite').attr('href', '#activites');
+$('#activites').addClass('active');
+});
+
+
+$('#btnSuivantFiliales').click(function () {
+$('#filiales').removeClass('active ');
+$('#filiale').removeClass('active ');
+$('#autres').addClass('active ');
+$('#autre').attr('href', '#autres');
+$('#autre').addClass('active');
+});
+
+$('#btnPrecedentFiliales').click(function () {
+$('#filiales').removeClass('active ');
+$('#filiale').removeClass('active ');
+$('#dirigents').addClass('active ');
+$('#dirigents').attr('href', '#dirigent');
+$('#dirigent').addClass('active');
+});
+
+
+$('#btnPrecedentAutres').click(function () {
+$('#autres').removeClass('active ');
+$('#autre').removeClass('active ');
+$('#filiale').addClass('active ');
+$('#filiale').attr('href', '#filiales');
+$('#filiales').addClass('active');
+});
+
+
+$('#btnPrecedentComplete').click(function () {
+$('#complement').removeClass('active ');
+$('#complements').removeClass('active ');
+$('#contacts').addClass('active ');
+$('#contacts').attr('href', '#contact');
+$('#contact').addClass('active');
+});
+
+
+$('#repertoire_ninea').blur(function () {
+
+if($('#repertoire_ninea').val()!=""){
+    var route = "{{ path('rechercheParNinea') }}" + "/" + $('#repertoire_ninea').val();
+	bExiste=0;
+$.ajax({
+type: 'GET',
+url: route,
+async: false,
+dataType: "json",
+success: function (data) {
+	      
+           if (data == 1) {
+			   typeNINEA = 7;
+			    document.getElementById("btnSauvegarder").disabled = true;
+			   $('#sauv').text("Le NINEA a déjà un numero de CUCI . il faudrait fournir un NINEA valide pour sauvegarder");
+			   document.getElementById("submited").value=1;
+			   Swal.fire('Ce NINEA a déjà un numero de CUCI .');
+
+			} else {
+				document.getElementById("submited").value=0;
+				document.getElementById("btnSauvegarder").disabled = false;
+				$('#sauv').text("");
+				typeNINEA = 0;
+			}
+},
+error: function(error){
+	console.log(error);	
+}
+});
+//alert(bExiste);
+if(bExiste==1){
+ //   $('#repertoire_ninea').focus();
+	Swal.fire('Ce NINEA a déjà un numero de CUCI .');
+	$('#repertoire_ninea').focus();
+}
+
+} else {
+if ($.trim($('#repertoire_ninea').val()).length != 13) {
+
+Swal.fire('Le NINET est composé de 13 chiffres.');
+}
+
+}
+
+});
+
+
+$('#repertoire_numeroRegistreCommerce').change(function () {
+		var route = "{{ path('rechercheRCCM') }}";
+
+		$.ajax({
+			type: 'POST',
+			url: route,
+			data: {"rccm":$.trim($('#repertoire_numeroRegistreCommerce').val())},
+			success: function (data) {
+					
+					if (data == 1) {
+						typeNINEA = 7;
+						document.getElementById("notsubmited").value=1;
+							document.getElementById("btnSauvegarder").disabled = true;
+						$('#sauv').text("Le RCCM éxiste déjà ");
+						Swal.fire('Le RCCM éxiste déjà.');
+
+						} else {
+							document.getElementById("notsubmited").value=0;
+							document.getElementById("btnSauvegarder").disabled = false;
+							$('#sauv').text("");
+							typeNINEA = 0;
+						}
+			},
+			error : function (data){
+				console.log(data);
+			}
+		});
+});
+
+$('#repertoire_ninea').change(function () {
+
+
+if ($('#repertoire_typeNINEA').val() == 1) {
+
+if ($.trim($('#repertoire_ninea').val()).length != 9) {
+
+
+Swal.fire('Le NINEA est composé de 9 chiffres.');
+} else {
+
+var s1,
+s2,
+tab = $.trim($('#repertoire_ninea').val()).split("");
+
+s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
+s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
+var rest = 10 - (s1 + 2 * s2) % 10;
+  if(rest==0)
+     rest=0;
+if (parseInt(tab[8]) != rest) {
+
+Swal.fire('Le NINEA n\'est pas valide .');
+
+}
+
+
+}
+
+} else {
+if ($.trim($('#repertoire_ninea').val()).length != 13) {
+
+Swal.fire('Le NINET est composé de 13 chiffres.');
+} else {
+
+var s1,
+s2,
+tab = $.trim($('#repertoire_ninea').val()).split("");
+
+s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]) + parseInt(tab[8]) + parseInt(tab[10]);
+s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]) + parseInt(tab[9]) + parseInt(tab[11]);
+var rest = 10 - (s1 + 2 * s2) % 10;
+   if(rest==10)
+      rest=0;
+if (parseInt(tab[12]) != rest) {
+
+Swal.fire('Le NINET n\'est pas valide .');
+
+}
+
+}
+
+}
+});  // end function 
+
+//});
+
+
+
+
+//});
+
+$('#btnSuivantIdentification').click(function () {
+
+
+var typeninea = "";
+if ($.trim($('#repertoire_typeNINEA').val()).length == 0) {
+typeninea = "Le type ninea est obligatoire";
+$('#idtypeninea').text(typeninea);
+$('#repertoire_typeNINEA').addClass('has_error');
+} else {
+var typeninea = "";
+
+$('#idtypeninea').text(typeninea);
+$('#repertoire_typeNINEA').removeClass('has_error');
+}
+
+var denominationSocial = "";
+if ($.trim($('#repertoire_denominationSocial').val()).length == 0) {
+denominationSocial = "La denomination sociale  est obligatoire";
+$('#denominationSocial').text(denominationSocial);
+$('#repertoire_denominationSocial').addClass('has_error');
+} else {
+var denominationSocial = "";
+$('#denominationSocial').text(denominationSocial);
+$('#repertoire_denominationSocial').removeClass('has_error');
+}
+
+var repertoireninea = "";
+
+if ($.trim($('#repertoire_ninea').val()).length == 0) {
+repertoireninea = "Le NINEA/NINET  est obligatoire";
+$('#repertoireninea').text(repertoireninea);
+$('#idninea').addClass('has_error');
+} else {
+var repertoireninea = "";
+if ($('#repertoire_typeNINEA').val() == 1) {
+
+var s1,
+s2,
+tab = $.trim($('#repertoire_ninea').val()).split("");
+
+s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
+s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
+var rest = 10 - (s1 + 2 * s2) % 10;
+
+if(rest==10)
+   rest = 0;
+
+if (parseInt(tab[8]) != rest) {
+
+	repertoireninea = 'Le NINEA n\'est pas valide .';
+	$('#repertoireninea').text(repertoireninea);
+	$('#repertoire_ninea').addClass('has_error');
+
+} else {
+	$('#repertoireninea').text(repertoireninea);
+	$('#repertoire_ninea').removeClass('has_error');
+	if ($('#submited').val() != 0) {
+
+	repertoireninea = 'Le NINEA a déjà un numero de CUCI . ';
+	$('#repertoireninea').text(repertoireninea);
+	$('#repertoire_ninea').addClass('has_error');
+
+	} else {
+	$('#repertoireninea').text("");
+	$('#repertoire_ninea').removeClass('has_error');
+	}
+}
+
+
+}
+
+
+
+
+
+if ($('#repertoire_typeNINEA').val() == 2) {
+
+var s1,
+s2,
+tab = $.trim($('#repertoire_ninea').val()).split("");
+
+s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]) + parseInt(tab[8]) + parseInt(tab[10]);
+s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]) + parseInt(tab[9]) + parseInt(tab[11]);
+var rest = 10 - (s1 + 2 * s2) % 10;
+if(rest==10)
+   rest = 0;
+if (parseInt(tab[12]) != rest) {
+
+repertoireninea = 'Le NINET n\'est pas valide .';
+$('#repertoireninea').text(repertoireninea);
+$('#repertoire_ninea').addClass('has_error');
+
+} else {
+$('#repertoireninea').text(repertoireninea);
+$('#repertoire_ninea').removeClass('has_error');
+if ($('#submited').val() != 0) {
+
+repertoireninea = 'Le NINEA a déjà un numero de CUCI . ';
+$('#repertoireninea').text(repertoireninea);
+$('#repertoire_ninea').addClass('has_error');
+
+} else {
+$('#repertoireninea').text("");
+$('#repertoire_ninea').removeClass('has_error');
+}
+}
+
+}
+}
+
+var numeroRegistreCommerce = "";
+if ($.trim($('#repertoire_numeroRegistreCommerce').val()).length == 0) {
+numeroRegistreCommerce = "Le numéro de registre commerce  est obligatoire";
+$('#numeroRegistreCommerce').text(numeroRegistreCommerce);
+$('#repertoire_numeroRegistreCommerce').addClass('has_error');
+} else {
+var numeroRegistreCommerce = "";
+$('#numeroRegistreCommerce').text(numeroRegistreCommerce);
+$('#repertoire_numeroRegistreCommerce').removeClass('has_error');
+
+if ($('#notsubmited').val() != 0) {
+
+repertoireninea = 'Le RCCM éxiste déjà . ';
+$('#numeroRegistreCommerce').text(repertoireninea);
+$('#repertoire_numeroRegistreCommerce').addClass('has_error');
+
+} else {
+$('#numeroRegistreCommerce').text(repertoireninea);
+$('#repertoire_numeroRegistreCommerce').removeClass('has_error');
+}
+}
+
+
+var activitePrincipale = "";
+if ($.trim($('#repertoire_activitePrincipale').val()).length == 0) {
+activitePrincipale = "L'activité principale  est obligatoire";
+$('#activitePrincipale').text(activitePrincipale);
+$('#repertoire_activitePrincipale').addClass('has_error');
+} else {
+var activitePrincipale = "";
+$('#activitePrincipale').text(activitePrincipale);
+$('#repertoire_activitePrincipale').removeClass('has_error');
+}
+
+
+var syscoa = "";
+if ($.trim($('#idsyscoa').val()).length == 0) {
+syscoa = "Le syscoa  est obligatoire";
+$('#syscoa').text(syscoa);
+$('#idsyscoa').addClass('has_error');
+} else {
+var syscoa = "";
+$('#syscoa').text(syscoa);
+$('#idsyscoa').removeClass('has_error');
+}
+
+
+var naema = "";
+if ($.trim($('#idnaema').val()).length == 0) {
+naema = "Le naema  est obligatoire";
+$('#naema').text(naema);
+$('#idnaema').addClass('has_error');
+} else {
+var naema = "";
+$('#naema').text(naema);
+$('#idnaema').removeClass('has_error');
+}
+
+
+var naemas = "";
+if ($.trim($('#idnaemas').val()).length == 0) {
+naemas = "Le naemas  est obligatoire";
+$('#naemas').text(naemas);
+$('#idnaemas').addClass('has_error');
+} else {
+var naemas = "";
+$('#naemas').text(naemas);
+$('#idnaemas').removeClass('has_error');
+}
+
+
+var citi = "";
+if ($.trim($('#idciti').val()).length == 0) {
+citi = "Le citi  est obligatoire";
+$('#citi').text(citi);
+$('#idciti').addClass('has_error');
+} else {
+var citi = "";
+$('#citi').text(citi);
+$('#idciti').removeClass('has_error');
+}
+
+
+if ($('#notsubmited').val() ==1 || $('#submited').val() ==1 || typeninea != "" || denominationSocial != "" || repertoireninea != "" || numeroRegistreCommerce != "" || activitePrincipale != "" || syscoa != "" || naema != "" || naemas != "" || citi != "") {
+return false;
+} else {
+$('#identification').removeClass('active ');
+$('#home').removeClass('active ');
+$('#coordonnee').addClass('active ');
+$('#coordonnee').attr('href', '#coordonnees');
+$('#coordonnees').addClass('active');
+
+}
+});
+
+
+$('#btnPrecedentCoordonnee').click(function () {
+$('#coordonnee').removeClass('active ');
+$('#coordonnees').removeClass('active ');
+$('#identification').addClass('active ');
+$('#identification').attr('href', '#home');
+$('#home').addClass('active');
+});
+});
+
+
+$('#btnPrecedentContact').click(function () {
+$('#contact').removeClass('active ');
+$('#contacts').removeClass('active ');
+$('#coordonnee').addClass('active ');
+$('#coordonnee').attr('href', '#coordonnees');
+$('#coordonnees').addClass('active');
+});
+
+$('#btnSuivantContact').click(function () {
+$('#contact').removeClass('active ');
+$('#contacts').removeClass('active ');
+$('#complement').addClass('active ');
+$('#complements').attr('href', '#complement');
+$('#complements').addClass('active');
+});
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{{ form_start(form) }}
+
+    <div  style="border: 1px solid #ccc;">
+            <div >
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <br>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.admcode) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.admcode)}}</span>
+                                    {{form_widget(form.admcode)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.admlibelle) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.admlibelle)}}</span>
+                                    {{form_widget(form.admlibelle)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.admContactDetails) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.admContactDetails)}}</span>
+                                    {{form_widget(form.admContactDetails)}}
+                                </div>
+                            </div>
+                            
+
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <button class="btn btn-secondary m-1">{{ button_label|default('Sauvegarder') }}</button>
+                                </div>
+                            </div>
+                    </div> 
+                    <br>
+                </div>
+            </div>
+        
+    </div>
+
+{{ form_end(form) }}

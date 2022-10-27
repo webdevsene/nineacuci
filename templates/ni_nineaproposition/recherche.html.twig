@@ -1,0 +1,343 @@
+{% extends 'ninea.html.twig' %}
+{% block title %} Recherche {% endblock %}
+{% block stylesheets %}
+
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link	href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}" rel="stylesheet">
+	<!-- App favicon -->
+	<link	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
+
+	<!-- Bootstrap Css -->
+	<link	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+	<!-- Icons Css -->
+	<link	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+	<!-- App Css-->
+	<link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+
+		.fieldcolor {
+			background-color: #eeeeee;
+		}
+
+		legend {
+			color: black;
+			font-size: 12px;
+		}
+	</style>
+
+{% endblock %}
+
+{% block body %}
+
+
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                {% for message in app.session.flashbag.get('message')%}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-xl-12">
+									<div class="mt-4">										
+										<div class="accordion" id="accordionExample">
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="headingOne">
+													<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+														Consultation NINEA
+													</button>
+												</h2>
+
+												<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+													<div class="accordion-body">
+														<form action="{{ path('ni_nineaproposition_recherche')}}">
+															<div class="col-lg-12">
+																	<div class="row">
+																		<div class="col-lg-6">
+																			<table style="width: 100%;">
+																				<tr class="form-control mb-2">
+																					<td style="width: 70%;">
+																						<label for="basicpill-firstname-input">Numéro Demande	</label>
+																					</td>
+																					<td >
+																						<input type="text" name="numdemande" id="" value="{{ ninnumerodemande}}">
+																						<span style="color: red;" id="idDmande"></span>
+																					</td>
+																				</tr>
+																				<tr class="form-control mb-2 ">
+																					<td style="width: 30%;">Forme Unité
+																						<span style="color:red;">*</span>						
+																					</td>
+																					<td style="width: 50%;">
+																						<select name="formeunite" class="form-control form-control-sm" id="idformeunite">
+																							<option value="" selected>Sélctionner ...</option>
+																								{% for tag in formeunites %}											
+																										<option value="{{ tag.id}}">	{{ tag.libelle}}</option>
+																								{% endfor %}												
+																						</select>
+																						<span style="color: red;" id="ninpersonne"></span>
+																					</td>
+																				</tr>
+																			</table>
+																			<table style="width: 100%;">
+																				<tr class="form-control mb-2">
+																					<td style="width: 30%;">
+																						<label for="basicpill-firstname-input">Régime juridique		</label>
+																					</td>
+																					<td >
+																						<select style="margin-left: 20%; width: 80%;" name="formejuridique" id="idFormejuridique" class="form-control form-control-sm">
+																							
+																						</select>
+																						<span style="color: red;" id="ninformejuridique"></span>
+																					</td>
+																				</tr>
+																			</table>
+												
+																			<table style="width: 100%;">
+																				<tr class="form-control mb-2">
+																					<td style="width: 70%;">
+																						<label for="basicpill-firstname-input">Statut		</label>
+																					</td>
+																					<td>
+																						<input type="text" name="statut">
+																						<span style="color: red;" id="ninstatut"></span>
+																					</td>
+																				</tr>
+																			</table>
+																		</div>
+												
+																		<div class="col-lg-6">	
+																			<table style="width: 100%;">
+																				<tr class="form-control mb-2 ">
+																					<td style="width: 70%;">
+																						<label for="basicpill-firstname-input">Raison sociale
+																							<span style="color:red;">*</span>
+																						</label>
+																					</td>
+																					<td >
+																						<input type="text" name="raisonsociale">
+																					</td>
+																				</tr>
+																			</table>
+												
+																			<table style="width: 100%;">
+																				<tr class="form-control mb-2">
+																					<td style="width: 70%;">
+																						<label for="basicpill-firstname-input">Prénom</label>
+																					</td>
+																					<td >
+																						<input type="text" name="prenom">
+																					</td>
+																				</tr>
+																			</table>
+																			
+																			<table style="width: 100%;">
+																				<tr class="form-control mb-2">
+																					<td style="width: 70%;">
+																						<label for="basicpill-firstname-input">Nom</label>
+																					</td>
+																					<td >
+																						<input type="text" name="nom">
+																					</td>
+																				</tr>
+																			</table>		
+																			<table style="width: 100%;">
+																				<tr class="form-control">
+																					<td style="width: 70%;">
+																						<label for="basicpill-firstname-input">CNI/Passport</label>
+																					</td>
+																					<td style="width: 50%;">
+																						<input type="text" name="cni">
+																					</td>
+																				</tr>
+																			</table>				
+																		</div>
+																							
+																	</div>
+																<div>
+																	<input type="submit" value="Rechercher" name="rechercher">
+																</div>
+															</div>
+														</form>
+
+													</div>
+												</div>
+											</div>
+											
+										</div>
+										<!-- end accordion -->
+									</div>
+								</div>
+								<!-- end col -->
+
+								
+								<!-- end col -->
+							</div>
+							<!-- end row -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		
+        </div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+		
+						<h4 class="card-title">Résultats</h4>
+						<p class="card-title-desc"></p>
+		
+						{% for message in app.session.flashbag.get('message')%}
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							{{message}}
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+		
+						{% endfor%}
+		
+						<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+							<thead class="bg-primary bg-gradient p-4" style="color: white;">
+								<tr>
+									<th><input type="checkbox" name="" id=""></th>
+									<th>Numéro de demande</th>
+									<th>Raison</th>
+									<th>Administration</th>
+									<th>Statut	</th>
+									<th>Date</th>
+									<th></th>
+								</tr>
+							</thead>		
+		
+							<tbody>
+								{% for ni_nineaproposition in niNineaproposition %}
+								<tr>
+		
+									<td><input type="checkbox" name="" id=""></td>
+									<td>{{ ni_nineaproposition.ninnumerodemande }}</td>
+									<td>
+										{% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 1 %} {{ni_nineaproposition.niPersonnes[0].ninPrenom}} {{ ni_nineaproposition.niPersonnes[0].ninNom}} 
+										{% else %} {{ ni_nineaproposition.niPersonnes[0].ninRaison}} 
+										{% endif %}
+									</td>
+									<td>{{ ni_nineaproposition.createdBy.prenom}} {{ ni_nineaproposition.createdBy.nom}}</td>
+		
+									<td>
+										{% if ni_nineaproposition.statut == "c" %}
+											<span class="badge badge-pill badge-soft-info font-size-11">En cours</span> 
+										{% else %} 
+											{% if ni_nineaproposition.statut == "v" %}
+												<span class="badge badge-pill badge-soft-success font-size-11">Valider	</span> 
+											{% else %}
+												<span class="badge badge-pill badge-soft-danger font-size-11">Rejeter</span> 
+											{% endif %} 
+										{% endif %}
+									</td>
+									<td>{{ ni_nineaproposition.ninmajdate | date("d/m/Y") }}</td>
+		
+									
+								</tr>
+							</tbody>
+							{% else %}
+							<tr>
+								<td colspan="108">Pas de données trouvées</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+		
+		
+					</div>
+				</div>
+			</div>
+			<!-- end col -->
+		</div>
+
+    </div>
+</div>
+
+<!-- end card -->
+{% endblock %}
+
+{% block javascript %}
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/jszip/jszip.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}} "></script><!-- Responsive examples --><script src="{{ asset( 'admin/dist/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}} "></script><!-- Datatable init js --><script src="{{ asset( 'admin/dist/assets/js/pages/dataTables.init.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/select2/js/select2.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}} "></script><!-- Sweet Alerts js --><script src="{{ asset( 'admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}} "></script><!-- Sweet alert init js--><script src="{{ asset( 'admin/dist/assets/js/pages/sweet-alerts.init.js')}} "></script><!-- init js -->{#
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											<script src="assets/js/pages/ecommerce-select2.init.js "></script> #}<!-- form advanced init --><script src="{{ asset( 'admin/dist/assets/js/pages/form-advanced.init.js')}} "> </script><!-- jquery step --><script src="{{ asset( 'admin/dist/assets/libs/jquery-steps/build/jquery.steps.min.js')}} "></script><!-- form wizard init --><script src="{{ asset( 'admin/dist/assets/js/pages/form-wizard.init.js')}} "></script><!-- nouvelle adaptation wizard--><script src="{{ asset( 'admin/dist/assets/js/jquery.validate.min.js')}} "></script>
+	<script src=" {{ asset('admin/dist/assets/libs/parsleyjs/parsley.min.js')}}  "></script>
+	<script src=" {{ asset('admin/dist/assets/js/pages/form-validation.init.js')}} "></script>
+
+
+	<script>
+		// controle sur le type de personne et le régime juridique
+		var $nipersonne = $('#idformeunite');
+
+		// When type personne gets selected ...
+		$nipersonne.change(function () {		
+
+			let formejuridique = document.getElementById("idFormejuridique");
+			formejuridique.innerHTML = "";
+
+			let opt = document.createElement('option');
+			opt.innerHTML = "Sélectionner ...";
+			opt.value = '';
+			formejuridique.add(opt);
+
+			{% for tag in formejuridiques %}
+				if ($nipersonne.val() == '{{ tag.niFormeunite.id }}') 
+				{
+				let opt = document.createElement('option');
+				opt.value = "{{ tag.id }}";
+				opt.innerHTML = "{{ tag.fojLibelle }}";
+				formejuridique.add(opt);
+				}
+
+			{% endfor %}
+				
+				
+		});
+
+	</script>
+{% endblock %}

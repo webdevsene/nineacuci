@@ -1,0 +1,554 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NiCessation{% endblock %}
+
+{% block body %}
+   <div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Demande de cessation
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+  
+                         <table class="table">
+        <tbody>
+            
+            <tr>
+                <th>Motif</th>
+                <td>{{ ni_cessation.motif }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ ni_cessation.description }}</td>
+            </tr>
+            <tr>
+                <th>DateCessation</th>
+                <td>{{ ni_cessation.dateCessation ? ni_cessation.dateCessation|date('d/m/Y') : '' }}</td>
+            </tr>
+			<tr>
+				<th>
+					Agent demandeur 
+				</th>
+				<td>
+					<label for=""  class="TXT">{{ ni_cessation.createdBy ? ni_cessation.createdBy.prenom : ""}} {{ ninea.createdBy ? ninea.createdBy.nom : ""}}</label>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Administration 	
+				</th>
+				<td>
+					<label for=""  class="TXT">{{ ni_cessation.createdBy.niAdministration.admlibelle}}</label>
+				</td>
+			</tr>
+			
+			{% if ni_cessation.etat == "r" %}
+				<tr>
+					<th>
+						Remarques 	
+					</th>
+					<td>
+						<label for=""  class="TXT">{{ ni_cessation.remarque}}</label>
+					</td>
+				</tr>
+			{% endif %}
+			
+        </tbody>
+    </table>
+                          
+
+                       
+                                
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+     <div class="box-footer">
+     {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
+          {% if ni_cessation.etat == "a" %}
+         <a href="{{ path('app_ni_cessation_valider', {'id': ni_cessation.id}) }}" title="valider" id="modification" class="btn btn-outline-success btn-sm edit">
+            Valider
+         </a>
+
+		 <a type="button" id="retourner" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+										data-bs-target=".btnretour">Retourner </a>
+
+		<a type="button" id="rejeter" class="btn btn-outline-danger btn-sm " data-bs-toggle="modal"
+										data-bs-target=".btnrejeter">Rejeter </a>
+         {% endif %}
+      {% endif %}
+                  
+     </div>
+</div>
+
+   
+
+  
+  <div class="row">
+
+		<div class="col-xl-12">
+		
+			<div>
+				<div class="accordion mb-3" id="accordionExample">
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne">
+							<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								<h5 class="font-size-14">NINEA</h5>
+							</button>
+							
+						</h2>
+						<div id="collapseOne" class="accordion-collapse  " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								<div class="text-muted">
+									<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+									<div class="row mb-0">
+										<div class="col-lg-12">
+											<fieldset class=" p-2 fieldcolor ">
+												<div class="row">
+													<div class="col-lg-6">
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" class="TXT" ><b><u> NINEA : </u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ni_cessation.ninea.ninNinea}}</label>	
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" ><b><u>Forme unité :</u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ni_cessation.ninea.formeJuridique.niFormeunite.libelle}}</label>	
+																</td>
+															</tr>
+						
+															<tr>
+																<td style="width: 30%;">
+																	<label  for="basicpill-firstname-input"><b><u>Régime juridique :</u></b> 
+																		
+																	</label>
+																</td>
+																<td style="width: 70%;">
+																	<label class="TXT" for="basicpill-firstname-input">{{ni_cessation.ninea.formeJuridique.fojLibelle}}</label>
+																	
+																</td>
+															</tr>
+															
+															<tr>
+																<td style="width: 30%;">
+																	<label  for="basicpill-firstname-input"><b><u>Etat :</u></b> 
+																		
+																	</label>
+																</td>
+																<td style="width: 70%;">
+																	<label class="TXT" for="basicpill-firstname-input">{{ ni_cessation.ninea.ninEtat != 0 ? "Activé":"Désactivé"}}</label>
+																	
+																</td>
+															</tr>
+														{#	<tr>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
+																	</label>
+																</td>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" class="TXT">	{{ninea.ninStatut.statLibelle}}</label>
+						
+																</td>
+															</tr> #}
+													
+														</table>
+													</div>
+						
+													<div class="col-lg-6">
+														<table style="width: 100%;">
+
+															{% if ni_cessation.ninea.formeJuridique.id == 26  or ni_cessation.ninea.formeJuridique.id == 96 or ni_cessation.ninea.formeJuridique.id == 99 %}
+																{% if ni_cessation.ninea.formeJuridique.id != 99 %}
+
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninEnseigne}}</label>
+																		</td>
+																	</tr>
+																{% endif %}
+																{% if ni_cessation.ninea.ninTitrefoncier != "" %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u> Titre foncier:</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninTitrefoncier}}</label>
+
+																		</td>
+																	</tr>
+																
+																{% else %}
+																{% if  ni_cessation.ninea.ninBail != ""  %}
+																		<tr>
+																			<td style="width: 30%;">
+																				<label for=""> <b><u> Bail:</u></b> </label>
+																			</td>
+																			<td style="width: 70%;">
+																				<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninBail}}</label>
+
+																			</td>
+																		</tr>
+																{% else  %}
+																	{% if  ni_cessation.ninea.ninPermisoccuper != ""  %}
+																		<tr>
+																			<td style="width: 30%;">
+																				<label for=""> <b><u> Permis d'occuper:</u></b> </label>
+																			</td>
+																			<td style="width: 70%;">
+																				<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninPermisoccuper}}</label>
+
+																			</td>
+																		</tr>
+																	{% endif %}
+																{% endif %}
+															{% endif %}
+																
+															{% elseif ni_cessation.ninea.formeJuridique.id == 98 or  ni_cessation.ninea.formeJuridique.id == 94 %}
+
+															{% elseif ni_cessation.ninea.formeJuridique.id == 90 %}
+
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b>	 											</label>
+																	</td>
+																	<td style="width: 50%;">
+																		<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninEnseigne}}</label>
+							
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 30%;">
+																		<label for=""> <b><u> Accord:</u></b> </label>
+																	</td>
+																	<td style="width: 70%;">
+																		<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninAccord}}</label>
+
+																	</td>
+																</tr>
+
+															{% elseif ni_cessation.ninea.formeJuridique.id == 92 %}
+																<tr>
+																	<td style="width: 30%;">
+																		<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																	</td>
+																	<td style="width: 70%;">
+																		<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninEnseigne}}</label>
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 30%;">
+																		<label for=""> <b><u> Bordereau:</u></b> </label>
+																	</td>
+																	<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninBordereau}}</label>
+																	</td>
+																</tr>
+
+															{% elseif ni_cessation.ninea.formeJuridique.id == 29  or ni_cessation.ninea.formeJuridique.id == 91	 %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninEnseigne}}</label>
+																		</td>
+																	</tr>	
+																{% if ninea.ninRegcom != "" %}
+																		<tr>
+																			<td style="width: 30%;">
+																				<label for=""> <b><u>Régistre de commerce :</u></b> </label>
+																			</td>
+																			<td style="width: 70%;">
+																				<label for="" class="TXT">{{ni_cessation.ninea.ninRegcom}}</label>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="width: 30%;">
+																				<label for=""> <b><u>Date de régistre :</u></b> </label>
+																			</td>
+																			<td style="width: 70%;">
+																				<label for=""  class="TXT">{{ni_cessation.ninea.ninDatreg|date('d/m/Y')}}</label>
+																			</td>
+																		</tr>
+																{% else %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u> Bordereau:</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninBordereau}}</label>
+																		</td>
+																	</tr>
+																{% endif %}
+
+															{% elseif ni_cessation.ninea.formeJuridique.id == 27	%}
+																<tr>
+																	<td style="width: 30%;">
+																		<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																	</td>
+																	<td style="width: 70%;">
+																		<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninEnseigne}}</label>
+																	</td>
+																</tr>
+
+																{% if ni_cessation.ninea.ninRegcom != "" %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u>Régistre de commerce :</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="" class="TXT">{{ni_cessation.ninea.ninRegcom}}</label>
+													
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u>Date de régistre :</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for=""  class="TXT">{{ni_cessation.ninea.ninDatreg|date('d/m/Y')}}</label>
+
+																		</td>
+																	</tr>
+																{% else %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u> Agrément:</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for=""  class="TXT">{{ni_cessation.ninea.ninAgrement}}</label>
+
+																		</td>
+																	</tr>
+																{% endif %}
+				
+															{% elseif ni_cessation.ninea.formeJuridique.id == 44  or ni_cessation.ninea.formeJuridique.id == 48 %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninEnseigne}}</label>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u> Agrément:</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<label for="basicpill-firstname-input" class="TXT">{{ni_cessation.ninea.ninAgrement}}</label>
+
+																		</td>
+																	</tr>
+
+															{% elseif ni_cessation.ninea.formeJuridique.id == 50  or ni_cessation.ninea.formeJuridique.id == 51 or ninea.formeJuridique.id == 52
+																		or ninea.formeJuridique.id == 54 or ninea.formeJuridique.id == 55 or ninea.formeJuridique.id == 59 %}
+																		<tr>
+																			<td style="width: 30%;">
+																				<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																			</td>
+																			<td style="width: 70%;">
+																				<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="width: 30%;">
+																				<label for=""> <b><u> Récépissé:</u></b> </label>
+																			</td>
+																			<td style="width: 70%;">
+																				<label for="basicpill-firstname-input" class="TXT">{{ninea.ninRecepisse}}</label>
+
+																			</td>
+																		</tr>
+
+																{% elseif ninea.formeJuridique.id == 32  or ninea.formeJuridique.id == 40 or ninea.formeJuridique.id == 41
+																	or ninea.formeJuridique.id == 42 or ninea.formeJuridique.id == 43 or ninea.formeJuridique.id == 45 or ninea.formeJuridique.id == 46 
+																	or ninea.formeJuridique.id == 47 or ninea.formeJuridique.id == 56 or ninea.formeJuridique.id == 97 or ninea.formeJuridique.id == 95 %}
+																			<tr>
+																				<td style="width: 30%;">
+																					<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																				</td>
+																				<td style="width: 70%;">
+																					<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="width: 30%;">
+																					<label for=""> <b><u> Arrêté ou decret ou loi:</u></b> </label>
+																				</td>
+																				<td style="width: 70%;">
+																					<label for="basicpill-firstname-input" class="TXT">{{ninea.ninArrete }}</label>
+
+																				</td>
+																			</tr>
+
+																	{% else %}
+																			<tr>
+																				<td style="width: 30%;">
+																					<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																				</td>
+																				<td style="width: 70%;">
+																					<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="width: 30%;">
+																					<label for=""> <b><u>Régistre de commerce :</u></b> </label>
+																				</td>
+																				<td style="width: 70%;">
+																					<label for="" class="TXT">{{ninea.ninRegcom}}</label>
+
+																				</td>
+																			</tr>
+																				<tr>
+																					<td style="width: 30%;">
+																						<label for=""> <b><u>Date de régistre :</u></b> </label>
+																					</td>
+																					<td style="width: 70%;">
+																						<label for=""  class="TXT">{{ninea.ninDatreg|date('d/m/Y')}}</label>
+
+																					</td>
+																				</tr>
+																				
+																	{% endif %}
+
+															<tr>
+																<td>
+																	<label for=""> <b><u>Administration :</u></b>	</label>
+																</td>
+																<td>
+																	<label for=""  class="TXT">{{ ninea.createdBy.niAdministration.admlibelle}}</label>
+																</td>
+															</tr>
+						
+															<tr>
+																<td>
+																	<label for=""> <b><u>Agent demandeur :</u></b>	</label>
+																</td>
+																<td>
+																	<label for=""  class="TXT">{{ ninea.createdBy.prenom}} {{ ninea.createdBy.nom}}</label>
+																</td>
+															</tr>
+														
+														</table>
+													</div>
+												</div>
+											</fieldset>
+											<br>
+										</div>
+									</div>
+								</div>
+
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- end accordion -->
+			</div>
+		</div>
+		<!-- end col -->
+
+	</div>
+
+
+			<div class="modal fade btnrejeter" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h6 class="modal-title" id="mySmallModalLabel">Motifs du rejet de la demande </h6>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							
+							<div id="sidebar">
+								<form    action="{{ path('ni_cessation_rejet',{id:ni_cessation.id}) }}" method="post">
+									<div class="row justify-content-center">
+										<div class="col-lg-12">	
+											<center>							
+												<textarea name="remarque"  cols="20" rows="5" required></textarea>
+											</center>	
+										</div>
+										<div class="col-lg-12">
+											<center><br>
+												<input type="submit" class=" boutonsm" value="Rejeter" width="200px">
+											</center>
+											
+										</div>
+									</div>
+								</form>	
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
+
+
+			<div class="modal fade btnretour" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h6 class="modal-title" id="mySmallModalLabel">Motifs du retour de la demande </h6>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>						
+						<div class="modal-body">							
+							<div id="sidebar">
+								<form    action="{{ path('ni_cessation_retourner',{id:ni_cessation.id}) }}" method="post">
+									<div class="row justify-content-center">
+										<div class="col-lg-12">	
+											<center>							
+												<textarea name="remarque"  cols="20" rows="5" required></textarea>
+											</center>	
+										</div>
+										<div class="col-lg-12">
+											<center><br>
+												<input type="submit" class="boutonsm" value="Retourner" width="200px">
+											</center>
+											
+										</div>
+									</div>
+								</form>	
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
+
+{% endblock %}

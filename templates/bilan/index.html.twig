@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bilan index{% endblock %}
+
+{% block body %}
+    <h1>Bilan index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AmortPR</th>
+                <th>AnneeFinanciere</th>
+                <th>Brut</th>
+                <th>Net1</th>
+                <th>Net2</th>
+                <th>RefCode</th>
+                <th>Status</th>
+                <th>Submit</th>
+                <th>Type</th>
+                <th>TypeRecupperation</th>
+                <th>UploadedFileName</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bilan in bilans %}
+            <tr>
+                <td>{{ bilan.id }}</td>
+                <td>{{ bilan.createdAt ? bilan.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ bilan.updatedAt ? bilan.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ bilan.amortPR }}</td>
+                <td>{{ bilan.anneeFinanciere }}</td>
+                <td>{{ bilan.brut }}</td>
+                <td>{{ bilan.net1 }}</td>
+                <td>{{ bilan.net2 }}</td>
+                <td>{{ bilan.refCode }}</td>
+                <td>{{ bilan.status }}</td>
+                <td>{{ bilan.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ bilan.type }}</td>
+                <td>{{ bilan.typeRecupperation }}</td>
+                <td>{{ bilan.uploadedFileName }}</td>
+                <td>
+                    <a href="{{ path('bilan_show', {'id': bilan.id}) }}">show</a>
+                    <a href="{{ path('bilan_edit', {'id': bilan.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="15">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('bilan_new') }}">Create new</a>
+{% endblock %}

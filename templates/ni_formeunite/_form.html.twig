@@ -1,0 +1,45 @@
+{{ form_start(form) }}
+    <div  style="border: 1px solid #ccc;">
+            <div >
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <br>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.id) }} </b> 
+                                </label>
+                            
+                                <div class="col-md-4 col-sm-4 ">
+                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.id)}}</span>
+                                    {{form_widget(form.id)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> {{ form_label(form.libelle) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.libelle)}}</span>
+                                    {{form_widget(form.libelle)}}
+                                </div>
+                            </div>
+                            
+
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-1 col-sm-3 " for="first-name"><b> </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <button class="btn btn-secondary">Sauvegarder</button>
+                                </div>
+                            </div>
+                    </div> 
+                    <br>
+                </div>
+            </div>
+        
+    </div>
+{{ form_end(form) }}

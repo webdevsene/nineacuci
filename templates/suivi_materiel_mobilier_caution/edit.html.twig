@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SuiviMaterielMobilierCaution{% endblock %}
+
+{% block body %}
+    <h1>Edit SuiviMaterielMobilierCaution</h1>
+
+    {{ include('suivi_materiel_mobilier_caution/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_suivi_materiel_mobilier_caution_index') }}">back to list</a>
+
+    {{ include('suivi_materiel_mobilier_caution/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,322 @@
+{% block stylesheets %}
+	<style>
+	
+	</style>
+{% endblock %}
+
+<div class="accordion-item">
+	<h2 class="accordion-header" id="headingTwo">
+		<button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			Ajouter Personne
+		</button>
+	</h2>
+	
+</div>
+
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+	<div class="card-body">
+		<form action="{{path('ajouterPersonnes',{id:app.request.attributes.get('id')})}}" method="post">
+			{% if (niNineaproposition.ninFormejuridique.niFormeunite.id == 1) %}
+				<div id="idPPhysique">
+					<div class="row">
+						<div class="col-lg-6">
+							<fieldset class="border p-2">
+								<legend class=" float-none w-auto p-2">
+									Etat civil
+								</legend>
+								<table style="width: 100%;">
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Nationalité</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;">
+											<select class="form-control form-control-sm" name="nationalite"  id="idnationalite_personne">
+												<option value="" selected>
+													Sélectionner</option>
+												{% for tag in nationalites %}
+													<option value="{{tag.id}}" {% if tag.id=="07" %} selected {% endif %}>
+														{{ tag.libelle}}</option>
+												{% endfor %}
+											</select>
+											<span style="color: red;" id="ninationalite"></span>
+										</td>
+									</tr>
+								</table>
+		
+								<div id="tableCni_personne">
+									<table  style="width: 100%;">
+										<tr id="trcni">
+											<td style="width: 40%;">
+												<label for="" class="TXT">CNI</label>
+												<span style="color: red;">*</span>
+											</td>
+											<td style="width: 60%;" >
+												<input type="text" name="cni" id="idcni" class="form-control form-control-sm">
+												<span style="color: red;" id="nincni"></span>
+											</td>
+										</tr>
+			
+										<tr id="trcni">
+											<td style="width: 40%;">
+												<label for="" class="TXT">Date de délivrance CNI</label>
+												<span style="color: red;">*</span>
+											</td>
+											<td style="width: 60%;" >
+												<input type="date" name="datecni" id="idDatecni" class="form-control form-control-sm">
+												<span style="color: red;" id="nincni"></span>
+											</td>
+										</tr>
+									</table>
+								</div>
+								
+								<div  id="tablePassport_personne">
+									<table style="width: 100%;">
+										<tr id="trPassport">
+											<td style="width: 40%;">
+												<label for="" class="TXT">
+													Passport</label>
+												<span style="color: red;">*</span>
+											</td>
+											<td style="width: 60%;">
+												<input type="text" name="passport" id="idDatepassport" class="form-control form-control-sm">
+												<span style="color: red;" id="ninpassport"></span>
+											</td>
+										</tr>
+			
+										<tr id="trDatePassport">
+											<td style="width: 40%;">
+												<label for="" class="TXT">Date du passport</label>
+											</td>
+											<td style="width: 50%;">
+												<input type="date" name="datepassport" id="idDatepassport" class="form-control form-control-sm">
+												<span style="color: red;" id="nindatepassport"></span>
+											</td>
+										</tr>
+									</table>
+								</div>
+		
+								<table style="width: 100%;">
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Civilite</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 30%;">
+											<select class="form-control form-control-sm" name="civilite" id="idCivilite">
+												<option value="" selected>Sélectionner			</option>
+												{% for tag in civilites %}
+													<option value="{{ tag.id}}">		{{ tag.civlibelle}}</option>
+												{% endfor %}
+											</select>
+											<span style="color: red;" id="nincivil"></span>
+										</td>
+									</tr>
+		
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Prénom</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;">
+											<input type="text" name="prenom"  id="prenom" class="form-control form-control-sm">
+											<span style="color: red;" id="ninprenom"></span>
+										</td>
+									</tr>
+		
+									<tr>
+										<td style="width: 40%;">
+											<label for="">Nom</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;">
+											<input type="text" name="nom" id="idnom" class="form-control form-control-sm">
+											<span style="color: red;" id="ninnom"></span>
+										</td>
+									</tr>
+		
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Sexe</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;">
+											<select class="form-select form-select-sm" name="sexe" id="idsexe"></select>
+											<span style="color: red;" id="ninsexe"></span>
+		
+										</td>
+									</tr>
+		
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Date de naissance</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;">
+											<input type="date" name="datenais" id="idDatenais"  class="form-control form-control-sm">
+											<span style="color: red;" id="nindatenais"></span>
+										</td>
+									</tr>
+		
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Lieu de naissance</label>
+										</td>
+										<td style="width: 60%;">
+											<input type="text" name="lieunais" id="idlieunais" class="form-control form-control-sm">
+											<span style="color: red;" id="ninlieunais"></span>
+										</td>
+									</tr>
+									
+								</table>		
+							</fieldset>
+							
+						</div>
+		
+						<div class="col-lg-6">
+							<fieldset class="border p-2">
+								<legend class=" float-none w-auto p-2">
+									Adresses
+								</legend>
+								<table style="width: 100%;">
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Téléphone</label>
+										</td>
+										<td style="width: 60%;">
+											<input type="text" name="telephone" id="idtelpersonne" value="" class="form-control form-control-sm">
+											<span style="color: red;" id="nintelpersonne"></span>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 40%;">
+											<label for="" class="TXT">Email</label>
+										</td>
+										<td style="width: 60%;">
+											<input type="text" name="email" id="idemailpersonne" value="" class="form-control form-control-sm">
+											<span style="color: red;" id="ninemail_personne"></span>
+										</td>
+									</tr>
+		
+									<tr>
+										<td>
+											<label for="numvoie" class="TXT">Région</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td>
+											<select class="form-control form-control-sm select2 " name="region" id="region" style="width: 100%;">
+												<option>Choississez la région</option>
+												{% for tag in regions %}
+													<option value="{{tag.id}}">{{tag.libelle}}</option>
+													{% endfor%}
+												</select>
+												<span style="color: red;" id="ninregion"></span>
+											</td>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label for="numvoie" class="TXT">Départements</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td>
+											<select class="form-control form-control-sm select2 select_personne" name="departement" id="departement" style="width: 100%;">
+												<option>Select</option>
+											</select>
+											<span style="color: red;" id="nindepartement"></span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label for="numvoie" class="TXT">CAV:</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td>
+											<select class="form-control form-control-sm select2" name="cav" id="cav" style="width: 100%;">
+												<option>Select</option>
+											</select>
+											<span style="color: red;" id="nincav"></span>
+										</td>
+									</tr>
+		
+									<tr>
+										<td>
+											<label for="basicpill-firstname-input" class="TXT">
+												CACR</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td>
+											<select class="form-control form-control-sm select2" name="cacr" id="cacr" style="width: 100%;">
+												<option></option>
+											</select>
+											<span style="color: red;" id="nincacr"></span>
+										</td>
+									</tr>
+									<tr>
+		
+										<td style="width: 30%;">
+											<label for="basicpill-firstname-input" class="TXT">
+												Quartier/Village/Hameau:</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 70%;">
+											<select class="form-control form-control-sm select2" name="qvh" id="qvh" style="width: 100%;">
+												<option></option>
+											</select>
+											<span style="color: red;" id="ninqvh"></span>
+										</td>
+									</tr>	
+								</table>	
+							</fieldset>
+		
+						</div>
+					</div>
+
+				</div>
+			{% else %}
+				{% if (niNineaproposition.ninFormejuridique.niFormeunite.id == 2) %}
+					<div id="idMorale"  class="col-lg-6" >
+						<fieldset class="border p-2">
+							<legend class=" float-none w-auto p-2">
+								Identification
+							</legend>					
+							<table style="width: 100%;">
+								<tr >
+									<td style="width: 40%;">
+										<label for="" class="TXT">Raison sociale</label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 55%;" >
+										<input type="text" name="raison" id="idraison" value="{{niNineaproposition.ninRaison}}"  class="form-control form-control-sm">
+										<span style="color: red;" id="ninraison"></span>
+									</td>
+								</tr>
+
+								<tr >
+									<td style="width: 40%;">
+										<label for="" class="TXT">Sigle</label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 55%;" >
+										<input type="text" name="sigle" id="idSigle" class="form-control form-control-sm" value="{{niNineaproposition.ninSigle}}">
+										<span style="color: red;" id="ninsigle"></span>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</div>
+				{% endif %}
+			{% endif %}
+					<div class="row mt-3">
+						<div class="col-lg-8">		</div>
+						<div class="col-lg-4" align="right">
+							<input type="submit" value="Ajouter" name="ajouter">
+							<input type="button"  data-bs-dismiss="modal" aria-label="Close" value="Annuler" name="annuler">
+						</div>
+					</div>
+		</form>
+	</div>
+
+</div>
+
+

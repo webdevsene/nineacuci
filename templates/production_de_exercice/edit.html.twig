@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ProductionDeExercice{% endblock %}
+
+{% block body %}
+    <h1>Edit ProductionDeExercice</h1>
+
+    {{ include('production_de_exercice/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_production_de_exercice_index') }}">back to list</a>
+
+    {{ include('production_de_exercice/_delete_form.html.twig') }}
+{% endblock %}

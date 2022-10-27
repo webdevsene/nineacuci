@@ -1,0 +1,885 @@
+{% extends 'ninea.html.twig' %}
+{% block title %}New NiNineaproposition
+{% endblock %}
+{% block stylesheets %}
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+	</style>
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link
+	href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}" rel="stylesheet">
+	<!-- App favicon -->
+	<link
+	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
+
+	<!-- Bootstrap Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+	<!-- Icons Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+	<!-- App Css-->
+	<link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block body %}
+	{{ form_start(form) }}
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+				<div class="card-body">
+
+
+					<div
+						id="basic-example">
+
+						<!-- Company Document -->
+						<h5>Identification</h5>
+						<section>
+							<div>
+								<div class="row">
+
+									<div class="col-lg-6">
+										<div class="mb-3 ">
+											{{form_errors(form.ninPers)}}
+											<label for="basicpill-firstname-input">{{form_label(form.ninPers)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninPers)}}
+
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="mb-3 ">
+											{{form_errors(form.ninRegime)}}
+											<label for="basicpill-firstname-input">{{form_label(form.ninRegime)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninRegime)}}
+
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="mb-3  ">
+											{{form_errors(form.ninStatut)}}
+											<label for="validationCustom03">{{form_label(form.ninStatut)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninStatut)}}
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="mb-3 ">
+											{{form_errors(form.ninEnseigne)}}
+											<label for="validationCustom03">{{form_label(form.ninEnseigne)}}</label>
+											{{form_widget(form.ninEnseigne)}}
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- Seller Details -->
+						<h5 id="test">Personne
+						</h5>
+						<section>
+							<div id="PPhysique">
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninCivil)}}
+											<label for="validationCustom03">{{form_label(form.ninCivil)}}</label>
+											{{form_widget(form.ninCivil)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninPrenom)}}
+											<label for="validationCustom03">{{form_label(form.ninPrenom)}}<span style="color:red;">*</span>
+											</label>
+											<div>
+												{{form_widget(form.ninPrenom)}}
+												<span style="color: red;" id="ninPrenom"></span>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNom)}}
+											<label for="validationCustom03">{{form_label(form.ninNom)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninNom)}}
+											<span style="color: red;" id="ninNom"></span>
+
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninSexe)}}
+											<label for="validationCustom03">{{form_label(form.ninSexe)}}</label>
+											{{form_widget(form.ninSexe)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNommari)}}
+											<label for="validationCustom03">{{form_label(form.ninNommari)}}</label>
+											{{form_widget(form.ninNommari)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninDatNais)}}
+											<label for="validationCustom03">{{form_label(form.ninDatNais)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninDatNais)}}
+											<span style="color: red;" id="ninDatNais"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											<label for="basicpill-firstname-input">Lieu de Naissance
+												<span style="color:red;">*</span>
+											</label>
+											<div>
+												{{form_widget(form.ninLieunais)}}
+												<span style="color: red;" id="ninLieunais"></span>
+											</div>
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNational)}}
+											<label for="validationCustom03">{{form_label(form.ninNational)}}</label>
+											{{form_widget(form.ninNational)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninadressedomicile)}}
+											<label for="validationCustom03">{{form_label(form.ninadressedomicile)}}</label>
+											{{form_widget(form.ninadressedomicile)}}
+
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninCni)}}
+											<label for="validationCustom03">{{form_label(form.ninCni)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninCni)}}
+											<span style="color: red;" id="ninCni"></span>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+
+											<label for="validationCustom03">Confirmation CNI/Passport
+												<span style="color:red;">*</span>
+											</label>
+											<input type="text" class="form-control" id="ninCni_Conforme" name "ninCni_Conforme" placeholder="Confirmation CNI">
+											<span style="color: red;" id="Conforme"></span>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.nindatecni)}}
+											<label for="validationCustom03">{{form_label(form.nindatecni)}}</label>
+											{{form_widget(form.nindatecni)}}
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="PMorale">
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninRaison)}}
+											<label for="validationCustom03">{{form_label(form.ninRaison)}}</label>
+											{{form_widget(form.ninRaison)}}
+
+
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninSigle)}}
+											<label for="validationCustom03">{{form_label(form.ninSigle)}}</label>
+											{{form_widget(form.ninSigle)}}
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+
+
+						<!-- Bank Details -->
+						<h5>Coordonnées</h5>
+						<section>
+							<div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNvoie)}}
+											<label for="validationCustom03">{{form_label(form.ninNvoie)}}</label>
+											{{form_widget(form.ninNvoie)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninType)}}
+											<label for="validationCustom03">{{form_label(form.ninType)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninType)}}
+											<span style="color: red;" id="ninType"></span>
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninVoie)}}
+											<label for="validationCustom03">{{form_label(form.ninVoie)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninVoie)}}
+											<span style="color: red;" id="ninVoie"></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninBoitpost)}}
+											<label for="validationCustom03">{{form_label(form.ninBoitpost)}}</label>
+											{{form_widget(form.ninBoitpost)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninVille)}}
+											<label for="validationCustom03">{{form_label(form.ninVille)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninVille)}}
+											<span style="color: red;" id="ninVille"></span>
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninAdresse)}}
+											<label for="validationCustom03">{{form_label(form.ninAdresse)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninAdresse)}}
+											<span style="color: red;" id="ninAdresse"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											<label for="validationCustom03">{{form_label(form.ninLocaliteadm)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninLocaliteadm)}}
+											<span style="color: red;" id="ninLocalite"></span>
+											{{form_errors(form.ninLocaliteadm)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEmail)}}
+											<label for="validationCustom03">{{form_label(form.ninEmail)}}</label>
+											{{form_widget(form.ninEmail)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninTelephon)}}
+											<label for="validationCustom03">{{form_label(form.ninTelephon)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninTelephon)}}
+											<span style="color: red;" id="ninTelephon"></span>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</section>
+
+
+						<!-- Confirm Details -->
+						<h5>
+							DGID</h5>
+						<section>
+							<div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninCsf)}}
+											<label for="validationCustom03">{{form_label(form.ninCsf)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninCsf)}}
+											<span style="color: red;" id="ninCsf"></span>
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninlocalitedgid)}}
+											<label for="validationCustom03">{{form_label(form.ninlocalitedgid)}}</label>
+											{{form_widget(form.ninlocalitedgid)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninControle)}}
+											<label for="validationCustom03">{{form_label(form.ninControle)}}</label>
+											{{form_widget(form.ninControle)}}
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninPerception)}}
+											<label for="validationCustom03">{{form_label(form.ninPerception)}}</label>
+											{{form_widget(form.ninPerception)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninFpm)}}
+											<label for="validationCustom03">{{form_label(form.ninFpm)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninFpm)}}
+											<span style="color: red;" id="ninFpm"></span>
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninImposition)}}
+											<label for="validationCustom03">{{form_label(form.ninImposition)}}<span style="color:red;">*</span>
+											</label>
+											{{form_widget(form.ninImposition)}}
+											<span style="color: red;" id="ninImposition"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+
+
+						<h5>
+							CSS</h5>
+						<section>
+							<div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninAgencecss)}}
+											<label for="validationCustom03">{{form_label(form.ninAgencecss)}}</label>
+											{{form_widget(form.ninAgencecss)}}
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</section>
+
+
+						<!-- Confirm Details -->
+						<h5>Autres</h5>
+						<section>
+							<div class="tab-pane" id="autresInfos" role="tabpanel">
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninActivitedps)}}
+											<label for="validationCustom03">{{form_label(form.ninActivitedps)}}</label>
+											{{form_widget(form.ninActivitedps)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEffectif)}}
+											<label for="validationCustom03">{{form_label(form.ninEffectif)}}</label>
+											{{form_widget(form.ninEffectif)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEffect1)}}
+											<label for="validationCustom03">{{form_label(form.ninEffect1)}}</label>
+											{{form_widget(form.ninEffect1)}}
+
+										</div>
+									</div>
+								</div>
+
+								<div class="row"></div>
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEffectiffem)}}
+											<label for="validationCustom03">{{form_label(form.ninEffectif)}}</label>
+											{{form_widget(form.ninEffectiffem)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEffectiffemsais)}}
+											<label for="validationCustom03">{{form_label(form.ninEffectiffemsais)}}</label>
+											{{form_widget(form.ninEffectiffemsais)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninRegcom)}}
+											<label for="validationCustom03">{{form_label(form.ninRegcom)}}</label>
+											{{form_widget(form.ninRegcom)}}
+
+										</div>
+									</div>
+
+								</div>
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3 ">
+											{{form_errors(form.ninDatreg)}}
+											<label for="validationCustom03">{{form_label(form.ninDatreg)}}</label>
+											{{form_widget(form.ninDatreg)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNumattrib)}}
+											<label for="validationCustom03">{{form_label(form.ninNumattrib)}}</label>
+											{{form_widget(form.ninNumattrib)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEmploy)}}
+											<label for="validationCustom03">{{form_label(form.ninEmploy)}}</label>
+											{{form_widget(form.ninEmploy)}}
+
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninsiglemere)}}
+											<label for="validationCustom03">{{form_label(form.ninsiglemere)}}</label>
+											{{form_widget(form.ninsiglemere)}}
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNineamere)}}
+											<label for="validationCustom03">{{form_label(form.ninNineamere)}}</label>
+											{{form_widget(form.ninNineamere)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEtat)}}
+											<label for="validationCustom03">{{form_label(form.ninEtat)}}</label>
+											{{form_widget(form.ninEtat)}}
+
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninEtabt)}}
+											<label for="validationCustom03">{{form_label(form.ninEtabt)}}</label>
+											{{form_widget(form.ninEtabt)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninMatri)}}
+											<label for="validationCustom03">{{form_label(form.ninMatri)}}</label>
+											{{form_widget(form.ninMatri)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninnompresidentgiesociete)}}
+											<label for="validationCustom03">{{form_label(form.ninnompresidentgiesociete)}}</label>
+											{{form_widget(form.ninnompresidentgiesociete)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninAutorisation)}}
+											<label for="validationCustom03">{{form_label(form.ninAutorisation)}}</label>
+											{{form_widget(form.ninAutorisation)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninMode)}}
+											<label for="validationCustom03">{{form_label(form.ninMode)}}</label>
+											{{form_widget(form.ninMode)}}
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninOcc)}}
+											<label for="validationCustom03">{{form_label(form.ninOcc)}}</label>
+											{{form_widget(form.ninOcc)}}
+										</div>
+									</div>
+
+								</div>
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninNature)}}
+											<label for="validationCustom03">{{form_label(form.ninNature)}}</label>
+											{{form_widget(form.ninNature)}}
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninCapital)}}
+											<label for="validationCustom03">{{form_label(form.ninCapital)}}</label>
+											{{form_widget(form.ninCapital)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninAffaires)}}
+											<label for="validationCustom03">{{form_label(form.ninAffaires)}}</label>
+											{{form_widget(form.ninAffaires)}}
+
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninAnnee_ca)}}
+											<label for="validationCustom03">{{form_label(form.ninAnnee_ca)}}</label>
+											{{form_widget(form.ninAnnee_ca)}}
+
+										</div>
+									</div>
+
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.ninCreation)}}
+											<label for="validationCustom03">{{form_label(form.ninCreation)}}</label>
+											{{form_widget(form.ninCreation)}}
+
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.nindatesuspension)}}
+											<label for="validationCustom03">{{form_label(form.nindatesuspension)}}</label>
+											{{form_widget(form.nindatesuspension)}}
+
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<div class="mb-3">
+											{{form_errors(form.nindatereprise)}}
+											<label for="validationCustom03">{{form_label(form.nindatereprise)}}</label>
+											{{form_widget(form.nindatereprise)}}
+
+										</div>
+									</div>
+
+								</div>
+
+							</section>
+
+
+						</div>
+
+					</div>
+					<!-- end card body -->
+				</div>
+				<!-- end card -->
+			</div>
+			<!-- end col -->
+		</div>
+		<!-- end row -->
+
+		<div class="col-md-1" align="right" style="display:none">
+			<button id="btnSauvegarder" class="btn btn-primary ">Sauvegarder</button>
+		</div>
+
+		{{ form_end(form) }}
+	{% endblock %}
+	{% block javascript %}
+
+
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}} "></script>
+
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/jszip/jszip.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}} "></script>
+
+		<!-- Responsive examples -->
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}} "></script>
+
+		<!-- Datatable init js -->
+		<script src="{{ asset( 'admin/dist/assets/js/pages/dataTables.init.js')}} "></script>
+
+
+		<script src="{{ asset( 'admin/dist/assets/libs/select2/js/select2.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}} "></script>
+		<script src="{{ asset( 'admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}} "></script>
+		<!-- Sweet Alerts js -->
+		<script src="{{ asset( 'admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}} "></script>
+
+		<!-- Sweet alert init js-->
+		<script src="{{ asset( 'admin/dist/assets/js/pages/sweet-alerts.init.js')}} "></script>
+
+		<!-- init js -->
+		{#
+		    <script src="assets/js/pages/ecommerce-select2.init.js "></script> #}
+
+		<!-- form advanced init --><script src="{{ asset( 'admin/dist/assets/js/pages/form-advanced.init.js')}} "> </script>
+
+		<!-- jquery step -->
+		<script src="{{ asset( 'admin/dist/assets/libs/jquery-steps/build/jquery.steps.min.js')}} "></script>
+
+		<!-- form wizard init -->
+		<script src="{{ asset( 'admin/dist/assets/js/pages/form-wizard.init.js')}} "></script>
+
+
+		<script>
+			$(document).ready(function () {
+
+$('#ni_nineaproposition_ninPers').change(function () {
+// alert(" pers change ");
+// alert($('#ni_nineaproposition_ninPers').val());
+if ($('#ni_nineaproposition_ninPers').val() == "1 ") {
+$('#PMorale').hide();
+$('#PPhysique').show();
+// document.getElementById("PMorale ").style.display = none;
+// document.getElementById("PPhysique ").style.display = block;
+} else if ($('#ni_nineaproposition_ninPers').val() == "2 ") {
+$('#PMorale').show();
+$('#PPhysique').hide();
+// document.getElementById("PPhysique ").style.display = none;
+// document.getElementById("PMorale ").style.display = block;
+}
+
+// ... retrieve the corresponding form.
+var $form = $(this).closest('form');
+// Simulate form data, but only include the selected sport value.
+var data = {};
+// data[$ni_nineaproposition_ninPers.attr('name')] = $ni_nineaproposition_ninPers.val();
+
+// Submit data via AJAX to the form's action path.
+$.ajax({
+url: $form.attr('action'),
+type: $form.attr('method'),
+data: data,
+complete: function (html) { // Replace current position field ...
+$('#ni_nineaproposition_ninRegime').replaceWith(
+// ... with the returned one from the AJAX response.
+$(html.responseText).find('#ni_nineaproposition_ninRegime')
+);
+// Position field now displays the appropriate positions.
+},
+error: function (error) {
+console.log(error);
+}
+});
+
+
+});
+
+$('#ni_nineaproposition_ninCni').change(function () { // alert($('#ni_nineaproposition_ninCni').val());
+if ($.trim($('#ninCni_Conforme').val()).length != 0 && $('#ni_nineaproposition_ninCni').val() != $('#ninCni_Conforme').val()) {
+document.getElementById("ninCni_Conforme ").value = " ";
+Swal.fire('CNI non conforme.');
+}
+
+});
+
+$('#ninCni_Conforme').change(function () {
+if ($('#ni_nineaproposition_ninCni').val() != $('#ninCni_Conforme').val()) { // alert("CNI non conforme ");
+document.getElementById("ninCni_Conforme ").value = " ";
+Swal.fire('CNI non conforme.');
+}
+// $("#sectionPersonnePhysique ").hide();
+// $("#ni_nineaproposition_ninPrenom ").show();
+
+});
+
+
+$('#VALIDER').click(function () {
+
+var ninPers = " ";
+if ($.trim($('#ni_nineaproposition_ninPers').val()).length == 0) {
+ninPers = "Le type de personne est obligatoire ";
+$('#ninPers').text(ninPers);
+$('#ni_nineaproposition_ninPers').addClass('has_error');
+} else {
+ninPers = " ";
+$('#ninPers').text(ninPers);
+$('#ni_nineaproposition_ninPers').removeClass('has_error');
+}
+
+var ninRegime = " ";
+if ($.trim($('#ni_nineaproposition_ninRegime').val()).length == 0) {
+ninRegime = "Le régime est obligatoire ";
+$('#ninRegime').text(ninRegime);
+$('#ni_nineaproposition_ninRegime').addClass('has_error');
+} else {
+ninRegime = " ";
+$('#ninRegime').text(ninRegime);
+$('#ni_nineaproposition_ninRegime').removeClass('has_error');
+}
+
+var ninStatut = " ";
+if ($.trim($('#ni_nineaproposition_ninStatut').val()).length == 0) {
+ninStatut = "Le statut est obligatoire ";
+$('#ninStatut').text(ninStatut);
+$('#ni_nineaproposition_ninStatut').addClass('has_error');
+} else {
+ninStatut = " ";
+$('#ninStatut').text(ninStatut);
+$('#ni_nineaproposition_ninStatut').removeClass('has_error');
+}
+
+
+var ninPrenom = " ";
+if ($.trim($('#ni_nineaproposition_ninPrenom').val()).length == 0) {
+ninPrenom = "Le prénom est obligatoire ";
+$('#ninPrenom').text(ninPrenom);
+$('#ni_nineaproposition_ninPrenom').addClass('has_error');
+} else {
+ninPrenom = " ";
+$('#ninPrenom').text(ninPrenom);
+$('#ni_nineaproposition_ninPrenom').removeClass('has_error');
+}
+
+var ninNom = " ";
+if ($.trim($('#ni_nineaproposition_ninNom').val()).length == 0) {
+ninNom = "Le Nom est obligatoire ";
+$('#ninNom').text(ninNom);
+$('#ni_nineaproposition_ninNom').addClass('has_error');
+} else {
+ninNom = " ";
+
+$('#ninNom').text(ninNom);
+$('#ni_nineaproposition_ninNom').removeClass('has_error');
+}
+
+
+var ninDatNais = " ";
+if ($.trim($('#ni_nineaproposition_ninDatNais').val()).length == 0) {
+ninDatNais = "La date de naissance est obligatoire ";
+$('#ninDatNais').text(ninDatNais);
+$('#ni_nineaproposition_ninDatNais').addClass('has_error');
+} else {
+ninDatNais = " ";
+
+$('#ninDatNais').text(ninDatNais);
+$('#ni_nineaproposition_ninDatNais').removeClass('has_error');
+}
+
+var ninLieunais = " ";
+if ($.trim($('#ni_nineaproposition_ninLieunais').val()).length == 0) {
+ninLieunais = "Le lieu de naissance est obligatoire ";
+$('#ninNom').text(ninLieunais);
+$('#ni_nineaproposition_ninLieunais').addClass('has_error');
+} else {
+ninLieunais = " ";
+
+$('#ninLieunais').text(ninLieunais);
+$('#ni_nineaproposition_ninLieunais').removeClass('has_error');
+}
+
+
+});
+
+
+$('#btnSauvegarder').click(function (e) {
+
+e.preventDefault();
+
+var form = $(this).closest("form").submit();
+
+});
+
+
+});
+		</script>
+
+
+		{# fonction javascript sur les select #}
+	{% endblock %}

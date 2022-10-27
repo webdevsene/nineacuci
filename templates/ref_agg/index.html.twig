@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RefAgg index{% endblock %}
+
+{% block body %}
+
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+             <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active"><a href="{{path('ref_agg_new')}}" class="btn btn-secondary" style="color:#fff;">Ajouter<br></a></li>
+             </ol>
+
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+  <div class="col-12">
+    {% for message in app.session.flashbag.get('message')%}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{message}}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div> 
+
+        {% endfor%}
+    <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+      <div class="card-body " style="margin: 0%;padding: 0%;">
+        <table id="agg" class="table table-bordered  table-hover nowrap w-100">
+            <thead style="background:#efefef; margin-top: 0px;">
+            <tr>
+                <th> <center><b>Catégorie</b><br> <input id="ninea" type="text" class="form-control filter"
+                    data-column-index="0"></center> </th>
+                <th>
+                    <center>  <b>Type</b>
+                    <input  type="text" class="form-control filter"
+                        data-column-index="1" width="100%"></center>
+                
+                </th>
+                <th>
+                    <center>
+                    <b>Parent</b>
+                    <input  type="text" class="form-control filter"
+                    data-column-index="2"></center>
+                </th>
+                <th>
+                    <center>
+                    <b>Code</b>
+                    <input  type="text" class="form-control filter"
+                    data-column-index="3"></center>
+                </th>
+                <th> <center>
+                    <b>Libelle</b>
+                  <input  type="text" class="form-control filter"
+                    data-column-index="4"></center>
+                </th>
+                <th> <center>
+                    <b>Ordre</b>
+                 <input  type="text" class="form-control filter"
+                    data-column-index="5"></center>
+                </th>
+                <th></th>
+              
+             
+            </tr>
+            </thead>
+            <tbody style="color: #5a5a5a; font-size: 12px;">
+                 {% for ref_agg in ref_aggs %}
+                     <tr>
+                        <td>
+                            {{ref_agg.category ? ref_agg.category.libelle : '' }}
+                        </td>
+                        <td>
+                          
+
+                            {{ref_agg.typeBilan ? ref_agg.typeBilan.libelle : '' }}
+
+                        </td>
+                        <td>{{ ref_agg.parent }}</td>
+                        <td>{{ ref_agg.code }}</td>
+                        <td>{{ ref_agg.libelle }}</td>
+                        <td>{{ ref_agg.ordre }}</td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td><a href="{{ path('ref_agg_edit', {'id': ref_agg.id}) }}"><i class="fa fa-edit"></i></a></td>
+                                    <td>
+                                        {{ include('ref_agg/_delete_form.html.twig') }}
+                                    </td>
+                                </tr>
+                            </table>
+                           
+                            
+                           
+                             
+                        </td>
+                    </tr>
+                   
+                {% else %}
+                    <tr>
+                        <td colspan="18">no records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div> <!-- end col -->
+</div> <!-- end row -->
+    
+    
+{% endblock %}
+{% block javascript %}
+  
+
+  
+ <!-- Responsive Table js -->
+        <script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+ <!-- Required datatable js -->
+  <script src="{{ asset('admin/dist/assets/js/pages/table-responsive.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+<script >
+
+
+$(document).ready(function() {
+   
+
+   var datatableReherche = $("#agg").DataTable({
+      
+       
+        "sDom": 'B<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+       
+    });
+
+  
+    $('.filter').on('keyup change', function() {
+        //clear global search values
+        datatableReherche.search('');
+        datatableReherche.column($(this).data('columnIndex')).search(this.value).draw();
+    });
+    });
+
+</script>  
+
+
+
+
+
+
+
+{% endblock %}

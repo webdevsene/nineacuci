@@ -1,0 +1,66 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NINEA{% endblock %}
+
+{% block body %}
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                 
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+                                {% for message in app.session.flashbag.get('message')%}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{message}}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                
+                                {% endfor%}
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+  
+
+                     <center>   <h1>Numéro de NINEA généré par l'opération de validation <br><br><span clas="badge w-100 badge-soft-success">{{ninea.ninNinea}}</span></h1> 
+                     <br>
+                     <br>
+                     <br>
+                     <a href="{{ path('a_valider') }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                        Retourner à la liste de Validation des NINEA
+                    </a>
+                     </center> 
+                       
+                                
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+  
+
+   
+
+   
+{% endblock %}
+

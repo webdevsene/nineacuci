@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CAV{% endblock %}
+
+{% block body %}
+    <h1>CAV</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ c_a_v.id }}</td>
+            </tr>
+            <tr>
+                <th>CAVID</th>
+                <td>{{ c_a_v.CAVID }}</td>
+            </tr>
+            <tr>
+                <th>CavActiveF</th>
+                <td>{{ c_a_v.cavActiveF }}</td>
+            </tr>
+            <tr>
+                <th>CavCDATE</th>
+                <td>{{ c_a_v.cavCDATE ? c_a_v.cavCDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CavCUSER</th>
+                <td>{{ c_a_v.cavCUSER }}</td>
+            </tr>
+            <tr>
+                <th>CavCDMIG</th>
+                <td>{{ c_a_v.cavCDMIG }}</td>
+            </tr>
+            <tr>
+                <th>CavCD</th>
+                <td>{{ c_a_v.cavCD }}</td>
+            </tr>
+            <tr>
+                <th>CavDescription</th>
+                <td>{{ c_a_v.cavDescription }}</td>
+            </tr>
+            <tr>
+                <th>CavMDATE</th>
+                <td>{{ c_a_v.cavMDATE ? c_a_v.cavMDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CavMUSER</th>
+                <td>{{ c_a_v.cavMUSER }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('c_a_v_index') }}">back to list</a>
+
+    <a href="{{ path('c_a_v_edit', {'id': c_a_v.id}) }}">edit</a>
+
+    {{ include('cav/_delete_form.html.twig') }}
+{% endblock %}

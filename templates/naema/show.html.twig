@@ -1,0 +1,63 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NAEMA{% endblock %}
+
+{% block body %}
+
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste des jours fériés
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th>Id</th>
+                                        <td>{{ n_a_e_m_a.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Libelle</th>
+                                        <td>{{ n_a_e_m_a.libelle }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <a href="{{ path('n_a_e_m_a_index') }}">Liste des produits</a>
+
+                            <a hidden href="{{ path('n_a_e_m_a_edit', {'id': n_a_e_m_a.id}) }}">Modifier</a>
+
+                            {{ include('naema/_delete_form.html.twig') }}
+  
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+{% endblock %}

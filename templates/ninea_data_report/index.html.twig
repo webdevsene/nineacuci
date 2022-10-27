@@ -1,0 +1,254 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+
+
+{% block body %}
+
+    {% for message in app.flashes('notice') %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-outline me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endfor %}
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                    Exportation/Filtrer des NINEAs
+				</a>
+			</li>
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                                <form id="sample_form" class="repeater" enctype="multipart/form-data" method="post" >
+                                    <div data-repeater-list="group-a">
+
+                                        <div class="" id="process" style="display:none;">
+                                            <div class="progress">
+                                                <!-- <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                    <span id="process_data">0</span> - <span id="total_data">0</span>
+                                                -->
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div id="myProgress">
+                                            <div id="myBar"></div>
+                                        </div> -->
+
+                                        <div data-repeater-item class="row mt-4">
+                                            <div class="mb-3 col-lg-4">
+                                              <label for="" class="form-label">Date de début</label>
+                                              <input type="date" class="form-control form-control-sm" name="var-datedebut" id="var-datedebut" aria-describedby="helpId" placeholder="">
+                                              <small id="helpId" class="form-text text-muted"></small>
+                                            </div>
+
+                                            <div class="mb-3 col-lg-4">
+                                            <label for="" class="form-label">Date de fin</label>
+                                            <input type="date"
+                                                class="form-control form-control-sm" name="var-datefin" id="var-datefin" aria-describedby="helpId" placeholder="" required>
+                                            <small id="helpId" class="form-text text-muted"></small>
+                                            </div>
+
+                                            <div class="mb-3 col-lg-4">
+                                            <label for="" class="form-label">Centre SI</label>
+                                            <input type="text"
+                                                class="form-control form-control-sm" name="var-csi" id="var-csi" aria-describedby="helpId" placeholder="" >
+                                            <small id="helpId" class="form-text text-muted"></small>
+                                            </div>
+                                            
+                                            <div class="col-lg-2 mt-2 align-self-center">
+                                                <div class="d-grid">
+                                                    <input id="submit-templ" name="submit-templ" type="submit" class="btn btn-secondary bg-secondary btn-sm" value="Générer rapport "/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </form> 
+                            </div>
+                            </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+	
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    <script>
+
+    const download = function (data) {
+ 
+        const blob = new Blob(["\ufeff", data], { type: 'text/csv;charset=utf-8;' });
+    
+        const url = window.URL.createObjectURL(blob)
+    
+        // Creating an anchor(a) tag of HTML
+        const a = document.createElement('a')
+    
+        // Passing the blob downloading url
+        a.setAttribute('href', url)
+    
+        // Setting the anchor tag attribute for downloading
+        // and passing the download file name
+        a.setAttribute('download', 'NinenasReport.csv');
+    
+        // Performing a download with click
+        a.click()
+    }
+
+    const csvmaker = function (data) {
+ 
+        // Empty array for storing the values
+        csvRows = [];
+    
+        // Headers is basically a keys of an
+        // object which is id, name, and
+        // profession
+        const headers = Object.keys(data[0]);
+        
+    
+        // As for making csv format, headers
+        // must be separated by comma and
+        // pushing it into array
+        csvRows.push(headers.join(','));
+    
+        // Pushing Object values into array
+        // with comma separation
+        for(i=0; i<data.length; i++){
+
+            const values = Object.values(data[i]).join(',');
+            csvRows.push(values)
+
+        }
+    
+        // Returning the array joining with new line
+        return csvRows.join('\n')
+    }
+            
+    $(document).ready(function(){
+
+        var clear_timer;
+
+        $('#sample_form').on('submit', function(event){
+                
+                var $date1 =  $("#var-datedebut").val(); 
+                var $date2 =  $("#var-datefin").val(); 
+
+                // var rte = "{{ path('app_ninea_data_reports', {'dateDebut': '"+$date1+"' ,'dateFin': '"+$date2+"' })}}";
+                var rte = "{{ path('app_ninea_data_reports') }}"+"/"+$("#var-datedebut").val();
+                rte = rte+"/"+$("#var-datefin").val();
+                console.log(rte);
+
+                // $('#message').html('');
+                event.preventDefault();
+                $.ajax({
+                    url: rte,
+                    method: "GET",
+                    xhr: function(){
+                        var xhr = new window.XMLHttpRequest();
+
+                        xhr.onreadystatechange = function () {
+                            
+                            var rdState = xhr.readyState
+
+                            var progress = 25 * rdState;
+
+                            $('#process').css('display', 'block');
+                            $(".progress-bar").css({"width": progress + "%"});
+
+                            if (progress == 100) {
+                                $(".progress-bar").css({"background-color": "green"});
+
+                            }
+
+                        }
+
+                        return xhr;
+                    },
+                    dataType: "json",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    async: true,
+                    beforeSend: function(){
+                        $('#submit-templ').attr('disabled','disabled');
+                        $('#submit-templ').val('En cours...');
+                    },
+                    success: function(data)
+                    {
+                        if(data)
+                        {
+                            // TODO mapping data to an csv file                           
+                            /*const dataon = data.map(row => ({
+                                ninea: row["ninea"],
+                                raison: row.raison.replace(/,/g, ''), // remove commas to avoid errors
+                                enseigne: row.enseigne,
+                                rccm: row.rccm,
+                                regimejur: row.regimejur,
+                                formeu: row.formeu,
+                                createdAt: row.createdAt,
+                                service: row.service,
+                                statut: row.statut
+                            }));*/
+
+                            const csvdata = csvmaker(data);
+                            download(csvdata);
+                            $('#submit-templ').attr('disabled',false);
+                            $('#submit-templ').val('Générer rapport ');
+                        }
+                        else
+                        {
+                            // $('#message').html('<div class="alert alert-danger">'+data.error+'</div>');
+                            $('#submit-templ').attr('disabled',false);
+                            $('#submit-templ').val('Générer rapport ');
+
+                            $(".progress-bar").css({"background-color": "red"});
+                            Swal.fire('Aucune informations trouvées pour cette recherche !');
+                            return false;
+                        }
+                    }, // end success func
+                })
+        });
+
+        
+    });
+
+        // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000);
+
+    </script>
+{% endblock %}
+

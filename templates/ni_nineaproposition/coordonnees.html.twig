@@ -1,0 +1,211 @@
+
+
+<div class="accordion-item">
+	<h2 class="accordion-header" id="headingTwo">
+		<button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			Ajouter Coordonnees
+		</button>
+	</h2>
+	
+</div>
+
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+	<div class="card-body">
+		<form action="{{ path('ajouterCoordonnees',{id:app.request.attributes.get('id')}) }}" method="post">
+			<div class="row">
+                <div class="col-lg-6">
+
+                    <fieldset class="border p-2">
+                        <legend class=" float-none w-auto p-2">
+                            Localisation</legend>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+                                    <span style="color: red;">*</span>
+                                </td>
+
+                                <td style="width: 70%;">
+                                    <select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie" required>
+                                        <option value="" selected >
+                                            Sélectionner</option>
+                                        {% for tag in typevoies %}
+                                            <option value="{{ tag.id}}">
+                                                {{tag.tyvlibelle}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <span style="color: red;" id="nintypevoie"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="voie" id="idvoie" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="numvoie" id="idNumvoie" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="numvoie" class="TXT"> <b><u>Région : </u></b> </label>
+                                    <span style="color: red;">*</span>
+                                </td>
+                                <td>
+                                    <select class="form-control select2 form-control-sm  " name="region" required id="region_coordonnees" style="width: 100%;">
+                                        <option>Choississez la région</option>
+                                        {% for tag in regions %}
+                                            <option value="{{tag.id}}">{{tag.libelle}}</option>
+                                            {% endfor%}
+                                        </select>
+                                        <span style="color: red;" id="ninregion"></span>
+                                    </td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="numvoie" class="TXT"> <b><u> Département : </u></b> </label>
+                                    <span style="color: red;">*</span>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm   select2" name="departement" required id="departement_coordonnees" style="width: 100%;">
+                                        <option>Select</option>
+                                    </select>
+                                    <span style="color: red;" id="nindepartement"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="numvoie" class="TXT"><b><u>CAV : </u></b></label>
+                                    <span style="color: red;">*</span>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm   select2" name="cav" required id="cav_coordonnees" style="width: 100%;">
+                                        <option>Select</option>
+                                    </select>
+                                    <span style="color: red;" id="nincav"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>           </label>
+                                    <span style="color: red;">*</span>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm   select2" name="cacr" id="cacr_coordonnees" required style="width: 100%;">
+                                        <option></option>
+                                    </select>
+                                    <span style="color: red;" id="nincacr"></span>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td style="width: 30%;">
+                                    <label for="basicpill-firstname-input" class="TXT"><b><u>QVH : </u></b></label>
+                                    <span style="color: red;">*</span>
+                                </td>
+                                <td style="width: 70%;">
+                                    <select class="form-control form-control-sm  select2" name="qvh" id="qvh_coordonnees" required style="width: 100%;">
+                                        <option></option>
+                                    </select>
+                                    <span style="color: red;" id="ninqvh"></span>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </fieldset>
+                </div>
+
+                <div class="col-lg-6">
+                    <fieldset class="border p-2">
+                        <legend class=" float-none w-auto p-2">
+                            Adresses</legend>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>Adresse domicile : </u></b></label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="adresse1" id="idadresse1" value="" required class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>Adresse2 : </u></b></label>
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="adresse2" id="idadresse2" value="" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>Téléphone portable : </u></b></label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="telephone1" id="idtelephone1" value="" required class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>Téléphone fixe : </u></b></label>
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="telephone2" id="idtelephone2" value="" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>Email : </u></b></label>
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="email" id="idemail" value="" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>Boite postale : </u></b></label>
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="bp" id="idbp" value="" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for=""><b><u>URL : </u></b></label>
+                                </td>
+                                <td style="width: 70%;">
+                                    <input type="text" name="url" id="idurl" value="" class="form-control form-control-sm">
+                                </td>
+                            </tr>
+                        </table>
+
+                    </fieldset>
+                </div>
+				<div class="col-lg-8">		</div>
+				<div class="col-lg-4 mt-3" align="right">
+					<input type="submit"  value="Ajouter" name="ajouter">
+					<input   type="button" data-bs-dismiss="modal" aria-label="Close"  value="Annuler" name="annuler">
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+</div>

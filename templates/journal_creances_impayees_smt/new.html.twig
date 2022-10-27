@@ -1,0 +1,377 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Bilan{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+    .larger{
+
+        width: 100%;
+
+    }
+ </style>
+
+
+         
+{% endblock %}
+{% block body %}
+
+        <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between " style="font-size:8px;">
+                <div class=" p-2">
+                    <a href="{{ path('app_bilan_smt_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Bilan smt<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_comptederesultat_smt_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Compte résultat smt<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{path('app_suivi_materiel_mobiliers_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">{{'SUIVI DU MATERIEL, DU MOBILIER ET DES CAUTIONS' | lower | capitalize }}<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{path('app_etat_des_stocks_smt_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">{{'ETAT DES STOCKS' | lower | capitalize }} <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href=" {{path('app_dettes_creances_smt_new')}} " class="btn btn-secondary waves-effect waves-light btn-sm">{{'ETAT DES CREANCES ET DES DETTES NON ECHUES' | lower | capitalize }}<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{path('app_journal_tresorerie_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">{{'JOURNAL DE TRESORERIE' | lower | capitalize }}<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{path('app_journal_creances_impayees_smt_new')}}" class="btn btn-primary waves-effect waves-light btn-sm">{{'JOURNAL DE SUIVI DES CREANCES IMPAYEES' | lower | capitalize }} <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{path('app_journal_dettes_payer_smt_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">{{'JOURNAL DE SUIVI DES DETTES A PAYER' | lower | capitalize }}<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+         <span style="font-size:14px; color:#60b9c7;border-bottom: 1px solid #60b9c7; width:100%;" >Journal de trésoreries SMT </span>
+    </div>
+        <!-- end page title -->
+
+
+ <br>
+<div class="row">
+    <div class="col-xl-12">
+        
+<div class="card paage" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    
+            {{ form_start(form)}}
+    <div class="card-body coorps" style="margin: 0%;padding: 0%;">
+                            <div class="row">
+                             <div class="col-xl-12" > 
+                                  
+                                <table class="table table-bordered " style="margin-top: 0px; padding: 0px;">
+                                    <tr style="margin-top:0px;">
+                                        <td  style="width: 15%;">Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                                            <input  type="text" disabled class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                                        <td style="text-align: right; width: 15%;">Désignation entité :<span style="color:red">*</span></td><td  style="width: 20%;">
+                                            <input type="text" disabled class="form-control form-control-sm" name="" id="denomination"></td>
+                                        <td style="text-align: right; width: 10%;">Année financière :<span style="color:red">*</span></td><td  style="width: 5%;">
+                                         <input  type="text" disabled class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'"></td>
+                                    </tr>
+                                </table>
+                                         
+                                <div class="card">
+                                 <div class="card-body">
+
+                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                         <button type="reset" class="btn btn-secondary waves-effect waves-light resetBtn" 
+                                            id="resetBtn">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                        
+                                         <button type="submit" class="btn btn-success waves-effect waves-light sauvegarder">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </button>
+                                         <button id="validerprodexer" type="button" class="btn btn-dark bt-soft waves-effect waves-light validerprod">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                        <input name="submited" id="submited" type="submit" value="1" style="display:none;"/>
+                                        <input name="notsubmited" id="notsubmited" type="submit" value="0" style="display:none;"/>
+                                     </div>
+                                 </div>
+                                </div>
+                             </div>
+                             <div class="d-flex flex-wrap gap-2 justify-content-between" style="margin-left: 1rem;">
+                                    <button id="ajouterline" type="button" class="btn btn-dark bt-soft opacity-25 waves-effect waves-light ajouterline" data-collection="#idProdexer">
+                                        <i class="bx bx-plus font-size-16 align-middle me-2"></i> Ajouter
+                                    </button>
+                             
+                             </div>
+
+
+                            <div class="col-12">
+                                <div class="table-wrapper">
+                                    <div class="table-responsive mb-3 fixed-solution" data-pattern="priority-columns">
+                                        <table name="form2" id="form2" class="table table-striped table-bordered ">
+                                            <thead style="background: #008000; color:white;">
+
+                                                <!-- t header remplacer ///////////////////////////// -->
+                                                <tr class=" opacity-65" style="background: #008000;">
+                                                    <th scope="col" colspan="2" class="text-center ">
+                                                        <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px;" id="txtcuci-prod"></span> 
+                                                    </th>
+                                                    <th colspan="2" scope="col" class="text-center ">
+
+                                                        <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignation-prod"></span>  
+                                                    </th>
+                                                    <th colspan="2" scope="col" class="text-center ">
+                                                        <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinanciere-prod"></span>
+                                                    </th>
+                                                </tr>
+                                                        <!-- //////////////////////////////////// t header remplacer -->
+
+                                                <tr>
+                                                    <th scope="col" colspan="" class="text-center ">
+                                                    </th>
+
+                                                    <th scope="col" colspan="" class="text-center ">
+                                                        Date
+                                                    </th>
+
+                                                    <th scope="col" colspan="" class="text-center ">
+                                                        N° facture 
+                                                    </th>
+
+                                                    <th scope="col" colspan="" class="text-center ">
+                                                        Nom client 
+                                                    </th>
+
+                                                    <th scope="col" colspan="" class="text-center ">
+                                                        Montant 
+                                                    </th>
+
+                                                    <th scope="ros" colspan="" class="text-center ">
+                                                        Date paiement 
+                                                    </th>
+
+
+                                                </tr>
+                                                
+                                            </thead>
+                                            
+                                    
+                                            <!-- debut tbody inputs -->
+
+                                            <tbody id="idProdexer" data-prototype="{{ include('journal_creances_impayees_smt/_creances_impayees.html.twig', {'form': form.journalCreancesImpayeesSmts.vars.prototype})|e }}" 
+                                                data-index="{{ form.journalCreancesImpayeesSmts|length > 0 ? form.journalCreancesImpayeesSmts|last.vars.name + 1 : 0 }}">
+
+                                              
+                                              {% for row in form.journalCreancesImpayeesSmts %}
+                                                <tr>
+                                                    <td></td>
+                                                    <td>{{ form_widget(row.dateJ) }}</td>
+                                                    <td>{{ form_widget(row.numFacture) }}</td>
+                                                    <td>{{ form_widget(row.nom) }}</td>
+                                                    <td>{{ form_widget(row.montant) }}</td>
+                                                    <td>{{ form_widget(row.datePaiement) }}</td>
+                                                </tr>
+                                              {% endfor %}
+
+                                            </tbody> 
+                                                
+                                            <!-- end tbody -->
+                                            
+                                        
+                                        
+                                        </table>
+                                    
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+
+                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                         <button type="reset" class="btn btn-secondary waves-effect waves-light resetBtn" 
+                                            id="resetBtn">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                         <button type="submit" class="btn btn-success waves-effect waves-light sauvegarder">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </button>
+                                         <button id="validerprod2" type="button" class="btn btn-dark bt-soft waves-effect waves-light validerprod">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                         <button id="myInputID1" type="button" class="btn btn-dark bt-soft waves-effect waves-light myInputID1" style="display:none">
+                                         </button>
+                                     </div>
+                                 </div>
+                            </div>
+                            
+                            <!--<button type="submit" class="btn btn-success waves-effect waves-light">
+                                <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                            </button> -->        
+    {{ form_end(form)}}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+<script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+
+        <!-- Init js -->
+        <!-- form mask init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+
+
+<script type="text/javascript">
+
+    var $validerToto=1;
+    var $tab_item_id = [];
+
+    $(document).ready(function(){
+
+    
+    const newItemProductionExercice = (e) => {
+        var collections = document.querySelector(e.currentTarget.dataset.collection);
+        let index = parseInt(collections.dataset.index);
+        let item = document.createElement("tr");
+        item.setAttribute('style', "border:#ced4da;");
+
+        collections.dataset.index = index + 1;
+        let prototype = collections.dataset.prototype;
+        item.innerHTML = prototype.replace(/__name__/g, index);
+        collections.appendChild(item);
+        
+        item.querySelector(".btn-removeProd").addEventListener("click", () => item.remove());
+        
+        var id_dateJ =  "suivi_materiel_mobilier_util_smt_suiviMaterielMobiliers_"+index+"_dateJ"; 
+        var id_designation =  "suivi_materiel_mobilier_util_smt_suiviMaterielMobiliers_"+index+"_designation"; 
+        var id_montant =  "suivi_materiel_mobilier_util_smt_suiviMaterielMobiliers_"+index+"_montant"; 
+        var id_dateDeSortie =  "suivi_materiel_mobilier_util_smt_suiviMaterielMobiliers_"+index+"_dateDeSortie"; 
+        var id_prixDeCession =  "suivi_materiel_mobilier_util_smt_suiviMaterielMobiliers_"+index+"_prixDeCession"; 
+
+        $tab_item_id.push([
+            id_dateJ,  
+            id_designation, 
+            id_montant, 
+            id_dateDeSortie,    
+            id_prixDeCession
+
+        ]);
+    };
+
+
+    document.querySelectorAll(".ajouterline").forEach(btn => btn.addEventListener("click", newItemProductionExercice));
+    document.getElementById('ajouterline').click();
+
+    $(function(){
+                    $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                    $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")
+                });
+
+    //////////////////////////////////////////////////////////
+        //// 
+    ///////////////////////////////////////////////////
+    
+
+
+    {% if app.session.get("codeCuci")!=""%}
+    
+        var value='{{app.session.get("codeCuci")}}';
+        document.getElementById('txtcuci-prod').innerHTML=value;
+
+        document.getElementById('txtfinanciere-prod').innerHTML='{{app.session.get("annee")}}';
+        document.getElementById("annee").value='{{app.session.get("annee")}}';
+        
+        $('.ajouterline').attr('disabled',false);
+
+
+        document.getElementById('idcuci').setAttribute('value',value);
+        var  route="{{path('nineaNumProduction')}}"+"/"+ value;
+
+                $.ajax({
+                    type: 'GET',
+                    url : route,
+                    dataType : "json",
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 800000,
+                    success: function(data){
+                        
+                        let denomination=document.getElementById("denomination");
+                        document.getElementById('txtdesignation-prod').innerHTML=data;
+                    
+                        denomination.value=data;               
+
+                    },
+                    error : function(error){
+                        console.log(error);
+                    }
+        });
+
+    {% else %}
+        $('.ajouterline').attr('disabled',true);
+
+
+    {% endif %} 
+    
+}); //// end document ready
+
+
+    
+
+$('.validerprod').click(function(e){
+        console.log($validerToto);
+
+        if ($validerToto==1) {
+                var a=$(this);
+                Swal.fire({
+                title:"Confirmation",
+                text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                icon:"warning",
+                showCancelButton:true,
+                confirmButtonText:"Oui",
+                cancelButtonText:"Non",
+                confirmButtonClass:"btn btn-success mt-2",
+                cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                buttonsStyling:!1}).then(function(t)
+                {
+                  if (t.value) {
+                   //var form = $(this).closest("form").submit();
+                   // $(this).closest("form").submit();
+                    document.getElementById("submited").click();
+                  }else
+                      e.preventDefault();
+
+                })
+        }
+
+       
+});
+
+
+
+
+
+
+
+ </script>
+
+{% endblock %}

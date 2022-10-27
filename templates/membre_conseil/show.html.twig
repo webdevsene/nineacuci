@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MembreConseil{% endblock %}
+
+{% block body %}
+    <h1>MembreConseil</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ membre_conseil.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ membre_conseil.createdAt ? membre_conseil.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ModifiedAt</th>
+                <td>{{ membre_conseil.modifiedAt ? membre_conseil.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Addresse</th>
+                <td>{{ membre_conseil.addresse }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ membre_conseil.nom }}</td>
+            </tr>
+            <tr>
+                <th>Position</th>
+                <td>{{ membre_conseil.position }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ membre_conseil.prenom }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('membre_conseil_index') }}">back to list</a>
+
+    <a href="{{ path('membre_conseil_edit', {'id': membre_conseil.id}) }}">edit</a>
+
+    {{ include('membre_conseil/_delete_form.html.twig') }}
+{% endblock %}

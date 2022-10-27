@@ -1,0 +1,1770 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Repertoire{% endblock %}
+{% block stylesheets %}
+
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+    .larger{
+
+        width: 100%;
+
+    }
+ </style>
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}">
+
+         
+{% endblock %}
+
+{% block body %}
+
+
+
+
+<!-- end row -->
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-xl-12">
+        {% for message in app.session.flashbag.get('messageRepertoire')%}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{message}}
+             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div> 
+
+        {% endfor%}
+       
+        <div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+            <div class="card-body">
+                <span style="color: red;"  >        
+                    <table>
+                        <tr>
+                            <td> {{form_errors(form.activitePrincipale)}}</td>
+                            <td>{{form_errors(form.denominationSocial)}} </td>
+                            <td>{{form_errors(form.numeroRegistreCommerce)}} </td>
+                          
+                            <td> {{form_errors(form.telephone1)}}</td>
+                           
+                           
+                            <td> {{form_errors(form.addresseComplete)}}</td>
+                        </tr>
+                    </table>
+                </span>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" style="background: #eeeeee;">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab" id="identification">
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Identifications</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " id="coordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" id="coordonnee">
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Coordonnées entreprise</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab" id="contacts">
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Contact</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#complement" role="tab" id="complements">
+                            <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                            <span class="d-none d-sm-block">Complement Identification</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"  id="activite" data-bs-toggle="tab" href="#activites" role="tab">
+                            <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                            <span class="d-none d-sm-block">Activités principale et secondaires</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#dirigent" id="dirigents" role="tab">
+                            <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                            <span class="d-none d-sm-block">Dirigaents ou Associés principaux</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#filiales" id="filiale" role="tab">
+                            <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                            <span class="d-none d-sm-block">Filiales et participations</span>    
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#autres" role="tab" id="autre">
+                            <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                            <span class="d-none d-sm-block">Autres informations</span>    
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content p-3 text-muted" style="border:3px solid #eeeeee;">
+                    <div class="tab-pane active" id="home" role="tabpanel">
+                       
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.codeCuci)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.codeCuci)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.denominationSocial)}}:<span style="color:red">*</span></label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.denominationSocial)}}
+
+                                               <span style="color: red;" id="denominationSocial" > </span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.sigle)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.sigle)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.enseigne)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.enseigne)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.typeNINEA)}}:<span style="color:red">*</span></label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.typeNINEA)}}
+                                              <span style="color: red;" id="idtypeninea" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.ninea)}}:<span style="color:red">*</span></label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.ninea)}}
+                                               <span style="color: red;" id="repertoireninea" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.clotureDeExercice)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.clotureDeExercice)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dureeDeExercice)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.dureeDeExercice)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.debutExerciceComptable)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.debutExerciceComptable)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.finExerciceComptable)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.finExerciceComptable)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dateArreteEffectif)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.dateArreteEffectif)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.clotureExercicePrecedent)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.clotureExercicePrecedent)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dureeExercicePrecedent)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.dureeExercicePrecedent)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.numeroRegistreCommerce)}}<span style="color:red">*</span></label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.numeroRegistreCommerce)}}
+                                              <span style="color: red;" id="numeroRegistreCommerce" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.numeroCaisseSociale)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.numeroCaisseSociale)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.codeImportateur)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.codeImportateur)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                 <div class="col-lg-12">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+                                        <br>
+                                       Activité principale</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    Libellé<span style="color:red">*</span><br>
+                                     {{form_widget(form.activitePrincipale)}}
+
+                                              <span style="color: red;" id="activitePrincipale" > </span><br>
+                                </div>
+                                 <div class="col-lg-3">
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                   SYCOA <span style="color:red">*</span><br>
+                                    <select disabled class="form-control select2 syscoa" name="categorySyscoa" id="categorySyscoa"  style="width: 100%;" disabled>
+
+                                       
+                                                   <option>Selectionner la catégorie</option>
+													{% for tag in categorySyscoa%}
+													   {% if repertoire.syscoa is not null %}
+														{% if repertoire.syscoa.categorySyscoa.id==tag.id%}
+															<option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+															{% else %}
+															<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+															{% endif %}
+															{% else %}
+															<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+														{% endif %}
+														{% endfor %}
+                                                    
+                                     </select>
+
+                                                <br><br>
+                                            
+                                    <select disabled class="form-control select2 syscoa" name="syscoa" id="idsyscoa"  style="width: 100%;">
+                                        
+                                      
+											{% for tag in syscoa %}
+											    {% if repertoire.syscoa is not null %}
+												{% if repertoire.syscoa.id==tag.id %}
+													<option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+													{% else %}
+													<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+												{% endif %}
+												  	{% else %}
+													<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+												{% endif %}
+											{% endfor %}
+
+
+                                                   
+                                     </select>
+
+                                    <span style="color: red;" id="syscoa" > </span>
+                                </div>
+                                <div class="col-lg-3">
+                                    NAEMA <span style="color:red">*</span><br>
+                                     <select disabled class="form-control select2 syscoa" name="categoryNaema" id="categoryNaema"  style="width: 100%;">
+                                                    <option>Selectionner la catégorie</option>
+                                                   {% for tag in categoryNaema%}
+                                                               {% if repertoire.naema is not null %}
+																{% if repertoire.naema.refNaemaNew.id==tag.id%}
+																	<option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+																	{% else %}
+																	<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+																	{%endif%}
+
+																	{% else %}
+																	<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+
+																	{%endif%}
+
+																	{% endfor%}
+                                            </select>
+
+
+                                              <br>
+                                              <br>
+
+                                           <select disabled class="form-control select2 syscoa" name="naema" id="idnaema"  style="width: 100%;">
+                                                   <option value="">Selectionner le code NAEMA</option>
+                                       {% if repertoire.naema is not null %}
+                                        {% for tag in repertoire.naema.refNaemaNew.naema%}
+                                        
+                                            {% if repertoire.naema.id==tag.id%}
+                                                <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+                                                {% else %}
+                                                <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                {% endif %}
+                                                {% else %}
+                                                <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+
+                                                
+                                                {% endfor %}
+                                                {% endif %}
+                                                    
+                                                   
+                                            </select>
+
+
+                                             <span style="color: red;" id="naema" > </span>
+
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                    NAEMAS <span style="color:red">*</span><br>
+
+                                            <select disabled class="form-control select2 syscoa" name="categoryNaemas" id="categoryNaemas"  style="width: 100%;">
+                                                    <option>Selectionner la catégorie</option>
+                                                   {% for tag in categoryNaemas%}
+                                                    {% if repertoire.naemas is not null %}
+                                                    {% if repertoire.naemas.categoryNaemas.id==tag.id%}
+                                                        <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+                                                        {%else%}
+                                                        <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                        {%endif%}
+                                                    {%else%}
+                                                        <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                        {%endif%}
+                                                    {% endfor%}
+                                            </select>
+
+
+                                              <br>
+                                              <br>
+
+                                           <select disabled class="form-control select2 syscoa" name="naemas" id="idnaemas"  style="width: 100%;">
+                                                     <option value="">Selectionner le code NAEMAS</option>
+                                                                                 {% if repertoire.naemas is not null %}
+																					{% for tag in repertoire.naemas.categoryNaemas.naemas%}
+																					
+																						{% if repertoire.naemas.id==tag.id%}
+																							<option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+																							{%else%}
+																							<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+																							{%endif%}
+
+																							{%else%}
+																							<option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+
+																							
+																							{% endfor%}
+																							{% endif %}
+                                                   
+                                            </select>
+
+                                                <span style="color: red;" id="naemas" > </span>
+                                   
+                                </div>
+                                <div class="col-lg-3">
+                                    CITI <span style="color:red">*</span><br>
+                                    <select disabled class="form-control select2 syscoa" name="categoryCiti" id="categoryCiti"  style="width: 100%;">
+                                                    <option>Selectionner la catégorie</option>
+                                                   		{% for tag in categoryCiti%}
+
+                                                        {% if repertoire.citi is not null %}
+                                                        {% if repertoire.citi.refCategoryCitiNew.id==tag.id%}
+                                                            <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+                                                            {%else%}
+                                                            <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                            {% endif %}
+                                                            {%else%}
+                                                            <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+
+                                                            {% endif %}
+                                                            {% endfor%}
+                                            </select>
+
+
+                                              <br>
+                                              <br>
+
+                                           <select disabled class="form-control select2 syscoa" name="citi" id="idciti"  style="width: 100%;">
+                                                  <option value="">Selectionner le code CITI</option>
+                                       {% if repertoire.citi is not null %}
+                                        {% for tag in repertoire.citi.refCategoryCitiNew.citi%}
+                                        
+                                            {% if repertoire.citi.id==tag.id%}
+                                                <option value="{{tag.id}}" selected>{{tag.id}}-{{tag.libelle}}</option>
+                                                {%else%}
+                                                <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                {%endif%}
+                                                {% else %}
+                                                <option value="{{tag.id}}">{{tag.id}}-{{tag.libelle}}</option>
+                                                
+                                                {% endfor%}
+                                            {%endif%}
+                                                    
+                                                   
+                                            </select>
+
+
+                                               
+                                                <span style="color: red;" id="citi" > 
+
+                                                </span>
+                                                 <br>
+                                                 <br>
+                                                 <br>
+                                   
+                                </div>
+                                
+                            </div>
+                             <div class="row">
+                               
+                                <div class="col-lg-12">
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary"  >Retourner</a>
+
+                                           
+                                        </div>
+                                         
+                                    </div>
+                                </div>
+                            </div>
+                            
+                    </div>
+                    <div class="tab-pane" id="coordonnees" role="tabpanel">
+
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.telephone1)}}:<span style="color:red">*</span></label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.telephone1)}}
+                                               <span style="color: red;" id="idtel1" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.telephone2)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.telephone2)}}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.numeroTelecopie)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.numeroTelecopie)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.boitePostale)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.boitePostale)}}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">Région:<span style="color:red">*</span></label>
+                                       
+                                        <div class="col-md-7">
+                                              
+                                            <select disabled class="form-control select2 syscoa" name="region" id="region"  style="width: 100%;">
+                                                      <option>Choississez la région</option>
+                                                    {% for tag in regions %}
+                                                    {% if repertoire.qvh is not null %}
+                                                    {% if repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id==tag.id%}
+                                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                        {%else%}
+                                                        <option value="{{tag.id}}">{{tag.libelle}}</option>
+                                                        {%endif%}
+                                                        {%else%}
+                                                        <option value="{{tag.id}}">{{tag.libelle}}</option>
+
+                                                        {%endif%}
+                                                        {% endfor%}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> Département:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                            <select disabled class="form-control syscoa select2" name="departement" id="departement" style="width: 100%;">
+                                                <option>Choississez le département</option>
+                                              	{% if repertoire.qvh is not null %}
+                                                {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.departements%}
+                                                    {% if repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.id==tag.id%}
+                                                        <option value="{{tag.id}}" selected>{{tag.description}}</option>
+                                                        {%else%}
+                                                        <option value="{{tag.id}}">{{tag.description}}</option>
+                                                        {%endif%}
+                                                        {% endfor%}
+                                                {%endif%}
+                                                    
+                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">Commune/Arrondissement/Ville:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                            <select disabled class="form-control syscoa select2" name="cav" id="cav" style="width: 100%;">
+                                                    <option>Choississez le CAV</option>
+                                                     <option>Select</option>
+                                   {% if repertoire.qvh is not null %}
+                                                    {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.cAVs%}
+                                                        {% if repertoire.qvh.qvhCACRID.cacrCAVID.id==tag.id%}
+                                                            <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                            {%else%}
+                                                            <option value="{{tag.id}}">{{tag.libelle}}</option>
+                                                            {%endif%}
+                                                            {% endfor%}
+                                                            {% endif %}
+                                            </select>
+                                            <span style="color: red;" id="idqvh" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> Commune d'arrondissement/communauté rurale:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                            <select disabled class="form-control syscoa select2" name="cacr" id="cacr"  style="width: 100%;">
+                                            {% if repertoire.qvh is not null %}
+                                        {% for tag in repertoire.qvh.qvhCACRID.cacrCAVID.cACRs%}
+                                            {% if repertoire.qvh.qvhCACRID.id==tag.id%}
+                                                <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                {%else%}
+                                                <option value="{{tag.id}}">{{tag.libelle}}</option>
+                                                {%endif%}
+                                                {% endfor%}
+                                                {% endif %}
+                                            </select> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> Quartier/Village/Hameau:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                            <select disabled class="form-control syscoa select2" name="qvh" id="qvh"  style="width: 100%;">
+                                               {% if repertoire.qvh is not null %}
+                                                {% for tag in repertoire.qvh.qvhCACRID.qVHs%}
+                                                    {% if repertoire.qvh.id==tag.id%}
+                                                        <option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+                                                        {%else%}
+                                                        <option value="{{tag.id}}">{{tag.libelle}}</option>
+                                                        {%endif%}
+                                                        {% endfor%}
+                                                        {% endif %}
+                                            </select> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.addresseComplete)}}:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.addresseComplete)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.email)}}:</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.email)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                     <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary"  >Retourner</a></center>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="tab-pane" id="contact" role="tabpanel">
+                        <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.NomDuContact)}}:</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.NomDuContact)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.prenomDuContact)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.prenomDuContact)}}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.addresseDuContact)}}:</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.addresseDuContact)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.fonctionDuContact)}}:</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.fonctionDuContact)}}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+                                        <br>
+                                        Détails de Cabinet Comptable ou Expert</label>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input">
+                                            <br>
+                                            <input class="form-check-input" type="radio" name="formRadiosRight"
+                                                                id="formRadiosRight1" checked>
+                                                        Cabinet Comptable
+                                                <input class="form-check-input" type="radio" name="formRadiosRight"
+                                                                id="formRadiosRight2" >Expert
+                                        </label>
+                                       
+                                       
+                                    </div>
+                                </div>
+                               
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                        <div class="cabinet" id="nomDuCabinetlabel">
+                                         {{form_label(form.NomDuCabinet)}}:
+                                         </div>  
+                                        <div class="expert" id="prenomDuExpertlabel">
+                                         {{form_label(form.prenomDuExpert)}}:
+                                         </div> 
+                                        </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div class="cabinet" id="nomDuCabinet">
+                                              {{form_widget(form.NomDuCabinet)}}
+                                            </div> 
+                                            
+                                              <div class="expert" id="prenomDuExpert">
+                                              {{form_widget(form.prenomDuExpert)}}
+                                               </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                     <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        
+                                         <div class="cabinet1" id="telephoneDuCabinetlabel">
+                                                {{form_label(form.telephoneDuCabinet)}}:
+                                              </div>
+                                         </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div class="cabinet"id="telephoneDuCabinet">
+                                                {{form_widget(form.telephoneDuCabinet)}}
+                                                </div>
+                                              
+                                        </div>
+                                    </div>
+                                   
+                                      
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                        <div class="cabinet" id="addresseDuCabinetLabel"> {{form_label(form.addresseDuCabinet)}}:
+                                            </div>
+                                        </label>
+                                        <div class="col-md-7">
+                                            <div class="cabinet" id="addresseDuCabinet">
+                                              {{form_widget(form.addresseDuCabinet)}} 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                             
+                                              <div class="expert" id="nomDuExpertLabel">
+                                             {{form_label(form.nomDuExpert)}}:
+                                             </div> 
+                                        </label>
+                                       
+                                        <div class="col-md-7">
+                                           
+
+
+                                                <div class="expert" id="nomDuExpert">
+                                                {{form_widget(form.nomDuExpert)}}
+                                              </div> 
+                                             
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+                                        <br>
+                                        Commissaire(s) aux comptes</label>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="basicpill-address-input">
+                                        
+                                        </label>
+                                        <div ><br><br>
+                                            <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+                                                <label style="text-align: center;background:#efefef;"> Commissaire(s) aux comptes</label>
+                                            </div>
+                                            <table class="table table table-bordered dt-responsive" id="idtab" width="100%">
+                                                <thead style="background:#efefef;">
+                                                    <tr>
+                                                        <th>Nom</th>
+                                                        <th>Prénom</th>
+                                                        <th>Tél</th>
+                                                        <th>Adresse</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="idCommissaire"  
+                                                       data-prototype="{{include('repertoire/commissaire.html.twig',{'form':form.commissairesComptes.vars.prototype})|e }}"
+                                                       data-index="{{ form.commissairesComptes|length > 0 ? form.commissairesComptes|last.vars.name + 1 : 0 }}">
+
+
+                                                      
+                                                        {% for tag in form.commissairesComptes %}
+                                                        <tr>
+                                                                <td>{{ form_widget(tag.nom) }}</td>
+                                                                <td> {{ form_widget(tag.prenom) }}</td>
+                                                                <td>{{ form_widget(tag.address) }}</td>
+                                                                <td>{{ form_widget(tag.telephone) }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                       
+                                                </tbody>
+                                            </table>
+                                            {{ form_label(form.commissairesComptes) }}                         
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-12">
+                                     <div class="mb-3 row" >
+                                       
+                                       <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary"  >Retourner</a></center>
+                                         
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="complement" role="tabpanel">
+                         <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.formeJuridique)}}:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.formeJuridique)}}
+                                               <span style="color: red;" id="idformeJuridique" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.regimeFiscal)}}:<span style="color:red">*</span></label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.regimeFiscal)}}
+                                              <span style="color: red;" id="idformeFiscal" > </span>
+                                        </div>
+                                    </div>
+                                </div>
+                         </div>
+                         <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.paysDuEntreprise)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.paysDuEntreprise)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.etablissementsDansPays)}}</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.etablissementsDansPays)}}
+                                        </div>
+                                    </div>
+                                </div>
+                         </div>
+                         <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.etablissementsHorsPays)}}</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.etablissementsHorsPays)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.premiereAnneeExercice)}}:</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.premiereAnneeExercice)}}
+                                        </div>
+                                    </div>
+                                </div>
+                         </div>
+                         <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.controle)}}:</label>
+                                        <div class="col-md-7">
+                                              {{form_widget(form.controle)}}
+                                        </div>
+                                    </div>
+                                </div>
+                         </div>
+                         <div class="row">
+                                <div class="col-lg-12">
+                                     <div class="mb-3 row" >
+                                       
+                                        <div class="col-md-12" align="center">
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
+                                </div>
+                         </div>
+                    </div>
+                    <div class="tab-pane" id="activites" role="tabpanel">
+
+                            
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                   
+                                        <label for="basicpill-address-input">
+                                        
+                                        </label>
+                                        <br>
+                                        
+                                    
+                     <table class="table table table-bordered dt-responsive" style="width: 100%;" >
+                                                <thead style="background:#efefef;">
+                                                    <tr style="width:100%;">
+                                                        <th width="100%;"></th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody  id="idActivities" 
+                                                        data-prototype="{{include('repertoire/activities.html.twig',{'form':form.activities.vars.prototype})|e }}"
+                                                        data-index="{{ form.activities|length > 0 ? form.activities|last.vars.name + 1 : 0 }}" >
+                                                </tbody>
+    {% for tag in form.activities %}
+       
+
+        {% if tag.vars.value.activitePrincipale==1 %}
+    <tr  >
+    
+    <td >
+
+        <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+                                            <label style="text-align: center;background:#efefef; font-size: 20px;">Activité  Principale</label>
+        </div>
+
+        <table class="table table table-bordered " width="80%">
+
+            <tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef; width: 80%;">
+                <td>Libellé</td>
+                <td>Chiffre d'affaires</td>
+                <td>Valeur ajoutée</td>
+                <td>Pourcentage</td>
+               
+            </tr>
+            <tr style="width:80%;">
+                <td width="10%;">{{ form_widget(tag.libelleActivitePrincipale) }}</td>
+                <td width="10%;">{{ form_widget(tag.chiffreAffaire) }}</td>
+                <td width="10%;">{{ form_widget(tag.valeurAjoutee) }}</td>
+                <td width="10%;">{{ form_widget(tag.pourcentage) }}</td>
+                
+            </tr>
+            
+        </table> 
+
+       
+        <div class="row">
+            <div class="col-md-6">SYSCOA <br> {{ form_widget(tag.sYSCOA) }}</div>
+            <div class="col-md-6">NAEMA <br> {{ form_widget(tag.nAEMA) }}</div>
+            <div class="col-md-6"><br>NAEMAS <br> {{ form_widget(tag.nAEMAS) }}</div>
+            <div class="col-md-6"><br>CITI <br>{{ form_widget(tag.cITI) }}</div>
+            
+        </div>
+      <div style="display: none;">{{ form_widget(tag.activitePrincipale) }}</div>
+     </td>
+    
+</tr>
+{%endif%}
+{%endfor%}
+
+
+ {% for tag in form.activities %}
+
+{% if tag.vars.value.activitePrincipale==0 %}
+
+<tr  >
+    
+    <td >
+
+       <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+            <label style="text-align: center;background:#efefef; font-size: 20px;">Activités  secondaires</label>
+        </div>
+        <table class="table table table-bordered " width="80%">
+
+            <tr style="text-align: center; border: 2px solid #f7f0f0; background: #efefef; width: 80%;">
+                <td>Libellé</td>
+                <td>Chiffre d'affaires</td>
+                <td>Valeur ajoutée</td>
+                <td>Pourcentage</td>
+            </tr>
+            <tr style="width:80%;">
+                <td width="10%;">{{ form_widget(tag.libelleActivitePrincipale) }}</td>
+                <td width="10%;">{{ form_widget(tag.chiffreAffaire) }}</td>
+                <td width="10%;">{{ form_widget(tag.valeurAjoutee) }}</td>
+                <td width="10%;">{{ form_widget(tag.pourcentage) }}</td>
+            </tr>
+            
+        </table> 
+
+       
+        <div class="row">
+            <div class="col-md-6">SYSCOA <br> {{ form_widget(tag.sYSCOA) }}</div>
+            <div class="col-md-6">NAEMA <br> {{ form_widget(tag.nAEMA) }}</div>
+            <div class="col-md-6"><br>NAEMAS <br> {{ form_widget(tag.nAEMAS) }}</div>
+            <div class="col-md-6"><br>CITI <br>{{ form_widget(tag.cITI) }}</div>
+            
+        </div>
+         <div style="display: none;">{{ form_widget(tag.activitePrincipale) }}</div>
+
+     </td>
+    
+</tr>
+{% endif%}
+
+{%endfor%}
+ </table>
+                                                   
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+                                            <br><br>
+                                            <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary" >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
+                                </div>
+                           </div>
+                    </div>
+                    <div class="tab-pane" id="dirigent" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="basicpill-address-input">
+                                       
+                                        </label>
+                   
+    <div>
+    <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+        <label style="text-align: center;background:#efefef;">Dirigeants</label>
+    </div>
+
+   
+        <table class="table table table-bordered dt-responsive"  width="100%">
+            <thead style="background:#efefef;">
+                 <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Fonction/Qualité</th>
+                    <th>Numero d'identification fiscale</th>
+                    <th>Addresse</th>
+                    <th></th>
+                    
+                </tr>
+                
+            </thead>
+            <tbody id="idDirigeant"
+    data-prototype="{{include('repertoire/dirigeant.html.twig',{'form':form.dirigeants.vars.prototype})|e }}"
+    data-index="{{ form.dirigeants|length > 0 ? form.dirigeants|last.vars.name + 1 : 0 }}">
+    {% for tag in form.dirigeants %}
+    <tr>
+    <td>{{ form_widget(tag.nom) }}</td>
+    <td> {{ form_widget(tag.prenom) }}</td>
+    <td>{{ form_widget(tag.position) }}</td>
+    <td>{{ form_widget(tag.numero) }}</td>
+    <td>{{ form_widget(tag.addresse) }}</td>
+    </tr>
+    {% endfor %} 
+                
+            </tbody>
+               
+            
+        </table>
+                                       
+                                              {{ form_label(form.dirigeants) }}                         
+                                    </div>       
+                                           
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="row">
+                                <div class="col-lg-12">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid #efefef;">
+                                        <br>
+                                        Actionnaire ou associés principaux</label>
+                                       
+                                        
+                                    </div>
+                                </div>
+                               
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="basicpill-address-input">
+                                        
+                                        </label>
+                   
+<div >
+  <br>
+
+    <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+        <label style="text-align: center;background:#efefef;">Actionnaires ou Associés principaux</label>
+    </div>
+
+    <table class="table table table-bordered dt-responsive"  width="100%">
+        <thead style="background:#efefef;">
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Nationalité</th>
+                <th>Montant capital</th>
+                <th>Pourcentage capital</th>
+                <th></th>
+                
+            </tr>
+        </thead>
+        <tbody id="idActionnaire" 
+    data-prototype="{{include('repertoire/actionnaire.html.twig',{'form':form.actionnaires.vars.prototype})|e }}"
+    data-index="{{ form.actionnaires|length > 0 ? form.actionnaires|last.vars.name + 1 : 0 }}">
+
+       {% for tag in form.actionnaires %}
+       <tr>
+            <td>{{ form_widget(tag.nom) }}</td>
+            <td> {{ form_widget(tag.prenom) }}</td>
+            <td>{{ form_widget(tag.pays) }}</td>
+            <td>{{ form_widget(tag.capital) }}</td>
+            <td>{{ form_widget(tag.pourcentage) }}</td>
+        </tr>
+        {% endfor %} 
+            
+        </tbody>
+            
+        
+    </table>
+                                       
+                                              {{ form_label(form.actionnaires) }}                         
+                                    </div>       
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                     <div class="row">
+                                <div class="col-lg-12">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input" style="border-bottom: 1px solid black;">
+                                        <br>
+                                         Membres du conceil d'administration</label>
+                                       
+                                        
+                                    </div>
+                                </div>
+                               
+                        </div>
+        <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="basicpill-address-input">
+                                       
+                                        </label>
+                   
+      <div >
+    <br>
+
+    <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+        <label style="text-align: center;background:#efefef;"> Membres du conceil d'administration</label>
+    </div>
+   
+    <table class="table table table-bordered dt-responsive" id="idtab" width="100%">
+        <thead style="background:#efefef;">
+             <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Fonction/Qualité</th>
+                <th>Addresse</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="idMembreConseil" 
+    data-prototype="{{include('repertoire/membreConseil.html.twig',{'form':form.membreConseils.vars.prototype})|e }}"
+    data-index="{{ form.membreConseils|length > 0 ? form.membreConseils|last.vars.name + 1 : 0 }}">
+
+
+    {% for tag in form.membreConseils %}
+    <tr>
+        <td>{{ form_widget(tag.nom) }}</td>
+        <td> {{ form_widget(tag.prenom) }}</td>
+        <td>{{ form_widget(tag.position) }}</td>
+        <td>{{ form_widget(tag.addresse) }}</td>
+    </tr>
+    {% endfor %}   
+            
+        </tbody>
+           
+        
+    </table>
+   
+          {{ form_label(form.membreConseils) }}                         
+                                    </div>       
+                                           
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div class="row">
+                                <div class="col-lg-12">
+                                    <center> <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary"  >Retourner</a></center>
+                                </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane" id="filiales" role="tabpanel">
+                       
+                    <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="basicpill-address-input">
+                                        
+                                        </label>
+                   
+<div>
+    <label style="text-align: center;"> </label><br>
+
+    <div style="text-align: center; border: 2px solid #f7f0f0; background: #efefef;">
+        <label style="text-align: center;background:#efefef;">Filiales et Participations</label>
+    </div>
+   
+        <table class="table table table-bordered dt-responsive" id="idtab" width="100%">
+            <thead style="background:#efefef;">
+                 <tr>
+                    <th>Désignation</th>
+                    <th>Nationalité</th>
+                    <th>Montant capital</th>
+                    <th>Pourcentage capital</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody  id="idFiliales" 
+    data-prototype="{{include('repertoire/filiales.html.twig',{'form':form.filiales.vars.prototype})|e }}"
+    data-index="{{ form.filiales|length > 0 ? form.filiales|last.vars.name + 1 : 0 }}">
+
+    {% for tag in form.filiales %}
+    <tr>
+    <td>{{ form_widget(tag.designation) }}</td>
+    <td> {{ form_widget(tag.pays) }}</td>
+    <td>{{ form_widget(tag.capital) }}</td>
+    <td>{{ form_widget(tag.pourcentage) }}</td>
+    </tr>
+    {% endfor %}
+                
+            </tbody>
+               
+            
+        </table>
+       
+              {{ form_label(form.membreConseils) }}                         
+                                    </div>       
+                                           
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="row">
+                                <div class="col-lg-12">
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+                                            <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary"  >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
+                                </div>
+                        </div>
+
+                    </div>
+                     <div class="tab-pane" id="autres" role="tabpanel">
+                         <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.systemeComptabilite)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.systemeComptabilite)}}
+                                              
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dateReception)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.dateReception)}}
+                                              
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.statut)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.statut)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.reactivation)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.reactivation)}}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row"  >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.dateMiseAjour)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.dateMiseAjour)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div  style="display: none;" id="iddateReactivationLabel">
+                                            {{form_label(form.dateReactivation)}}:
+                                        </div>
+                                        </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div  style="display: none;" id="iddateReactivation">
+                                              {{form_widget(form.dateReactivation)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                         <div class="row">
+                                <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> {{form_label(form.observation)}}:</label>
+                                       
+                                        <div class="col-md-7">
+                                              {{form_widget(form.observation)}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div style="display: none;" id="idraisonReactivationLabel">
+                                              {{form_label(form.raisonReactivation)}}:
+                                        </div>
+                                      </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div style="display: none;" id="idraisonReactivation">
+                                              {{form_widget(form.raisonReactivation)}}
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                 <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">Cessation :</label>
+                                       
+                                        <div class="col-md-7">
+                                               <input class="form-check-input" type="radio" name="cessation"
+                                                                id="cessationRight" checked>
+                                                        Non
+                                                <input class="form-check-input" type="radio" name="cessation"
+                                                                id="cessationLeft" >OUI
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3 row" >
+                                        <label class="col-md-12" for="basicpill-firstname-input">
+                                            <br>
+                                           
+                                        </label>
+                                       
+                                       
+                                    </div>
+                                </div>
+                               
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+
+                                   <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input">
+                                         <div style="display: none;" id="raisonCessationLabelle"> {{form_label(form.raisonCessation)}}:
+                                          </div>
+                                         </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div style="display: none;" id="raisonCessation">
+                                              {{form_widget(form.raisonCessation)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                   
+                                      <div class="mb-3 row" >
+                                        <label class="col-md-5" for="basicpill-firstname-input"> 
+                                        <div style="display: none;" id="iddateCessationLabel">
+                                              {{form_label(form.dateCessation)}}:
+                                        </div>
+                                      </label>
+                                       
+                                        <div class="col-md-7">
+                                            <div style="display: none;" id="iddateCessation">
+                                              {{form_widget(form.dateCessation)}}
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                     <div class="row">
+                                <div class="col-lg-12">
+                                     <div class="mb-3 row" >
+                                        
+                                       
+                                        <div class="col-md-12" align="center">
+                                             <a href="{{ path('repertoire_index') }}"  class="btn btn-secondary"  >Retourner</a>
+                                        </div>
+                                         
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+                      
+{% endblock %}
+
+
+
+
+
+{% block javascript %}
+
+
+
+
+<script src="{{ asset('admin/dist/assets/libs/select2/js/select2.min.js')}}"></script>
+
+
+  
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}}"></script>
+  <!-- Sweet Alerts js -->
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+        <!-- form advanced init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-advanced.init.js')}}"></script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+    
+
+
+
+
+
+
+
+        
+
+    $(document).ready(function(){
+
+
+
+            if ($('#repertoire_show_prenomDuExpert').val()=="") {
+
+             document.getElementById("nomDuCabinet").style.display = "block";
+             document.getElementById("addresseDuCabinetLabel").style.display = "block";
+             document.getElementById("addresseDuCabinet").style.display = "block";
+             document.getElementById("nomDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinet").style.display = "block";
+             document.getElementById("prenomDuExpert").style.display = "none";
+             document.getElementById("prenomDuExpertlabel").style.display = "none";
+             document.getElementById("nomDuExpertLabel").style.display = "none";
+             document.getElementById("nomDuExpert").style.display = "none";
+             radiobtn = document.getElementById("formRadiosRight1");
+             radiobtn.checked = true;
+            
+         }else{
+               
+            document.getElementById("nomDuCabinetlabel").style.display = "none";
+            document.getElementById("nomDuCabinet").style.display = "none";
+            document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+            document.getElementById("telephoneDuCabinet").style.display = "block";
+            document.getElementById("prenomDuExpert").style.display = "block";
+            document.getElementById("prenomDuExpertlabel").style.display = "block";
+            document.getElementById("nomDuExpertLabel").style.display = "block";
+            document.getElementById("nomDuExpert").style.display = "block";
+
+            document.getElementById("addresseDuCabinetLabel").style.display = "block";
+            document.getElementById("addresseDuCabinet").style.display = "block";
+             radiobtn = document.getElementById("formRadiosRight2");
+             radiobtn.checked = true;
+
+         }
+
+      
+       
+           
+        
+
+
+
+        
+
+
+
+
+
+
+        if ($('#repertoire_show_reactivation').val()==0) {
+
+             document.getElementById("iddateReactivation").style.display = "block";
+             document.getElementById("iddateReactivationLabel").style.display = "block";
+             document.getElementById("idraisonReactivation").style.display = "block";
+             document.getElementById("idraisonReactivationLabel").style.display = "block";
+         }else{
+
+             document.getElementById("iddateReactivationLabel").style.display = "none";
+             document.getElementById("iddateReactivation").style.display = "none";
+             document.getElementById("idraisonReactivationLabel").style.display = "none";
+             document.getElementById("idraisonReactivation").style.display = "none";
+         }
+
+
+
+
+        if ($('#repertoire_show_raisonCessation').val()!="") {
+
+             document.getElementById("iddateCessationLabel").style.display = "block";
+             document.getElementById("iddateCessation").style.display = "block";
+              document.getElementById("raisonCessationLabelle").style.display = "block";
+             document.getElementById("raisonCessation").style.display = "block";
+             radiobtn = document.getElementById("cessationLeft");
+             radiobtn.checked = true;
+            
+         }else{
+               
+             document.getElementById("iddateCessationLabel").style.display = "none";
+             document.getElementById("iddateCessation").style.display = "none";
+             document.getElementById("raisonCessationLabelle").style.display = "none";
+             document.getElementById("raisonCessation").style.display = "none";
+             radiobtn = document.getElementById("cessationRight");
+             radiobtn.checked = true;
+
+         }
+       
+   
+     
+
+        $(".syscoa").select2({
+          theme: "classic"
+        });
+
+
+
+    });
+
+
+    
+         $('#formRadiosRight1').change(function(){
+
+           
+           
+            
+            
+             document.getElementById("nomDuCabinet").style.display = "block";
+             document.getElementById("addresseDuCabinetLabel").style.display = "block";
+             document.getElementById("addresseDuCabinet").style.display = "block";
+             document.getElementById("nomDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinet").style.display = "block";
+             document.getElementById("prenomDuExpert").style.display = "none";
+             document.getElementById("prenomDuExpertlabel").style.display = "none";
+             document.getElementById("nomDuExpertLabel").style.display = "none";
+             document.getElementById("nomDuExpert").style.display = "none";
+
+
+
+
+             
+         });
+
+
+          $('#formRadiosRight2').change(function(){
+
+             document.getElementById("nomDuCabinetlabel").style.display = "none";
+             document.getElementById("nomDuCabinet").style.display = "none";
+
+              document.getElementById("telephoneDuCabinetlabel").style.display = "block";
+             document.getElementById("telephoneDuCabinet").style.display ="block";
+
+            document.getElementById("prenomDuExpert").style.display = "block";
+             document.getElementById("prenomDuExpertlabel").style.display = "block";
+             document.getElementById("nomDuExpertLabel").style.display = "block";
+             document.getElementById("nomDuExpert").style.display = "block";
+
+             document.getElementById("addresseDuCabinetLabel").style.display = "block";
+             document.getElementById("addresseDuCabinet").style.display = "block";
+         });
+
+
+       
+
+
+
+
+
+</script>
+
+
+
+
+{% endblock %}

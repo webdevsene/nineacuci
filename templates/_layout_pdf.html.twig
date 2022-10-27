@@ -1,0 +1,13 @@
+{# src/AppBundle/Resources/views/layout-pdf.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {# Layout for PDF files #}
+    <div>
+        {% block content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {#<link href="{{ absolute_url(asset('css/pdf.min.css')) }}" rel="stylesheet" type="text/css">#}
+{% endblock %}

@@ -1,0 +1,77 @@
+{{ form_start(form) }}
+    <div  style="border: 1px solid #ccc;">
+            <div >
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <br>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.motif) }} </b> 
+                                </label>
+                            
+                                <div class="col-md-4 col-sm-4 ">
+                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.motif)}}</span>
+                                    {{form_widget(form.motif)}}
+                                </div>
+                            </div>
+                            <div class="item row mt-2">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.description) }} </b> 
+                                </label>
+                            
+                                <div class="col-md-4 col-sm-4 ">
+                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.description)}}</span>
+                                    {{form_widget(form.description)}}
+                                </div>
+                            </div>
+                            <div class="item row mt-2">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.dateCessation) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.dateCessation)}}</span>
+                                    {{form_widget(form.dateCessation)}}
+                                </div>
+                            </div>
+
+                             <div class="item row mt-2">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> NINEA: </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                    <div class=" input-group">
+                                        {% if ni_cessation is  defined  and ni_cessation.ninea is not null %}
+                                           
+                                            <input type="text" value="{{ni_cessation.ninea.ninNinea}}" id="inputmere"  readonly name="nineamere" required class="form-control form-control-sm ">
+                                        {% else %}
+                                            <input type="text" value="" id="inputmere"  readonly name="nineamere" required class="form-control form-control-sm ">
+                                        {% endif %}
+                                        <div class="input-group-btn">
+                                            <button type="button" style="height: 100%;" class="bx bx-search-alt" id="btnRechercheNINEA"></button> <span style="color: red;" id="nin_nineamere"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            <div class="item row mt-4">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <button class="btn btn-secondary">Soumettre</button>
+                                </div>
+                            </div>
+                    </div> 
+                    <br>
+                </div>
+            </div>
+        
+    </div>
+{{ form_end(form) }}
+

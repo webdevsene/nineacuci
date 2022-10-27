@@ -1,0 +1,10 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}New RefNomenclatureRc{% endblock %}
+
+{% block body %}
+
+    {{ include('ref_nomenclature_rc/_form.html.twig') }}
+
+    <a href="{{ path('app_ref_nomenclature_rc_index') }}">back to list</a>
+{% endblock %}

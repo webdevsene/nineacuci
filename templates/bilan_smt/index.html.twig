@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BilanSmt index{% endblock %}
+
+{% block body %}
+    <h1>BilanSmt index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AmortPR</th>
+                <th>AnneeFinanciere</th>
+                <th>Brut</th>
+                <th>Net1</th>
+                <th>Net2</th>
+                <th>RefCode</th>
+                <th>Status</th>
+                <th>Submit</th>
+                <th>Type</th>
+                <th>TypeRecupperation</th>
+                <th>UploadedFileName</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bilan_smt in bilan_smts %}
+            <tr>
+                <td>{{ bilan_smt.id }}</td>
+                <td>{{ bilan_smt.createdAt ? bilan_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ bilan_smt.updatedAt ? bilan_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ bilan_smt.amortPR }}</td>
+                <td>{{ bilan_smt.anneeFinanciere }}</td>
+                <td>{{ bilan_smt.brut }}</td>
+                <td>{{ bilan_smt.net1 }}</td>
+                <td>{{ bilan_smt.net2 }}</td>
+                <td>{{ bilan_smt.refCode }}</td>
+                <td>{{ bilan_smt.status }}</td>
+                <td>{{ bilan_smt.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ bilan_smt.type }}</td>
+                <td>{{ bilan_smt.typeRecupperation }}</td>
+                <td>{{ bilan_smt.uploadedFileName }}</td>
+                <td>
+                    <a href="{{ path('app_bilan_smt_show', {'id': bilan_smt.id}) }}">show</a>
+                    <a href="{{ path('app_bilan_smt_edit', {'id': bilan_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="15">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_bilan_smt_new') }}">Create new</a>
+{% endblock %}

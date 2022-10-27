@@ -1,0 +1,221 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}Modification utlisateur{% endblock %}
+{% block stylesheets %}
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+ </style> 
+{% endblock %}
+{% block body %}
+<!-- start page title -->
+
+<!-- end page title -->
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         Modification utilisateur
+        </button>
+    </h2>
+    
+</div>
+<div class="card">
+    <div class="card-body"> 
+         {{ form_start(form) }}   
+   <div class="row">
+
+    <div class="col-6">
+   
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.prenom)}}:<span style="color:red">*</span>
+                 </label>
+                <div class="col-md-6">
+                     {{form_widget(form.prenom)}}
+                     <span style="color: red;" id="idPrenom"> {{form_errors(form.prenom)}}</span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.nom)}}:<span style="color:red">*</span>
+                 </label>
+                <div class="col-md-6">
+                     {{form_widget(form.nom)}}
+                     <span style="color: red;" id="idNom"> {{form_errors(form.nom)}}</span>
+                </div>
+            </div>
+
+ <div class="mb-3 row">
+                <label for="example-date-input" class="col-md-4 col-form-label">{{form_label(form.email)}}:</label>
+                <div class="col-md-6">
+                    
+                     {{form_widget(form.email)}}
+                     <span style="color: red;" id="idEmail"> {{form_errors(form.email)}}</span>
+                </div>
+            </div>
+
+
+          
+
+          
+           
+
+    </div> <!-- end col -->
+
+     <div class="col-6">
+   
+          
+            <div class="mb-3 row">
+                <label for="example-date-input" class="col-md-4 col-form-label">{{form_label(form.niAdministration)}}:<span style="color:red">*</span></label>
+                <div class="col-md-6">
+                    
+                     {{form_widget(form.niAdministration)}}
+                     <span style="color: red;" > {{form_errors(form.niAdministration)}}</span>
+                </div>
+            </div>
+          
+         
+
+          
+            <div class="mb-3 row">
+                <label for="example-date-input" class="col-md-4 col-form-label">{{form_label(form.dateExpiration)}}:<span style="color:red">*</span></label>
+                <div class="col-md-6">
+                    
+                     {{form_widget(form.dateExpiration)}}
+                     <span style="color: red;" > {{form_errors(form.dateExpiration)}}</span>
+                </div>
+            </div>
+              <div class="mb-3 row">
+                <label for="example-text-input" class="col-md-4 col-form-label">{{form_label(form.tel)}}:
+                 <span style="color: red;" id="idTel"> {{form_errors(form.tel)}}</span></label>
+                <div class="col-md-6">
+                     {{form_widget(form.tel)}}
+                </div>
+            </div>
+
+             <div class="mb-3 row">
+                <label class="col-md-4 col-form-label">{{form_label(form.matricule)}}</label>
+                <div class="col-md-6">
+                     {{form_widget(form.matricule)}}
+                </div>
+            </div>
+
+            
+
+
+            
+          
+    </div> <!-- end col -->
+     <div class="col-12"><br>
+       <h6 class="mb-sm-0 font-size-18" style="border-bottom: 1px solid black ;">Rôles de l'utilisateur</h6> 
+         <div align="center" style="width: 20%;">
+            <br><br>
+             <table class="table table-striped table-bordered" width="20%">
+                {% for tag in form.roles%}
+                    <tr>
+                        <td><label > {{form_label(tag)}}</label></td>
+                        <td> {{form_widget(tag)}}</td>
+                    </tr>
+                {% endfor%}
+            </table>
+             
+         </div>
+     </div>
+
+     <div class="col-6" align="right"><br>
+       <input type="submit"  class="btn btn-primary" id="idbtn"  value="Sauvegarder"  />
+
+    </div>
+
+    <div class="col-6" align="left"><br>
+        <a href="{{path('user_list')}}"  class="btn btn-secondary waves-effect">Retourner</a>
+
+    </div>
+
+</div>
+</div>
+</div>
+ {{ form_end(form) }}
+<!-- end row -->
+
+
+{% endblock %}
+
+{% block javascript %}
+
+
+<script type="text/javascript">
+    
+   
+
+
+  
+
+  
+
+      function estMailValide(){
+        
+         var email="";
+        if (!$('#user_email').val().match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i)) {
+          email="Le mail n'est pas une adresse valide";
+          $('#idEmail').text(email);
+          $('#user_email').addClass('has_error');
+       }else{
+          var email="";
+          $('#idEmail').text(email);
+          $('#user_email').removeClass('has_error');
+       }
+
+    }
+
+
+    document.getElementById("user_email").addEventListener("change", estMailValide); 
+
+
+
+    $(document).ready(function(){
+
+  
+     $('#idbtn').click(function(){
+ 
+       var nom="";
+       var prenom="";
+       if ($.trim($('#user_prenom').val()).length==0) {
+           prenom="Le prenom est obligatoire";
+          $('#idPrenom').text(prenom);
+          $('#user_prenom').addClass('has_error');
+       }
+       if ($.trim($('#user_nom').val()).length==0) {
+          nom="Le nom est obligatoire";
+          $('#idNom').text(nom);
+          $('#user_nom').addClass('has_error');
+       }
+
+        if ($.trim($('#user_email').val()).length==0) {
+                email="Le mail est obligatoire";
+          $('#idEmail').text(email);
+          $('#user_email').addClass('has_error');
+       }
+
+ 
+       
+ 
+     });
+
+     
+ 
+  
+    });
+ </script>
+
+
+<script src="{{ asset('admin/dist/assets/libs/parsleyjs/parsley.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/js/pages/form-validation.init.js')}}"></script>
+
+
+{% endblock %}

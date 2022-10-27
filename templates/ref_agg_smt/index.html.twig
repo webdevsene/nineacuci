@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RefAggSmt index{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+             <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active"><a href="{{path('app_ref_agg_smt_new')}}" class="btn btn-secondary" style="color:#fff;">Ajouter<br></a></li>
+             </ol>
+
+
+        </div>
+    </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    {% for message in app.session.flashbag.get('message')%}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{message}}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div> 
+
+        {% endfor%}
+    <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+      <div class="card-body " >
+       <table id="repertoire" class="table table-bordered  table-hover " width="100%" style="siez-font:8px;">
+        <thead>
+            <tr>
+                <th>code</th>
+                <th>Libelle</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ref_agg_smt in ref_agg_smts %}
+            <tr>
+                <td>{{ ref_agg_smt.id }}</td>
+                <td>{{ ref_agg_smt.libelle }}</td>
+                <td>
+                    <a href="{{ path('app_ref_agg_smt_edit', {'id': ref_agg_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+      </div>
+    </div>
+  </div> <!-- end col -->
+</div>
+
+
+   
+{% endblock %}
+
+{% block javascript %}
+  
+ <script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+ 
+
+<!-- Required datatable js -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<!-- Buttons examples -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+
+
+
+
+<script >
+
+ 
+$(document).ready(function() {
+ 
+
+   var datatableReherche = $("#repertoire").DataTable({
+        
+        buttons:["excel"],
+        
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+       
+    });
+     
+     var bt=datatableReherche.buttons().container().appendTo("#repertoire_wrapper .col-md-6:eq(0)");
+
+
+   
+    $('.filter').on('keyup change', function() {
+        //clear global search values
+        datatableReherche.search('');
+        datatableReherche.column($(this).data('columnIndex')).search(this.value).draw();
+    });
+    });
+
+</script>  
+
+
+ 
+
+
+
+
+{% endblock %}

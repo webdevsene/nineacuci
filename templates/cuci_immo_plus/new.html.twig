@@ -1,0 +1,3100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Bilan{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+    .larger{
+
+        width: 100%;
+
+    }
+ </style>
+
+
+         
+{% endblock %}
+{% block body %}
+ {% for message in app.flashes('notice') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-outline me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endfor %}
+        <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <div class=" p-2">
+                    <a href="{{ path('bilan_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Bilan <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('compte_de_resultats_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Compte résultat <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('flux_des_tresoreries_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Flux des trésoreries<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('immo_brut_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations brutes <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('cuci_immo_plus_new') }}" class="btn btn-primary waves-effect waves-light btn-sm">Immobilisations: Plus-value et moins-value de cession <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_effectifs_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Effectifs, masse salariale et personnel exterieur <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_production_de_exercice_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Production de l'exercice <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('achat_production_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Achats destinés à la production <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+         <span style="font-size:14px; color:#60b9c7;border-bottom: 1px solid #60b9c7; width:100%;" >Immobilisations: Plus-value et moins-value de cession</span>
+    </div>
+        <!-- end page title -->
+
+
+<br>
+<div class="card p-0" style=" margin: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <form method="post" action="{{path('cuci_immo_plus_new')}}" id="idformpas" style="margin: 0px; padding: 0px;">
+    <div class=" row">
+        <div class="col-xl-12" > 
+                                      
+            <table class="table table-bordered mt-2" >
+                                     <tr style="margin-top:0px;">
+                                      
+                                      <td  style="width: 15%;">Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                                          <input type="text" readonly  class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                                      <td style="text-align: right; width: 12%;">Désignation entité :<span style="color:red">*</span></td><td  style="width: 20%;">
+                                          <input type="text"  disabled class="form-control form-control-sm" name="" id="denomination"></td>
+                                      <td style="text-align: right; width: 13%;">Année financière :<span style="color:red">*</span></td><td  style="width: 5%;">
+                                          <input type="text" readonly class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'"></td>
+                                     </tr>
+            </table>
+                     
+            <div class="card">
+             <div class="card-body">
+
+                 <div class="d-flex flex-wrap gap-2 justify-content-center">
+                     <button type="button" class="btn btn-secondary waves-effect waves-light effacer">
+                         <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                     </button>
+                    
+                     <button type="button" class="btn btn-success waves-effect waves-light sauvegarderImmo">
+                         <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                         Sauvegarder
+                     </button>
+                     <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
+                         <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                     </button>
+                     <input name="submited" id="submited" type="submit" value="1" style="display:none;"/>
+                     <input name="notsubmited" id="notsubmited" type="submit" value="0" style="display:none;"/>
+                 </div>
+             </div>
+            </div>
+         </div>
+
+    </div>
+    <div class="card-body p-0" >
+               
+                            <div class="row">
+                             
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table name="form2" id="form2" class="table table-striped table-bordered ">
+                                        <thead style="background: #008000; color:white;">
+                                        <tr class=" opacity-65" >
+                                                <th scope="col" colspan="2" class="text-center ">
+                                                    <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px;" id="txtcuci"></span> 
+                                                </th>
+                                                <th colspan="3" scope="col" class="text-center ">
+                                                    
+                                                      <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignation"></span>  
+                                                </th>
+                                                <th colspan="2" scope="col" class="text-center ">
+                                                   
+                                                     <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinanciere"></span>
+                                                </th>
+                                            </tr>
+                                            <tr class=" opacity-65">
+                                               <th scope="col" colspan="1"   rowspan="2" class="text-center ">
+                                                    REF 
+                                                </th>
+                                                 <th scope="col" colspan="1"  rowspan="2"  class="text-center ">
+                                                   Libellé  
+                                                </th>
+                                                <th scope="col" colspan="1" class="text-center">
+                                                    MONTANT BRUT
+                                                  <br>
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                    <span >
+                                                        AMORTISSEMENTS PRATIQUES
+                                                    </span> 
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                    <span  >
+                                                        VALEUR COMPTABLE NETTE
+                                                    </span> 
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                    <span  >
+                                                        PRIX DE CESSION
+                                                    </span> 
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                    <span  >
+                                                        PLUS VALUE OU MOINS VALUE
+                                                    </span> 
+                                                </th>
+                                                
+                                              </tr>
+                                            <tr class=" opacity-80">
+                                                
+                                                <th colspan="1" scope="col" class="text-center">
+                                                    A
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                  B
+                                                </th>
+                                                 <th colspan="1" scope="col" class="text-center">
+                                                    C = A - B
+                                                </th>
+                                                 <th colspan="1" scope="col" class="text-center">
+                                                   D
+                                                </th>
+                                                <th colspan="1" scope="col" class="text-center">
+                                                   E=D-C
+                                                </th>
+                                               
+                                              </tr>
+                                        </thead>
+
+                                        <!-- debut tbody inputs -->
+                                        <tbody id="tbody">
+                                    
+                                        
+                                        
+                                        </tbody>
+                                        <!-- end tbody -->
+                                    </table>
+                                </div>
+                            </div> 
+                             <div class="col-12">
+                             <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                <button type="button" class="btn btn-secondary waves-effect waves-light effacer">
+                                    <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                </button>
+                                
+                                <button  type="button" class="btn btn-success waves-effect waves-light sauvegarderImmo">
+                                    <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                    Sauvegarder
+                                </button>
+                                <button id="validerER" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
+                                    <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                </button>
+                                
+                            </div>
+                          </div>       
+          
+
+                            </div>
+                            <input type="hidden" name="type" value="1" >
+                  
+               
+           
+
+    </div>
+</form>
+</div>
+
+
+
+    
+{% endblock %}
+
+
+
+{% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+
+
+<script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+
+        <!-- Init js -->
+
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+        <!-- form mask init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+
+<script>
+
+
+
+
+
+
+ $(document).ready(function(){
+
+   {% if app.session.get("codeCuci")!=""%}
+  
+        var value='{{app.session.get("codeCuci")}}';
+        document.getElementById('txtcuci').innerHTML=value;
+
+
+        document.getElementById('idcuci').setAttribute('value',value);
+
+
+        var  route="{{path('nineaNum')}}"+"/"+ value;
+     
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                   
+                    denomination.value=data;
+                    document.getElementById('txtdesignation').innerHTML=data;
+
+                  
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+        });
+
+
+       {% if app.session.get("annee")!=""%}
+            document.getElementById("annee").value='{{app.session.get("annee")}}';
+            var route="{{path('cuciimmoplus')}}"+"/"+'{{app.session.get("annee")}}';
+            document.getElementById('txtfinanciere').innerHTML='{{app.session.get("annee")}}';
+            var form = $(this).closest("form");
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    var tbody=document.getElementById("tbody");
+                
+
+                    tbody.innerHTML="";
+
+                    
+                    for (var i = 0; i < data[0].length; i++) {
+                        var tr=document.createElement('tr');
+                        if (data[0][i][4]) {
+                            tr.setAttribute('class'," opacity-65");
+                            tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+                        }else
+                           tr.setAttribute('style',"border:#ced4da;");
+                                
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+                        var td7=document.createElement('td');
+                        var td8=document.createElement('td');
+                        var td9=document.createElement('td');
+                    
+
+                        td1.setAttribute('colspan',1); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                            
+                            
+                        td1.innerHTML=  data[0][i][0];
+                        tr.appendChild(td1) ;
+
+                        td2.setAttribute('colspan',1); 
+                        td2.setAttribute('scope',"col"); 
+                                
+                        td2.innerHTML=  data[0][i][1];
+                        tr.appendChild(td2) ;
+
+                        td3.setAttribute('colspan',1); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm inputImmo'); 
+                        input3.setAttribute('type','text');
+                        input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input3.setAttribute('name',data[0][i][0]+"brut");
+                        input3.setAttribute('id',data[0][i][0]+"brut");
+
+                        if (data[0][i][4])
+                          input3.setAttribute('style','font-weight: bold;');
+                        
+
+                        if(data[1][data[0][i][0]]){
+                        input3.setAttribute('value',data[1][data[0][i][0]][1]);
+                        }
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+                        td4.setAttribute('colspan',1); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                    
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm inputImmo');
+                        input4.setAttribute('type','text');
+                        input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                        input4.setAttribute('name',data[0][i][0]+"ammoPR");
+                        input4.setAttribute('id',data[0][i][0]+"ammoPR");
+                        if (data[0][i][4])
+                          input4.setAttribute('style','font-weight: bold;');
+
+
+                        if(data[1][data[0][i][0]]){
+                        input4.setAttribute('value',data[1][data[0][i][0]][2]);
+                        }
+                        
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+                        td5.setAttribute('colspan',1); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");           
+                    
+                        var input5=document.createElement('input');  
+                        input5.setAttribute('class','form-control form-control-sm inputImmo');
+                        input5.setAttribute('type','text');
+                        input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                        input5.setAttribute('name',data[0][i][0]+"valeur");
+                        input5.setAttribute('id',data[0][i][0]+"valeur");
+                        if (data[0][i][4])
+                          input5.setAttribute('style','font-weight: bold;');
+
+                        if(data[1][data[0][i][0]]){
+                        input5.setAttribute('value',data[1][data[0][i][0]][3]);
+                        }
+                        
+                        td5.appendChild(input5);
+                        tr.appendChild(td5) ;
+
+
+                        td6.setAttribute('colspan',1); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                    
+                        var input6=document.createElement('input');  
+                        input6.setAttribute('class','form-control form-control-sm inputImmo');
+                        input6.setAttribute('type','text');
+                        input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input6.setAttribute('name',data[0][i][0]+"prix");
+                        input6.setAttribute('id',data[0][i][0]+"prix");
+                        if (data[0][i][4])
+                          input6.setAttribute('style','font-weight: bold;');
+
+                        if(data[1][data[0][i][0]]){
+                        input6.setAttribute('value',data[1][data[0][i][0]][4]);
+                        }
+                        
+                        td6.appendChild(input6);
+                        tr.appendChild(td6) ;
+                        td7.setAttribute('colspan',1); 
+                        td7.setAttribute('scope',"col"); 
+                        td7.setAttribute('class',"text-center");           
+                        var input7=document.createElement('input');  
+                        input7.setAttribute('class','form-control form-control-sm inputImmo');
+                        input7.setAttribute('type','text');
+                        input7.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input7.setAttribute('name',data[0][i][0]+"net");
+                        input7.setAttribute('id',data[0][i][0]+"net");
+                        if (data[0][i][4])
+                          input7.setAttribute('style','font-weight: bold;');
+
+                        if(data[1][data[0][i][0]]){
+                        input7.setAttribute('value',data[1][data[0][i][0]][5]);
+                        }
+                        td7.appendChild(input7);
+                        tr.appendChild(td7) ;
+                        tbody.appendChild(tr);  
+                    }
+
+
+                        var tr=document.createElement('tr');
+                      
+                        tr.setAttribute('class'," opacity-65");
+                        tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+
+                        var td1=document.createElement('td');
+                       
+                        var td3=document.createElement('td');
+                        var td4=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+                        var td7=document.createElement('td');
+                        var td8=document.createElement('td');
+                        var td9=document.createElement('td');
+                    
+
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");
+                        td1.innerHTML="Total";
+                        tr.appendChild(td1) ;
+
+                        td3.setAttribute('colspan',1); 
+                        td3.setAttribute('scope',"col"); 
+                        td3.setAttribute('class',"text-center"); 
+
+
+                        var input3=document.createElement('input');  
+                        input3.setAttribute('class','form-control form-control-sm inputImmo'); 
+                        input3.setAttribute('type','text');
+                        input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input3.setAttribute('name',"totalbrut");
+                        input3.setAttribute('id',"totalbrut");
+                        input3.setAttribute('value',data[2][0]);
+                        input3.setAttribute('style','font-weight: bold;');
+                  
+                        td3.appendChild(input3);
+                        tr.appendChild(td3) ;
+                        td4.setAttribute('colspan',1); 
+                        td4.setAttribute('scope',"col"); 
+                        td4.setAttribute('class',"text-center");           
+                    
+                        var input4=document.createElement('input');  
+                        input4.setAttribute('class','form-control form-control-sm inputImmo');
+                        input4.setAttribute('type','text');
+                        input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input4.setAttribute('name',"totalammoPR");
+                        input4.setAttribute('id',"totalammoPR");
+                        input4.setAttribute('value',data[2][1]);
+                        input4.setAttribute('style','font-weight: bold;');
+
+
+
+                        
+                        td4.appendChild(input4);
+                        tr.appendChild(td4) ;
+                        td5.setAttribute('colspan',1); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");           
+                    
+                        var input5=document.createElement('input');  
+                        input5.setAttribute('class','form-control form-control-sm inputImmo');
+                        input5.setAttribute('type','text');
+                        input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                        input5.setAttribute('name',"totalvaleur");
+                        input5.setAttribute('id',"totalvaleur");
+                        input5.setAttribute('value',data[2][2]);
+                        input5.setAttribute('style','font-weight: bold;');
+                        
+                        td5.appendChild(input5);
+                        tr.appendChild(td5) ;
+
+
+                        td6.setAttribute('colspan',1); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                    
+                        var input6=document.createElement('input');  
+                        input6.setAttribute('class','form-control form-control-sm inputImmo');
+                        input6.setAttribute('type','text');
+                        input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input6.setAttribute('name',"totalprix");
+                        input6.setAttribute('id',"totalprix");
+                        input6.setAttribute('value',data[2][3]);
+                        input6.setAttribute('style','font-weight: bold;');
+
+                        
+                        td6.appendChild(input6);
+                        tr.appendChild(td6) ;
+                        td7.setAttribute('colspan',1); 
+                        td7.setAttribute('scope',"col"); 
+                        td7.setAttribute('class',"text-center");           
+                        var input7=document.createElement('input');  
+                        input7.setAttribute('class','form-control form-control-sm inputImmo');
+                        input7.setAttribute('type','text');
+                        input7.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input7.setAttribute('name',"totalnet");
+                        input7.setAttribute('id',"totalnet");
+                        input7.setAttribute('value',data[2][4]);
+                        input7.setAttribute('style','font-weight: bold;');
+
+
+                      
+                        td7.appendChild(input7);
+                        tr.appendChild(td7) ;
+                        tbody.appendChild(tr);  
+                
+
+                
+                    $(".form-control").bind("keypress", function(e) {
+
+                        if (e.keyCode == 13) {
+                            var inps = $("input"); //add select too
+                            for (var x = 0; x < inps.length; x++) {
+                                if (inps[x] == this) {
+                                    while ((inps[x]).name == (inps[x + 1]).name) {
+                                    x++;
+                                    }
+                                    if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                                }
+                            }   e.preventDefault();
+                        }
+                    });
+
+                    $(function(){
+                        $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                        $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")});
+
+                
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+           
+            });
+
+
+       {% endif %}
+
+    {% endif %}
+
+    $('#idcuci').change(function(){
+            
+            let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+            document.getElementById('txtcuci').innerHTML=$('#idcuci').val();
+             
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                    denomination.value=data;
+                    document.getElementById('txtdesignation').innerHTML=data;
+
+                  
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+    });
+
+
+$('#annee').change(function(){
+           
+    var route="{{path('cuciimmoplus')}}"+"/"+ $('#annee').val();
+    document.getElementById('txtfinanciere').innerHTML=$('#annee').val();
+    var form = $(this).closest("form");
+    $.ajax({
+        type: 'GET',
+        url : route,
+        dataType : "json",
+        success: function(data){
+            var tbody=document.getElementById("tbody");
+        
+
+            tbody.innerHTML="";
+
+
+        
+
+
+
+            for (var i = 0; i < data[0].length; i++) {
+                var tr=document.createElement('tr');
+                if (data[0][i][4]) {
+                    tr.setAttribute('class'," opacity-65");
+                    tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+                }else
+                tr.setAttribute('style',"border:#ced4da;");
+                        
+
+                var td1=document.createElement('td');
+                var td2=document.createElement('td');
+                var td3=document.createElement('td');
+                var td4=document.createElement('td');
+                var td5=document.createElement('td');
+                var td6=document.createElement('td');
+                var td7=document.createElement('td');
+                var td8=document.createElement('td');
+                var td9=document.createElement('td');
+            
+
+                td1.setAttribute('colspan',1); 
+                td1.setAttribute('scope',"col"); 
+                td1.setAttribute('class',"text-center form");
+                    
+                    
+                td1.innerHTML=  data[0][i][0];
+                tr.appendChild(td1) ;
+
+                td2.setAttribute('colspan',1); 
+                td2.setAttribute('scope',"col"); 
+                        
+                td2.innerHTML=  data[0][i][1];
+                tr.appendChild(td2) ;
+
+                td3.setAttribute('colspan',1); 
+                td3.setAttribute('scope',"col"); 
+                td3.setAttribute('class',"text-center"); 
+
+
+                var input3=document.createElement('input');  
+                input3.setAttribute('class','form-control form-control-sm inputImmo'); 
+                input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                input3.setAttribute('name',data[0][i][0]+"brut");
+                input3.setAttribute('id',data[0][i][0]+"brut");
+                
+
+                if(data[1][data[0][i][0]]){
+                input3.setAttribute('value',data[1][data[0][i][0]][1]);
+                }
+
+
+                td3.appendChild(input3);
+                tr.appendChild(td3) ;
+
+            
+
+
+                td4.setAttribute('colspan',1); 
+                td4.setAttribute('scope',"col"); 
+                td4.setAttribute('class',"text-center");           
+            
+                var input4=document.createElement('input');  
+                input4.setAttribute('class','form-control form-control-sm inputImmo');
+                input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                input4.setAttribute('name',data[0][i][0]+"ammoPR");
+                input4.setAttribute('id',data[0][i][0]+"ammoPR");
+
+
+                if(data[1][data[0][i][0]]){
+                input4.setAttribute('value',data[1][data[0][i][0]][2]);
+                }
+                
+                td4.appendChild(input4);
+                tr.appendChild(td4) ;
+
+
+                td5.setAttribute('colspan',1); 
+                td5.setAttribute('scope',"col"); 
+                td5.setAttribute('class',"text-center");           
+            
+                var input5=document.createElement('input');  
+                input5.setAttribute('class','form-control form-control-sm inputImmo');
+                input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                input5.setAttribute('name',data[0][i][0]+"valeur");
+                input5.setAttribute('id',data[0][i][0]+"valeur");
+
+                if(data[1][data[0][i][0]]){
+                input5.setAttribute('value',data[1][data[0][i][0]][3]);
+                }
+                
+                td5.appendChild(input5);
+                tr.appendChild(td5) ;
+
+
+                td6.setAttribute('colspan',1); 
+                td6.setAttribute('scope',"col"); 
+                td6.setAttribute('class',"text-center");           
+            
+                var input6=document.createElement('input');  
+                input6.setAttribute('class','form-control form-control-sm inputImmo');
+                input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                input6.setAttribute('name',data[0][i][0]+"prix");
+                input6.setAttribute('id',data[0][i][0]+"prix");
+
+                if(data[1][data[0][i][0]]){
+                input6.setAttribute('value',data[1][data[0][i][0]][4]);
+                }
+                
+                td6.appendChild(input6);
+                tr.appendChild(td6) ;
+
+
+                td7.setAttribute('colspan',1); 
+                td7.setAttribute('scope',"col"); 
+                td7.setAttribute('class',"text-center");           
+            
+                var input7=document.createElement('input');  
+                input7.setAttribute('class','form-control form-control-sm inputImmo');
+                input7.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                input7.setAttribute('name',data[0][i][0]+"net");
+                input7.setAttribute('id',data[0][i][0]+"net");
+
+                if(data[1][data[0][i][0]]){
+                input7.setAttribute('value',data[1][data[0][i][0]][5]);
+                }
+                
+                td7.appendChild(input7);
+                tr.appendChild(td7) ;
+
+
+            
+
+
+                tbody.appendChild(tr);  
+
+                        
+                    
+            
+            }
+
+            var tr=document.createElement('tr');
+                        
+                            tr.setAttribute('class'," opacity-65");
+                            tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+
+                            var td1=document.createElement('td');
+                        
+                            var td3=document.createElement('td');
+                            var td4=document.createElement('td');
+                            var td5=document.createElement('td');
+                            var td6=document.createElement('td');
+                            var td7=document.createElement('td');
+                            var td8=document.createElement('td');
+                            var td9=document.createElement('td');
+                        
+
+                            td1.setAttribute('colspan',2); 
+                            td1.setAttribute('scope',"col"); 
+                            td1.setAttribute('class',"text-center form");
+                            td1.innerHTML="Total";
+                            tr.appendChild(td1) ;
+
+                            td3.setAttribute('colspan',1); 
+                            td3.setAttribute('scope',"col"); 
+                            td3.setAttribute('class',"text-center"); 
+
+
+                            var input3=document.createElement('input');  
+                            input3.setAttribute('class','form-control form-control-sm inputImmo'); 
+                            input3.setAttribute('type','text');
+                            input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                            input3.setAttribute('name',"totalbrut");
+                            input3.setAttribute('id',"totalbrut");
+                            input3.setAttribute('style','font-weight: bold;');
+
+                    
+                            td3.appendChild(input3);
+                            tr.appendChild(td3) ;
+                            td4.setAttribute('colspan',1); 
+                            td4.setAttribute('scope',"col"); 
+                            td4.setAttribute('class',"text-center");           
+                        
+                            var input4=document.createElement('input');  
+                            input4.setAttribute('class','form-control form-control-sm inputImmo');
+                            input4.setAttribute('type','text');
+                            input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                            input4.setAttribute('name',"totalammoPR");
+                            input4.setAttribute('id',"totalammoPR");
+                            input4.setAttribute('style','font-weight: bold;');
+
+
+
+                            
+                            td4.appendChild(input4);
+                            tr.appendChild(td4) ;
+                            td5.setAttribute('colspan',1); 
+                            td5.setAttribute('scope',"col"); 
+                            td5.setAttribute('class',"text-center");           
+                        
+                            var input5=document.createElement('input');  
+                            input5.setAttribute('class','form-control form-control-sm inputImmo');
+                            input5.setAttribute('type','text');
+                            input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
+                            input5.setAttribute('name',"totalvaleur");
+                            input5.setAttribute('id',"totalvaleur");
+                            input5.setAttribute('style','font-weight: bold;');
+                            
+                            td5.appendChild(input5);
+                            tr.appendChild(td5) ;
+
+
+                            td6.setAttribute('colspan',1); 
+                            td6.setAttribute('scope',"col"); 
+                            td6.setAttribute('class',"text-center");           
+                        
+                            var input6=document.createElement('input');  
+                            input6.setAttribute('class','form-control form-control-sm inputImmo');
+                            input6.setAttribute('type','text');
+                            input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                            input6.setAttribute('name',"totalprix");
+                            input6.setAttribute('id',"totalprix");
+                            input6.setAttribute('style','font-weight: bold;');
+
+                            
+                            td6.appendChild(input6);
+                            tr.appendChild(td6) ;
+                            td7.setAttribute('colspan',1); 
+                            td7.setAttribute('scope',"col"); 
+                            td7.setAttribute('class',"text-center");           
+                            var input7=document.createElement('input');  
+                            input7.setAttribute('class','form-control form-control-sm inputImmo');
+                            input7.setAttribute('type','text');
+                            input7.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                            input7.setAttribute('name',"totalnet");
+                            input7.setAttribute('id',"totalnet");
+                            input7.setAttribute('style','font-weight: bold;');
+
+
+                        
+                            td7.appendChild(input7);
+                            tr.appendChild(td7) ;
+                            tbody.appendChild(tr); 
+        
+
+        
+            $(".form-control").bind("keypress", function(e) {
+
+                if (e.keyCode == 13) {
+                    var inps = $("input"); //add select too
+                    for (var x = 0; x < inps.length; x++) {
+                        if (inps[x] == this) {
+                            while ((inps[x]).name == (inps[x + 1]).name) {
+                            x++;
+                            }
+                            if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                        }
+                    }   e.preventDefault();
+                }
+            });
+
+            $(function(){
+                            $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                            $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")});
+
+        
+        } ,
+        error : function(error){
+            console.log(error);
+        }
+    })
+    });
+
+});
+
+
+$('.effacer').click(function(){
+  var checkboxList = document.getElementsByClassName('inputImmo');
+                for (i = 0; i < checkboxList.length; i++) {
+                   checkboxList[i].value="";
+                }
+ });
+ $('.sauvegarderImmo').click(function(){
+
+                var empt = 1;
+                var checkboxList = document.getElementsByClassName('inputImmo');
+                for (i = 0; i < checkboxList.length; i++) {
+                    if (checkboxList[i].value != "") {
+                        console.log(checkboxList[i].value);
+                        empt = 0;
+                    }
+                }
+               
+                if(empt!=1)
+                {
+                
+                    Swal.fire({
+                    title:"Confirmation",
+                    text:"Êtes-vous sûr de vouloir sauvegarder  sans valider ?",
+                    icon:"warning",
+                    showCancelButton:true,
+                    confirmButtonText:"Oui",
+                    cancelButtonText:"Non",
+                    confirmButtonClass:"btn btn-success mt-2",
+                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                    buttonsStyling:!1}).then(function(t)
+                    {
+                    if (t.value) {
+                        document.getElementById("notsubmited").click()
+                    }
+                    })
+                }
+  })
+
+  function remplacer(value){
+      if(value!=""){
+        value=value.replace(".", "");
+        value=value.replace(".", "");
+        value=value.replace(".", "");
+        value=value.replace(".", "");
+        value=value.replace(".", "");
+        value=value.replace(".", "");
+        value=value.replace(",", "");
+        value=value.replace(",", "");
+        value=value.replace(",", "");
+        value=value.replace(",", "");
+        value=value.replace(",", "");
+        value=value.replace(",", "");
+        value=value.replace(",", "");
+        return value;
+     } else 
+       return 0;
+    }
+
+
+    function is_int(value){
+       
+      var  $val= remplacer(value);
+       
+      if((parseFloat($val) == parseFloat($val)) && !isNaN($val)){ 
+       
+          return true;
+      } else {
+          
+          return false;
+      }
+    }
+
+$('#tbody').on('blur', "#PAvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PAbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PAbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PAammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PAammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PAvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PAvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PA : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PAnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PAvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PAvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PAprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PAprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PAnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PAnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PA  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PBvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PBbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PBbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PBammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PBammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PBvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PBvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PB  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PBnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PBvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PBvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PBprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PBprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PBnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PBnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PB  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PCvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PCbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PCbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PCammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PCammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PCvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PCvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PC  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PCnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PCvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PCvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PCprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PCprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PCnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PCnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PC  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PDvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PDbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PDbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PDammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PDammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PDvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PDvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PD  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PDnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PDvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PDvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PDprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PDprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PDnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PDnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PD  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PEvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PEbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PEbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PEammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PEammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PEvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PEvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PE  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PEnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PEvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PEvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PEprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PEprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PEnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PEnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PE  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PFvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PFbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PFbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PFammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PFammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PFvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PFvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PF  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PFnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PFvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PFvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PFprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PFprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PFnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PFnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PF  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#PGvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PGbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PGbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PGammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PGammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PGvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PGvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PG  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PGnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PGvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PGvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PGprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PGprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PGnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PGnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PG  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#PHvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PHbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PHbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PHammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PHammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PHvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PHvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PH  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PHnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PHvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PHvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PHprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PHprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PHnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PHnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PH  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PIvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PIbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PIbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PIammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PIammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PIvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PIvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PI  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PInet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PIvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PIvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PIprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PIprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PInet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PInet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PI  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#PJvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PJbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PJbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PJammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PJammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PJvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PJvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PJ  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PJnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PJvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PJvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PJprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PJprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PJnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PJnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PJ  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#PKvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PKbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PKbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PKammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PKammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PKvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PKvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PK  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PKnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PKvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PKvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PKprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PKprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PKnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PKnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PK  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#PLvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PLbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PLbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PLammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PLammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PLvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PLvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PL  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PLnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PLvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PLvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PLprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PLprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PLnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PLnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PL  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#PMvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PMbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PMbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PMammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PMammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PMvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PMvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PM  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PMnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PMvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PMvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PMprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PMprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PMnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PMnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PM  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PNvaleur", function(){
+            var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PNbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PNbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PNammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PNammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PNvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PNvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PN  : C = A -B');
+            
+            }else{
+            
+            } 
+
+});
+
+$('#tbody').on('blur', "#PNnet", function(){
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PNvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PNvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PNprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PNprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PNnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PNnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PN  : E=D-C');
+            
+            }else{
+            
+            } 
+
+});
+$('#tbody').on('blur', "#totalbrut", function(){
+    var brutA=0,totalBrutA=0;
+    if(is_int(document.getElementById("PAbrut").value)==true){
+        brutA=brutA+parseFloat(remplacer(document.getElementById("PAbrut").value));
+    }
+
+    if(is_int(document.getElementById("PFbrut").value)==true){
+      brutA=brutA+parseFloat(remplacer(document.getElementById("PFbrut").value));
+    }
+
+    if(is_int(document.getElementById("PLbrut").value)==true){
+      brutA=brutA+parseFloat(remplacer(document.getElementById("PLbrut").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalbrut").value)==true){
+      totalBrutA=parseFloat(remplacer(document.getElementById("totalbrut").value));
+    }else
+      totalBrutA=0;
+
+    
+   
+    if (totalBrutA!=brutA) {
+        
+        Swal.fire(' Vérifier les totaux du Montant brut ');
+    
+    }else{
+    
+    } 
+
+});
+$('#tbody').on('blur', "#totalammoPR", function(){
+    var ammoPRA=0,totalammoPRA=0;
+    if(is_int(document.getElementById("PAammoPR").value)==true){
+        ammoPRA=ammoPRA+parseFloat(remplacer(document.getElementById("PAammoPR").value));
+    }
+
+    if(is_int(document.getElementById("PFammoPR").value)==true){
+    ammoPRA=ammoPRA+parseFloat(remplacer(document.getElementById("PFammoPR").value));
+    }
+
+    if(is_int(document.getElementById("PLammoPR").value)==true){
+    ammoPRA=ammoPRA+parseFloat(remplacer(document.getElementById("PLammoPR").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalammoPR").value)==true){
+    totalammoPRA=parseFloat(remplacer(document.getElementById("totalammoPR").value));
+    }else
+    totalammoPRA=0;
+
+
+
+    if (totalammoPRA!=ammoPRA) {
+        
+        Swal.fire(' Vérifier les totaux du Montant ammoPR ');
+
+    }else{
+
+    } 
+});
+$('#tbody').on('blur', "#totalvaleur", function(){
+    var valeurA=0,totalvaleurA=0;
+    if(is_int(document.getElementById("PAvaleur").value)==true){
+        valeurA=valeurA+parseFloat(remplacer(document.getElementById("PAvaleur").value));
+    }
+
+    if(is_int(document.getElementById("PFvaleur").value)==true){
+    valeurA=valeurA+parseFloat(remplacer(document.getElementById("PFvaleur").value));
+    }
+
+    if(is_int(document.getElementById("PLvaleur").value)==true){
+    valeurA=valeurA+parseFloat(remplacer(document.getElementById("PLvaleur").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalvaleur").value)==true){
+    totalvaleurA=parseFloat(remplacer(document.getElementById("totalvaleur").value));
+    }else
+    totalvaleurA=0;
+
+
+
+    if (totalvaleurA!=valeurA) {
+        
+        Swal.fire('Vérifier les totaux valeur comptable nette');
+
+    }else{
+
+    } 
+});
+$('#tbody').on('blur', "#totalprix", function(){
+    var prixA=0,totalprixA=0;
+    if(is_int(document.getElementById("PAprix").value)==true){
+        prixA=prixA+parseFloat(remplacer(document.getElementById("PAprix").value));
+    }
+
+    if(is_int(document.getElementById("PFprix").value)==true){
+    prixA=prixA+parseFloat(remplacer(document.getElementById("PFprix").value));
+    }
+
+    if(is_int(document.getElementById("PLprix").value)==true){
+    prixA=prixA+parseFloat(remplacer(document.getElementById("PLprix").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalprix").value)==true){
+    totalprixA=parseFloat(remplacer(document.getElementById("totalprix").value));
+    }else
+    totalprixA=0;
+
+
+
+    if (totalprixA!=prixA) {
+        
+        Swal.fire(' Vérifier les totaux du Montant prix de cession');
+
+    }else{
+
+    } 
+});
+$('#tbody').on('blur', "#totalnet", function(){
+    var netA=0,totalnetA=0;
+    if(is_int(document.getElementById("PAnet").value)==true){
+        netA=netA+parseFloat(remplacer(document.getElementById("PAnet").value));
+    }
+
+    if(is_int(document.getElementById("PFnet").value)==true){
+    netA=netA+parseFloat(remplacer(document.getElementById("PFnet").value));
+    }
+
+    if(is_int(document.getElementById("PLnet").value)==true){
+    netA=netA+parseFloat(remplacer(document.getElementById("PLnet").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalnet").value)==true){
+    totalnetA=parseFloat(remplacer(document.getElementById("totalnet").value));
+    }else
+    totalnetA=0;
+
+
+
+    if (totalnetA!=netA) {
+        
+        Swal.fire(' Vérifier les totaux plus value ou moins value');
+
+    }else{
+
+    } 
+});
+$('.valider').click(function(e){
+    var valider=1;
+
+    var sommeGA=0;
+    if(is_int(document.getElementById("PBbrut").value)==true){
+        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PBbrut").value));
+    }
+
+    if(is_int(document.getElementById("PCbrut").value)==true){
+        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PCbrut").value));
+    }
+
+    if(is_int(document.getElementById("PDbrut").value)==true){
+        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PDbrut").value));
+    }
+
+    if(is_int(document.getElementById("PEbrut").value)==true){
+        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PEbrut").value));
+    }
+
+
+   
+
+    var adbrut=0;
+    if(document.getElementById("PAbrut").value!="")
+        adbrut=parseInt(remplacer(document.getElementById("PAbrut").value));
+
+    if (sommeGA==parseInt(adbrut)) {
+      ////////////
+            var sommeGA=0;
+            if(is_int(document.getElementById("PBammoPR").value)==true){
+                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PBammoPR").value));
+            }
+
+            if(is_int(document.getElementById("PCammoPR").value)==true){
+                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PCammoPR").value));
+            }
+
+            if(is_int(document.getElementById("PDammoPR").value)==true){
+                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PDammoPR").value));
+            }
+
+            if(is_int(document.getElementById("PEammoPR").value)==true){
+                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PEammoPR").value));
+            }
+
+
+        
+
+            var adammoPR=0;
+            if(document.getElementById("PAammoPR").value!="")
+                adammoPR=parseInt(remplacer(document.getElementById("PAammoPR").value));
+
+            if (sommeGA==parseInt(adammoPR)) {
+             //////////////////
+
+                var sommeGA=0;
+                if(is_int(document.getElementById("PBvaleur").value)==true){
+                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PBvaleur").value));
+                }
+
+                if(is_int(document.getElementById("PCvaleur").value)==true){
+                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PCvaleur").value));
+                }
+
+                if(is_int(document.getElementById("PDvaleur").value)==true){
+                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PDvaleur").value));
+                }
+
+                if(is_int(document.getElementById("PEvaleur").value)==true){
+                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PEvaleur").value));
+                }
+
+
+            
+
+                var advaleur=0;
+                if(document.getElementById("PAvaleur").value!="")
+                    advaleur=parseInt(remplacer(document.getElementById("PAvaleur").value));
+
+                if (sommeGA==parseInt(advaleur)) {
+                    ///////////////////////
+
+
+                    var sommeGA=0;
+                    if(is_int(document.getElementById("PBprix").value)==true){
+                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PBprix").value));
+                    }
+
+                    if(is_int(document.getElementById("PCprix").value)==true){
+                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PCprix").value));
+                    }
+
+                    if(is_int(document.getElementById("PDprix").value)==true){
+                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PDprix").value));
+                    }
+
+                    if(is_int(document.getElementById("PEprix").value)==true){
+                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PEprix").value));
+                    }
+
+
+                
+
+                    var adprix=0;
+                    if(document.getElementById("PAprix").value!="")
+                        adprix=parseInt(remplacer(document.getElementById("PAprix").value));
+
+                    if (sommeGA==parseInt(adprix)) {
+                        /////////////
+
+                        var sommeGA=0;
+                        if(is_int(document.getElementById("PBnet").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PBnet").value));
+                        }
+
+                        if(is_int(document.getElementById("PCnet").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PCnet").value));
+                        }
+
+                        if(is_int(document.getElementById("PDnet").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PDnet").value));
+                        }
+
+                        if(is_int(document.getElementById("PEnet").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PEnet").value));
+                        }
+
+                        var adnet=0;
+                        if(document.getElementById("PAnet").value!="")
+                            adnet=parseInt(remplacer(document.getElementById("PAnet").value));
+
+                        if (sommeGA==parseInt(adnet)) {
+                            ////////////
+                           
+                        var sommeGA=0;
+                        if(is_int(document.getElementById("PGbrut").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PGbrut").value));
+                        }
+
+                        if(is_int(document.getElementById("PHbrut").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PHbrut").value));
+                        }
+
+                        if(is_int(document.getElementById("PIbrut").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PIbrut").value));
+                        }
+
+                        if(is_int(document.getElementById("PJbrut").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PJbrut").value));
+                        }
+
+                        if(is_int(document.getElementById("PKbrut").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PKbrut").value));
+                        }
+
+                        var adnet=0;
+                        if(document.getElementById("PFbrut").value!="")
+                            adnet=parseInt(remplacer(document.getElementById("PFbrut").value));
+
+                        if (sommeGA==parseInt(adnet)) {
+                            ///////////////
+                           var sommeGA=0;
+                        if(is_int(document.getElementById("PGammoPR").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PGammoPR").value));
+                        }
+
+                        if(is_int(document.getElementById("PHammoPR").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PHammoPR").value));
+                        }
+
+                        if(is_int(document.getElementById("PIammoPR").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PIammoPR").value));
+                        }
+
+                        if(is_int(document.getElementById("PJammoPR").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PJammoPR").value));
+                        }
+
+                        if(is_int(document.getElementById("PKammoPR").value)==true){
+                            sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PKammoPR").value));
+                        }
+
+                        var adnet=0;
+                        if(document.getElementById("PFammoPR").value!="")
+                            adnet=parseInt(remplacer(document.getElementById("PFammoPR").value));
+
+                        if (sommeGA==parseInt(adnet)) {
+                            /////////
+                            var sommeGA=0;
+                            if(is_int(document.getElementById("PGvaleur").value)==true){
+                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PGvaleur").value));
+                            }
+
+                            if(is_int(document.getElementById("PHvaleur").value)==true){
+                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PHvaleur").value));
+                            }
+
+                            if(is_int(document.getElementById("PIvaleur").value)==true){
+                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PIvaleur").value));
+                            }
+
+                            if(is_int(document.getElementById("PJvaleur").value)==true){
+                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PJvaleur").value));
+                            }
+
+                            if(is_int(document.getElementById("PKvaleur").value)==true){
+                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PKvaleur").value));
+                            }
+
+                            var adnet=0;
+                            if(document.getElementById("PFvaleur").value!="")
+                                adnet=parseInt(remplacer(document.getElementById("PFvaleur").value));
+
+                            if (sommeGA==parseInt(adnet)) {
+                            //////////////
+                                var sommeGA=0;
+                                if(is_int(document.getElementById("PGprix").value)==true){
+                                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PGprix").value));
+                                }
+
+                                if(is_int(document.getElementById("PHprix").value)==true){
+                                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PHprix").value));
+                                }
+
+                                if(is_int(document.getElementById("PIprix").value)==true){
+                                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PIprix").value));
+                                }
+
+                                if(is_int(document.getElementById("PJprix").value)==true){
+                                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PJprix").value));
+                                }
+
+                                if(is_int(document.getElementById("PKprix").value)==true){
+                                    sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PKprix").value));
+                                }
+                              /////////////////
+                                var adnet=0;
+                                if(document.getElementById("PFprix").value!="")
+                                    adnet=parseInt(remplacer(document.getElementById("PFprix").value));
+
+                                if (sommeGA==parseInt(adnet)) {
+
+                                    var sommeGA=0;
+                                    if(is_int(document.getElementById("PGnet").value)==true){
+                                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PGnet").value));
+                                    }
+
+                                    if(is_int(document.getElementById("PHnet").value)==true){
+                                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PHnet").value));
+                                    }
+
+                                    if(is_int(document.getElementById("PInet").value)==true){
+                                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PInet").value));
+                                    }
+
+                                    if(is_int(document.getElementById("PJnet").value)==true){
+                                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PJnet").value));
+                                    }
+
+                                    if(is_int(document.getElementById("PKnet").value)==true){
+                                        sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PKnet").value));
+                                    }
+
+                                    var adnet=0;
+                                    if(document.getElementById("PFnet").value!="")
+                                        adnet=parseInt(remplacer(document.getElementById("PFnet").value));
+
+                                    if (sommeGA==parseInt(adnet)) {
+                                    /////////////////////////
+
+                                      var sommeGA=0;
+                                            if(is_int(document.getElementById("PMbrut").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PMbrut").value));
+                                            }
+                                            if(is_int(document.getElementById("PNbrut").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PNbrut").value));
+                                            }
+                                            var adnet=0;
+                                            if(document.getElementById("PLbrut").value!="")
+                                                adnet=parseInt(remplacer(document.getElementById("PLbrut").value));
+
+                                            if (sommeGA==parseInt(adnet)) {
+                                              ////////////////
+                                             var sommeGA=0;
+                                            if(is_int(document.getElementById("PMammoPR").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PMammoPR").value));
+                                            }
+                                            if(is_int(document.getElementById("PNammoPR").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PNammoPR").value));
+                                            }
+                                            var adnet=0;
+                                            if(document.getElementById("PLammoPR").value!="")
+                                                adnet=parseInt(remplacer(document.getElementById("PLammoPR").value));
+
+                                            if (sommeGA==parseInt(adnet)) {
+                                                ////////////////
+                                                 var sommeGA=0;
+                                            if(is_int(document.getElementById("PMvaleur").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PMvaleur").value));
+                                            }
+                                            if(is_int(document.getElementById("PNvaleur").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PNvaleur").value));
+                                            }
+                                            var adnet=0;
+                                            if(document.getElementById("PLvaleur").value!="")
+                                                adnet=parseInt(remplacer(document.getElementById("PLvaleur").value));
+
+                                            if (sommeGA==parseInt(adnet)) {
+                                             ////////////////
+                                              var sommeGA=0;
+                                            if(is_int(document.getElementById("PMprix").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PMprix").value));
+                                            }
+                                            if(is_int(document.getElementById("PNprix").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PNprix").value));
+                                            }
+                                            var adnet=0;
+                                            if(document.getElementById("PLprix").value!="")
+                                                adnet=parseInt(remplacer(document.getElementById("PLprix").value));
+
+                                            if (sommeGA==parseInt(adnet)) {
+
+                                                ///////////////////
+
+                                                  var sommeGA=0;
+                                            if(is_int(document.getElementById("PMnet").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PMnet").value));
+                                            }
+                                            if(is_int(document.getElementById("PNnet").value)==true){
+                                                sommeGA=sommeGA + parseInt(remplacer(document.getElementById("PNnet").value));
+                                            }
+                                            var adnet=0;
+                                            if(document.getElementById("PLnet").value!="")
+                                                adnet=parseInt(remplacer(document.getElementById("PLnet").value));
+
+                                            if (sommeGA==parseInt(adnet)) {
+
+
+                                            }else{
+                                            valider=0;
+                                            Swal.fire('Vérifier le plus value ou moins value saisie pour  PL (PL=PM+PN).');
+                                            }
+
+
+                                                /////////////////
+
+
+                                            }else{
+                                            valider=0;
+                                            Swal.fire('Vérifier le prix de cession saisie pour  PL (PL=PM+PN).');
+                                            }
+
+
+                                             /////////////
+
+                                            }else{
+                                            valider=0;
+                                            Swal.fire('Vérifier la valeur comptable nette saisie pour  PL (PL=PM+PN).');
+                                            }
+
+                                                ///////////////
+                                            }else{
+                                            valider=0;
+                                            Swal.fire('Vérifier amortissement pratiques saisie pour  PL (PL=PM+PN).');
+                                            }
+
+
+                                              ////////////////
+
+                                            }else{
+                                            valider=0;
+                                            Swal.fire('Vérifier le montant brut saisie pour  PL (PL=PM+PN).');
+                                            }
+
+
+                                    //////////////////////////
+
+                                    }else{
+                                    valider=0;
+                                    Swal.fire('Vérifier le plus value ou moins value saisie pour PF (PF=PG+PH+PI+PJ+PK).');
+
+                                    }
+
+                                    //////////////////
+
+                                }else{
+                                valider=0;
+                                Swal.fire('Vérifier le prix de cession saisie pour PF (PF=PG+PH+PI+PJ+PK).');
+
+                                }
+                         ///////
+                        }else{
+                        valider=0;
+                        Swal.fire('Vérifier VALEUR COMPTABLE NETTE saisie pour PF (PF=PG+PH+PI+PJ+PK).');
+
+                        }
+
+
+                            ////////
+
+                        }else{
+                        valider=0;
+                        Swal.fire('Vérifier amortissement pratiques saisie pour PF (PF=PG+PH+PI+PJ+PK).');
+
+                        }
+
+
+                            ////////////////
+
+                        }else{
+                        valider=0;
+                        Swal.fire('Vérifier le montant brut saisie pour PF (PF=PG+PH+PI+PJ+PK).');
+
+                        }
+
+                            /////////////
+
+                        }else{
+                        valider=0;
+                        Swal.fire('Vérifier le plus value ou moins value saisie pour PA (PA=PB+PC+PD).');
+
+                        }
+
+
+                        /////////////
+
+                    }else{
+                    valider=0;
+                    Swal.fire('Vérifier le prix de cession pour PA (PA=PB+PC+PD).');
+
+                    }
+
+
+                    //////////////////////
+
+                }else{
+                valider=0;
+                Swal.fire('Vérifier la valeur comptable nette  saisie pour PA (PA=PB+PC+PD).');
+
+                }
+
+
+             /////////////////
+            }else{
+            valider=0;
+            Swal.fire('Vérifier amortissement pratiques  saisie pour PA (PA=PB+PC+PD).');
+
+            }
+
+      //////////////
+    }else{
+       valider=0;
+       Swal.fire('Vérifier le montant brut saisie pour PA (PA=PB+PC+PD).');
+
+    }
+    ///////////
+
+    var netA=0,totalnetA=0;
+    if(is_int(document.getElementById("PAnet").value)==true){
+        netA=netA+parseFloat(remplacer(document.getElementById("PAnet").value));
+    }
+
+    if(is_int(document.getElementById("PFnet").value)==true){
+    netA=netA+parseFloat(remplacer(document.getElementById("PFnet").value));
+    }
+
+    if(is_int(document.getElementById("PLnet").value)==true){
+    netA=netA+parseFloat(remplacer(document.getElementById("PLnet").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalnet").value)==true){
+    totalnetA=parseFloat(remplacer(document.getElementById("totalnet").value));
+    }else
+    totalnetA=0;
+
+
+
+    if (totalnetA!=netA) {
+         valider=0;
+        Swal.fire(' Vérifier les totaux plus value ou moins value');
+
+    }else{
+
+    }
+
+    ////////////
+
+     var prixA=0,totalprixA=0;
+    if(is_int(document.getElementById("PAprix").value)==true){
+        prixA=prixA+parseFloat(remplacer(document.getElementById("PAprix").value));
+    }
+
+    if(is_int(document.getElementById("PFprix").value)==true){
+    prixA=prixA+parseFloat(remplacer(document.getElementById("PFprix").value));
+    }
+
+    if(is_int(document.getElementById("PLprix").value)==true){
+    prixA=prixA+parseFloat(remplacer(document.getElementById("PLprix").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalprix").value)==true){
+    totalprixA=parseFloat(remplacer(document.getElementById("totalprix").value));
+    }else
+    totalprixA=0;
+
+
+
+    if (totalprixA!=prixA) {
+         valider=0;
+        Swal.fire(' Vérifier les totaux du Montant prix de cession');
+
+    }else{
+
+    } 
+    /////////
+    var valeurA=0,totalvaleurA=0;
+    if(is_int(document.getElementById("PAvaleur").value)==true){
+        valeurA=valeurA+parseFloat(remplacer(document.getElementById("PAvaleur").value));
+    }
+
+    if(is_int(document.getElementById("PFvaleur").value)==true){
+    valeurA=valeurA+parseFloat(remplacer(document.getElementById("PFvaleur").value));
+    }
+
+    if(is_int(document.getElementById("PLvaleur").value)==true){
+    valeurA=valeurA+parseFloat(remplacer(document.getElementById("PLvaleur").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalvaleur").value)==true){
+    totalvaleurA=parseFloat(remplacer(document.getElementById("totalvaleur").value));
+    }else
+    totalvaleurA=0;
+
+
+
+    if (totalvaleurA!=valeurA) {
+         valider=0;
+        Swal.fire('Vérifier les totaux valeur comptable nette');
+
+    }else{
+
+    } 
+    //////////
+    var brutA=0,totalBrutA=0;
+    if(is_int(document.getElementById("PAbrut").value)==true){
+        brutA=brutA+parseFloat(remplacer(document.getElementById("PAbrut").value));
+    }
+
+    if(is_int(document.getElementById("PFbrut").value)==true){
+      brutA=brutA+parseFloat(remplacer(document.getElementById("PFbrut").value));
+    }
+
+    if(is_int(document.getElementById("PLbrut").value)==true){
+      brutA=brutA+parseFloat(remplacer(document.getElementById("PLbrut").value));
+    }
+
+
+
+    if(is_int(document.getElementById("totalbrut").value)==true){
+      totalBrutA=parseFloat(remplacer(document.getElementById("totalbrut").value));
+    }else
+      totalBrutA=0;
+
+    
+   
+    if (totalBrutA!=brutA) {
+         valider=0;
+        Swal.fire(' Vérifier les totaux du Montant brut ');
+    
+    }else{
+    
+    } 
+    //////////////
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PNvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PNvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PNprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PNprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PNnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PNnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PN  : E=D-C');
+            
+            }else{
+            
+            } 
+    /////////////
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PNbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PNbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PNammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PNammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PNvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PNvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PN  : C = A -B');
+            
+            }else{
+            
+            }
+    /////////////
+    var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PMvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PMvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PMprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PMprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PMnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PMnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PM  : E=D-C');
+            
+            }else{
+            
+            } 
+    ////////////
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PMbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PMbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PMammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PMammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PMvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PMvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PM  : C = A -B');
+            
+            }else{
+            
+            } 
+
+    ///////////
+    var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PLvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PLvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PLprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PLprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PLnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PLnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PL  : E=D-C');
+            
+            }else{
+            
+            } 
+    //////////
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PLbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PLbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PLammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PLammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PLvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PLvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PL  : C = A -B');
+            
+            }else{
+            
+            } 
+    //////////////
+     var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PKvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PKvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PKprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PKprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PKnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PKnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PK  : E=D-C');
+            
+            }else{
+            
+            } 
+
+    ////////////////
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PKbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PKbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PKammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PKammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PKvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PKvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PK  : C = A -B');
+            
+            }else{
+            
+            } 
+    //////////////
+             var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PJvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PJvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PJprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PJprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PJnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PJnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PJ  : E=D-C');
+            
+            }else{
+            
+            } 
+    //////////
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PJbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PJbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PJammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PJammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PJvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PJvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PJ  : C = A -B');
+            
+            }else{
+            
+            } 
+
+
+////////////////////
+
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PIbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PIbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PIammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PIammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PIvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PIvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PI  : C = A -B');
+            
+            }else{
+            
+            } 
+
+    ////////////
+
+
+     var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PHvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PHvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PHprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PHprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PHnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PHnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PH  : E=D-C');
+            
+            }else{
+            
+            } 
+
+
+
+    /////////
+
+     var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PHbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PHbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PHammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PHammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PHvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PHvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PH  : C = A -B');
+            
+            }else{
+            
+            } 
+
+
+    //////////
+
+
+     var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PGvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PGvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PGprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PGprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PGnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PGnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PG  : E=D-C');
+            
+            }else{
+            
+            } 
+
+    //////////
+
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PGbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PGbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PGammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PGammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PGvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PGvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PG  : C = A -B');
+            
+            }else{
+            
+            } 
+
+    ////////////
+
+     var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PFbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PFbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PFammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PFammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PFvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PFvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PF  : C = A -B');
+            
+            }else{
+            
+            } 
+
+    /////////
+
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PFbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PFbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PFammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PFammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PFvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PFvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PF  : C = A -B');
+            
+            }else{
+            
+            } 
+    /////////
+
+     var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PFvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PFvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PFprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PFprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PFnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PFnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PF  : E=D-C');
+            
+            }else{
+            
+            }
+
+    /////////////
+
+    var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PEvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PEvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PEprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PEprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PEnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PEnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PE  : E=D-C');
+            
+            }else{
+            
+            } 
+
+    ///////////
+
+           var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PDvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PDvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PDprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PDprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PDnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PDnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PD  : E=D-C');
+            
+            }else{
+            
+            } 
+
+
+    /////////////
+
+
+    var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PDbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PDbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PDammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PDammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PDvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PDvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PD  : C = A -B');
+            
+            }else{
+            
+            } 
+    /////////////
+
+    var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PCvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PCvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PCprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PCprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PCnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PCnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PC  : E=D-C');
+            
+            }else{
+            
+            } 
+     /////////////
+
+      var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PCbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PCbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PCammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PCammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PCvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PCvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PC  : C = A -B');
+            
+            }else{
+            
+            } 
+
+    /////////////////
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PBvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PBvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PBprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PBprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PBnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PBnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PB  : E=D-C');
+            
+            }else{
+            
+            } 
+
+
+    ///////////////
+
+
+
+
+     
+            ///////////
+             var brut=0,ammoPR=0,valeur=0;
+            if(is_int(document.getElementById("PBbrut").value)==true){
+                  brut=parseFloat(remplacer(document.getElementById("PBbrut").value));
+            }else brut=0;
+
+            if(is_int(document.getElementById("PBammoPR").value)==true){
+                  ammoPR=parseFloat(remplacer(document.getElementById("PBammoPR").value));
+            }else ammoPR=0;
+            
+            if(is_int(document.getElementById("PBvaleur").value)==true){
+                valeur=parseFloat(remplacer(document.getElementById("PBvaleur").value));
+            } else valeur=0;
+            
+             var nette=brut-ammoPR;
+            if (nette!=valeur) {
+                 valider=0;
+                Swal.fire('Vérifier la valeur comptable nette saisie pour PB  : C = A -B');
+            
+            }else{
+            
+            } 
+
+
+
+            //////////
+            
+            
+            var valeur=0,prix=0,valeur=0;
+            if(is_int(document.getElementById("PAvaleur").value)==true){
+                  valeur=parseFloat(remplacer(document.getElementById("PAvaleur").value));
+            }else valeur=0;
+
+            if(is_int(document.getElementById("PAprix").value)==true){
+                  prix=parseFloat(remplacer(document.getElementById("PAprix").value));
+            }else prix=0;
+            
+            if(is_int(document.getElementById("PAnet").value)==true){
+                net=parseFloat(remplacer(document.getElementById("PAnet").value));
+            } else net=0;
+            
+            
+            if (net!=(prix-valeur)) {
+                 valider=0;
+                Swal.fire('Vérifier le plus value ou moins  saisie pour PA  : E=D-C');
+            
+            }else{
+            
+            } 
+
+        var brut=0,ammoPR=0,valeur=0;
+        if(is_int(document.getElementById("PAbrut").value)==true){
+                brut=parseFloat(remplacer(document.getElementById("PAbrut").value));
+        }else brut=0;
+
+        if(is_int(document.getElementById("PAammoPR").value)==true){
+                ammoPR=parseFloat(remplacer(document.getElementById("PAammoPR").value));
+        }else ammoPR=0;
+        
+        if(is_int(document.getElementById("PAvaleur").value)==true){
+            valeur=parseFloat(remplacer(document.getElementById("PAvaleur").value));
+        } else valeur=0;
+        
+            var nette=brut-ammoPR;
+        if (nette!=valeur) {
+             valider=0;
+            Swal.fire('Vérifier la valeur comptable nette saisie pour PA  : C = A -B');
+        
+        }else{
+        
+        } 
+    
+    if (valider==1) {
+         var empt = 1;
+                var checkboxList = document.getElementsByClassName('inputImmo');
+                for (i = 0; i < checkboxList.length; i++) {
+                    if (checkboxList[i].value != "") {
+                        console.log(checkboxList[i].value);
+                        empt = 0;
+                    }
+                }
+               
+        if(empt!=1)
+          {
+            e.preventDefault();
+            var a=$(this);
+            Swal.fire({
+            title:"Confirmation",
+            text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+            icon:"success",
+            showCancelButton:true,
+            confirmButtonText:"Oui",
+            cancelButtonText:"Non",
+            confirmButtonClass:"btn btn-success mt-2",
+            cancelButtonClass:"btn btn-danger ms-2 mt-2",
+            buttonsStyling:!1}).then(function(t)
+            {
+                if (t.value) {
+                    document.getElementById("submited").click()
+                }else
+                    e.preventDefault();
+
+            })
+          }
+    }
+        
+
+       
+   
+
+
+
+});
+
+
+
+// Auto Close Bootstrap alerts
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 2000);
+
+
+</script>
+
+
+
+
+
+{% endblock %}
+

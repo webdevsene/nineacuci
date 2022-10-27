@@ -1,0 +1,262 @@
+{% extends 'ninea.html.twig' %}
+{% block title %}New NiNineaproposition
+{% endblock %}
+{% block stylesheets %}
+
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link
+	href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}" rel="stylesheet">
+	<!-- App favicon -->
+	<link
+	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
+
+	<!-- Bootstrap Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+	<!-- Icons Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+	<!-- App Css-->
+	<link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+
+		.fieldcolor {
+		   border: 2px solid #eee;
+		}
+
+		legend {
+			color: black;
+			font-size: 12px;
+		}
+	</style>
+
+{% endblock %}
+{% block body %}
+	{{ form_start(form,{"id":"formsaisie"} )}}
+
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingTwo">
+			<button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+				Saisie d'un ancien NINEA
+			</button>
+		</h2>
+
+	</div>
+
+	<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-lg-12">
+					{% for message in app.session.flashbag.get('message')%}
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							{{message}}
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					{% endfor %}
+
+					<fieldset class=" p-2 fieldcolor mb-3">
+						<div class="row">
+							<div class="col-lg-6">
+								<table style="width: 100%;">
+                                    <tr>
+										<td style="width: 50%;">
+											<label for="basicpill-firstname-input" class="TXT">{{form_label(form.ninEnseigne)}}<span style="color:red;">*</span>
+											</label>
+										</td>
+										<td style="width: 50%;">
+											{{form_widget(form.ninEnseigne)}}
+											<span style="color: red;" id="ninenseigne"></span>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> Forme Unité</label>	
+											<span style="color:red;">*</span>	
+										</td>
+										<td style="width: 50%;">
+											<select name="formeunite" required class="form-control form-control-sm" id="idformeunite">
+												<option value="" selected>Sélectionner ...</option>
+												{% for tag in formeunites %}										
+														<option  value="{{ tag.id}}">			{{ tag.libelle}}</option>
+												{% endfor %}
+											</select>
+											<span style="color: red;" id="ninpersonne"></span>
+										</td>
+									</tr>
+								</table>
+
+								<table style="width: 100%;">
+									<tr>
+										<td style="width: 50%;">
+											<label class="TXT" for="basicpill-firstname-input">Régime juridique
+												<span style="color:red;">*</span>
+											</label>
+										</td>
+										<td style="width: 50%;">
+											<select name="formejuridique" required id="idFormejuridique" class="form-control form-control-sm">
+													<option value="">Sélectionner ...</option>
+											</select>
+											<span style="color: red;" id="ninformejuridique"></span>
+										</td>
+									</tr>
+										<tr>
+										<td style="width: 50%;">
+											<label for="basicpill-firstname-input" class="TXT">{{form_label(form.ninStatut)}}<span style="color:red;">*</span>
+											</label>
+										</td>
+										<td style="width: 50%;">
+											{{form_errors(form.ninStatut)}}
+											{{form_widget(form.ninStatut)}}
+											<span style="color: red;" id="ninstatut"></span>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 50%;">
+											<label for="basicpill-firstname-input" class="TXT">{{form_label(form.ninEnseigne)}}<span style="color:red;">*</span>
+											</label>
+										</td>
+										<td style="width: 50%;">
+											{{form_widget(form.ninEnseigne)}}
+											<span style="color: red;" id="ninenseigne"></span>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="col-lg-6">
+
+								<table style="width: 100%;">								
+									<tr>
+										<td>
+											<label for="" class="TXT"> {{form_label(form.ninRegcom)}}</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td>
+											{{form_widget(form.ninRegcom)}}
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label for="" class="TXT"> {{form_label(form.ninDatreg)}}</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td>
+											{{form_widget(form.ninDatreg)}}
+										</td>
+									</tr>
+									
+								</table>
+
+							</div>
+						</div>
+					</fieldset>
+					<br>
+				</div>
+
+					<div class="col-lg-12">
+						<center>
+							<input type="submit" value="Sauvegarder" name="sauvegarder" class="btn btn-primary waves-effect waves-light">
+						</center>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	
+	</div>
+	<!-- end card -->
+	{{ form_end(form) }}
+{% endblock %}
+{% block javascript %}
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/jszip/jszip.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}} "></script><!-- Responsive examples --><script src="{{ asset( 'admin/dist/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}} "></script><!-- Datatable init js --><script src="{{ asset( 'admin/dist/assets/js/pages/dataTables.init.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/select2/js/select2.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}} "></script>
+	<script src="{{ asset( 'admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.js')}} "></script><!-- Sweet Alerts js --><script src="{{ asset( 'admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}} "></script><!-- Sweet alert init js--><script src="{{ asset( 'admin/dist/assets/js/pages/sweet-alerts.init.js')}} "></script><!-- init js -->{#
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								<script src="assets/js/pages/ecommerce-select2.init.js "></script> #}<!-- form advanced init --><script src="{{ asset( 'admin/dist/assets/js/pages/form-advanced.init.js')}} "> </script><!-- jquery step --><script src="{{ asset( 'admin/dist/assets/libs/jquery-steps/build/jquery.steps.min.js')}} "></script><!-- form wizard init --><script src="{{ asset( 'admin/dist/assets/js/pages/form-wizard.init.js')}} "></script><!-- nouvelle adaptation wizard--><script src="{{ asset( 'admin/dist/assets/js/jquery.validate.min.js')}} "></script>
+	<script src=" {{ asset('admin/dist/assets/libs/parsleyjs/parsley.min.js')}}  "></script>
+	<script src=" {{ asset('admin/dist/assets/js/pages/form-validation.init.js')}} "></script>
+
+
+	<script>
+
+		function formatPhoneNumber(phoneNumberString) {
+			var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+			var match = cleaned.match(/^(\(33|77|78|72|75|76|36|32|70)[0-9]{7}$/)
+			if (match) {
+
+
+			return 1;
+			}
+			return 0;
+			}
+
+
+		// contole date cni et date passpport
+		$('#ni_nineaproposition_ninDatreg').change(function () {
+			var dateReg = new Date($('#ni_nineaproposition_ninDatreg').val());
+			var dateDuJour = new Date();
+			if (dateReg > dateDuJour) {
+			Swal.fire('La date du regsitre  doit être inférieure   à la date du jour.');
+			$('#ni_nineaproposition_ninDatreg').val("");
+			//document.getElementById("ni_nineaproposition_ninDatreg").value = new Date("");
+			}
+			});
+
+		
+
+
+			$("#idformeunite").change(function () {
+
+			let formejuridique = document.getElementById("idFormejuridique");
+			formejuridique.innerHTML = "";
+
+			let opt = document.createElement('option');
+			opt.innerHTML = "Sélectionner ...";
+			opt.value = '';
+			formejuridique.add(opt);
+
+			{% for tag in formejuridiques %}
+			if ($("#idformeunite").val() == '{{ tag.niFormeunite.id }}') {
+			let opt = document.createElement('option');
+			opt.value = "{{ tag.id }}";
+			opt.innerHTML = "{{ tag.fojLibelle }}";
+			formejuridique.add(opt);
+			}
+
+{% endfor %}
+
+});
+
+
+
+
+	</script>
+{% endblock %}

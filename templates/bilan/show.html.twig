@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bilan{% endblock %}
+
+{% block body %}
+    <h1>Bilan</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ bilan.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ bilan.createdAt ? bilan.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ bilan.updatedAt ? bilan.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AmortPR</th>
+                <td>{{ bilan.amortPR }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ bilan.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Brut</th>
+                <td>{{ bilan.brut }}</td>
+            </tr>
+            <tr>
+                <th>Net1</th>
+                <td>{{ bilan.net1 }}</td>
+            </tr>
+            <tr>
+                <th>Net2</th>
+                <td>{{ bilan.net2 }}</td>
+            </tr>
+            <tr>
+                <th>RefCode</th>
+                <td>{{ bilan.refCode }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ bilan.status }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ bilan.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ bilan.type }}</td>
+            </tr>
+            <tr>
+                <th>TypeRecupperation</th>
+                <td>{{ bilan.typeRecupperation }}</td>
+            </tr>
+            <tr>
+                <th>UploadedFileName</th>
+                <td>{{ bilan.uploadedFileName }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('bilan_index') }}">back to list</a>
+
+    <a href="{{ path('bilan_edit', {'id': bilan.id}) }}">edit</a>
+
+    {{ include('bilan/_delete_form.html.twig') }}
+{% endblock %}

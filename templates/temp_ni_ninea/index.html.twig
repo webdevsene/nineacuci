@@ -1,0 +1,176 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}Demnde de modification{% endblock %}
+
+{% block body %}
+  <div class="box mt-4">
+        <div class="box-header">
+            <ul class="nav nav-tabs nav-tabs-left">
+                <li class="active">
+                    <a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                        Liste des demandes de modification  NINEA
+                    </a></li>
+    
+            </ul>
+        </div>
+    
+        <div class="box-content padded">
+    
+            <div class="tab-content">            
+    
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body table-responsive-lg"> 
+                                    <table id="demande" class="table table-bordered  table-hover  " style="width:100% ;">
+                                            <thead class="tr_entete p-4">
+                                                <tr>
+                                                    
+                                                    <th >NINEA </th>
+                                                    <th>Raison</th>
+                                                    <th>Service</th>
+                                                    <th>Agent demandeur</th>
+                                                    <th>Statut           </th>
+                                                    <th>Date     </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+
+
+                                            <tbody>
+                                                {% for tag in temp_n_i_nineas %}
+                                                <tr>                           
+                                                    <td>{{ tag.ninNinea }}</td>
+                                                    <td style=" word-break: break-all; width: 20%;">
+                                                        {% if tag.formejuridique is not null  %}
+
+                                                            {% if tag.formejuridique.niFormeunite.id == 11 or tag.formejuridique.niFormeunite.id == 12 %} 
+                                                            {{tag.tempNiPersonnes | length > 0 ? tag.tempNiPersonnes[0].ninPrenom :""}} {{tag.tempNiPersonnes | length > 0 ?  tag.tempNiPersonnes[0].ninNom :""}}
+                                                            {% else %} 
+                                                                {% if tag.formejuridique.niFormeunite.id == 21  or tag.formejuridique.niFormeunite.id == 22 %}
+                                                                    
+                                                                        {{tag.tempNiPersonnes | length > 0 ? tag.tempNiPersonnes[0].ninRaison:""}} 
+                                                                    
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td style="width: 20%;">{% if tag.createdBy is not null %}  
+                                                            {% if tag.createdBy.niAdministration is not null %} 
+                                                                        {{ tag.createdBy.niAdministration.admlibelle}}
+                                                                {% endif %}
+                                                        {% endif %}
+                                                            </td>
+                                                    <td>
+                                                    {% if tag.createdBy is not null %} 
+                                                    {{ tag.createdBy.prenom}} {{ tag.createdBy.nom}}
+                                                    {% endif %}
+                                                    </td>
+
+                                                    <td style="width: 10%;">
+                                                        {% if tag.ninlock == true %}
+                                                            <span class="badge badge-pill badge-soft-warning font-size-11">En  validation</span> 
+
+                                                        {% else %}
+
+                                                            {% if tag.statut == "c" %}
+                                                                <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                                                                {% else %}
+                                                                    {% if tag.statut == "b" %}
+                                                                        <span class="badge badge-pill badge-soft-secondary font-size-11">Brouillon</span> 
+                                                                    {% else %}
+                                                                        {% if tag.statut == "r" %}
+                                                                            <span class="badge badge-pill badge-soft-danger font-size-11" >Rejeter
+                                                                                
+                                                                            </span>
+                                                                            <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                            </button>
+                                                                            
+                                                                        {% else %}
+                                                                            {% if tag.statut == "t" %}
+                                                                                <span class="badge badge-pill badge-soft-pink font-size-11" >Retourner
+                                                                                    
+                                                                                </span>
+                                                                                <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                                </button>
+                                                                                
+                                                                            {% else %}
+                                                                                <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                                                                                
+                                                                            {% endif %} 
+                                                                            
+                                                                    {% endif %} 
+                                                                    {% endif %} 
+                                                                
+                                                            {% endif %}
+                                                        {% endif %}
+
+                                                    </td>
+                                                    <td>{{ tag.ninmajdate | date("d/m/Y") }}</td>
+
+                                                    <td>
+                                                        {% if tag.statut != 'r' %}
+                                                            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_DEMANDE_NINEA') %} 
+                                                                
+                                                                {% if tag.statut == "v"   %}
+                                                                    <a href="{{ path('ni_nineaproposition_ninea', {'id': tag.id}) }}" id="modification" >
+                                                                        Détails
+                                                                    </a>
+                                                                {% else %} 
+                                                                
+
+                                                                        {% if tag.ninlock == 1 %}                                     
+                                                                                {% if app.user.id ==  tag.updatedBy.id %}    
+                                                                                    <a  href="{{ path('app_temp_n_i_ninea_edit', {'id': tag.id}) }}" id="modification" >
+                                                                                        Détails
+                                                                                        <a href="{{ path('liberer_demande', {'id': tag.id})}}" class="idInconlock" title="Libérer la demande"  style="color: red">
+                                                                                            <i class="fas fa-lock "></i> 
+                                                                                        </a>
+                                                                                    </a>
+
+                                                                                {% else %}
+                                                                                    <a type="button"  class="idDetails"  style="color: red">
+                                                                                        Détails
+                                                                                    </a>
+
+                                                                                    <a type="button" class="idInconlock" onclick="recupUtilisateur( '{{tag.updatedBy.getPrenomNom}}' );"  style="color: red">
+                                                                                        <i class="fas fa-lock "></i> 
+                                                                                    </a>
+                                                                                {% endif %}
+
+
+                                                                        {% else %}
+                                                                        {% if tag.statut == "t" %}
+                                                                        {% if app.user.id == tag.createdBy.id %}
+                                                                            <a href="{{ path('app_temp_n_i_ninea_edit', {'id': tag.id}) }}" id="modification" >
+                                                                                Détails
+                                                                            </a>
+                                                                        {% endif %}
+                                                                        {% else %}
+                                                                        <a href="{{ path('app_temp_n_i_ninea_edit', {'id': tag.id}) }}" id="modification">
+                                                                            Détails
+                                                                        </a>
+                                                                        {% endif %}
+                                                                        {% endif %}
+
+                                                                {% endif %} 
+                                                            {% endif %} 
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                        
+                                            {% endfor %}
+                                            </tbody>
+                                    </table>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+         </div>
+ </div>
+
+   
+
+   
+{% endblock %}

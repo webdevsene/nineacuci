@@ -1,0 +1,294 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DbChangeController!{% endblock %}
+
+{% block body %}
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                    Filtre historisation
+				</a>
+			</li>
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			 <div class="card">
+            <div class="card-body">
+                <form enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="post" >
+                    <div class="mb-3 p-2">
+                      <label for="" class="form-label">Code CUCI</label>
+                      <input type="text"
+                          class="form-control form-control-sm" name="_codecuci" id="_codecuci" aria-describedby="helpId" placeholder="" >
+                      <small id="helpId" class="form-text text-muted"></small>
+                    </div>
+                    <div class="mb-3 p-2">
+                      <label for="" class="form-label">Action</label>
+                        <select class="form-select form-select-sm" name="_laction" id="_laction" aria-describedby="helpId" placeholder="" required>
+                          <option value="" >Choisir une action </option>
+                          <option value="Nouveau enregistrement" >Nouveau enregistrement</option>
+                          <option value="Nouvelle unite" >Nouvelle unite</option>
+                          <option value="insert" >insert</option>
+                          <option value="update" >update</option>
+                          <option value="delete" >delete</option>
+                        </select>
+                      <small id="helpId" class="form-text text-muted"></small>
+                    </div>
+                    <div class="mb-3 p-2">
+                      <label for="" class="form-label">Année financière / d'exercice</label>
+                      <input type="text"
+                          class="form-control form-control-sm" name="_lannee" id="_lannee" aria-describedby="helpId" placeholder="" >
+                      <small id="helpId" class="form-text text-muted"></small>
+                    </div>
+                    <div class="mb-3 p-2">
+                      <label for="" class="form-label">Table étatfi</label>
+                        <select class="form-select form-select-sm" name="_tbl" id="_tbl" aria-describedby="helpId" placeholder="" >
+                          <option value="" >Choisir une table </option>
+                          <option value="cuci_repertoire" >Tbl répertoire</option>
+                          <option value="cuci_bilan" >Tbl bilan</option>
+                          <option value="cuci_compte_de_resultats" >Tbl compte de résultats </option>
+                          <option value="cuci_etats_des_tresoreries" >Tbl flux des trésoreries </option>
+                          <option value="cuci_immo_brut" >Tbl immo brute</option>
+                          <option value="cuci_immo_plus" >Tbl immo plus ou moins</option>
+                          <option value="cuci_effectifs_masse_salariale" >Tbl effectifs masse salariale</option>
+                          <option value="cuci_production_de_exercice" >Tbl production de l'exercice</option>
+                          <option value="cuci_achats_du_production" >Tbl achat de production</option>
+                          <option value="cuci_bilansmt" >Tbl bilan SMT</option>
+                          <option value="cuci_comptederesultat_smt" >Tbl compte SMT</option>
+                        </select>
+                      <small id="helpId" class="form-text text-muted"></small>
+                    </div>
+                    
+                    <div class="row p-4">
+                           <br><button id="_actions" type="submit" name="_actions" value="1" class="btn btn-sm mt-1 btn-secondary " >Exporter par filtre</button>
+                    </div>             
+                </form>
+            </div>
+        </div>
+								
+		</div>
+			
+</div>
+</div>
+
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                    Suivi des activités
+				</a>
+			</li>
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">  
+            <div class="row">          
+			 <div class="col-xl-12">
+
+        <div class="card">
+            <div class="card-body">
+
+                <!-- form filter  init --> 
+                <div class="row">
+                    <div class="col-lg-12">                            
+                                <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="get" >
+                                    <button  type="submit" value="1" class="btn btn-secondary btn-sm m-2 valider " name="filtrer" > Exporter toute la table</button>
+                                </form>
+                    </div>
+                </div> <!-- end form filter -->        
+            
+            
+            <div class="row" style="border:3px solid #eeeeee;">
+
+            <table id="repertoire" class="table table-bordered table-bordered  table-hover w-100 " width="100%" style="size-font:8px;">
+            <thead class="tr_entete" style=" margin-top: 0px; ">
+            <tr >
+                <th> <center>
+                     <b>CUCI</b></center>
+                </th>
+
+                <th> <center>
+                     <b>Action</b></center>
+                </th>
+
+
+                 <th> <center>
+                     <b>Nom du Champ</b></center>
+                </th>
+
+
+                <th style="width: 5%;"> <center>
+                     <b>Ancienne Valeur(Old )</b></center>
+                </th>
+
+
+                <th style="width: 5%;"> <center>
+                     <b>Nouvelle Valeur(New )</b></center>
+                </th>
+
+                <th style="width: 5%;"> <center>
+                     <b>Date saisie</b></center>
+                </th>
+
+                <th style="width: 5%;"> <center>
+                     <b>Saisie par</b></center>
+                </th>
+
+                <th>
+                    <center>
+                    <b>Date de MAJ</b></center>
+                </th>
+                
+
+                <th> <center>
+                     <b>MAJ par</b></center>
+                </th>   
+               
+               
+              
+            </tr>
+            </thead>
+            <tbody id="donnees">
+
+            
+                {% for article in articles %}
+                    <tr>
+                        <td>
+                            {{ article['code_cuci'] }}
+                        </td>
+                        <td>
+                            {{ article['action'] }}
+                        </td>
+                        <td>
+                            {{ article['field_name'] }}
+                        </td>
+                        <td>
+                            <span class="badge w-100 badge-soft-dark">{{ article['old_value'] }}</span>
+                        </td>
+                        <td>
+                            <span class="badge w-100 rounded-pill badge-soft-primary">{{ article['new_value'] }}</span>
+                        </td>
+                        <td>
+                            {{ article['dateSaisie'] |  date('d/m/Y')}}
+                        </td>
+                        <td>
+                            {{ article['saisiePar'] }}
+                        </td>
+                        <td>
+                            {{ article['created_at'] | date('d/m/Y') }}
+                        </td>
+                        <td>
+                            {{ article['userID'] }}
+                        </td>
+                    </tr>
+
+                
+                {% else %}
+
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Aucune information trouvée à propos de votre recherche !</strong>
+                    </div>
+
+                {% endfor %}
+                
+            
+
+            </tbody>
+           
+        </table>
+
+            <div class="w-100 navigation">
+                {% if articles.page >=1 %}
+                    <span class=" count">Affichage de {{1 + ((limits * articles.page) - limits)}} à {{limits * articles.page}} sur {{ articles.getTotalItemCount | number_format(0, '.', ',') }}</span>
+                    
+                {% else %}
+                    <span class=" count">Affichage de {{ articles.page +1 }} à {{ limits }} sur {{ articles.getTotalItemCount | number_format(0, '.', ',') }}</span>
+                    
+                {% endif %}
+                    {{ knp_pagination_render(articles) }}
+            </div>
+               
+
+                
+
+            </div>
+            </div>
+        </div>
+    </div>
+								
+	</div>
+			
+</div>
+</div>
+
+
+       
+
+
+
+    <!-- end col -->
+
+   <!-- end col -->
+</div> <!-- end row -->
+
+
+ <!-- end row -->
+{% endblock %}
+
+{% block javascript %}
+
+
+
+ <!-- Responsive Table js -->
+        <script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+ 
+
+<!-- Required datatable js -->
+  <script src="{{ asset('admin/dist/assets/js/pages/table-responsive.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+
+<!-- Buttons examples -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+
+
+    <!-- form mask init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+  
+
+
+<script>
+    
+    // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000);
+
+ 
+</script>  
+
+
+{% endblock %}

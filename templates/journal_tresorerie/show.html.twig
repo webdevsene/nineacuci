@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalTresorerie{% endblock %}
+
+{% block body %}
+    <h1>JournalTresorerie</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ journal_tresorerie.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ journal_tresorerie.createdAt ? journal_tresorerie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ journal_tresorerie.updatedAt ? journal_tresorerie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ journal_tresorerie.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ journal_tresorerie.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ journal_tresorerie.status }}</td>
+            </tr>
+            <tr>
+                <th>DateJ</th>
+                <td>{{ journal_tresorerie.dateJ ? journal_tresorerie.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ journal_tresorerie.libelle }}</td>
+            </tr>
+            <tr>
+                <th>Recettes</th>
+                <td>{{ journal_tresorerie.recettes }}</td>
+            </tr>
+            <tr>
+                <th>Depenses</th>
+                <td>{{ journal_tresorerie.depenses }}</td>
+            </tr>
+            <tr>
+                <th>Solde</th>
+                <td>{{ journal_tresorerie.solde }}</td>
+            </tr>
+            <tr>
+                <th>VrVentes</th>
+                <td>{{ journal_tresorerie.vrVentes }}</td>
+            </tr>
+            <tr>
+                <th>VrAutres</th>
+                <td>{{ journal_tresorerie.vrAutres }}</td>
+            </tr>
+            <tr>
+                <th>VdMobiliers</th>
+                <td>{{ journal_tresorerie.vdMobiliers }}</td>
+            </tr>
+            <tr>
+                <th>VdMarchandises</th>
+                <td>{{ journal_tresorerie.vdMarchandises }}</td>
+            </tr>
+            <tr>
+                <th>VdFournitures</th>
+                <td>{{ journal_tresorerie.vdFournitures }}</td>
+            </tr>
+            <tr>
+                <th>VdLoyer</th>
+                <td>{{ journal_tresorerie.vdLoyer }}</td>
+            </tr>
+            <tr>
+                <th>VdSalaires</th>
+                <td>{{ journal_tresorerie.vdSalaires }}</td>
+            </tr>
+            <tr>
+                <th>VdImpots</th>
+                <td>{{ journal_tresorerie.vdImpots }}</td>
+            </tr>
+            <tr>
+                <th>VdAutres</th>
+                <td>{{ journal_tresorerie.vdAutres }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_tresorerie_index') }}">back to list</a>
+
+    <a href="{{ path('app_journal_tresorerie_edit', {'id': journal_tresorerie.id}) }}">edit</a>
+
+    {{ include('journal_tresorerie/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cubage des données {% endblock %}
+{% block stylesheets %}
+<style type="text/css">
+    .box {
+       width: 800px;
+       margin: auto;
+    }
+    .active_tab1{
+       background-color: #fff;
+       color: #333;
+       font-weight: 600;
+    }
+    .inactive_tab1{
+       background-color: #f5f5f5;
+       color: #333;
+       cursor: not-allowed;
+    }
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+ </style>
+{% endblock %}
+{% block body %}
+
+                {% for message in app.flashes('notice') %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <i class="mdi mdi-alert-outline me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                {% endfor %}
+
+                <div class="row ">
+                    
+                            <div class="col-xl-12 " >
+                                <div class="card " style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                                    <div class="card-body" style="border: 1px solid #ccc;">
+                                        <h4 class="card-title mb-4 text-center" >Cubage des données</h4>
+
+                                        <form name="myForm" method="post" style="margin: auto; width: 50%; margin-left : 35vw; " onsubmit="return validateForm();">
+                                            <div class="row mb-2">
+                                                <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Année exercice</label>
+                                                <div class="col-sm-3">
+                                                  <input type="text" class="form-control form-control-sm input-mask" data-inputmask="'mask': '9999'" id="debut-periode-input" name="debut-periode-input" placeholder="Enter année anterieur ">
+                                                </div>
+                                            </div>
+                                           
+
+                                            <div class="row mb-2">
+                                                <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Table</label>
+
+                                                <div class="col-sm-3" >
+
+                                                 <select id="format-input" required name="table" class=" form-select form-select-sm">
+                                                    <option value="">Choisir un tableau...</option>
+                                                    <option value="1">Bilan </option>
+                                                    <option value="2">Compte de Résultats </option>
+                                                    <option value="3">Etat des Flux de trésoreries </option>
+                                                   </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <label for="horizontal-firstname-input" class="col-sm-3 col-form-label"></label>
+
+                                                <div class="col-sm-3" >
+
+                                                 <button type="submit" id="rapport-submit" name="rapport-submit" class="btn btn-secondary btn-sm w-md rapport-submit">Générer rapport </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="row justify-content-end">
+                                                <div class="col-sm-10">
+                                                    <div>
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- end card body -->
+                                </div>
+                                <!-- end card -->
+                            </div>
+                            <!-- end col -->
+
+                </div>
+
+{% endblock %}
+
+{% block javascript %}
+        <!-- form mask init -->
+        <script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+
+        <script>
+            function validateForm() {
+                let x = document.forms["myForm"]["debut-periode-input"].value;
+                let y = document.forms["myForm"]["fin-periode-input"].value;
+                if (x == "" || y == "") {
+                  alert("Année doit être renseignée !");
+                  return false;
+                }
+                if (x >= y ) {
+                  alert("Verifier l'année en fin de période !");
+                  return false;
+                }
+
+                let diff = y-x ;
+                
+                if (diff !== 1 ) {
+                  alert("Verifier l'année en fin de période !");
+                  return false;
+                }
+
+
+            }
+        </script>
+
+
+{% endblock %}

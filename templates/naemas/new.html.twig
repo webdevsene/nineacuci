@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New NAEMAS{% endblock %}
+
+{% block body %}
+    <h1>Create new NAEMAS</h1>
+
+    {{ include('naemas/_form.html.twig') }}
+
+    <a href="{{ path('n_a_e_m_a_s_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DbChange{% endblock %}
+
+{% block body %}
+    <h1>DbChange</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ db_change.id }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ db_change.createdAt ? db_change.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Table_name</th>
+                <td>{{ db_change.tableName }}</td>
+            </tr>
+            <tr>
+                <th>Entity_id</th>
+                <td>{{ db_change.entityId }}</td>
+            </tr>
+            <tr>
+                <th>Action</th>
+                <td>{{ db_change.action }}</td>
+            </tr>
+            <tr>
+                <th>Field_name</th>
+                <td>{{ db_change.fieldName }}</td>
+            </tr>
+            <tr>
+                <th>Old_value</th>
+                <td>{{ db_change.oldValue }}</td>
+            </tr>
+            <tr>
+                <th>New_value</th>
+                <td>{{ db_change.newValue }}</td>
+            </tr>
+            <tr>
+                <th>User_id</th>
+                <td>{{ db_change.userId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_db_change_index') }}">back to list</a>
+
+    <a href="{{ path('app_db_change_edit', {'id': db_change.id}) }}">edit</a>
+
+    {{ include('db_change/_delete_form.html.twig') }}
+{% endblock %}

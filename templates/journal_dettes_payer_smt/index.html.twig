@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalDettesPayerSmt index{% endblock %}
+
+{% block body %}
+    <h1>JournalDettesPayerSmt index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>AnneeFinanciere</th>
+                <th>DateJ</th>
+                <th>NumFacture</th>
+                <th>Nom</th>
+                <th>Montant</th>
+                <th>DatePaiement</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for journal_dettes_payer_smt in journal_dettes_payer_smts %}
+            <tr>
+                <td>{{ journal_dettes_payer_smt.id }}</td>
+                <td>{{ journal_dettes_payer_smt.createdAt ? journal_dettes_payer_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_dettes_payer_smt.updatedAt ? journal_dettes_payer_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_dettes_payer_smt.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ journal_dettes_payer_smt.status }}</td>
+                <td>{{ journal_dettes_payer_smt.anneeFinanciere }}</td>
+                <td>{{ journal_dettes_payer_smt.dateJ ? journal_dettes_payer_smt.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_dettes_payer_smt.numFacture }}</td>
+                <td>{{ journal_dettes_payer_smt.nom }}</td>
+                <td>{{ journal_dettes_payer_smt.montant }}</td>
+                <td>{{ journal_dettes_payer_smt.datePaiement ? journal_dettes_payer_smt.datePaiement|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_journal_dettes_payer_smt_show', {'id': journal_dettes_payer_smt.id}) }}">show</a>
+                    <a href="{{ path('app_journal_dettes_payer_smt_edit', {'id': journal_dettes_payer_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_dettes_payer_smt_new') }}">Create new</a>
+{% endblock %}

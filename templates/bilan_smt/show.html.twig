@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BilanSmt{% endblock %}
+
+{% block body %}
+    <h1>BilanSmt</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ bilan_smt.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ bilan_smt.createdAt ? bilan_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ bilan_smt.updatedAt ? bilan_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AmortPR</th>
+                <td>{{ bilan_smt.amortPR }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ bilan_smt.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Brut</th>
+                <td>{{ bilan_smt.brut }}</td>
+            </tr>
+            <tr>
+                <th>Net1</th>
+                <td>{{ bilan_smt.net1 }}</td>
+            </tr>
+            <tr>
+                <th>Net2</th>
+                <td>{{ bilan_smt.net2 }}</td>
+            </tr>
+            <tr>
+                <th>RefCode</th>
+                <td>{{ bilan_smt.refCode }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ bilan_smt.status }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ bilan_smt.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ bilan_smt.type }}</td>
+            </tr>
+            <tr>
+                <th>TypeRecupperation</th>
+                <td>{{ bilan_smt.typeRecupperation }}</td>
+            </tr>
+            <tr>
+                <th>UploadedFileName</th>
+                <td>{{ bilan_smt.uploadedFileName }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_bilan_smt_index') }}">back to list</a>
+
+    <a href="{{ path('app_bilan_smt_edit', {'id': bilan_smt.id}) }}">edit</a>
+
+    {{ include('bilan_smt/_delete_form.html.twig') }}
+{% endblock %}

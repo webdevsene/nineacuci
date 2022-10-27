@@ -1,0 +1,245 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Migration des mises à jour {% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+    .box {
+       width: 800px;
+       margin: auto;
+    }
+    .active_tab1{
+       background-color: #fff;
+       color: #333;
+       font-weight: 600;
+    }
+    .inactive_tab1{
+       background-color: #f5f5f5;
+       color: #333;
+       cursor: not-allowed;
+    }
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+ </style>
+{% endblock %}
+{% block body %}
+
+                {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="mdi mdi-alert-outline me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                {% endfor %}
+
+                {% for message in app.flashes('notice') %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <i class="mdi mdi-alert-outline me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                {% endfor %}
+                
+                <div class=" mt-lg-1">
+                
+                        <!-- start page title -->
+                        <div class="box-header">
+                            <ul class="nav nav-tabs nav-tabs-left">
+                                <li class="active">
+                                    <a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                                        Correction de l'année de campagne
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                            <!-- end page title -->
+
+                        <div class="box-content padded">
+
+                            <div class="tab-content">
+                            
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <form name="myForm" class="repeater" enctype="multipart/form-data" method="post" action="{{ path('app_updated_data_migrations_errnoannee')}}">
+                                                <div data-repeater-list="group-a">
+                                                    <div data-repeater-item class="row">
+
+                                                        <div  class="mb-3 col-lg-2 ">
+                                                            <!--<label for="subject">Choisir une table</label>
+                                                            
+                                                            <select id="tabl-input"  name="tabl-input" class=" form-select form-select-sm tabl-input">
+                                                                <option value="">Choisir un tableau...</option>
+                                                                <option value="1">Bilan Actif</option>
+                                                                <option value="2">Bilan Passif</option>
+                                                                <option value="3">Compte de Résultats </option>
+                                                                <option value="4">Etat des Flux de trésoreries </option>
+                                                            </select>-->
+
+                                                            <div class="form-check form-checkbox-outline form-check-success mb-3">
+                                                                <input class="form-check-input Spec" type="checkbox"
+                                                                    id="customCheckcolor1" name="customCheckcolor1" value="1">
+                                                                <label class="form-check-label" for="customCheckcolor2">
+                                                                    Bilan Actif
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-checkbox-outline form-check-primary mb-3">
+                                                                <input class="form-check-input Spec" type="checkbox"
+                                                                    id="customCheckcolor2" name="customCheckcolor2" value="2">
+                                                                <label class="form-check-label" for="customCheckcolor1">
+                                                                    Bilan Passif
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-checkbox-outline form-check-info mb-3">
+                                                                <input class="form-check-input Spec" type="checkbox"
+                                                                    id="customCheckcolor3" name="customCheckcolor3" value="3">
+                                                                <label class="form-check-label" for="customCheckcolor3">
+                                                                    Compte de Résultats
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-checkbox-outline form-check-warning mb-3">
+                                                                <input class="form-check-input Spec" type="checkbox"
+                                                                    id="customCheckcolor4" name="customCheckcolor4" checked value="4">
+                                                                <label class="form-check-label" for="customCheckcolor4">
+                                                                    Flux de trésoreries
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-checkbox-outline form-check-danger">
+                                                                <input class="form-check-input Spec-all" type="checkbox"
+                                                                    id="customCheckTous" name="customCheckTous" value="5">
+                                                                <label class="form-check-label" for="customCheckcolor5">
+                                                                    Tout sélectionner
+                                                                </label>
+                                                            </div>
+
+
+                                                        </div>
+            
+                                                        <div class="mb-3 col-lg-3 p-2">
+                                                            <label for="_erreno">Année erronnée</label>
+                                                            <input type="text" name="_erreno"  class="form-control form-control-sm input-mask erreno" data-inputmask="'mask': '9999'" id="_erreno">
+                                                        </div>
+            
+                                                        <div class="mb-3 col-lg-3 p-2">
+                                                            <label for="_anneecorrect">Année de correction</label>
+                                                            <input type="text" name="_anneecorrect"  class="form-control form-control-sm input-mask anneecorrect" data-inputmask="'mask': '9999'" id="_anneecorrect">
+                                                        </div>
+            
+                                                        <div class="mb-3 col-lg-3 p-2  codecuciva">
+                                                            <label for="_cuciconcerne">Code cuci concerné</label>
+                                                            <input type="text" name="_cuciconcerne"  class="form-control form-control-sm cuciconcerne" id="_cuciconcerne">
+                                                        </div>
+
+                                                    </div>
+                                                        <div class="mb-0 col-lg-3 align-self-center">
+                                                            <div class="d-grid">
+                                                                <input id="submit-templ" name="submit-templ" type="submit" class="btn btn-secondary btn-sm" value="Modifier année de campagne"/>
+                                                            </div>
+                                                        </div>
+                                                    
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                        <!-- end row -->
+		                </div>
+                        </div>
+                </div>
+        
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    <!-- Sweet alert init js-->
+    <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+        <!-- form mask init -->
+    <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+
+    <script>
+
+        $(document).ready(function(){
+
+            $('.Spec-all').on('click', function() {
+                $('.Spec:enabled').prop('checked', this.checked);
+            });
+        });
+
+        $(".codecuciva").on('blur change',"#_cuciconcerne", function(e){
+
+            let route="{{path('nineaNum')}}"+"/"+ $('#_cuciconcerne').val();
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                async: true,
+                success: function(data){                        
+                    if(data!=0){
+                        $("#_cuciconcerne").css('border-color', '');
+                        //continue;
+                    }else{                        
+                        Swal.fire('Vérifier le numéro de CUCI que vous avez entrez.');
+                        $("#_cuciconcerne").css('border-color', 'red');
+                        return false;
+                        //console.log('erno cuci'+$('#_cuciconcerne').val()); return false; 
+                    }
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            });            
+
+        });
+
+        $("#submit-templ").click(function(e){
+
+            if($("#tabl-input").val() == "" || $("#_erreno").val() == "" || $("#_anneecorrect").val()=="" || $("#_cuciconcerne").val()==""){
+                Swal.fire("Choisir un tableau, année erronée, année de correction et le CUCI concerné !"); return false;
+            }else{
+
+
+            }
+
+
+        });
+
+        function validateForm() {
+            let x = document.forms["myForm"]["format-input"].value;
+            let y = document.forms["myForm"]["_resume"].value;
+            if (x == "" || y == "") {
+              Swal.fire("Choisir une table et le template correspondant !");
+              return false;
+            }
+        }        
+    
+        // Auto Close Bootstrap alerts
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 2000); 
+
+    </script>
+
+
+{% endblock %}

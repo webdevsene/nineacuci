@@ -1,0 +1,26 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NiFormeunite{% endblock %}
+
+{% block body %}
+    <h1>NiFormeunite</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ni_formeunite.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ ni_formeunite.libelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ni_formeunite_index') }}">back to list</a>
+
+    <a href="{{ path('app_ni_formeunite_edit', {'id': ni_formeunite.id}) }}">edit</a>
+
+    {{ include('ni_formeunite/_delete_form.html.twig') }}
+{% endblock %}

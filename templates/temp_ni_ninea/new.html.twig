@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TempNINinea{% endblock %}
+
+{% block body %}
+    <h1>Create new TempNINinea</h1>
+
+    {{ include('temp_ni_ninea/_form.html.twig') }}
+
+    <a href="{{ path('app_temp_n_i_ninea_index') }}">back to list</a>
+{% endblock %}

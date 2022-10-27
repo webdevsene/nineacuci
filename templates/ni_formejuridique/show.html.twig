@@ -1,0 +1,26 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NiFormejuridique{% endblock %}
+
+{% block body %}
+    <h1>NiFormejuridique</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ni_formejuridique.id }}</td>
+            </tr>
+            <tr>
+                <th>FojLibelle</th>
+                <td>{{ ni_formejuridique.fojLibelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ni_formejuridique_index') }}">back to list</a>
+
+    <a href="{{ path('app_ni_formejuridique_edit', {'id': ni_formejuridique.id}) }}">edit</a>
+
+    {{ include('ni_formejuridique/_delete_form.html.twig') }}
+{% endblock %}

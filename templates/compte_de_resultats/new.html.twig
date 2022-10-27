@@ -1,0 +1,2644 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- Responsive Table css -->
+    <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+{% endblock %}
+
+
+{% block body %}
+
+
+    {% for message in app.flashes('notice') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-outline me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endfor %}
+
+        <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <div class=" p-2">
+                    <a href="{{ path('bilan_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Bilan <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('compte_de_resultats_new') }}" class="btn btn-primary waves-effect waves-light btn-sm">Compte résultat <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('flux_des_tresoreries_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Flux des trésoreries<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('immo_brut_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations brutes <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('cuci_immo_plus_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations: Plus-value et moins-value de cession <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_effectifs_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Effectifs, masse salariale et personnel exterieur <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_production_de_exercice_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Production de l'exercice <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('achat_production_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Achats destinés à la production <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+         <span style="font-size:14px; color:#60b9c7;border-bottom: 1px solid #60b9c7; width:100%;" >Compte de résultat</span>
+    </div>
+        <!-- end page title -->
+
+ <br>
+<div class="row">
+    <div class="col-xl-12">
+
+        <!-- debut form -->
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <form method="post" action="{{path('compte_de_resultats_new')}}" id="idformcompte" name="idformcompte">
+    <div class="card-body " style="margin: 0%;padding: 0%;">
+        <div class="row">
+        <div class="col-xl-12"> 
+
+        
+            <table class="table table-bordered mt-2" >
+                <tr style="margin-top:0px;">
+                    <td  style="width: 15%;">Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                        <input type="text"  readonly class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                    <td style="text-align: right; width: 15%;">Désignation entité :<span style="color:red">*</span></td><td  style="width: 20%;">
+                        <input type="text" disabled class="form-control form-control-sm" name="denomination" id="denomination"></td>
+                    <td style="text-align: right; width: 10%;">Année financière :<span style="color:red">*</span></td><td  style="width: 5%;">
+                        {% if is_granted('ROLE_BSE_ADMIN') %}
+                            <input type="text" class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'">
+                            
+                        {% else %}
+                            <input readonly type="text" class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'">
+                            
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+         
+             <div class="card">
+                 <div class="card-body">
+
+                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                         <button type="button" class="btn btn-secondary waves-effect waves-light resetBtn" id="resetBtn">
+                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                         </button>
+                         <a type="submit" class="btn btn-success waves-effect waves-light sauvegarderCompte">
+                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                         </a>
+                         {#<button type="button" class="btn btn-dark bg-soft opacity-25" name="valider" id="valider">#}
+                         <button type="button" class="btn btn-dark bt-soft waves-effect waves-light valider" id="valider">
+                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                         </button>
+                 </div>
+             </div>
+         </div>
+
+         <div class="col-12">
+            <div class="table-responsive">
+                <table name="form2" id="form2" class="table table-bordered table-striped" width="100%">
+                    <thead style="color: white;">
+                        <!---<tr class=" opacity-65" style="background: #008000;">
+                            <th scope="col" colspan="2" class="text-center ">
+                            </th>
+                            <th scope="col" colspan="3" class="text-center">
+                            </th>
+                            <th colspan="3" scope="col" class="text-center text-white">
+                              Exercice au 31/12/<span class="text" id="anneeN"></span> 
+                            </th>
+                            <th colspan="3" scope="col" class="text-center text-white">
+                              Exercice au 31/12/<span class="text" id="anneeN-1"></span>
+                            </th>
+                        </tr>-->
+                        
+                        <!-- t header remplacer -->
+                        <tr class=" opacity-65" style="background: #008000;">
+                            <th scope="col" colspan="3" class="text-center ">
+                                <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px; " id="txtcuci-cr"></span> 
+                            </th>
+                            <th colspan="5" scope="col" class="text-center ">
+                                
+                                  <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignation-cr"></span>  
+                            </th>
+                            <th colspan="3" scope="col" class="text-center ">
+                                 <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinanciere-cr"></span>
+                            </th>
+                            
+                        </tr>
+                        <!-- t header remplacer -->
+
+                        <tr class=" opacity-80" style="background: #008000;">
+                            <th scope="col" colspan="2" rowspan="2" class="text-center text-white"  style="width:2%;">
+                                REF
+                            </th>
+                            <th scope="col" colspan="" rowspan="2" class="text-center text-white" style="width:20%;">
+                                Libelle
+                            </th>
+                            <th scope="col" colspan="" rowspan="2" class="text-center text-white" style="width:5%;">
+                                Signe
+                            </th>
+                            <th scope="col" colspan="" rowspan="2" class="text-center text-white"style="width:5%;">
+                                Note
+                            </th>
+
+                            <th colspan="3" scope="col" class="text-center text-white" style="width:34%;">
+                              Exercice au 31/12/<span class="text" id="anneeN"></span> 
+                            </th>
+                            <th colspan="3" scope="col" class="text-center text-white" style="width:34%;">
+                              Exercice au 31/12/<span class="text" id="anneeN-1"></span>
+                            </th>
+                        </tr>
+                        <tr class=" opacity-80" style="background: #008000;">
+                            <th colspan="3" scope="col" class="text-center text-white" style="width:34%;">
+                              NETN
+                            </th>
+                            <th colspan="3" scope="col" class="text-center text-white" style="width:34%;">
+                               NETN-1
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <!-- debut tbody inputs -->
+                    <tbody id="tbody">
+                
+                    
+                    
+                    </tbody>
+                    <!-- end tbody -->
+                </table> </br>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+       <button type="button" class="btn btn-secondary waves-effect waves-light resetBtn" id="resetBtn2">
+           <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+       </button>
+       <a  type="submit" class="btn btn-success waves-effect waves-light sauvegarderCompte">
+           <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+       </a>
+       <button type="button" class="btn btn-dark bt-soft waves-effect waves-light valider"
+        id="valider2">
+           <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+       </button>
+        <input name="submited" id="submited" type="submit" value="1" style="display:none;"/>
+        <input name="notsubmited" id="notsubmited" type="submit" value="0" style="display:none;"/>
+   </div>
+            <!-- <input type="hidden" name="type" value="1" >
+            <button type="submit" class="btn btn-success waves-effect waves-light">
+                <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+            </button> -->
+                         
+        </div>
+        <input type="hidden" name="" value="2" >
+        </form>
+</div>
+
+<!-- end formulaire -->
+
+</div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+
+        <!-- Init js -->
+
+
+        <!-- form mask init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+<script type="text/javascript">
+
+
+ $(document).ready(function(){
+
+    {% if app.session.get("codeCuci")!=""%}
+     
+       var value='{{app.session.get("codeCuci")}}';
+   
+       document.getElementById('idcuci').setAttribute('value',value);
+       document.getElementById('txtcuci-cr').innerHTML=value;
+
+
+       //let route="{{path('nineaNum')}}"+"/"+ value;
+       let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+
+               $.ajax({
+                   type: 'GET',
+                   url : route,
+                   dataType : "json",
+                   success: function(data){
+                       
+                       let denomination=document.getElementById("denomination");
+                       document.getElementById('txtdesignation-cr').innerHTML=data;
+                       denomination.value=data;
+   
+                     
+                   } ,
+                   error : function(error){
+                       console.log(error);
+                   }
+       })
+
+
+       {% if app.session.get("annee")!=""%}
+
+            document.getElementById('txtfinanciere-cr').innerHTML='{{app.session.get("annee")}}';
+
+            document.getElementById("annee").value='{{app.session.get("annee")}}';
+            let routeurl="{{path('compte_result_json')}}"+"/"+ '{{app.session.get("annee")}}';
+            var form = $(this).closest("form");
+
+            $.ajax({
+                type: 'GET',
+                url : routeurl,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+                    //tbody=document.getElementById("tbody");
+                    var tbody=document.getElementById("tbody");
+                    var ann=document.getElementById("annee");
+                    var anneeN_1=document.getElementById("anneeN-1");
+                    var anneeN=document.getElementById("anneeN");
+                    tbody.innerHTML="";
+                    ann.innerHTML="";
+                    anneeN.value = ann.value;
+                    anneeN.setAttribute('value', anneeN.value);
+                    anneeN.innerHTML=anneeN.value;
+                    anneeN_1.innerHTML=anneeN.value-1;
+    
+                        
+                    //for (var i = data[2].length - 1; i >= 0; i--) {
+                    for (var i = 0; i < data[2].length; i++) {
+                        
+                          //for (var j = data[1].length - 1; j >= 0; j--) {
+                          for (var j = 0; j < data[1].length; j++) {
+                                        
+                              if (data[2][i][0]==data[1][j][2]) {
+          
+                                  var tr=document.createElement('tr'); // tr pour les agregats fils
+                                  tr.setAttribute('style',"border:#ced4da;");
+
+                                  var td1=document.createElement('td');
+                                  var td2=document.createElement('td');
+          
+                                  var td5=document.createElement('td');
+                                  var td6=document.createElement('td');
+    
+                                  var tsignes = document.createElement('td');
+                                  var tnotes = document.createElement('td');
+    
+    
+          
+                                  td1.setAttribute('colspan',2); 
+                                  td1.setAttribute('scope',"col"); 
+                                  td1.setAttribute('class',"text-center form");  
+                                         
+                                  td1.innerHTML=  data[1][j][0];
+                                  tr.appendChild(td1) ;
+                                  
+                                  td2.setAttribute('colspan',1); 
+                                  td2.setAttribute('class',"text-left form");           
+                                  td2.setAttribute('scope',"col"); 
+                                            
+                                  td2.innerHTML=  data[1][j][1];
+                                  tr.appendChild(td2) ;
+    
+    
+                                  // tsignes.setAttribute('colspan',2); 
+                                  tsignes.setAttribute('class',"text-center form");           
+                                  tsignes.setAttribute('scope',"col"); 
+                                            
+                                  tsignes.innerHTML=  data[1][j][5];
+                                  tr.appendChild(tsignes) ;
+    
+    
+                                  tnotes.setAttribute('colspan',1); 
+                                  tnotes.setAttribute('class',"text-center form");           
+                                  tnotes.setAttribute('scope',"col"); 
+                                            
+                                  tnotes.innerHTML= data[1][j][6]; // '20'; // data[1][j][3]
+                                  tr.appendChild(tnotes) ;
+    
+    
+                                  
+                                  td5.setAttribute('colspan',3); 
+                                  td5.setAttribute('scope',"col"); 
+                                  td5.setAttribute('class',"text-center");
+                                  var input5=document.createElement('input');
+                                  input5.setAttribute('type','text'); 
+                                  input5.setAttribute('name',data[1][j][0]+"net1"); 
+                                  input5.setAttribute('id',data[1][j][0]+"net1"); 
+                                 
+                                  input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                                  input5.setAttribute('data-sousclasse',data[1][j][2]);
+
+                                  input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                 
+                                  if(data[0][data[1][j][0]]){
+                                      input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                                  }
+          
+                                  // input5.addEventListener ("change", function(e){
+                                  //     var sousclasse= $(this).data('sousclasse');
+                                  //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                                  //     
+                                  //     console.log(total);
+                                  //     if($(this).hasClass('net1')){
+                                  //          $('input.total.net1').val(total);
+                                  //     }else{
+                                  //         $('input.total.net2').val(total);
+                                  //     }
+                                  //    
+                                  // });
+                                  td5.appendChild(input5);
+                                  tr.appendChild(td5) ;
+                                  
+          
+          
+                                  td6.setAttribute('colspan',3); 
+                                  td6.setAttribute('scope',"col"); 
+                                  td6.setAttribute('class',"text-center");           
+                                  var input6=document.createElement('input');  
+                                  input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                                  input6.setAttribute('type','text'); 
+                                  input6.setAttribute('name',data[1][j][0]+"net2"); 
+                                  input6.setAttribute('id',data[1][j][0]+"net2"); 
+                                  input6.setAttribute('data-sousclasse',data[1][j][2]);
+                                  input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+
+                                  if(data[0][data[1][j][0]]){
+                                  input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                                  }
+          
+                                  // on commente cette partie pour tester la methode hard
+                                  //input6.addEventListener ("change", function(e){
+                                  //    var sousclasse= $(this).data('sousclasse');
+                                  //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                                  //    console.log(total);
+                                  //    if($(this).hasClass('net2')){
+                                  //         $('input.total.net1').val(total);
+                                  //    }else{
+                                  //        $('input.total.net2').val(total);
+                                  //    }
+                                  //    // my update here 
+                                  //});
+                                  td6.appendChild(input6);
+                                  tr.appendChild(td6) ;
+                                  tbody.appendChild(tr);  
+          
+                               
+                              }
+                          } 
+    
+                        /// tr pour les agregats parents
+                        var tr=document.createElement('tr');
+                        // tr.setAttribute('class',"bg-dark bg-soft opacity-65");                    
+                        tr.setAttribute('class'," opacity-65");
+                        tr.setAttribute('style',"color:white;background: #82C46C; border:#ced4da;");
+
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+    
+                        var tsignes = document.createElement('td');
+                        var tnotes = document.createElement('td');
+    
+    
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");           
+                        td1.innerHTML=  data[2][i][0]; // sont stockés les ref
+                        tr.appendChild(td1) ;
+                        
+                        td2.setAttribute('colspan',1); 
+                        td2.setAttribute('class',"text-left form");           
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
+                        tr.appendChild(td2) ;
+    
+                        
+                        // tsignes.setAttribute('colspan',2); 
+                        tsignes.setAttribute('class',"text-center form");           
+                        tsignes.setAttribute('scope',"col"); 
+                                  
+                        tsignes.innerHTML=  data[2][i][5] ; //'-/+'; // afffiche les valeur du signe depuis la base tab RefAgg data[2][i][2]
+                        tr.appendChild(tsignes) ;
+    
+    
+                        tnotes.setAttribute('colspan',1); 
+                        tnotes.setAttribute('class',"text-center form");           
+                        tnotes.setAttribute('scope',"col"); 
+                                  
+                        tnotes.innerHTML= data[2][i][6]; // '20'; // sont affichées les valeurs des notes data[2][i][3]
+                        tr.appendChild(tnotes) ;
+    
+    
+                        td5.setAttribute('colspan',3); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");
+                        var input1=document.createElement('input'); 
+                        input1.setAttribute('type','text');
+                        input1.setAttribute('style','font-weight: bold;');
+                        input1.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+
+                        
+                        input1.setAttribute('name',data[2][i][0]+"net1"); 
+                        input1.setAttribute('id',data[2][i][0]+"net1"); 
+                        input1.setAttribute('class','form-control form-control-sm calcul total net1 '+data[2][i][0]);   
+                        if(data[0][data[2][i][0]]){
+                            input1.setAttribute('value',data[0][data[2][i][0]][1]);
+                            // faut appeler la function sum ici
+                        }
+    
+                        
+                        td5.appendChild(input1);
+                        tr.appendChild(td5) ;
+                        
+    
+    
+                        td6.setAttribute('colspan',3); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                        var input2=document.createElement('input'); 
+                        input2.setAttribute('type','text');
+                        input2.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                        input2.setAttribute('style','font-weight: bold;');
+                        input2.setAttribute('name',data[2][i][0]+"net2"); 
+                        input2.setAttribute('id',data[2][i][0]+"net2"); 
+                        input2.setAttribute('class','form-control form-control-sm calcul total net2 '+data[2][i][0]);
+                        if(data[0][data[2][i][0]]){
+                            input2.setAttribute('value',data[0][data[2][i][0]][2]);
+                          }
+                                
+                          td6.appendChild(input2);
+                          tr.appendChild(td6) ;
+                          tbody.appendChild(tr);  
+    
+    
+    
+                        
+    
+                    }
+    
+                    
+             $(".form-control").bind("keypress", function(e) {
+    
+                if (e.keyCode == 13) {
+                    var inps = $("input"); //add select too
+                    for (var x = 0; x < inps.length; x++) {
+                        if (inps[x] == this) {
+                            while ((inps[x]).name == (inps[x + 1]).name) {
+                            x++;
+                            }
+                            if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                        }
+                    }   e.preventDefault();
+                }
+            });
+
+            $(function(){
+                        $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                        $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")});
+    
+                   
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        
+       {% endif %}
+   
+    {% endif %}
+   
+});   // end DOM 
+
+
+    //$(document).ready(function(){
+
+        $('#idcuci').change(function(){
+            
+            let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+            document.getElementById('txtcuci-cr').innerHTML=$('#idcuci').val();
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                    denomination.value=data;
+                    //// ici recuperer l'annee de session
+                    document.getElementById("annee").value=$('#annee').val();
+
+                    document.getElementById('txtdesignation-cr').innerHTML=data;
+
+
+                    
+                    
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        });
+
+
+        
+    $('#annee').change(function(e){
+
+        e.preventDefault();
+
+        let route="{{path('compte_result_json')}}"+"/"+ $('#annee').val(); //console.log(route);
+        document.getElementById("txtfinanciere-cr").innerHTML=$('#annee').val();
+            
+        $.ajax({
+            type: 'GET',
+            url : route,
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function(data){
+                //tbody=document.getElementById("tbody");
+                var tbody=document.getElementById("tbody");
+                //var ann=document.getElementById("annee");
+                //var anneeN_1=document.getElementById("anneeN-1");
+                //var anneeN=document.getElementById("anneeN");
+                tbody.innerHTML="";
+                //ann.innerHTML="";
+                //anneeN.value = ann.value;
+                //anneeN.setAttribute('value', anneeN.value);
+                //anneeN.innerHTML=anneeN.value;
+                //anneeN_1.innerHTML=anneeN.value-1;
+
+                    
+                //for (var i = data[2].length - 1; i >= 0; i--) {
+                for (var i = 0; i < data[2].length; i++) {
+                    
+                      //for (var j = data[1].length - 1; j >= 0; j--) {
+                      for (var j = 0; j < data[1].length; j++) {
+                                    
+                          if (data[2][i][0]==data[1][j][2]) {
+      
+                              var tr=document.createElement('tr');
+                              tr.setAttribute('style',"border:#ced4da;");
+
+                              var td1=document.createElement('td');
+                              var td2=document.createElement('td');
+      
+                              var td5=document.createElement('td');
+                              var td6=document.createElement('td');
+
+                              var tsignes = document.createElement('td');
+                              var tnotes = document.createElement('td');
+
+
+      
+                              td1.setAttribute('colspan',2); 
+                              td1.setAttribute('scope',"col"); 
+                              td1.setAttribute('class',"text-center form");  
+                                     
+                              td1.innerHTML=  data[1][j][0];
+                              tr.appendChild(td1) ;
+                              
+                              td2.setAttribute('colspan',1); 
+                              td2.setAttribute('class',"text-left form");           
+                              td2.setAttribute('scope',"col"); 
+                                        
+                              td2.innerHTML=  data[1][j][1];
+                              tr.appendChild(td2) ;
+
+
+                              // tsignes.setAttribute('colspan',2); 
+                              tsignes.setAttribute('class',"text-center form");           
+                              tsignes.setAttribute('scope',"col"); 
+                                        
+                              tsignes.innerHTML=  data[1][j][5] ; //data[1][j][2]
+                              tr.appendChild(tsignes) ;
+
+
+                              tnotes.setAttribute('colspan',1); 
+                              tnotes.setAttribute('class',"text-center form");           
+                              tnotes.setAttribute('scope',"col"); 
+                                        
+                              tnotes.innerHTML= data[1][j][6]; // '20'; // data[1][j][3]
+                              tr.appendChild(tnotes) ;
+
+
+                              
+                              td5.setAttribute('colspan',3); 
+                              td5.setAttribute('scope',"col"); 
+                              td5.setAttribute('class',"text-center");
+                              var input5=document.createElement('input');
+                              input5.setAttribute('type','text'); 
+                              input5.setAttribute('name',data[1][j][0]+"net1"); 
+                              input5.setAttribute('id',data[1][j][0]+"net1"); 
+                              input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                              input5.setAttribute('data-sousclasse',data[1][j][2]);
+
+                              input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                              if(data[0][data[1][j][0]]){
+                                  input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                              }
+
+
+      
+                              // input5.addEventListener ("change", function(e){
+                              //     var sousclasse= $(this).data('sousclasse');
+                              //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                              //     
+                              //     console.log(total);
+                              //     if($(this).hasClass('net1')){
+                              //          $('input.total.net1').val(total);
+                              //     }else{
+                              //         $('input.total.net2').val(total);
+                              //     }
+                              //    
+                              // });
+                              td5.appendChild(input5);
+                              tr.appendChild(td5) ;
+                              
+      
+      
+                              td6.setAttribute('colspan',3); 
+                              td6.setAttribute('scope',"col"); 
+                              td6.setAttribute('class',"text-center");           
+                              var input6=document.createElement('input');  
+                              input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                              input6.setAttribute('type','text'); 
+                              input6.setAttribute('name',data[1][j][0]+"net2"); 
+                              input6.setAttribute('id',data[1][j][0]+"net2"); 
+                              input6.setAttribute('data-sousclasse',data[1][j][2]);
+
+                              input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                              
+                              if(data[0][data[1][j][0]]){
+                              input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                              }
+      
+                              // on commente cette partie pour tester la methode hard
+                              //input6.addEventListener ("change", function(e){
+                              //    var sousclasse= $(this).data('sousclasse');
+                              //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                              //    console.log(total);
+                              //    if($(this).hasClass('net2')){
+                              //         $('input.total.net1').val(total);
+                              //    }else{
+                              //        $('input.total.net2').val(total);
+                              //    }
+                              //    // my update here 
+                              //});
+                              td6.appendChild(input6);
+                              tr.appendChild(td6) ;
+                              tbody.appendChild(tr);  
+      
+                           
+                          }
+                      } 
+
+                    var tr=document.createElement('tr');
+                    // tr.setAttribute('class',"bg-dark bg-soft opacity-65");                    
+                    tr.setAttribute('class'," opacity-65");
+                    tr.setAttribute('style',"color:white;background: #82C46C; border:#ced4da;");
+                    var td1=document.createElement('td');
+                    var td2=document.createElement('td');
+                    var td5=document.createElement('td');
+                    var td6=document.createElement('td');
+
+                    var tsignes = document.createElement('td');
+                    var tnotes = document.createElement('td');
+
+
+                    td1.setAttribute('colspan',2); 
+                    td1.setAttribute('scope',"col"); 
+                    td1.setAttribute('class',"text-center form");           
+                    td1.innerHTML=  data[2][i][0]; // sont stockés les ref
+                    tr.appendChild(td1) ;
+                    
+                    td2.setAttribute('colspan',1); 
+                    td2.setAttribute('class',"text-left form");           
+                    td2.setAttribute('scope',"col"); 
+                               
+                    td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
+                    tr.appendChild(td2) ;
+
+                    
+                    // tsignes.setAttribute('colspan',2); 
+                    tsignes.setAttribute('class',"text-center form");           
+                    tsignes.setAttribute('scope',"col"); 
+                              
+                    tsignes.innerHTML=  data[2][i][5]; // afffiche les valeur du signe depuis la base tab RefAgg data[2][i][2]
+                    tr.appendChild(tsignes) ;
+
+
+                    tnotes.setAttribute('colspan',1); 
+                    tnotes.setAttribute('class',"text-center form");           
+                    tnotes.setAttribute('scope',"col"); 
+                              
+                    tnotes.innerHTML=  data[2][i][6]; // '20'; // sont affichées les valeurs des notes data[2][i][3]
+                    tr.appendChild(tnotes) ;
+
+
+                    td5.setAttribute('colspan',3); 
+                    td5.setAttribute('scope',"col"); 
+                    td5.setAttribute('class',"text-center");
+                    var input1=document.createElement('input'); 
+                    input1.setAttribute('type','text');
+                    input1.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+ 
+                    
+                    input1.setAttribute('name',data[2][i][0]+"net1"); 
+                    input1.setAttribute('id',data[2][i][0]+"net1"); 
+                    input1.setAttribute('class','form-control form-control-sm total net1 '+data[2][i][0]);   
+                    if(data[0][data[2][i][0]]){
+                        input1.setAttribute('value',data[0][data[2][i][0]][1]);
+                        // faut appeler la function sum ici
+                    }
+
+                    
+                    td5.appendChild(input1);
+                    tr.appendChild(td5) ;
+                    
+
+
+                    td6.setAttribute('colspan',3); 
+                    td6.setAttribute('scope',"col"); 
+                    td6.setAttribute('class',"text-center");           
+                    var input2=document.createElement('input'); 
+                    input2.setAttribute('type','text');
+                    input2.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+ 
+                    input2.setAttribute('name',data[2][i][0]+"net2"); 
+                    input2.setAttribute('id',data[2][i][0]+"net2"); 
+                    input2.setAttribute('class','form-control form-control-sm total net2 '+data[2][i][0]);
+                    if(data[0][data[2][i][0]]){
+                        input2.setAttribute('value',data[0][data[2][i][0]][2]);
+                      }
+                            
+                      td6.appendChild(input2);
+                      tr.appendChild(td6) ;
+                      tbody.appendChild(tr);  
+
+
+
+                    
+
+                }
+
+                
+         $(".form-control").bind("keypress", function(e) {
+
+            if (e.keyCode == 13) {
+                var inps = $("input"); //add select too
+                for (var x = 0; x < inps.length; x++) {
+                    if (inps[x] == this) {
+                        while ((inps[x]).name == (inps[x + 1]).name) {
+                        x++;
+                        }
+                        if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                    }
+                }   e.preventDefault();
+            }
+        });
+        $(function(){
+                        $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                        $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")});
+
+               
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        })
+    });
+
+    
+    
+     function remplacer(vartester){
+         
+         
+        if(vartester == "" || vartester == null){
+            return 0;
+
+        }
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        
+        return vartester;
+    }
+
+
+
+    // javascript function to verify integer value is
+    function isInt(valeur) {
+
+      if(valeur!=null || valeur!=""){
+        var $val=remplacer(valeur);
+       
+      if((parseFloat($val) == parseFloat($val)) && !isNaN($val)){ 
+       
+          return true;
+      } else {
+          
+          return false;
+      }
+      }else 
+          return false;
+        
+
+        // return !isNaN(value) && 
+        //        parseFloat(Number(value)) == value ;
+    }
+
+
+    function getResult(a1, a2) {
+        var i = a1.length;
+        if (i != a2.length) return false;
+     
+        while (i--) {
+          if (a1[i] !== a2[i]) return false;
+        }
+        return true;
+    }
+
+////////////// controles automatique sur les Agg [9] parents  Net1////////////////
+
+// XA
+$('#tbody').on('blur change', "#XAnet1", function(){
+
+        var swalMsg = "Verifier les valeurs NET1 saisie pour ";
+        
+        // sumXA c'est sumXA= TA - (RA + RB)
+        var sumXA = 0;
+
+        // on recupere la input  value dans tb
+        var tb = 0;  
+
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXA=sumXA+ parseInt(remplacer(document.getElementById('TAnet1').value));
+        }
+
+        if(isInt(document.getElementById('RAnet1').value) == true){
+
+            sumXA=sumXA-Math.abs(parseInt(remplacer(document.getElementById('RAnet1').value)) );
+
+        }
+        
+        if(isInt(document.getElementById('RBnet1').value) == true){
+
+            sumXA=sumXA+parseInt(remplacer(document.getElementById('RBnet1').value));
+        }        
+        
+        
+        //if(isInt(document.getElementById('XAnet1').value) == true){
+        if(document.getElementById('XAnet1').value !=""){
+
+            tb= parseInt(remplacer(document.getElementById('XAnet1').value));
+
+        }
+        
+        var testVar = "Marge brute sur marchandises \nXA= TA - (RA + RB) !";
+
+        if(tb == sumXA){
+
+            
+        }else{
+
+            Swal.fire(swalMsg + testVar ); 
+            return; // pour casser le flux d'execution
+
+        }    
+
+});
+
+
+
+// XB traitement sum chiffre d'affaire TI = TA+TC+TD+TB
+$('#tbody').on('blur change', "#XBnet1", function(){
+
+        var swalMsg = "Verifier les valeurs NET1 saisie pour ";
+        
+        var sumXB = 0; // sumXB c'est sumXB= TA+ TB+TC+TD
+
+       var ti = 0; // input value recuperer
+
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXB = sumXB+parseInt(remplacer(document.getElementById('TAnet1').value));
+
+        }
+        if(isInt(document.getElementById('TCnet1').value) == true ){
+
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TCnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TDnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('TBnet1').value) == true){
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TBnet1').value)); 
+
+        }
+
+
+        if(isInt(document.getElementById('XBnet1').value) == true){ // recuperer la valeur de TI
+            ti = parseInt(remplacer(document.getElementById('XBnet1').value));
+        }
+        
+        var testVar1 = "chiffre d'affaires \nXB = TA+TB+TC+TD !";
+        if(ti != sumXB){
+            Swal.fire(swalMsg + testVar1 ); 
+            return ;
+                     
+        }else{}
+    
+});
+
+
+
+// XC
+
+$('#tbody').on('blur change', "#XCnet1", function(){
+
+
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = "valeur ajoutée XC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !" 
+        
+        var sumXC = parseInt(remplacer(document.getElementById('XAnet1').value)); 
+
+        var tn=0; // recuperer input value 
+        
+
+        var testVar2 = "valeur ajoutée \nXC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
+
+        if(isInt(document.getElementById('TBnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TBnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TCnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TCnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TDnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TEnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TEnet1').value)) ;
+            
+        }
+        
+        if(isInt(document.getElementById('TFnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TFnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TGnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TGnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('THnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('THnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TInet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TInet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RCnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RCnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RDnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('RDnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('REnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('REnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('RFnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RGnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RHnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RHnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RInet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RInet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RJnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RJnet1').value))) ;
+            
+        }
+                
+
+        if(isInt(document.getElementById('XCnet1').value) == true){ 
+            tn = parseInt(remplacer(document.getElementById('XCnet1').value)); // recuperer la valeur de TN
+        }
+
+
+
+        if(tn != sumXC){
+            
+            valider=0;
+            
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+testVar2);
+            return ;
+                     
+        }else{ }
+
+
+});
+
+
+
+
+// XD
+$('#tbody').on('blur change', "#XDnet1", function(){
+
+
+        // traitement sum Excedent brute d'exploitation TQ= TN+RP
+
+        var tq = 0; 
+
+
+        var sumXD = parseInt(remplacer(document.getElementById('XCnet1').value));
+
+
+        if(isInt(document.getElementById('RKnet1').value) == true){
+            sumXD = sumXD - Math.abs(parseInt(remplacer(document.getElementById('RKnet1').value)));
+
+        }
+        if(isInt(document.getElementById('XDnet1').value) == true){
+            tq =  parseInt(remplacer(document.getElementById('XDnet1').value));
+
+        }
+        var testVar3 = "Excedent brute d'exploitation \nXD = XC-RK !"; 
+        if(tq != sumXD){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+testVar3);
+            return;
+                     
+        }
+    
+});
+
+
+// XE
+$('#tbody').on('blur change', "#XEnet1", function(){
+
+        // traitement sum resultat d'exploitation TX = sumXD+TS+RS DEVENUE sunTX c'est ex sumXE = sumXD -RL+TJ
+        
+        var tx = 0; 
+        var sumXE = parseInt(remplacer(document.getElementById('XDnet1').value));
+
+        if(isInt(document.getElementById('TJnet1').value) == true){
+            sumXE = sumXE + parseInt(remplacer(document.getElementById('TJnet1').value));
+
+        }
+        if(isInt(document.getElementById('RLnet1').value) == true){
+            sumXE = sumXE - Math.abs(parseInt(remplacer(document.getElementById('RLnet1').value)));
+
+        }
+        if(isInt(document.getElementById('XEnet1').value) == true){
+            tx =  parseInt(remplacer(document.getElementById('XEnet1').value));
+
+        }
+        var testVar4 = "Resultat d'exploitation \nXE = XD+TJ-RL !";
+        if(tx != sumXE){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour  '+testVar4);
+            return;
+                     
+        }
+    
+});
+
+
+
+// XF
+$('#tbody').on('blur change', "#XFnet1", function(){
+
+        // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD devenue 
+        // sumXF c'est ex sumXF = TK+TL+TM-RM-RN dans le nouveau code syscoa
+
+        var sumXF = 0; // sumXF c'est ex sumXF = TK+TL+TM-RM-RN
+        var ug = 0;
+        var testVar5 = "Resultat financier \nXF = TK+TL+TM-RM-RN !";
+
+
+        if(isInt(document.getElementById('RMnet1').value) == true && 
+           isInt(document.getElementById('RNnet1').value) == true && 
+           isInt(document.getElementById('TKnet1').value) == true &&
+           isInt(document.getElementById('TLnet1').value) == true &&
+           isInt(document.getElementById('TMnet1').value) == true ){
+
+            
+            sumXF=  parseInt(remplacer(document.getElementById('TKnet1').value))+
+                    parseInt(remplacer(document.getElementById('TLnet1').value))+
+                    parseInt(remplacer(document.getElementById('TMnet1').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RMnet1').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RNnet1').value)))
+                    ;
+
+                    
+        }
+        if(isInt(document.getElementById('XFnet1').value) == true){
+            ug =  parseInt(remplacer(document.getElementById('XFnet1').value));
+
+        }
+        if(ug != sumXF){
+
+            Swal.fire('Verifier les valauers NET1 saisies pour '+testVar5);
+            return;
+                     
+        }else{}
+
+    
+});
+
+
+
+// XG
+$('#tbody').on('blur change', "#XGnet1", function(){
+
+
+        var sumXG = parseInt(remplacer(document.getElementById('XEnet1').value))+
+                    parseInt(remplacer(document.getElementById('XFnet1').value));
+        
+        
+        var ui = 0;
+        var testVar6 = "Resultat des activites ordinaires \nXG = XE+XF !";
+
+
+        if(isInt(document.getElementById('XGnet1').value) == true){
+            ui =  parseInt(remplacer(document.getElementById('XGnet1').value));
+            
+        }
+        if(ui != sumXG){
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar6); return;
+                     
+        }else{}
+});
+
+
+
+// XH
+$('#tbody').on('blur change', "#XHnet1", function(){
+
+        // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
+        var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
+        var up = 0; 
+        
+        var testVar7 = "Resultat hors activites ordinaires \nXH = TN+TO-RO-RP Resultat hors activites ordinaires !";
+        
+        if(isInt(document.getElementById('TNnet1').value) == true && 
+           isInt(document.getElementById('TOnet1').value) == true && 
+           isInt(document.getElementById('ROnet1').value) == true &&
+           isInt(document.getElementById('RPnet1').value) == true ){
+
+            
+            sumXH = parseInt(remplacer(document.getElementById('TNnet1').value))+
+                    parseInt(remplacer(document.getElementById('TOnet1').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('ROnet1').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RPnet1').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XHnet1').value) == true){
+            up =  parseInt(remplacer(document.getElementById('XHnet1').value));
+
+        }
+        if(up != sumXH){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar7);
+            return;
+                     
+        }else{}
+    
+});
+
+
+// XI
+$('#tbody').on('blur change', "#XInet1", function(){
+
+        // traitement sum benef ou perte UZ = UI +UP +SQ +SR
+        var sumXI = parseInt(remplacer(document.getElementById('XGnet1').value))+
+                    parseInt(remplacer(document.getElementById('XHnet1').value));
+        var uz = 0;
+        //var uz2 = 0;
+
+        var testVar8 = "résultat net \nXI=XG+XH-RQ-RS !";
+        
+        if(isInt(document.getElementById('RQnet1').value) == true && 
+           isInt(document.getElementById('RSnet1').value) == true ){
+
+            
+            sumXI = sumXI-Math.abs(parseInt(remplacer(document.getElementById('RQnet1').value)))-
+                          Math.abs(parseInt(remplacer(document.getElementById('RSnet1').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XInet1').value) == true){
+            uz =  parseInt(remplacer(document.getElementById('XInet1').value));
+            //uz2 =  parseInt(remplacer(document.getElementById('XInet2').value));
+
+        }
+        if(uz != sumXI){
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar8); return;
+                     
+        }else{}
+
+
+
+});
+
+
+
+////////////// end controles automatique sur les Agg [9] parents Net1////////////////
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+////////////// controles automatique sur les Agg [9] parents  Net2////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
+// XA
+$('#tbody').on('blur change', "#XAnet2", function(){
+
+        var swalMsg = "Verifier les valeurs NET2 saisie pour ";
+        
+        // sumXA c'est sumXA= TA - (RA + RB)
+        var sumXA = 0;
+
+        // on recupere la input  value dans tb
+        var tb = 0;  
+
+        if(isInt(document.getElementById('TAnet2').value) == true){
+
+            sumXA=sumXA+ parseInt(remplacer(document.getElementById('TAnet2').value));
+        }
+
+        if(isInt(document.getElementById('RAnet2').value) == true){
+
+            sumXA=sumXA-Math.abs(parseInt(remplacer(document.getElementById('RAnet2').value)) );
+
+        }
+        
+        if(isInt(document.getElementById('RBnet2').value) == true){
+
+            sumXA=sumXA+parseInt(remplacer(document.getElementById('RBnet2').value));
+        }        
+        
+        
+        //if(isInt(document.getElementById('XAnet2').value) == true){
+        if(document.getElementById('XAnet2').value !=""){
+
+            tb= parseInt(remplacer(document.getElementById('XAnet2').value));
+
+        }
+        
+        var testVar = "Marge brute sur marchandises \nXA= TA - (RA + RB) !";
+
+        if(tb == sumXA){
+
+            
+        }else{
+
+            Swal.fire(swalMsg + testVar ); 
+            return; // pour casser le flux d'execution
+
+        }    
+
+});
+
+
+
+// XB traitement sum chiffre d'affaire TI = TA+TC+TD+TB
+$('#tbody').on('blur change', "#XBnet2", function(){
+
+        var swalMsg = "Verifier les valeurs NET2 saisie pour ";
+        
+        var sumXB = 0; // sumXB c'est sumXB= TA+ TB+TC+TD
+
+       var ti = 0; // input value recuperer
+
+        if(isInt(document.getElementById('TAnet2').value) == true){
+
+            sumXB = sumXB+parseInt(remplacer(document.getElementById('TAnet2').value));
+
+        }
+        if(isInt(document.getElementById('TCnet2').value) == true ){
+
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TCnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('TDnet2').value) == true ){
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TDnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('TBnet2').value) == true){
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TBnet2').value)); 
+
+        }
+
+
+        if(isInt(document.getElementById('XBnet2').value) == true){ // recuperer la valeur de TI
+            ti = parseInt(remplacer(document.getElementById('XBnet2').value));
+        }
+        
+        var testVar1 = "chiffre d'affaires \XB = TA+TB+TC+TD !";
+        if(ti != sumXB){
+            Swal.fire(swalMsg + testVar1 ); 
+            return ;
+                     
+        }else{}
+    
+});
+
+
+
+// XC
+
+$('#tbody').on('blur change', "#XCnet2", function(){
+
+
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = "valeur ajoutée XC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !" 
+        
+        var sumXC = parseInt(remplacer(document.getElementById('XAnet2').value)); 
+
+        var tn=0; // recuperer input value 
+        
+
+        var testVar2 = "valeur ajoutée \nXC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
+
+        if(isInt(document.getElementById('TBnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TBnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TCnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TCnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TDnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TDnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TEnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TEnet2').value)) ;
+            
+        }
+        
+        if(isInt(document.getElementById('TFnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TFnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TGnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TGnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('THnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('THnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TInet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TInet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RCnet2').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RCnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RDnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('RDnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('REnet2').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('REnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet2').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('RFnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet2').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RGnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RHnet2').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RHnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RInet2').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RInet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RJnet2').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RJnet2').value))) ;
+            
+        }
+                
+
+        if(isInt(document.getElementById('XCnet2').value) == true){ 
+            tn = parseInt(remplacer(document.getElementById('XCnet2').value)); // recuperer la valeur de TN
+        }
+
+
+
+        if(tn != sumXC){
+            
+            valider=0;
+            
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+testVar2);
+            return ;
+                     
+        }else{ }
+
+
+});
+
+
+
+
+// XD
+$('#tbody').on('blur change', "#XDnet2", function(){
+
+
+        // traitement sum Excedent brute d'exploitation TQ= TN+RP
+
+        var tq = 0; 
+
+
+        var sumXD = parseInt(remplacer(document.getElementById('XCnet2').value));
+
+
+        if(isInt(document.getElementById('RKnet2').value) == true){
+            sumXD = sumXD - Math.abs(parseInt(remplacer(document.getElementById('RKnet2').value)));
+
+        }
+        if(isInt(document.getElementById('XDnet2').value) == true){
+            tq =  parseInt(remplacer(document.getElementById('XDnet2').value));
+
+        }
+        var testVar3 = "Excedent brute d'exploitation \nXD = XC-RK !"; 
+        if(tq != sumXD){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+testVar3);
+            return;
+                     
+        }
+    
+});
+
+
+// XE
+$('#tbody').on('blur change', "#XEnet2", function(){
+
+        // traitement sum resultat d'exploitation TX = sumXD+TS+RS DEVENUE sunTX c'est ex sumXE = sumXD -RL+TJ
+        
+        var tx = 0; 
+        var sumXE = parseInt(remplacer(document.getElementById('XDnet2').value));
+
+        if(isInt(document.getElementById('TJnet2').value) == true){
+            sumXE = sumXE + parseInt(remplacer(document.getElementById('TJnet2').value));
+
+        }
+        if(isInt(document.getElementById('RLnet2').value) == true){
+            sumXE = sumXE - Math.abs(parseInt(remplacer(document.getElementById('RLnet2').value)));
+
+        }
+        if(isInt(document.getElementById('XEnet2').value) == true){
+            tx =  parseInt(remplacer(document.getElementById('XEnet2').value));
+
+        }
+        var testVar4 = "Resultat d'exploitation \nXE = XD+TJ-RL !";
+        if(tx != sumXE){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour  '+testVar4);
+            return;
+                     
+        }
+    
+});
+
+
+
+// XF
+$('#tbody').on('blur change', "#XFnet2", function(){
+
+        // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD devenue 
+        // sumXF c'est ex sumXF = TK+TL+TM-RM-RN dans le nouveau code syscoa
+
+        var sumXF = 0; // sumXF c'est ex sumXF = TK+TL+TM-RM-RN
+        var ug = 0;
+        var testVar5 = "Resultat financier \nXF = TK+TL+TM-RM-RN !";
+
+
+        if(isInt(document.getElementById('RMnet2').value) == true && 
+           isInt(document.getElementById('RNnet2').value) == true && 
+           isInt(document.getElementById('TKnet2').value) == true &&
+           isInt(document.getElementById('TLnet2').value) == true &&
+           isInt(document.getElementById('TMnet2').value) == true ){
+
+            
+            sumXF=  parseInt(remplacer(document.getElementById('TKnet2').value))+
+                    parseInt(remplacer(document.getElementById('TLnet2').value))+
+                    parseInt(remplacer(document.getElementById('TMnet2').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RMnet2').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RNnet2').value)))
+                    ;
+
+                    
+        }
+        if(isInt(document.getElementById('XFnet2').value) == true){
+            ug =  parseInt(remplacer(document.getElementById('XFnet2').value));
+
+        }
+        if(ug != sumXF){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+testVar5);
+            return;
+                     
+        }else{}
+
+    
+});
+
+
+
+// XG
+$('#tbody').on('blur change', "#XGnet2", function(){
+
+
+        var sumXG = parseInt(remplacer(document.getElementById('XEnet2').value))+
+                    parseInt(remplacer(document.getElementById('XFnet2').value));
+        
+        
+        var ui = 0;
+        var testVar6 = "Resultat des activites ordinaires \nXG = XE+XF !";
+
+
+        if(isInt(document.getElementById('XGnet2').value) == true){
+            ui =  parseInt(remplacer(document.getElementById('XGnet2').value));
+            
+        }
+        if(ui != sumXG){
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar6); return;
+                     
+        }else{}
+});
+
+
+
+// XH
+$('#tbody').on('blur change', "#XHnet2", function(){
+
+        // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
+        var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
+        var up = 0; 
+        
+        var testVar7 = "Resultat hors activites ordinaires \nXH = TN+TO-RO-RP Resultat hors activites ordinaires !";
+        
+        if(isInt(document.getElementById('TNnet2').value) == true && 
+           isInt(document.getElementById('TOnet2').value) == true && 
+           isInt(document.getElementById('ROnet2').value) == true &&
+           isInt(document.getElementById('RPnet2').value) == true ){
+
+            
+            sumXH = parseInt(remplacer(document.getElementById('TNnet2').value))+
+                    parseInt(remplacer(document.getElementById('TOnet2').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('ROnet2').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RPnet2').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XHnet2').value) == true){
+            up =  parseInt(remplacer(document.getElementById('XHnet2').value));
+
+        }
+        if(up != sumXH){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar7);
+            return;
+                     
+        }else{}
+    
+});
+
+
+// XI
+$('#tbody').on('blur change', "#XInet2", function(){
+
+        // traitement sum benef ou perte UZ = UI +UP +SQ +SR
+        var sumXI = parseInt(remplacer(document.getElementById('XGnet2').value))+
+                    parseInt(remplacer(document.getElementById('XHnet2').value));
+        var uz = 0;
+        //var uz2 = 0;
+
+        var testVar8 = "résultat net \nXI=XG+XH-RQ-RS !";
+        
+        if(isInt(document.getElementById('RQnet2').value) == true && 
+           isInt(document.getElementById('RSnet2').value) == true ){
+
+            
+            sumXI = sumXI-Math.abs(parseInt(remplacer(document.getElementById('RQnet2').value)))-
+                          Math.abs(parseInt(remplacer(document.getElementById('RSnet2').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XInet2').value) == true){
+            uz =  parseInt(remplacer(document.getElementById('XInet2').value));
+            //uz2 =  parseInt(remplacer(document.getElementById('XInet2').value));
+
+        }
+        if(uz != sumXI){
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar8); return;
+                     
+        }else{}
+
+
+
+});
+
+
+
+////////////// end controles automatique sur les Agg [9] parents Net2////////////////
+
+
+
+
+
+//////////////////  traitement du btn Valider /////////////////////////////
+
+
+    $('.valider').click(function(e){
+
+        e.preventDefault();
+
+        var swalMsg = "Verifier les valeurs NET1 saisie pour ";
+        var swalMsg2 = "Verifier les valeurs NET2 saisie pour ";
+        
+        var tagnet,net=0,somme=0, valider=1, valider2=1;
+
+
+        ////////////////////////// XA NET1 et NET2
+        
+        // RA+RB+TA sumXA c'est sumXA= TA - RA + RB
+        var sumXA = 0; 
+        var sumXA2 = 0; 
+
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXA=sumXA+ parseInt(remplacer(document.getElementById('TAnet1').value));
+        }
+
+        if(isInt(document.getElementById('RAnet1').value) == true){
+
+            sumXA=sumXA-Math.abs(parseInt(remplacer(document.getElementById('RAnet1').value)) );
+
+        }
+        
+        if(isInt(document.getElementById('RBnet1').value) == true){
+
+            sumXA=sumXA+parseInt(remplacer(document.getElementById('RBnet1').value));
+        }
+        
+        var tb = 0;
+        var tb2 = 0;
+        
+        
+        //if(isInt(document.getElementById('XAnet1').value) == true){
+        if(document.getElementById('XAnet1').value !=""){
+
+            tb= parseInt(remplacer(document.getElementById('XAnet1').value));
+
+        }
+        
+        var testVar = "Marge brute sur marchandises \nXA = TA-RA+RB !";
+
+        if(tb == sumXA){
+
+            
+        }else{
+            valider=0;
+
+            Swal.fire(' Verifier les valeurs NET1 saisie pour ' + testVar); 
+            return; // pour casser le flux d'execution
+
+        }
+        
+        // traitement sum chiffre d'affaire TI = TA+TC+TD+TB
+        
+        var sumXB = 0; // sumXB c'est sumXB= TA+ TB+TC+TD
+        if(isInt(document.getElementById('TAnet1').value) == true){
+
+            sumXB = sumXB+parseInt(remplacer(document.getElementById('TAnet1').value));
+
+        }
+        if(isInt(document.getElementById('TCnet1').value) == true ){
+
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TCnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TDnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('TBnet1').value) == true){
+            sumXB =sumXB+parseInt(remplacer(document.getElementById('TBnet1').value)); 
+
+        }
+
+
+       var ti = 0;
+        if(isInt(document.getElementById('XBnet1').value) == true){ // recuperer la valeur de TI
+            ti = parseInt(remplacer(document.getElementById('XBnet1').value));
+        }
+        
+        var testVar1 = "chiffre d'affaires \nXB = TA+TB+TC+TD !";
+        if(ti != sumXB){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+        // traitement sum valeur ajoutee TN = TB+TI + TE+TF+TK+TL+TT+RC+RD+RE+RH+RI+RJ+RK+RL
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = sumXA+TE+TF+TG+TH+TI- RC + RD- RE+RF- RG- RH- RI- RJ
+        // sumXC = 0; tn = 0;  sumXC c'est sumXC = XB - |RA| + RB + TE +TF + TG + TH + TI - |RC| + RD - |RE| + RF - |RG| - |RH| - |RI| - |RJ|  
+        
+        var sumXC = sumXA;  // sumXC = sumXA - TA 
+        
+        if(isInt(document.getElementById('TBnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TBnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TCnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TCnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TDnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TDnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TEnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TEnet1').value)) ;
+            
+        }
+        
+        if(isInt(document.getElementById('TFnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TFnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TGnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TGnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('THnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('THnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TInet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('TInet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RCnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RCnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RDnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('RDnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('REnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('REnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet1').value) == true ){
+            sumXC = sumXC + parseInt(remplacer(document.getElementById('RFnet1').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RGnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RHnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RHnet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RInet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RInet1').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RJnet1').value) == true ){
+            sumXC = sumXC - Math.abs(parseInt(remplacer(document.getElementById('RJnet1').value))) ;
+            
+        }
+                
+        var tn=0;
+
+        if(isInt(document.getElementById('XCnet1').value) == true){ 
+            tn = parseInt(remplacer(document.getElementById('XCnet1').value)); // recuperer la valeur de TN
+        }
+
+
+        var testVar2 = "valeur ajoutée \nXC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
+
+        if(tn != sumXC){
+            
+            valider=0;
+            
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+testVar2);
+            return ;
+                     
+        }
+
+
+        // traitement sum Excedent brute d'exploitation TQ= TN+RP
+
+        var tq = 0; 
+        var sumXD = sumXC;  // sumXD c'est sumXD = sumXC - RK
+
+
+        if(isInt(document.getElementById('RKnet1').value) == true){
+            sumXD = sumXD - Math.abs(parseInt(remplacer(document.getElementById('RKnet1').value)));
+
+        }
+        if(isInt(document.getElementById('XDnet1').value) == true){
+            tq =  parseInt(remplacer(document.getElementById('XDnet1').value));
+
+        }
+        var testVar3 = "Excedent brute d'exploitation \nXD = XC-RK !"; 
+        if(tq != sumXD){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+testVar3);
+            return;
+                     
+        }
+        
+        // traitement sum resultat d'exploitation TX = sumXD+TS+RS DEVENUE sunTX c'est ex sumXE = sumXD -RL+TJ
+        
+        var tx = 0; 
+        var sumXE = sumXD;  // sunTX c'est ex sumXE = sumXD -RL+TJ
+
+        if(isInt(document.getElementById('TJnet1').value) == true){
+            sumXE = sumXE + parseInt(remplacer(document.getElementById('TJnet1').value));
+
+        }
+        if(isInt(document.getElementById('RLnet1').value) == true){
+            sumXE = sumXE - Math.abs(parseInt(remplacer(document.getElementById('RLnet1').value)));
+
+        }
+        if(isInt(document.getElementById('XEnet1').value) == true){
+            tx =  parseInt(remplacer(document.getElementById('XEnet1').value));
+
+        }
+        var testVar4 = "Resultat d'exploitation \nXE = XD+TJ-RL !";
+        if(tx != sumXE){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour  '+testVar4);
+            return;
+                     
+        }
+
+        // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD
+
+        var sumXF = 0; // sumXF c'est ex sumXF = TK+TL+TM-RM-RN
+        var ug = 0;
+        if(isInt(document.getElementById('RMnet1').value) == true && 
+           isInt(document.getElementById('RNnet1').value) == true && 
+           isInt(document.getElementById('TKnet1').value) == true &&
+           isInt(document.getElementById('TLnet1').value) == true &&
+           isInt(document.getElementById('TMnet1').value) == true ){
+
+            
+            sumXF=  parseInt(remplacer(document.getElementById('TKnet1').value))+
+                    parseInt(remplacer(document.getElementById('TLnet1').value))+
+                    parseInt(remplacer(document.getElementById('TMnet1').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RMnet1').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RNnet1').value)))
+                    ;
+
+                    
+        }
+        if(isInt(document.getElementById('XFnet1').value) == true){
+            ug =  parseInt(remplacer(document.getElementById('XFnet1').value));
+
+        }
+        var testVar5 = "Resultat financier \nXF = TK+TL+TM-RM-RN !";
+        if(ug != sumXF){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar5);
+            return;
+                     
+        }
+
+        
+        var sumXG = sumXE+sumXF; // sumXG c'est ex sumXG = XE+XF
+        
+        
+        var ui = 0;
+        if(isInt(document.getElementById('XGnet1').value) == true){
+            ui =  parseInt(remplacer(document.getElementById('XGnet1').value));
+            
+        }
+        var testVar6 = "Resultat des activites ordinaires \nXG = XE+XF !";
+        if(ui != sumXG){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar6); return;
+                     
+        }
+
+        // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
+        var sumXH = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
+        var up = 0; 
+        if(isInt(document.getElementById('TNnet1').value) == true && 
+           isInt(document.getElementById('TOnet1').value) == true && 
+           isInt(document.getElementById('ROnet1').value) == true &&
+           isInt(document.getElementById('RPnet1').value) == true ){
+
+            
+            sumXH = parseInt(remplacer(document.getElementById('TNnet1').value))+
+                    parseInt(remplacer(document.getElementById('TOnet1').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('ROnet1').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RPnet1').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XHnet1').value) == true){
+            up =  parseInt(remplacer(document.getElementById('XHnet1').value));
+
+        }
+        var testVar7 = "Résultats hors activité ordinaire \nXH = TN+TO-RO-RP Resultat hors activites ordinaires !";
+        if(up != sumXH){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar7);
+            return;
+                     
+        }
+
+
+        // traitement sum benef ou perte UZ = UI +UP +SQ +SR
+        var sumXI = sumXG+sumXH; //sumXI c'est ex sumXI=XG+XH-RQ-RS
+        var uz = 0;
+        var uz2 = 0;
+        
+        if(isInt(document.getElementById('RQnet1').value) == true && 
+           isInt(document.getElementById('RSnet1').value) == true ){
+
+            
+            sumXI = sumXI-Math.abs(parseInt(remplacer(document.getElementById('RQnet1').value)))-
+                          Math.abs(parseInt(remplacer(document.getElementById('RSnet1').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XInet1').value) == true){
+            uz =  parseInt(remplacer(document.getElementById('XInet1').value));
+            uz2 =  parseInt(remplacer(document.getElementById('XInet2').value));
+
+        }
+        var testVar8 = "résultat net \nXI=XG+XH-RQ-RS !";
+        if(uz != sumXI){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisies pour '+testVar8); return;
+                     
+        }
+
+
+
+
+        ///////////////////////colonne NET2 dans traitement validation  ////////////////////////////
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+                ////////////////////////// XA NET2
+        
+        // RA+RB+TA sumXA c'est sumXA= TA - RA + RB
+        var sumXANET2 = 0; 
+
+        if(isInt(document.getElementById('TAnet2').value) == true){
+
+            sumXANET2=sumXANET2+ parseInt(remplacer(document.getElementById('TAnet2').value));
+        }
+
+        if(isInt(document.getElementById('RAnet2').value) == true){
+
+            sumXANET2=sumXANET2-Math.abs(parseInt(remplacer(document.getElementById('RAnet2').value)) );
+
+        }
+        
+        if(isInt(document.getElementById('RBnet2').value) == true){
+
+            sumXANET2=sumXANET2+parseInt(remplacer(document.getElementById('RBnet2').value));
+        }
+        
+        var tb2 = 0;
+        
+        
+        //if(isInt(document.getElementById('XAnet1').value) == true){
+        if(document.getElementById('XAnet2').value !=""){
+
+            tb2= parseInt(remplacer(document.getElementById('XAnet2').value));
+
+        }
+        
+        var testVar2 = "Marge brute sur marchandises \nXA = TA-RA+RB !";
+
+        if(tb2 == sumXANET2){
+
+            
+        }else{
+            valider=0;
+
+            Swal.fire(' Verifier les valeurs NET2 saisie pour ' + testVar2); 
+            return; // pour casser le flux d'execution
+
+        } // end traitement XAnet2
+
+
+
+        // traitement sum chiffre d'affaire TI = TA+TC+TD+TB
+        
+        var sumXBNET2 = 0; // sumXB c'est sumXB= TA+ TB+TC+TD
+        if(isInt(document.getElementById('TAnet2').value) == true){
+
+            sumXBNET2 = sumXBNET2+parseInt(remplacer(document.getElementById('TAnet2').value));
+
+        }
+        if(isInt(document.getElementById('TCnet2').value) == true ){
+
+            sumXBNET2 =sumXBNET2+parseInt(remplacer(document.getElementById('TCnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('TDnet2').value) == true ){
+            sumXBNET2 =sumXBNET2+parseInt(remplacer(document.getElementById('TDnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('TBnet2').value == true)){
+            sumXBNET2 =sumXBNET2+parseInt(remplacer(document.getElementById('TBnet2').value)); 
+
+        }
+
+
+        var ti2 = 0;
+        if(isInt(document.getElementById('XBnet2').value) == true){ // recuperer la valeur de TI
+            ti2 = parseInt(remplacer(document.getElementById('XBnet2').value));
+        }
+        
+        var testVar2 = "chiffre d'affaires \nXB = TA+TB+TC+TD !";
+        if(ti2 != sumXBNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar2); 
+            return ;
+                     
+        }
+
+        /// end traitement XBNET2
+
+        
+        //// traitement sum XCNET2
+        var sumXCNET2 = sumXANET2;  // sumXC = sumXA - TA 
+        
+        if(isInt(document.getElementById('TBnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TBnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TCnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TCnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TDnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TDnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TEnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TEnet2').value)) ;
+            
+        }
+        
+        if(isInt(document.getElementById('TFnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TFnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TGnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TGnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('THnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('THnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('TInet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('TInet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RCnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 - Math.abs(parseInt(remplacer(document.getElementById('RCnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RDnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('RDnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('REnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 - Math.abs(parseInt(remplacer(document.getElementById('REnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RFnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 + parseInt(remplacer(document.getElementById('RFnet2').value)) ;
+            
+        }
+        if(isInt(document.getElementById('RGnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 - Math.abs(parseInt(remplacer(document.getElementById('RGnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RHnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 - Math.abs(parseInt(remplacer(document.getElementById('RHnet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RInet2').value) == true ){
+            sumXCNET2 = sumXCNET2 - Math.abs(parseInt(remplacer(document.getElementById('RInet2').value))) ;
+            
+        }
+        if(isInt(document.getElementById('RJnet2').value) == true ){
+            sumXCNET2 = sumXCNET2 - Math.abs(parseInt(remplacer(document.getElementById('RJnet2').value))) ;
+            
+        }
+                
+        var tn2=0;
+
+        if(isInt(document.getElementById('XCnet2').value) == true){ 
+            tn2 = parseInt(remplacer(document.getElementById('XCnet2').value)); // recuperer la valeur de TN
+        }
+
+
+        var testVar2 = "valeur ajoutée \nXC= XA+TB+TC+TD+TE+TF+TG+TH+TI-RC+RD-RE+RF-RG-RH-RI-RJ !";
+
+        if(tn2 != sumXCNET2){
+            
+            valider=0;
+            
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+testVar2);
+            return ;
+                     
+        }//////// end traitement XCnet2
+
+
+        
+        // traitement sum Excedent brute d'exploitation TQ= TN+RP
+
+        var tq2 = 0; 
+        var sumXDNET2 = sumXCNET2;  // sumXD c'est sumXD = sumXC - RK
+
+
+        if(isInt(document.getElementById('RKnet2').value) == true){
+            sumXDNET2 = sumXDNET2 - Math.abs(parseInt(remplacer(document.getElementById('RKnet2').value)));
+
+        }
+        if(isInt(document.getElementById('XDnet2').value) == true){
+            tq2 =  parseInt(remplacer(document.getElementById('XDnet2').value));
+
+        }
+        var testVar3 = "Excedent brute d'exploitation \nXD = XC-RK !"; 
+        if(tq2 != sumXDNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+testVar3);
+            return;
+                     
+        }//// end traitement XDnet2
+
+
+        // traitement sum resultat d'exploitation TX = sumXD+TS+RS DEVENUE sunTX c'est ex sumXE = sumXD -RL+TJ
+        
+        var tx2 = 0; 
+        var sumXENET2 = sumXDNET2;  // sunTX c'est ex sumXE = sumXD -RL+TJ
+
+        if(isInt(document.getElementById('TJnet2').value) == true){
+            sumXENET2 = sumXENET2 + parseInt(remplacer(document.getElementById('TJnet2').value));
+
+        }
+        if(isInt(document.getElementById('RLnet2').value) == true){
+            sumXENET2 = sumXENET2 - Math.abs(parseInt(remplacer(document.getElementById('RLnet2').value)));
+
+        }
+        if(isInt(document.getElementById('XEnet2').value) == true){
+            tx2 =  parseInt(remplacer(document.getElementById('XEnet2').value));
+
+        }
+        var testVar4 = "Resultat d'exploitation \nXE = XD+TJ-RL !";
+        if(tx2 != sumXENET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour  '+testVar4);
+            return;
+                     
+        } //// end traitement XEnet1
+
+
+
+        // traitement sum resultat financier UG = UA+ UD+ UE- SA- SD
+
+        var sumXFNET2 = 0; // sumXF c'est ex sumXF = TK+TL+TM-RM-RN
+        var ug2 = 0;
+        if(isInt(document.getElementById('RMnet2').value) == true && 
+           isInt(document.getElementById('RNnet2').value) == true && 
+           isInt(document.getElementById('TKnet2').value) == true &&
+           isInt(document.getElementById('TLnet2').value) == true &&
+           isInt(document.getElementById('TMnet2').value) == true ){
+
+            
+            sumXFNET2=  parseInt(remplacer(document.getElementById('TKnet2').value))+
+                    parseInt(remplacer(document.getElementById('TLnet2').value))+
+                    parseInt(remplacer(document.getElementById('TMnet2').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RMnet2').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RNnet2').value)))
+                    ;
+
+                    
+        }
+        if(isInt(document.getElementById('XFnet2').value) == true){
+            ug2 =  parseInt(remplacer(document.getElementById('XFnet2').value));
+
+        }
+        var testVar5 = "Resultat financier \nXF = TK+TL+TM-RM-RN !";
+        if(ug2 != sumXFNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar5);
+            return;
+                     
+        } //// end traitement XFnet2
+
+
+
+        /////////////////// XGNET2 traitment dans valider
+        
+        var sumXGNET2 = sumXENET2+sumXFNET2; // sumXG c'est ex sumXG = XE+XF
+        
+        
+        var ui2 = 0;
+        if(isInt(document.getElementById('XGnet2').value) == true){
+            ui2 =  parseInt(remplacer(document.getElementById('XGnet2').value));
+            
+        }
+        var testVar6 = "Resultat des activites ordinaires \nXG = XE+XF !";
+        if(ui2 != sumXGNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar6); return;
+                     
+        } /// end traitement XGnet2
+
+
+
+        // traitement sum resultat hors activites ordinaires (RHO) UP= UK + UL +SK +SL        
+        var sumXHNET2 = 0; // sumXH c'est ex sumXH = TN+TO-RO-RP 
+        var up2 = 0; 
+        if(isInt(document.getElementById('TNnet2').value) == true && 
+           isInt(document.getElementById('TOnet2').value) == true && 
+           isInt(document.getElementById('ROnet2').value) == true &&
+           isInt(document.getElementById('RPnet2').value) == true ){
+
+            
+            sumXHNET2 = parseInt(remplacer(document.getElementById('TNnet2').value))+
+                    parseInt(remplacer(document.getElementById('TOnet2').value))-
+                    Math.abs(parseInt(remplacer(document.getElementById('ROnet2').value)))-
+                    Math.abs(parseInt(remplacer(document.getElementById('RPnet2').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XHnet2').value) == true){
+            up2 =  parseInt(remplacer(document.getElementById('XHnet2').value));
+
+        }
+        var testVar7 = "Résultats hors activité ordinaire \nXH = TN+TO-RO-RP Resultat hors activites ordinaires !";
+        if(up2 != sumXHNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar7);
+            return;
+                     
+        } ///// end traitement XHnet2 
+
+
+
+
+        // traitement sum benef ou perte UZ = UI +UP +SQ +SR
+        var sumXINET2 = sumXGNET2+sumXHNET2; //sumXI c'est ex sumXI=XG+XH-RQ-RS
+        var uzz = 0;
+        var uz22 = 0;
+        
+        if(isInt(document.getElementById('RQnet2').value) == true && 
+           isInt(document.getElementById('RSnet2').value) == true ){
+
+            
+            sumXINET2 = sumXINET2-Math.abs(parseInt(remplacer(document.getElementById('RQnet2').value)))-
+                          Math.abs(parseInt(remplacer(document.getElementById('RSnet2').value)))
+                    ;
+                    
+        }
+        if(isInt(document.getElementById('XInet2').value) == true){
+            uzz =  parseInt(remplacer(document.getElementById('XInet2').value));
+            uz22 =  parseInt(remplacer(document.getElementById('XInet2').value));
+
+        }
+        var testVar8 = "résultat net \nXI=XG+XH-RQ-RS !";
+        if(uzz != sumXINET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisies pour '+testVar8); return;
+                     
+        } //// end traitement XI
+
+
+
+
+
+        if (valider==1) {
+
+
+                var empt = 1;
+                //var checkboxList = document.getElementsByClassName('inputclass');
+                var checkboxList = $('input.calcul');
+                for (i = 0; i < checkboxList.length; i++) {
+                    if (checkboxList[i].value != "") {
+                    
+                        empt = 0;
+                    }
+                }
+                console.log(empt);
+                if(empt!=1){
+
+                    
+                    // un tab contenant les valeurs de XIn et XIn-1
+                    var XInet1 = (isInt(document.getElementById("XInet1").value)) ? parseInt(remplacer(document.getElementById("XInet1").value)) : 0;
+                    var XInet2 = (isInt(document.getElementById("XInet2").value)) ? parseInt(remplacer(document.getElementById("XInet2").value)) : 0;
+                    var xin=[
+                        XInet1
+                    ];
+                    var xin2=[
+                        XInet2
+                    ];
+                        //uz2
+           
+                     
+                     let route="{{path('compareCiXi')}}"+"/"+ $('#annee').val();
+                     $.ajax({
+                            type: 'GET',
+                            url : route,
+                            dataType : "json",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            timeout: 800000,
+                            success: function(data){ 
+                                
+                                //if(JSON.stringify(data) === JSON.stringify(xin)){
+                                let myArr = [
+                                    parseInt(remplacer(data[0][0])),
+                                ]; 
+                                let myArr2 = [
+                                    parseInt(remplacer(data[0][1]))
+                                ]; 
+
+                                    //parseInt(remplacer(data[0][1]))                           
+
+                                
+                                if(false == getResult(myArr, xin)){
+                                    console.log(myArr, xin); 
+                                       
+                                    valider=0;
+                                    Swal.fire('Verifier les valeurs NET1 saisies pour XI, \nCI (Résultat net de l\'exercice Passif) doit être égal à \nXI (Résultat net du Compte) ! '+data[0][0]); return;
+                                }
+                                else if(false == getResult(myArr2, xin2)){
+                                    console.log(myArr2, xin2); 
+                                       
+                                    valider=0;
+                                    Swal.fire('Verifier les valeurs NET2 saisies pour XI, \nCI (Résultat net de l\'exercice Passif) doit être égal à \nXI (Résultat net du Compte) ! '+data[0][1]); return;
+                                    
+                                }else{
+
+                                    {
+                                    e.preventDefault();
+                                    var a=$(this);
+                                    Swal.fire({
+                                    title:"Confirmation",
+                                    text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                                    icon:"success",
+                                    showCancelButton:true,
+                                    confirmButtonText:"Oui",
+                                    cancelButtonText:"Non",
+                                    confirmButtonClass:"btn btn-success mt-2",
+                                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                                    buttonsStyling:!1}).then(function(t)
+                                    {
+                                      if (t.value) {
+                                         document.getElementById("submited").click();
+                                        // window.location.reload(); return;
+                                       // window.location.replace("http://www.w3schools.com");
+                                      }else{
+                                          e.preventDefault();
+                                      }
+                    
+                                    })}
+                                }
+                                                   
+                                
+                            } ,
+                            error : function(error){
+                                console.log(error);
+                            }
+                        });
+
+                }
+
+
+
+        }
+
+    }); // end eventListner btn valider 
+
+
+
+
+  /// btn sauvegarder compte sans valider 
+  
+  $('.sauvegarderCompte').click(function(){
+
+                var empt = 1;
+                //var checkboxList = document.getElementsByClassName('calcul');
+                var elemts =  $('input.calcul');
+                for (i = 0; i < elemts.length; i++) {
+                    if (elemts[i].value != "") {
+                        //console.log(elemts[i].value);
+                        empt = 0;
+                    }
+                }
+                console.log(empt);
+                if(empt!=1)
+                {
+                
+                    Swal.fire({
+                    title:"Confirmation",
+                    type:"warning",
+                    text:"Êtes-vous sûr de vouloir sauvegarder  sans valider ?",
+                    icon:"warning",
+                    showCancelButton:true,
+                    confirmButtonText:"Oui",
+                    cancelButtonText:"Non",
+                    confirmButtonClass:"btn btn-success mt-2",
+                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                    buttonsStyling:!1}).then(function(t)
+                    {
+                    if (t.value) {
+                        document.getElementById("notsubmited").click();
+                    }
+                    })
+                }
+  }) ;//// end traitement du btn sauvegarder compte 
+
+    
+    
+    $("#resetBtn").click(function(e){
+
+
+
+        var elemtsValues =  document.getElementsByClassName('calcul') ;
+        for (i = 0; i < elemtsValues.length; i++) {
+            elemtsValues[i].value="";
+        }
+
+
+
+    });    
+    
+    
+    $("#resetBtn2").click(function(e){
+
+
+        var elemtsValues =  document.getElementsByClassName('calcul') ;
+                for (i = 0; i < elemtsValues.length; i++) {
+                    elemtsValues[i].value="";
+                }
+    });    
+
+    
+    function somme(netnumber,sousclasseName){
+        var elemts =  $('input.calcul.'+netnumber+'.'+sousclasseName);
+        var sum =0;
+        for(var i = 0 ; i< elemts.length;i++){
+            sum+=parseInt(elemts[i].value);
+        }
+
+        return sum;
+
+    }
+
+
+
+    
+    // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000);
+
+
+</script>
+
+
+{% endblock %}

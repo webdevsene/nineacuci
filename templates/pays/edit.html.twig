@@ -1,0 +1,49 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}Edit Pays{% endblock %}
+
+{% block body %}
+
+
+
+
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Modification une nationnalité
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                            {{ include('pays/_form.html.twig', {'button_label': 'Modifier'}) }}
+  
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+    <a href="{{ path('app_pays_index') }}">Liste des nationnalités</a>
+		</div>
+			
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RefAggSmt{% endblock %}
+
+{% block body %}
+    <h1>RefAggSmt</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ref_agg_smt.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ ref_agg_smt.libelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ref_agg_smt_index') }}">back to list</a>
+
+    <a href="{{ path('app_ref_agg_smt_edit', {'id': ref_agg_smt.id}) }}">edit</a>
+
+    {{ include('ref_agg_smt/_delete_form.html.twig') }}
+{% endblock %}

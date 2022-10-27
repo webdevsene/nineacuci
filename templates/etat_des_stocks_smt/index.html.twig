@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EtatDesStocksSmt index{% endblock %}
+
+{% block body %}
+    <h1>EtatDesStocksSmt index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AnneeFinanciere</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>Reference</th>
+                <th>Designation</th>
+                <th>Quantite</th>
+                <th>PrixUnitaire</th>
+                <th>Montant</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for etat_des_stocks_smt in etat_des_stocks_smts %}
+            <tr>
+                <td>{{ etat_des_stocks_smt.id }}</td>
+                <td>{{ etat_des_stocks_smt.createdAt ? etat_des_stocks_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ etat_des_stocks_smt.updatedAt ? etat_des_stocks_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ etat_des_stocks_smt.anneeFinanciere }}</td>
+                <td>{{ etat_des_stocks_smt.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ etat_des_stocks_smt.status }}</td>
+                <td>{{ etat_des_stocks_smt.reference }}</td>
+                <td>{{ etat_des_stocks_smt.designation }}</td>
+                <td>{{ etat_des_stocks_smt.quantite }}</td>
+                <td>{{ etat_des_stocks_smt.prixUnitaire }}</td>
+                <td>{{ etat_des_stocks_smt.montant }}</td>
+                <td>
+                    <a href="{{ path('app_etat_des_stocks_smt_show', {'id': etat_des_stocks_smt.id}) }}">show</a>
+                    <a href="{{ path('app_etat_des_stocks_smt_edit', {'id': etat_des_stocks_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_etat_des_stocks_smt_new') }}">Create new</a>
+{% endblock %}

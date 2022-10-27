@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit NiDirigeant{% endblock %}
+
+{% block body %}
+    <h1>Edit NiDirigeant</h1>
+
+    {{ include('ni_dirigeant/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_ni_dirigeant_index') }}">back to list</a>
+
+    {{ include('ni_dirigeant/_delete_form.html.twig') }}
+{% endblock %}

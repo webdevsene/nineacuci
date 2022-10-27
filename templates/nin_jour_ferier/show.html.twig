@@ -1,0 +1,74 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NinJourFerier{% endblock %}
+
+{% block body %}
+
+
+
+    {{ include('nin_jour_ferier/_delete_form.html.twig') }}
+
+<div class="box ">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste des jours fériés
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                        
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th>Id</th>
+                                        <td>{{ nin_jour_ferier.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Ninjour</th>
+                                        <td>{{ nin_jour_ferier.Ninjour ? nin_jour_ferier.Ninjour|date('Y-m-d') : '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nindescription</th>
+                                        <td>{{ nin_jour_ferier.Nindescription }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>CreatedAt</th>
+                                        <td>{{ nin_jour_ferier.createdAt ? nin_jour_ferier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>UpdatedAt</th>
+                                        <td>{{ nin_jour_ferier.updatedAt ? nin_jour_ferier.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+  
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+                            <a href="{{ path('app_nin_jour_ferier_index') }}">Liste des jours fériés</a>
+			
+    </div>
+</div>
+
+
+{% endblock %}

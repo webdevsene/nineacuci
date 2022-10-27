@@ -1,0 +1,3989 @@
+{% extends 'ninea.html.twig' %}
+{% block title %}New NiNineaproposition
+{% endblock %}
+{% block stylesheets %}
+
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link
+	href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}" rel="stylesheet">
+	<!-- App favicon -->
+	<link
+	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
+
+	<!-- Bootstrap Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+	<!-- Icons Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+	<!-- App Css-->
+	<link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+
+		.fieldcolor {
+			border: 2px solid #eeeeee;
+
+		}
+
+		.toast{
+			position: absolute; 
+			top: 10px; 
+			right: 10px;
+		}
+
+		legend {
+			color: black;
+			font-size: 12px;
+		}
+
+
+
+
+		a:hover,
+a:focus{
+    text-decoration: none;
+    outline: none;
+}
+.tab{ font-family: 'Nunito', sans-serif; }
+.tab .nav-tabs{ border: none; }
+.tab .nav-tabs li a{
+    color:#0d3174;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 20px 8px;
+    margin: 0 5px 10px 0;
+    border: 5px solid #fff;
+    border-radius: 0;
+    box-shadow: 0 0 7px rgba(0,0,0,0.1), 0 0 5px rgba(0,0,0,0.15) inset;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease 0s;
+}
+.tab .nav-tabs li.active a,
+.tab .nav-tabs li a:hover ,
+.tab .nav-tabs li.active a:hover{
+    color: #fff;
+    background-color: #fff;
+    border: 5px solid #fff;
+	
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    background-color: #0d3174;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: rotate(20deg);
+    position: absolute;
+    top: 150%;
+    left: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease 0s,transform 0.3s ease 0.13s, top 0.5s ease 0s;
+}
+.tab .nav-tabs li.active a:before,
+.tab .nav-tabs li a:hover:before{
+    opacity: 1;
+    transform: rotate(0);
+    top: 0;
+}
+.tab .tab-content{
+    color:#fff;
+    font-size: 12px;
+    padding: 20px;
+    border: 10px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15), 0 0 10px rgba(0,0,0,0.15) inset;
+    position: relative;
+}
+@media only screen and (max-width: 479px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin: 0 0 5px;
+    }
+}
+
+	</style>
+
+{% endblock %}
+{% block body %}
+
+
+	<div class="row" >
+		
+		<div class="col-lg-12" align="right">
+			<span style="font-size: 10px;">[ {{ninea.createdAt| date('d-m-Y')}} ]</span>
+		</div>
+	</div>
+
+
+	
+
+	<div class="row">
+		<div class="col-xl-12">
+			<div>
+				<div class="accordion mb-3" id="accordionExample">
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne">
+							<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								<h5 class="font-size-14">MODIFICATIONS NINEA</h5>
+							</button>
+							
+						</h2>
+						<div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								<div class="text-muted">
+									<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+									<div class="row mb-0">
+										<div class="col-lg-12">
+											<fieldset class=" p-2 fieldcolor ">
+												<div class="row">
+													<div class="col-lg-6">
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" ><b><u>N° de demande:</u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ninea.ninnumerodemande}}</label>	
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" ><b><u>Forme unité :</u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ninea.formeJuridique.niFormeunite.libelle}}</label>	
+																</td>
+															</tr>
+						
+															<tr>
+																<td style="width: 30%;">
+																	<label  for="basicpill-firstname-input"><b><u>Régime juridique :</u></b> 
+																		
+																	</label>
+																</td>
+																<td style="width: 70%;">
+																	<label class="TXT" for="basicpill-firstname-input"></label>{{ninea.formeJuridique.fojLibelle}}</label>
+																	
+																</td>
+															</tr>
+															
+														{#	<tr>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
+																	</label>
+																</td>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" class="TXT">	{{ninea.ninStatut.statLibelle}}</label>
+						
+																</td>
+															</tr> #}
+													
+														</table>
+													</div>
+						
+													<div class="col-lg-6">
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b>	 											</label>
+																</td>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" class="TXT"></label>{{ninea.ninEnseigne}}</label>
+						
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<label for="" > <b><u>Numéro régistre de commerce :</u></b>	</label>
+																</td>
+																<td> 
+																	<label for="" class="TXT">{{ninea.ninRegcom}}</label>
+																	
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<label for=""> <b><u>Date de régistre :</u></b>	</label>
+																</td>
+																<td>
+																	<label for=""  class="TXT">{{ninea.ninDatreg|date('d/m/Y')}}</label>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<label for=""> <b><u>Administration :</u></b>	</label>
+																</td>
+																<td>
+																	<label for=""  class="TXT">{{ ninea.createdBy.niAdministration.admlibelle}}</label>
+																</td>
+															</tr>
+						
+															<tr>
+																<td>
+																	<label for=""> <b><u>Agent demandeur :</u></b>	</label>
+																</td>
+																<td>
+																	<label for=""  class="TXT">{{ ninea.createdBy.prenom}} {{ ninea.createdBy.nom}}</label>
+																</td>
+															</tr>
+														
+														</table>
+													</div>
+												</div>
+											</fieldset>
+											<br>
+										</div>
+									</div>
+								</div>
+
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- end accordion -->
+			</div>
+		</div>
+		<!-- end col -->
+
+	</div>
+
+	
+	<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+			
+			<div class="col-lg-12">
+				<div class="tab " role="tabpanel">
+					<ul class="nav nav-tabs nav-fill " role="tablist" >
+
+						<li class="nav-item ">
+							<a class="nav-link active  " id="idpersonne" data-bs-toggle="tab"  href="#personne" role="tab" id="idpersonne" >
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">
+									{% if ninea.formeJuridique.niFormeunite.id == 11 %} Personne physique 
+									{% else %}
+										{% if ninea.formeJuridique.niFormeunite.id == 21 %}
+											Personne morale
+										{% else %}
+											{% if ninea.formeJuridique.niFormeunite.id == 12 %}
+												Autres personnes physiques imposables
+											{% else %}
+												{% if ninea.formeJuridique.niFormeunite.id == 22 %}
+													Autres personnes morales
+												{% endif %}	
+											{% endif %}
+										{% endif %}
+									{% endif %}
+
+								</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link " id="idcoordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" id="idcoordonnee">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Coordonnées de l'entreprise
+								</span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link " id="idactivite" data-bs-toggle="tab" href="#activites" role="tab">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Activités et produits</span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link " id="idactiviteEconomique" data-bs-toggle="tab" href="#activiteEconomiques" role="tab">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Activité économique
+								</span>
+							</a>
+						</li>
+
+						{% if ninea.formeJuridique.niFormeunite.id == 21 %} 
+
+							<li class="nav-item">
+								<a class="nav-link " id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-home"></i>
+									</span>
+									<span class="d-none d-sm-block">Dirigeants et associés</span>
+								</a>
+							</li>
+						{% endif %}
+
+					
+					</ul>
+
+					<div class="tab-content p-3 text-muted tabs" style="border: 3px solid #eeeeee;">
+						
+						<div	class="tab-pane active" id="personne" role="tabpanel">
+
+							{% if ninea.niPersonne is not null %} 
+								<fieldset class=" fieldcolor p-2">
+									
+								
+
+
+										<form action="{{path('ninea_editPersonne',{id:ninea.niPersonne.id})}}" method="post" autocomplete="off">
+											
+											{% if (ninea.formeJuridique.niFormeunite.id == 11) %}
+												<div id="idPPhysique">
+													<div class="row">
+														<div class="col-lg-6">
+															<fieldset class="border p-2">										
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm select2" name="nationalite"   id="idnationalite_personne" required>
+																				<option value="" selected>
+																					Sélectionner</option>
+																				{% for tag in nationalites %}
+																					<option value="{{tag.id}}" {% if tag.id == ninea.niPersonne.nationalite.id %} selected {% endif %}>
+																						{{tag.id}}-{{ tag.libelle}}</option>
+																				{% endfor %}
+																			</select>
+																			<span style="color: red;" id="ninationalite"></span>
+																		</td>
+																	</tr>
+																</table>
+										
+																<div id="tableCni_personne">
+																	<table  style="width: 100%;">
+																		<tr id="trcni">
+																			<td style="width: 60%;">
+																				<label for="" class="TXT"> <b><u>CNI : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 40%;" >
+																				<input type="text" name="cni" id="idcni" value="{{ninea.niPersonne.ninCNI}}" maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm">
+																				<span style="color: red;" id="nincni"></span>
+																			</td>
+																		</tr>
+											
+																		<tr id="trcni">
+																			<td style="width: 60%;">
+																				<label for="" class="TXT"><b><u>Date de délivrance  : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 40%;" >
+																				<input type="date" name="datecni" id="idDatecni"  value="{{ninea.niPersonne.ninDateCNI|date("Y-m-d") }}" class="form-control form-control-sm">
+																				<span style="color: red;" id="nincni"></span>
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+																
+																<div  id="tablePassport_personne">
+																	<table style="width: 100%;">
+																		<tr id="trPassport">
+																			<td style="width: 60%;">
+																				<label for="" class="TXT">	<b><u>Passport : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 40%;">
+																				<input type="text" name="passport" id="idDatepassport"  value="{{ninea.niPersonne.ninCNI}}" class="form-control form-control-sm">
+																				<span style="color: red;" id="ninpassport"></span>
+																			</td>
+																		</tr>
+											
+																		<tr id="trDatePassport">
+																			<td style="width: 60%;">
+																				<label for="" class="TXT"><b><u>Date du passport  : </u></b></label>
+																			</td>
+																			<td style="width: 40%;">
+																				<input type="date" name="datepassport" id="idDatepassport"  value="{{ninea.niPersonne.ninDateCNI|date("Y-m-d") }}" class="form-control form-control-sm">
+																				<span style="color: red;" id="nindatepassport"></span>
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+										
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="" class="TXT"><b><u>Civilité : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm" name="civilite" id="idCivilite" required>
+																				<option value="" selected>Sélectionner ...			</option>
+																				{% for tagciv in civilites %}
+																					{% if tagciv.id == ninea.niPersonne.civilite.id %}
+																							<option value="{{ tagciv.id}}" selected>	{{ tagciv.civlibelle}}</option>
+																						{% else %}
+																							<option value="{{ tagciv.id}}" >	{{ tagciv.civlibelle}}</option>
+																					{% endif %}
+																				{% endfor %}
+																			</select>
+																			<span style="color: red;" id="nincivil"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="prenom"  id="prenom" required value="{{ninea.niPersonne.ninPrenom}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="ninprenom"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for=""><b><u>Nom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="nom" id="idnom" class="form-control form-control-sm" required value="{{ninea.niPersonne.ninNom}}">
+																			<span style="color: red;" id="ninnom"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm" name="sexe" id="idsexe" aria-readonly="true">
+																				{% for tags in sexes %}
+																					{% if tags.id == ninea.niPersonne.ninSexe.id %}
+																						<option value="{{ tags.id }}" selected > {{ tags.libelle}}</option>
+																					{% else %}
+																						<option value="0" > Sélectionner ...</option>
+																					{% endif %}
+																				{% endfor %}														
+																			</select>
+																			<span style="color: red;" id="ninsexe"></span>
+										
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="date" name="datenais" id="idDatenais" required value="{{ninea.niPersonne.ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="nindatenais"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Lieu de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="lieunais" id="idlieunais"   value="{{ninea.niPersonne.ninLieuNaissance}}"class="form-control form-control-sm" required>
+																			<span style="color: red;" id="ninlieunais"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="telephone" id="idtelpersonne"  value="{{ninea.niPersonne.ninTelephone}}" class="form-control form-control-sm" required>
+																			<span style="color: red;" id="nintelpersonne"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Email : </u></b></label>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="email" name="email" id="idemailpersonne"  value="{{ninea.niPersonne.ninEmailPersonnel}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="ninemail_personne"></span>
+																		</td>
+																	</tr>
+										
+																</table>		
+															</fieldset>
+															
+														</div>
+										
+														<div class="col-lg-6">
+															<fieldset class="border p-2">										
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																			<span style="color: red;">*</span>
+																		</td>
+										
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie" required>
+																				{% for tagv in typevoies %}
+																					{% if ninea.niPersonne.ninTypevoie is not null %}
+																						{% if tagv.id == ninea.niPersonne.ninTypevoie.id %}
+																							<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
+																						{% else %}
+																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																						{% endif %}
+																					{% else %}
+																						<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																					{% endif %}	
+																				{% endfor %}
+																			</select>
+																			<span style="color: red;" id="nintypevoie"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="voie" id="idvoie" value="{{ ninea.niPersonne.ninVoie}}" class="form-control form-control-sm " required>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<input type="text" name="numvoie" id="idNumvoie" value="{{ ninea.niPersonne.numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 " name="region" id="region" style="width: 100%;">
+																				<option>Sélectionner ...</option>
+																				{% for tagr in regions %}
+																					{% if tagr.id == ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																						<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+																					{% else %}
+																						<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+																					{% endif %}
+
+																				{% endfor %}
+																				</select>
+																				<span style="color: red;" id="ninregion"></span>
+																			</td>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 " name="departement" id="departement" style="width: 100%;">
+																				{% if ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																				{% else %}
+																						<option value="" ></option>
+																				{% endif %}
+																			</select>
+																			<span style="color: red;" id="nindepartement"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT"><b><u>Commune/Ville/Arrondissement : </u></b>:</label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2" name="cav" id="cav" style="width: 100%;">
+																					{% if ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID %}
+																						<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincav"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td>
+																			<label for="basicpill-firstname-input" class="TXT">	<b><u>Commune d'arrondissement/Communauté rurale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2" name="cacr" id="cacr" style="width: 100%;">
+																					{% if ninea.niPersonne.ninQvh.qvhCACRID %}
+																						<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincacr"></span>
+																		</td>
+																	</tr>
+																	<tr>
+										
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input" class="TXT">
+																				<b><u>Quartier/Village/Hameau : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<select class="form-control form-control-sm select2"  required="true" name="qvh" id="qvh" style="width: 100%;">
+																					{% if ninea.niPersonne.ninQvh %}
+																						<option value="{{ ninea.niPersonne.ninQvh.id }}" selected> {{ ninea.niPersonne.ninQvh.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="ninqvh"></span>
+																		</td>
+																	</tr>	
+																	<tr>				
+																		<td style="width: 30%;">
+																			<label for="basicpill-firsAdresse complète:tname-input" class="TXT">
+																				<b><u>Adresse domicile : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<input type="text" name="adresse" id="idadresse" value="{{ ninea.niPersonne.adresse}}"class="form-control form-control-sm">
+																			<span style="color: red;" id="ninadresse"></span>
+																		</td>
+																	</tr>
+
+																</table>	
+															</fieldset>
+										
+														</div>
+													</div>
+
+												</div>
+											{% else %}
+												{% if (ninea.formeJuridique.niFormeunite.id == 21) %}
+													<div id="idMorale"  class="col-lg-6 " >
+														<fieldset class="border p-2" >
+														<center>	
+															<table style="width: 100%;">
+																<tr >
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 55%;" >
+																		<input readonly="true" type="text" name="raison" id="idraison" value="{{ninea.niPersonne.ninRaison}}"  class="form-control form-control-sm">
+																		<span style="color: red;" id="ninraison"></span>
+																	</td>
+																</tr>
+
+																<tr >
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Sigle : </u></b></label>
+																	</td>
+																	<td style="width: 55%;" >
+																		<input readonly="true" type="text" name="sigle" id="idSigle" class="form-control form-control-sm" value="{{ninea.niPersonne.ninSigle}}">
+																		<span style="color: red;" id="ninsigle"></span>
+																	</td>
+																</tr>
+															</table>
+														</center>
+														</fieldset>
+													</div>
+												{% endif %}
+											{% endif %}
+
+										</form>
+
+									
+
+								</fieldset>
+
+							
+
+							{% else %}
+						
+
+								<form action="{{path('ajouterPersonnes',{id:app.request.attributes.get('id')})}}" method="post" autocomplete="off">
+									{% if (ninea.formeJuridique.niFormeunite.id == 11) %}
+										<div id="idPPhysique">
+											<div class="row">
+												<div class="col-lg-6">
+													<fieldset class="border p-2">										
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 60%;">
+																	<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 40%;">
+																	<select class="form-control form-control-sm select2" name="nationalite" required id="idnationalite_personne">
+																		<option value="" selected>
+																			Sélectionner</option>
+																		{% for tag in nationalites %}
+																			<option value="{{tag.id}}" {% if tag.id=="SN" %} selected {% endif %}>
+																				{{tag.id}}-{{ tag.libelle}}</option>
+																		{% endfor %}
+																	</select>
+																	<span style="color: red;" id="ninationalite"></span>
+																</td>
+															</tr>
+														</table>
+								
+														<div id="tableCni_personne">
+															<table  style="width: 100%;">
+																<tr id="trcni">
+																	<td style="width: 60%;">
+																		<label for="" class="TXT"> <b><u>CNI : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 40%;" >
+																		<input type="text" name="cni" id="idcni" required class="form-control form-control-sm" 
+																			maxlength = '14' pattern ="[A-z0-9]{13,14}">
+																		<span style="color: red;" id="nincni"></span>
+																	</td>
+																</tr>
+									
+																<tr id="trcni">
+																	<td style="width: 60%;">
+																		<label for="" class="TXT"><b><u>Date de délivrance  : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 40%;" >
+																		<input type="date" name="datecni" id="idDatecni" class="form-control form-control-sm" required>
+																		<span style="color: red;" id="nincni"></span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														
+														<div  id="tablePassport_personne">
+															<table style="width: 100%;">
+																<tr id="trPassport">
+																	<td style="width: 40%;">
+																		<label for="" class="TXT">	<b><u>Passport : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="text" name="passport" id="idDatepassport" class="form-control form-control-sm">
+																		<span style="color: red;" id="ninpassport"></span>
+																	</td>
+																</tr>
+									
+																<tr id="trDatePassport">
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Date du passport  : </u></b></label>
+																	</td>
+																	<td style="width: 50%;">
+																		<input type="date" name="datepassport" id="idDatepassport" class="form-control form-control-sm">
+																		<span style="color: red;" id="nindatepassport"></span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+								
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 60%;">
+																	<label for="" class="TXT"><b><u>Civilité : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 40%;">
+																	<select class="form-control form-control-sm" name="civilite" id="idCivilite" required>
+																		<option value="0" selected>Sélectionner ...			</option>
+																		{% for tag in civilites %}
+																			<option value="{{ tag.id}}">		{{ tag.civlibelle}}</option>
+																		{% endfor %}
+																	</select>
+																	<span style="color: red;" id="nincivil"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 60%;">
+																	<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 40%;">
+																	<input type="text" name="prenom"  id="prenom" class="form-control form-control-sm" required>
+																	<span style="color: red;" id="ninprenom"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 60%;">
+																	<label for=""><b><u>Nom : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 40%;">
+																	<input type="text" name="nom" id="idnom" class="form-control form-control-sm" required>
+																	<span style="color: red;" id="ninnom"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 60%;">
+																	<select class="form-control form-control-sm" name="sexe" id="idsexe" aria-readonly="true">
+																		<option value="0">Sélectionner ...</option>
+																	</select>
+																	<span style="color: red;" id="ninsexe"></span>
+								
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 60%;">
+																	<input type="date" name="datenais" id="idDatenais"  class="form-control form-control-sm" required>
+																	<span style="color: red;" id="nindatenais"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Lieu de naissance : </u></b></label>
+																	<span style="color: red;">*</span>
+
+																</td>
+																<td style="width: 60%;">
+																	<input type="text" name="lieunais" id="idlieunais" class="form-control form-control-sm" required>
+																	<span style="color: red;" id="ninlieunais"></span>
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+																	<span style="color: red;">*</span>
+
+																</td>
+																<td style="width: 60%;">
+																	<input type="text" name="telephone" id="idtelpersonne" value="" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" required>
+																	<span style="color: red;" id="nintelpersonne"></span>
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Email : </u></b></label>
+																</td>
+																<td style="width: 60%;">
+																	<input type="email" name="email" id="idemailpersonne" value="" class="form-control form-control-sm">
+																	<span style="color: red;" id="ninemail_personne"></span>
+																</td>
+															</tr>
+								
+														</table>		
+													</fieldset>
+													
+												</div>
+								
+												<div class="col-lg-6">
+													<fieldset class="border p-2">										
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 60%;">
+																	<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																	<span style="color: red;">*</span>
+																</td>
+								
+																<td style="width: 40%;">
+																	<select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie" required>
+																		<option value="" selected >			Sélectionner</option>
+																		{% for tag in typevoies %}
+																			<option value="{{ tag.id}}">			{{tag.tyvlibelle}}</option>
+																		{% endfor %}
+																	</select>
+																	<span style="color: red;" id="nintypevoie"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 60%;">
+																	<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+																	<span style="color: red;">*</span>
+
+																</td>
+																<td style="width: 40%;">
+																	<input type="text" name="voie" id="idvoie" class="form-control form-control-sm " required>
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 30%;">
+																	<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+																</td>
+																<td style="width: 70%;">
+																	<input type="text" name="numvoie" id="idNumvoie" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td>
+																	<select class="form-control form-control-sm select2 " name="region" id="region" style="width: 100%;">
+																		<option value="0">Sélectionner ...</option>
+																		{% for tag in regions %}
+																			<option value="{{tag.id}}">{{tag.libelle}}</option>
+																			{% endfor%}
+																		</select>
+																		<span style="color: red;" id="ninregion"></span>
+																	</td>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td>
+																	<select class="form-control form-control-sm select2 " name="departement" id="departement" style="width: 100%;">
+																		<option  value="0">Selectionner ...</option>
+																	</select>
+																	<span style="color: red;" id="nindepartement"></span>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<label for="numvoie" class="TXT"><b><u>Commune/Ville/Arrondissement : </u></b>:</label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td>
+																	<select class="form-control form-control-sm select2" name="cav" id="cav" style="width: 100%;">
+																		<option  value="0">Selectionner ...</option>
+																	</select>
+																	<span style="color: red;" id="nincav"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td>
+																	<label for="basicpill-firstname-input" class="TXT">	<b><u>Commune 'arrondissement/Communauté rurale : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td>
+																	<select class="form-control form-control-sm select2" name="cacr" id="cacr" style="width: 100%;">
+																		<option  value="0">Selectionner ...</option>
+																	</select>
+																	<span style="color: red;" id="nincacr"></span>
+																</td>
+															</tr>
+															<tr>
+								
+																<td style="width: 30%;">
+																	<label for="basicpill-firstname-input" class="TXT">
+																		<b><u>Quartier/Village/Hameau : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 70%;">
+																	<select  required class="form-control form-control-sm select2" name="qvh" id="qvh" style="width: 100%;" >
+																		<option  value="0">Selectionner ...</option>
+																	</select>
+																	<span style="color: red;" id="ninqvh"></span>
+																</td>
+															</tr>	
+															<tr>				
+																<td style="width: 30%;">
+																	<label for="basicpill-firsAdresse complète:tname-input" class="TXT">
+																		<b><u>Adresse domicile : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 70%;">
+																	<input type="text" name="adresse" id="idadresse" value="" class="form-control form-control-sm" required>
+																	<span style="color: red;" id="ninadresse"></span>
+																</td>
+															</tr>
+
+														</table>	
+													</fieldset>
+								
+												</div>
+											</div>
+						
+										</div>
+									{% else %}
+										{% if (ninea.formeJuridique.niFormeunite.id == 21) %}
+											<div id="idMorale"  class="col-lg-6" >
+												<fieldset class="border p-2">
+													<center>			
+														<table style="width: 100%;">
+															<tr >
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 55%;" >
+																	<input type="text" name="raison" id="idraison" required value="{{ninea.ninRaison}}"  class="form-control form-control-sm">
+																	<span style="color: red;" id="ninraison"></span>
+																</td>
+															</tr>
+							
+															<tr >
+																<td style="width: 40%;">
+																	<label for="" class="TXT"><b><u>Sigle : </u></b></label>
+																</td>
+																<td style="width: 55%;" >
+																	<input type="text" name="sigle" id="idSigle" class="form-control form-control-sm" value="{{ninea.ninSigle}}">
+																	<span style="color: red;" id="ninsigle"></span>
+																</td>
+															</tr>
+														</table>
+													</center>
+												</fieldset>
+											</div>
+										{% endif %}
+									{% endif %}
+											<div class="row mt-3">
+												<div class="col-lg-8">		</div>
+												<div class="col-lg-4" align="right">
+													<input type="button" value="Modifier" name="ajouter" id="btnSuivant" class="boutonsm">
+												</div>
+											</div>
+								</form>
+								
+							{% endif %}
+							
+						</div>
+
+						
+						<div class="tab-pane " id="coordonnees" role="tabpanel">
+							<div class="col-lg-12">					
+								<fieldset class=" p-2 fieldcolor ">
+									<div class="row">
+									          {% if lastcoordoonnee is not null %}
+												<form action="{{path('ninea_editCoordonnees',{id:lastcoordoonnee.id})}}" method="post" autocomplete="off">
+													<div class="row">
+														<div class="col-lg-6">
+										
+															<fieldset class="border p-2">													
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																			<span style="color: red;">*</span>
+																		</td>
+										
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie" required>
+																				<option value="" selected >	Sélectionner</option>
+																				
+																					{% for tagv in typevoies %}
+																						{% if lastcoordoonnee.ninTypevoie is not null %}
+																							{% if tagv.id == lastcoordoonnee.ninTypevoie.id %}
+																								<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
+																							{% else %}
+																								<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																							{% endif %}
+																						{% else %}
+																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																						{% endif %}
+																					{% endfor %}
+																			</select>
+																			<span style="color: red;" id="nintypevoie"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="voie" id="idvoie" value="{{ lastcoordoonnee.ninVoie}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+										
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="numvoie" id="idNumvoie" value="{{lastcoordoonnee.ninnumVoie}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT"> <b><u>Région : </u></b> </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 40%;">
+																			<select class="form-control select2 form-control-sm  " name="region" required id="region_coordonnees" style="width: 100%;">
+																				<option>Sélectionner ...</option>
+																					{% for tagr in regions %}
+																						{% if tagr.id == lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																							<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+																						{% else %}
+																							<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+																						{% endif %}
+
+																					{% endfor %}
+																				</select>
+																				<span style="color: red;" id="ninregion"></span>
+																			</td>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT"> <b><u> Département : </u></b> </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm   select2" name="departement" required id="departement_coordonnees" style="width: 100%;">
+																				{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																				{% else %}
+																						<option value="" >Sélectionner ...</option>
+																				{% endif %}
+																			</select>
+																			<span style="color: red;" id="nindepartement"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT"><b><u>CAV : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm   select2" name="cav" required id="cav_coordonnees" style="width: 100%;">
+																				{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
+																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																				{% else %}
+																					<option value="" ></option>
+																				{% endif %}												
+																			</select>
+																			<span style="color: red;" id="nincav"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td>
+																			<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>           </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm   select2" name="cacr" id="cacr_coordonnees" required style="width: 100%;">
+																				{% if lastcoordoonnee.qvh.qvhCACRID %}
+																							<option value="{{ lastcoordoonnee.qvh.qvhCACRID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.libelle}}</option>
+																						{% else %}
+																								<option value="" ></option>
+																						{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincacr"></span>
+																		</td>
+																	</tr>
+																	<tr>
+										
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input" class="TXT"><b><u>Quartier/Village/Hameau : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<select class="form-control form-control-sm  select2" name="qvh" id="qvh_coordonnees" required style="width: 100%;">
+																				{% if lastcoordoonnee.qvh %}
+																						<option value="{{ lastcoordoonnee.qvh.id }}" selected> {{ lastcoordoonnee.qvh.libelle}}</option>
+																					{% else %}
+																						<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="ninqvh"></span>
+																		</td>
+																	</tr>
+										
+																</table>
+										
+															</fieldset>
+														</div>
+										
+														<div class="col-lg-6">
+															<fieldset class="border p-2">													
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for=""><b><u>Adresse de l'établissement : </u></b></label>
+																			<span style="color: red;">*</span>
+										
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="adresse1" id="idadresse1" value="{{lastcoordoonnee.ninadresse1}}	" required class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for=""><b><u>Téléphone portable : </u></b></label>
+																			<span style="color: red;">*</span>
+										
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="telephone1" id="idtelephone1" value="{{lastcoordoonnee.ninTelephon1}}" required class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 60%;">
+																			<label for=""><b><u>Téléphone fixe : </u></b></label>
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="telephone2" id="idtelephone2" value="{{lastcoordoonnee.nintelephon2}}" 
+																			oninput="this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for=""><b><u>Email : </u></b></label>
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="email" id="idemail" value="{{lastcoordoonnee.ninEmail}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for=""><b><u>Boite postale : </u></b></label>
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="bp" id="idbp" value="{{lastcoordoonnee.ninBP}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""><b><u>URL : </u></b></label>
+																		</td>
+																		<td style="width: 70%;">
+																			<input type="text" name="url" id="idurl" value="{{lastcoordoonnee.ninUrl}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																</table>
+										
+															</fieldset>
+														</div>
+															
+
+                                                            <div class="row">
+								                                   <div class="col-lg-12">
+								                                    	<div class="mb-3 row">
+									                                    	<label class="col-md-8" for="basicpill-firstname-input"></label>
+									                                	    <div class="col-md-2 mr-0">
+									                                		 <input type="submit"  value="Modifier" name="editer" id="idBtnSuivantCoordonnees" class="boutonsm">
+									                                       </div>
+                                                                           <div class="col-md-2 mr-0" >
+									                                		 <input type="button"  value="Vider" name="vider" id="idBViderCoordonnees" class="boutonsm">
+									                                       </div>
+								                                        </div>
+							                                        </div>
+							                                    </div>
+
+                                                                <div class="row">
+								                                   <div class="col-lg-12">
+								                                    	<div class="mb-3 row">
+									                                    	<label class="col-md-6" for="basicpill-firstname-input">HISTORIQUE DES COORDONNEES</label>
+									                                 	  
+								                                        </div>
+							                                        </div>
+							                                    </div>
+
+                                                               <div class="row">
+                                                                    <table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                                                                       <thead class="tr_entete" >
+                                                                          <tr>
+                                                                            <th>Région</th>
+                                                                            <th>Département</th>
+                                                                            <th>CAV</th>                           
+                                                                            <th>CACR</th>
+                                                                            <th>Quartier</th>
+                                                                            <th>Adresse</th>
+                                                                            <th>Tel. Portable</th>
+                                                                            <th>Debut</th>
+                                                                            <th>Fin</th>
+                                                                          </tr>
+                                                                      </thead>
+
+                                                                      <tbody>
+                                                                      {% for tag in coordoonnes %}
+                                                                         <tr>
+                                                                              <td>{{ tag.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle }}</td>
+                                                                              <td>{{ tag.qvh.qvhCACRID.cacrCAVID.cavDEPID.description }}</td>
+                                                                              <td>{{ tag.qvh.qvhCACRID.cacrCAVID.libelle }}</td>
+                                                                              <td>{{ tag.qvh.qvhCACRID.libelle }}</td>
+                                                                              <td>{{ tag.qvh.libelle }}</td>
+
+                                                                               <td>{{ tag.ninadresse1 }}</td>
+                                                                               <td>{{ tag.ninTelephon1 }}</td>
+                                                                               <td>{{  tag.createdat ? tag.createdat | date("d/m/Y") : "" }}</td>
+                                                                               <td>{{ tag.DateFin ? tag.DateFin | date("d/m/Y") : "" }}</td>
+                                                                
+                                                                          </tr>
+
+                   
+                                                                        {% endfor %}
+                                                                   </tbody>
+                                                                  </table>
+                                                               </div>
+
+
+																
+													</div>
+										
+												</form>
+											{% endif %}
+												
+										
+									</div>
+								</fieldset>				
+							</div>
+
+						</div>
+
+
+
+						<div class="tab-pane" id="activites" role="tabpanel">							
+
+						<div class="w-100">
+                           <div class="col-lg-12 justify-content-center"> 
+
+                           <form name="formActivites" action="{{path('activiteEtProduitsHisto',{id:app.request.attributes.get('id')})}}" method="post" autocomplete="off">
+
+                            <fieldset class="fieldcolor p-2 mb-3">
+  
+								<label for="basicpill-address-input">
+								<button type="button" id="btnAjouterActivities"  class="btn btn-primary waves-effect waves-light btn-sm"><i class="fas fa-plus-circle"></i> Ajouter
+								</button>
+								</label>
+
+                              <div class="row">
+                              <div class="col-lg-12">
+							  <table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                               <thead class="tr_entete" >
+                             
+                                  <tr>
+                                     <th>Libelle</th>
+                                     <th>NAEMA</th>
+                                     <th>Produits</th>
+									  <th>Debut</th>
+                                     <th>Fin</th>
+									 <th>Action</th>
+                                  </tr>
+                               </thead>
+                               <tbody id="idActivities"></tbody>
+							   {% set nb=0 %}
+                                
+                               {% for tagact in ninactivites %}
+							      {% set nb=nb+1 %}
+                                  <tr>
+				                      <td style="width: 20%;">
+					                     <input type="text" {% if tagact.statActivprincipale==1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+										 {% if nb==1 %}
+										     <input type="hidden" name="nbActivites" id="idnbActivites">
+										 {% endif %}
+			                          </td>
+			                    	  <td style="width: 40%;">				                      
+									     <select readonly class="form-control form-control-sm select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
+											{% for tagN in naemas %}
+											    {% if tagN.id == tagact.refnaema.id %}
+												    <option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+											    {% endif %}
+											{% endfor %}
+									    </select>
+									  </td>
+                                      <td style="width: 40%;">
+                                         <select class="select2 form-control select2-multiple" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
+												multiple="multiple" data-placeholder="Selectionner...">
+											{% for tagP in ninproduits %}
+											    {% if tagP.refproduits.naema.id == tagact.refnaema.id %}
+												    <option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+											    {% endif %}
+											{% endfor %}
+
+											{% for tagPR in produits %}
+											{% if tagPR.naema.id == tagact.refnaema.id %}
+												{% set bProduitExiste = false %}
+												{% for tagP in ninproduits %}
+													{% if tagP.refproduits.id == tagPR.id %}
+														{% set bProduitExiste = true %}
+														
+													{% endif %}
+												{% endfor %}
+												{% if bProduitExiste == false %}
+													<option value="{{tagPR.id}}"> {{tagPR.id}}-{{ tagPR.libelle}}</option>
+												{% endif %}
+											{% endif %}
+										    {% endfor %}
+
+										  </select>
+                                      </td>
+										<td>{{  tagact.createdat ? tagact.createdat | date("d/m/Y") : "" }}</td>
+										<td>{{ tagact.DateDeCloture ? tagact.DateDeCloture | date("d/m/Y") : "" }}</td>
+									  <td>
+									      {% if tagact.statActivprincipale!=1 %}
+                                             <input  id="idBtnSupprimerActivite{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHisto('{{tagact.id}}');" value="Supprimer" >
+										   {% endif %}
+									  </td>
+								   </tr>
+								  {% endfor %}
+								  {% if nb==0 %}
+                                     <tr>
+				                      <td style="width: 20%;">
+					                     <input type="text" name="ninAutact1" id="idninAutact1" class="form-control form-control-sm " required>
+										<input type="hidden" name="nbActivites" id="idnbActivites">
+			                          </td>
+			                           <td style="width: 40%;">				                      
+									     <select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
+											<option value="" selected>
+												Sélectionner...</option>
+											{% for tag in naemas %}
+												<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
+											{% endfor %}
+									    </select>
+									  </td>
+                                      <td style="width: 40%;">
+                                         <select class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
+												multiple="multiple" data-placeholder="Selectionner...">
+										  </select>
+                                      </td>
+                                    
+								   </tr>
+								  {% endif %}
+                               </tbody>
+                              </table>
+									</div>
+								</div>
+			
+								<div class="row">
+								<div class="col-lg-12">
+									<div class="mb-3 row">
+										<div align="center">
+											<input type="submit"  value="Valider Ajout" id="idBtnSuivantActivites" name="ajouter" class="boutonsm">
+										</div>
+									</div>
+								</div>
+							   </div>
+
+                            </fieldset>
+
+            </form>
+          </div>
+        </div>
+
+	</div>
+
+
+
+
+
+			<div class="tab-pane" id="activiteEconomiques" role="tabpanel"> 
+					
+                     <div class="col-lg-12"> 
+                     <fieldset class=" p-2 fieldcolor ">
+                        <div class="row">
+							{% if lastactiviteEco is not null %}
+                            <form action="{{path('nininea_editActivitesEconomiques',{id:lastactiviteEco.id})}}" method="post" autocomplete="off">
+
+
+                              	<div class="row">
+									<div class="col-lg-6">
+
+                                   <table style="width: 100%;">
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											 <input type="text" name="ninAffaire" id="idninAffaire" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+										<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninCapital" id="idninCapital" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+										<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninEffectif" id="idninEffectif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+										<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+								</table>
+						 </div>
+
+						     <div class="col-lg-6">
+                               <table style="width: 100%;">
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+										   <input type="text" name="ninEffect1" id="idninEffect1" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											 <input type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+								</table>
+						 </div>
+					      
+								</div> 
+
+								<div class="row">
+                                  <div class="col-lg-12">
+                                    <div class="mb-3 row">
+                                       <label class="col-md-6" for="basicpill-firstname-input"></label>
+                                       
+                                       <div class="col-md-1" align="right">
+                                           <input type="submit"  value="Modifier" name="modifierActivitesEcos" id="idBtnsuivantActivitesEconomiques" class="boutonsm">
+                                        </div>
+                                     </div>
+                                 </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3 row">
+                                            <label class="col-md-6" for="basicpill-firstname-input">HISTORIQUE ACTIVITES ECONOMIQUES</label>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                <table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                                    <thead class="tr_entete" >
+                                        <tr>
+                                        <th>Chiffre d'affaires</th>
+                                        <th>Année C.A. </th>
+                                        <th>Capital</th>
+                                        <th>Effectif permanent</th>
+
+                                        <th>Effectif permanent Fem.</th>
+                                        <th>Effectif temporaire</th>
+                                        <th>Effectif temporaire Fem.</th>
+                                        <th>Debut</th>
+                                        <th>Fin</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for tag in activiteseconmiques %}
+                                        <tr>
+                                            <td>{{ tag.ninAffaire }}</td>
+                                            <td>{{ tag.ninAnneeCa }}</td>
+                                            <td>{{ tag.ninCapital }}</td>
+                                            <td>{{ tag.ninEffectif }}</td>
+                                            <td>{{ tag.ninEffectifFem }}</td>
+
+                                            <td>{{ tag.ninEffect1 }}</td>
+                                            <td>{{ tag.ninEffectifFemSAIS }}</td>
+                                            <td>{{  tag.createdAt ? tag.createdAt | date("d/m/Y") : "" }}</td>
+                                            <td>{{ tag.DeteDeCloture ? tag.DeteDeCloture | date("d/m/Y") : "" }}</td>
+                                        </tr>
+
+
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                            </div>
+
+
+
+								</form>
+                            {% endif %}
+							</div>
+							</fieldset>
+            	    </div>
+
+			      </div>
+
+
+
+	<div class="tab-pane" id="dirigeants" role="tabpanel">
+		 <button type="button" id="idBtnAjoutDirigeants" class="boutonsm"><i class="fas fa-plus-circle"></i> Ajouter </button>
+		
+	    <div class="col-lg-12 justify-content-center"> 
+		<fieldset class=" p-2 fieldcolor ">
+        <div>
+		  <form name="formDirigeant" action="{{path('ajouterDirigeantsHisto',{id:app.request.attributes.get('id')})}}" method="post" autocomplete="off">
+			<div class="row" id="idPageAjoutDirigeants">
+				<div class="col-lg-6" id="idPageAjoutDirigeants1">
+					<fieldset class="border p-2">						
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-control form-control-sm" required  name="nationalite"  id="idnationalite_dirigeant">
+										<option value="" selected>
+											Sélectionner</option>
+										{% for tag in nationalites %}
+											<option value="{{tag.id}}" {% if Odirigeant!=null and Odirigeant.ninNationalite.id==tag.id %} selected {% elseif Odirigeant==null and  tag.id=="SN"%} selected {% endif %}>
+												{{ tag.libelle}}</option>
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninationalite"></span>
+								</td>
+							</tr>
+						</table>
+
+						<div id="tableCni_dirigeant">
+							<table  style="width: 100%;">
+								<tr id="trcni">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>CNI</u></b></label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 60%;" >
+										<input type="text" name="cni" id="idcni_dirig" value="{{Odirigeant ? Odirigeant.ninCni : ""}}" required 
+											maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm">
+										<span style="color: red;" id="nincni"></span>
+									</td>
+								</tr>
+	
+								<tr id="trcni">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>Date de délivrance CNI : </u></b></label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 60%;" >
+										<input type="date" name="datecni" id="idDatcni_dirig" value="{{Odirigeant ? Odirigeant.ninDateCni | date("Y-m-d")  : ""}}"  required class="form-control form-control-sm">
+										<span style="color: red;" id="nincni"></span>
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+						<div id="tablePassport_dirigeant">
+							<table style="width: 100%;" >
+								<tr id="trPassport">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 60%;">
+										<input type="text" name="passport" id="idPassport"  value="{{Odirigeant ? Odirigeant.ninCni : ""}}"  class="form-control form-control-sm">
+										<span style="color: red;" id="ninpassport"></span>
+									</td>
+								</tr>
+	
+								<tr id="trDatePassport">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
+									</td>
+									<td style="width: 60%;">
+										<input type="date" name="datepassport" id="idDatepassport_dirig" value="{{Odirigeant and Odirigeant.ninDateCni ? Odirigeant.ninDateCni | date("d/m/Y")  : ""}}" class="form-control form-control-sm">
+										<span style="color: red;" id="nindatepassport"></span>
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Civilite : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 30%;">
+									<select class="form-control form-control-sm" name="civilite" required id="idcivilite_dirig">
+										<option value="" selected>Sélectionner...</option>
+										{% for tag in civilites %}
+                                            {% if Odirigeant %}
+										       {% if Odirigeant.ninCivilite and  Odirigeant.ninCivilite.id==tag.id %}
+											      <option value="{{ tag.id}}" selected>		{{ tag.civlibelle}}</option>
+											   {% else %}
+                                                   <option value="{{ tag.id}}">		{{ tag.civlibelle}}</option>
+												{% endif %} 
+											{% else %}
+											   <option value="{{ tag.id}}">		{{ tag.civlibelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="nincivil"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="prenom"  id="prenom" value="{{Odirigeant ? Odirigeant.ninPrenom : ""}}" required class="form-control form-control-sm">	
+									<span style="color: red;" id="ninprenom"></span>
+									<input type="hidden" name="idDirigeantAM"  id="idDirigeantAM" value="{{Odirigeant ? Odirigeant.id : ""}}" required class="form-control form-control-sm">	
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for=""><b><u>Nom : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="nom" id="idnom" value="{{Odirigeant ? Odirigeant.ninNom : ""}}" required class="form-control form-control-sm">
+									<span style="color: red;" id="ninnom"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+								 <input type="text" readonly name="sexe" id="idSexe_dirig" value="" required class="form-control form-control-sm">
+								<span style="color: red;" id="ninsexe"></span>
+
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="date" name="datenais"  value="{{Odirigeant and Odirigeant.ninDatenais ? Odirigeant.ninDatenais | date("Y-m-d")  : ""}}" id="idDatenais_dirig"  required class="form-control form-control-sm">
+									<span style="color: red;" id="nindatenais"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Lieu de naissance</u></b></label>
+									<span style="color: red;">*</span>
+
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="lieunais" id="idlieunais" value="{{Odirigeant ? Odirigeant.ninLieunais : ""}}" required class="form-control form-control-sm">
+									<span style="color: red;" id="ninlieunais"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Qualification : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-control form-control-sm" name="qualification" required id="idqualification">
+										<option value="" selected>	Sélectionner....</option>
+										{% for tag in qualifications %}
+											<option value="{{tag.id}}" >{{ tag.libelle}}</option>
+											 {% if Odirigeant %}
+										       {% if Odirigeant.ninPosition and  Odirigeant.ninPosition.id==tag.id %}
+											      <option value="{{ tag.id}}" selected>		{{ tag.libelle}}</option>
+											   {% else %}
+                                                   <option value="{{ tag.id}}">		{{ tag.libelle}}</option>
+												{% endif %} 
+											{% else %}
+											   <option value="{{ tag.id}}">		{{ tag.libelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninqualications"></span>
+								</td>
+							</tr>
+						</table>
+
+					</fieldset>
+				</div>
+
+				<div class="col-lg-6" id="idPageAjoutDirigeants2">
+					<fieldset class="border p-2">
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="telephone" id="idtelpersonne_dirig1"  value="{{Odirigeant ? Odirigeant.ninTelephone1 : ""}}" class="form-control form-control-sm">
+									<span style="color: red;" id="nintelpersonne"></span>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Email : </u></b></label>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="email" id="idemail_dirig" value="{{Odirigeant ? Odirigeant.ninEmail : ""}}"   class="form-control form-control-sm">
+									<span style="color: red;" id="ninemail_dirig"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2 "  name="region" id="region_dirigeant" style="width: 100%;">
+										<option>Sélectionner ...</option>
+										{% for tag in regions %}
+										   {% if Odirigeant %}
+                                               {% if Odirigeant.ninQvh and tag.id == Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+														<option value="{{ tag.id }}" selected> {{ tag.libelle}}</option>
+												{% else %}
+														<option value="{{ tag.id }}" > {{ tag.libelle}}</option>
+												{% endif %}
+
+										   {% else %}
+										   		<option value="{{tag.id}}">{{tag.libelle}}</option>
+                                           {% endif %}
+										{% endfor %}
+
+										</select>
+										<span style="color: red;" id="ninregion"></span>
+									</td>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2 " name="departement" id="departement_dirigeant" style="width: 100%;">
+										 {% if Odirigeant %}
+											{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+												<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+											{% else %}
+													<option value="" >Sélectionner ...</option>
+											{% endif %}
+										 {% else %}
+                                            <option value="" >Sélectionner ...</option>
+										{% endif %}
+									</select>
+									<span style="color: red;" id="nindepartement"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>CAV :</u></b></label>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2" name="cav" id="cav_dirigeant" style="width: 100%;">
+										 {% if Odirigeant %}
+											{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID %}
+												<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+											{% else %}
+													<option value="" >Sélectionner ...</option>
+											{% endif %}
+										 {% else %}
+                                            <option value="" >Sélectionner ...</option>
+										{% endif %}
+									</select>
+									<span style="color: red;" id="nincav"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>	</label>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2" name="cacr" id="cacr_dirigeant" style="width: 100%;">
+									 {% if Odirigeant %}	
+										{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID %}
+											<option value="{{ Odirigeant.ninQvh.qvhCACRID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.libelle}}</option>
+										{% else %}
+												<option value="" ></option>
+										{% endif %}
+									 {% else %}
+												<option value="" ></option>
+									 {% endif %}
+									</select>
+									<span style="color: red;" id="nincacr"></span>
+								</td>
+							</tr>
+							<tr>
+
+								<td style="width: 30%;">
+									<label for="basicpill-firstname-input" class="TXT">
+										<b><u>Quartier/Village/Hameau: : </u></b></label>
+								</td>
+								<td style="width: 70%;">
+									<select class="form-control form-control-sm select2" name="qvh" id="qvh_dirigeant" style="width: 100%;">
+										<option value=""></option>
+										{% if Odirigeant %}	
+										    {% if Odirigeant.ninQvh %}
+											    <option value="{{ Odirigeant.ninQvh.id }}" selected> {{ Odirigeant.ninQvh.libelle}}</option>
+										{% else %}
+												<option value="" ></option>
+										{% endif %}
+									 {% else %}
+												<option value="" ></option>
+									 {% endif %}
+									</select>
+									<span style="color: red;" id="ninqvh"></span>
+								</td>
+							</tr>
+
+						</table>
+
+					</fieldset>
+
+				</div>
+              </div>
+		
+
+            <div class="row" id="idGroupeBtnAjoutDirigeants">
+             <div class="col-lg-12">
+                <div class="mb-3 row">
+                    <label class="col-md-6" for="basicpill-firstname-input"></label>
+                    
+                    <div class="col-md-1" align="right">
+                        <input type="submit"  value="Valider" name="valider" onclick="ajoutModifDirigeant();"  class="boutonsm">
+                    </div>
+                    <div class="col-md-1" align="right">
+                        <input type="button"  value="Annuler" id="idBtnAnnulerAjoutDirigeant" name="annuler"  class="boutonsm">
+                    </div>
+                </div>
+                </div>
+            </div>
+              <div class="row">
+                <div class="col-lg-12">
+                    <div class="mb-3 row">
+                        <label class="col-md-6" for="basicpill-firstname-input">HISTORIQUE DES DIRIGEANTS</label>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                        <   <table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                            <thead class="tr_entete" >
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Qualification</th>
+                                    <th>CNI</th>
+                                    <th>Nationalité</th>
+									<th>Debut</th>
+                                    <th>Fin</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for tag in ninea.ninDirigeant %}
+                                <tr>
+                                    <td >{{tag.ninPrenom}}</td>
+                                    <td >{{tag.ninNom}}	</td>
+                                    <td >   {{tag.ninPosition != null ? tag.ninPosition.libelle:"" }} </td>
+                                    <td >{{tag.ninCni}}</td>
+                                    <td >{{ tag.ninNationalite != null ? tag.ninNationalite.libelle:""}}</td>
+									<td>{{  tag.createdAt ? tag.createdAt | date("d/m/Y") : "" }}</td>
+                                     <td>{{ tag.DateDeCloture ? tag.DateDeCloture | date("d/m/Y") : "" }}</td>
+                                    <td>
+                                        <input  id="idBtnModifDirigeant"  type="submit" value="Modifier" onclick="modifierDirigeants('{{ tag.id}}');" >
+										<input  id="idBtnModifDirigeant"  type="submit" value="Enlever" name="enlever" onclick="modifierDirigeants('{{ tag.id}}');" >
+                                    </td>
+                                
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                </div>
+
+            </div>
+			
+
+		</form>
+                  
+
+             </div>
+		   </fieldset>
+		</div>
+
+	</div>
+
+</div>
+
+	</div>
+
+
+
+	
+
+</div>
+</div>
+
+
+
+
+	{# edit Personne #}
+	<div class="modal fade editPersonne" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+				
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="body">
+					{# templates/base.html.twig #}
+
+					
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	{# edit Coordonnees #}
+	<div class="modal fade editCoordonnees" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+				
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="body">
+					{# templates/base.html.twig #}
+					
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+<!-- end card -->
+{% endblock %}
+
+
+{% block javascript %}
+
+
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+     <!-- toastr plugin -->
+	 <script src="{{ asset('admin/dist/assets/libs/toastr/build/toastr.min.js')}}"></script>
+
+	 <!-- toastr init -->
+	 <script src="{{ asset('admin/dist/assets/js/pages/toastr.init.js')}}"></script>
+
+	 <script src="{{ asset( 'admin/dist/assets/libs/select2/js/select2.min.js')}} "></script>
+
+	<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+				<!-- form mask init -->
+	<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+
+	<script src="{{ asset('admin/dist/assets/js/multiselect.min.js')}}"></script>
+
+	        <!-- form advanced init -->
+	<script src="{{ asset('admin/dist/assets/js/pages/form-advanced.init.js')}}"></script>
+	<script src="{{ asset('admin/dist/assets/js/app.js')}}"></script>
+
+<script>
+
+		// In your Javascript (external .js resource or <script> tag)
+			$(document).ready(function() {
+				$('#idActivities').find('select').each(function(){
+					$(this).select2();
+				  });	
+			
+
+				  $("#idnationalite_personne").select2();
+
+		        var idDirigeantAM = document.getElementById("idDirigeantAM").value;
+                if(idDirigeantAM ==""){
+                    	document.getElementById("idGroupeBtnAjoutDirigeants").style.display = "none";
+                        document.getElementById("idPageAjoutDirigeants1").style.display = "none";
+                       document.getElementById("idPageAjoutDirigeants2").style.display = "none";
+				 }
+				 else {
+					 if (document.getElementById("idcivilite_dirig").value == "1") {
+		
+		                 document.getElementById("idSexe_dirig").value="M";
+		
+		             } else if (document.getElementById("idcivilite_dirig").value == "3" || document.getElementById("idcivilite_dirig").value == "4") {
+		                document.getElementById("idSexe_dirig").value= "F";
+	
+		            }
+				 }
+	
+
+			});	
+
+
+			$(".form-control").bind("keypress", function(e) {
+
+				if (e.keyCode == 13) {
+					var inps = $("input"); //add select too
+					for (var x = 0; x < inps.length; x++) {
+						if (inps[x] == this) {
+							while ((inps[x]).name == (inps[x + 1]).name) {
+							x++;
+							}
+							if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+						}
+					}   e.preventDefault();
+				}
+			});
+	
+			
+	// Affichage des activités
+	const newItemActivities = (e) => {
+		var collections = document.querySelector(e.currentTarget.dataset.collection);
+		let index = parseInt(collections.dataset.index);
+			
+		let item = document.createElement("tr");
+		
+		// item.innerHTML = collections.dataset.index = index + 1;
+		collections.dataset.index = index + 1;
+		let prototype = collections.dataset.prototype;
+		item.innerHTML = prototype.replace(/__name__/g, index);
+		
+		
+		item.querySelector(".btn-delete").addEventListener("click", () => item.remove());
+		collections.appendChild(item);
+		$(".naemaselect2").select2();
+		
+	}
+	
+	document.querySelectorAll(".ajouterActivities").forEach(btn => btn.addEventListener("click", newItemActivities));
+	
+	
+
+	function editPersonne (id) {
+		
+		let route = "{{ path('ninea_editPersonne') }}" + "/" +id;
+		
+		$.ajax({
+		type: 'GET',
+		url: route,
+		success: function (data) {
+			document.getElementById('body').innerHTML = "";
+			document.getElementById('body').innerHTML = data;
+			
+
+			document.getElementById("tablePassport_editpersonne").style.display = "none";
+
+			$('#idnationaliteditpersonne').change(function () {
+			
+				if ($('#idnationaliteditpersonne').val() == "SN") {
+					document.getElementById("tableCni_editpersonne").style.display = "block";
+					document.getElementById("tablePassport_editpersonne").style.display = "none";
+			
+				} else {
+					document.getElementById("tableCni_editpersonne").style.display = "none";
+					document.getElementById("tablePassport_editpersonne").style.display = "block";
+			
+				}
+			});
+
+
+
+			$('#editregion_personne').change(function () {
+
+				let route = "{{ path('departementsRegion') }}" + "/" + $('#editregion_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let departement = document.getElementById("editdepartement_personne");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				departement.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				departement.add(opt);
+				$("#editdepartement_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editdepartement_personne').change(function () {
+				
+				let route = "{{ path('cavDepartement') }}" + "/" + $('#editdepartement_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cav = document.getElementById("editcav_personne");
+				cav.setAttribute('class','form-control form-control-sm'); 
+				cav.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cav.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cav.add(opt);
+				$("#editcav_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				
+				$('#editcav_personne').change(function () {
+				
+				let route = "{{ path('cacrCav') }}" + "/" + $('#editcav_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cacr = document.getElementById("editcacr_personne");
+				cacr.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cacr.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cacr.add(opt);
+				$("#editcacr_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editcacr_personne').change(function () {
+				
+				let route = "{{ path('qvhCacr') }}" + "/" + $('#editcacr_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let qvh = document.getElementById("editqvh_personne");
+				qvh.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				qvh.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				qvh.add(opt);
+				$("#editqvh_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+			
+		},
+		error: function (error) {
+			
+		console.log(error);
+		}
+		});
+
+
+	}
+
+
+	
+
+
+
+
+	function traceDirigeants (id) {
+     let route = "{{ path('tracerDirigeant') }}" + "/" +id;
+
+	 	$.ajax({
+		type: 'GET',
+		url: route,
+		success: function (data) {
+			document.getElementById('body').innerHTML = "";
+			document.getElementById('body').innerHTML = data;
+			
+			$(".editPersonne").modal('show');		
+		},
+		error: function (error) {
+			
+		console.log(error);
+		}
+		});
+    }  
+
+	function ajoutModifDirigeant(){
+		var idDirigeantAM = document.getElementById("idDirigeantAM").value;
+		if(idDirigeantAM !=""){
+             document.forms['formDirigeant'].action="{{path('modifierDirigeantsHisto')}}"+ "/" + idDirigeantAM;
+
+		}
+	}
+
+	
+
+
+	function suppActiviteEtProduitsHisto (id) {
+    //  alert(document.forms['formDirigeant'].action);
+	  document.forms['formActivites'].action="{{path('suppActiviteEtProduitsHisto')}}"+ "/" +id;
+
+	}
+
+	function modifierDirigeants (id) {
+    //  alert(document.forms['formDirigeant'].action);
+	  document.forms['formDirigeant'].action="{{path('modifierDirigeantsHisto')}}"+ "/" +id;
+
+	  document.getElementById("idnationalite_dirigeant").removeAttribute('required');
+	  document.getElementById("idcni_dirig").removeAttribute('required');
+	  document.getElementById("idDatcni_dirig").removeAttribute('required');
+	  document.getElementById("idPassport").removeAttribute('required');
+	  document.getElementById("idDatepassport_dirig").removeAttribute('required');
+	  document.getElementById("idcivilite_dirig").removeAttribute('required');
+	 document.getElementById("prenom").removeAttribute('required');
+	  document.getElementById("idnom").removeAttribute('required');
+
+	document.getElementById("idSexe_dirig").removeAttribute('required');
+	document.getElementById("idDatenais_dirig").removeAttribute('required');
+	  document.getElementById("idlieunais").removeAttribute('required');
+	 document.getElementById("idqualification").removeAttribute('required');
+	  
+	 // alert(document.forms['formDirigeant'].action);
+	}
+
+		function EnleverDirigeants (id) {
+    //  alert(document.forms['formDirigeant'].action);
+	  document.forms['formDirigeant'].action="{{path('modifierDirigeantsHisto')}}"+ "/" +id;
+
+	  document.getElementById("idnationalite_dirigeant").removeAttribute('required');
+	  document.getElementById("idcni_dirig").removeAttribute('required');
+	  document.getElementById("idDatcni_dirig").removeAttribute('required');
+	  document.getElementById("idPassport").removeAttribute('required');
+	  document.getElementById("idDatepassport_dirig").removeAttribute('required');
+	  document.getElementById("idcivilite_dirig").removeAttribute('required');
+	 document.getElementById("prenom").removeAttribute('required');
+	  document.getElementById("idnom").removeAttribute('required');
+
+	document.getElementById("idSexe_dirig").removeAttribute('required');
+	document.getElementById("idDatenais_dirig").removeAttribute('required');
+	  document.getElementById("idlieunais").removeAttribute('required');
+	 document.getElementById("idqualification").removeAttribute('required');
+	  
+	 // alert(document.forms['formDirigeant'].action);
+	}
+
+
+	function editDirigeants (id) {
+		
+		let route = "{{ path('ninea_editDirigeant') }}" + "/" +id;
+		
+		$.ajax({
+		type: 'GET',
+		url: route,
+		success: function (data) {
+			document.getElementById('body').innerHTML = "";
+			document.getElementById('body').innerHTML = data;
+			
+			$(".editPersonne").modal('show');	
+
+			 if ($('#editnationalite_dirig').val() == "SN") {
+			      document.getElementById("edittablePassport_dirig").style.display = "none";
+	         }
+			
+
+			
+			
+		},
+		error: function (error) {
+			
+		console.log(error);
+		}
+		});
+	}
+
+
+
+
+	function activated ()
+	{
+		let route = "{{ path('activated') }}";
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		},
+		error: function (error) {
+		console.log(error);
+		}
+
+		});
+	}
+
+
+	//
+
+	//message toast
+		$(document).ready(function(){
+			
+			{% for message in app.session.flashbag.get('message')%}
+				
+				document.getElementById("toastbody").innerHTML="" ;
+				document.getElementById("toastbody").innerHTML="{{message}}" ;
+				
+				$("#myToast").toast({
+					delay: 2000
+				}); 
+				
+				// Show toast
+				$("#myToast").toast("show");
+			{% endfor%}				
+			
+		});
+	
+
+	
+	//garder la session sur la page
+     
+	//coordonnees	
+	if( "{{app.session.get('actived')}}" == 2 ){
+		
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$('#idcoordonnee').addClass('active');
+			$('#coordonnees').addClass('active');
+
+			activated();
+		
+	}
+
+
+		//activites
+		if( "{{app.session.get('actived')}}" == 3 ){
+		
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$("#idactivite").addClass('active');
+			$("#activites").addClass('active');
+		
+			activated();
+
+	}
+
+    
+	//Dirigeants
+    
+
+
+	if( "{{app.session.get('actived')}}" == 4 ){
+		
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$("#idactiviteEconomique").addClass('active');
+			$("#activiteEconomiques").addClass('active');
+
+		
+			activated();
+
+	}
+	
+
+	//activites economiques
+	if( "{{app.session.get('actived')}}" == 5 ){
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$("#iddirigeant").addClass('active');
+			$("#dirigeants").addClass('active');
+		
+			activated();
+
+	}
+
+
+          if ($('#idnationalite_personne').val() == "SN") {
+			      document.getElementById("tablePassport_personne").style.display = "none";
+	      }
+			$('#idnationalite_personne').change(function () {
+			
+				if ($('#idnationalite_personne').val() == "SN") {
+					document.getElementById("tableCni_personne").style.display = "block";
+					document.getElementById("idcni").setAttribute('required',true);
+					document.getElementById("idDatecni").setAttribute('required',true);
+					document.getElementById("idDatepassport").removeAttribute('required');
+
+					document.getElementById("tablePassport_personne").style.display = "none";
+			
+				} else {
+					document.getElementById("tableCni_personne").style.display = "none";
+					document.getElementById("tablePassport_personne").style.display = "block";
+					document.getElementById("idDatepassport").setAttribute('required',true);
+					document.getElementById("idcni").removeAttribute('required');
+					document.getElementById("idDatecni").removeAttribute('required');
+
+			
+				}
+			});
+
+			$('#editnationalite_dirig').change(function () {
+
+				alert("nationalite edit");
+
+				if ($('#editnationalite_dirig').val() == "SN") {
+					document.getElementById("edittableCni_dirig").style.display = "block";
+					document.getElementById("edittablePassport_dirig").style.display = "none";
+
+				} else {
+					document.getElementById("edittableCni_dirig").style.display = "none";
+					document.getElementById("edittablePassport_dirig").style.display = "block";
+
+				}
+			});
+
+
+     $("#idBtnAjoutDirigeants").click(function () {
+         document.getElementById("idPageAjoutDirigeants1").style.display = "block";
+         document.getElementById("idPageAjoutDirigeants2").style.display = "block";
+		document.getElementById("idGroupeBtnAjoutDirigeants").style.display = "block";
+
+     });
+
+      $("#idBtnAnnulerAjoutDirigeant").click(function () {
+         document.getElementById("idPageAjoutDirigeants1").style.display = "none";
+         document.getElementById("idPageAjoutDirigeants2").style.display = "none";
+		document.getElementById("idGroupeBtnAjoutDirigeants").style.display = "none";
+
+     });
+
+
+	 $('#idBtnSuivantActivites').click(function(){
+			var table = document.getElementById("idtab");
+			var rowNumber = table.rows.length-1;
+			document.getElementById("idnbActivites").value=rowNumber;
+		//	alert(document.getElementById("idnbActivites").value);
+		});
+
+
+        $("#btnAjouterActivities").click(function(){
+
+            var table = document.getElementById("idtab");
+	        var newRow = table.insertRow(-1);
+            var rowNumber = table.rows.length-1;
+
+			var newCell = newRow.insertCell(0);
+			 newCell.innerHTML = '<td style="width: 20%;"> <input type="text" name="ninAutact'+rowNumber+'" id="idninAutact'+rowNumber+'" class="form-control form-control-sm "></td>';
+
+			var newCell2 = newRow.insertCell(1);		    
+			newCell2.innerHTML = '<td style="width: 40%;">	<select class="form-control form-control-sm select2" name="refNaema'+rowNumber+'"   id="idrefNaema'+rowNumber+'" required> <option value="" selected> Sélectionner...</option> {% for tag in naemas %} <option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> {% endfor %} </select></td>';
+		
+            var newCell3 = newRow.insertCell(2);		    
+			newCell3.innerHTML = '<td style="width: 40%;"> <select class="select2 form-control select2-multiple" name="refProduit'+rowNumber+'[]"   id="idrefProduit'+rowNumber+'" multiple="multiple" data-placeholder="Selectionner...">  </select> </td>';
+
+
+           var newCell4 = newRow.insertCell(3);
+		    newCell4.innerHTML = '<td><input type="date" readonly class="form-control form-control-sm"></td>';
+           
+		   var newCell5 = newRow.insertCell(4);
+		    newCell5.innerHTML = '<td><input type="date" readonly class="form-control form-control-sm"></td>';
+
+            var newCell6 = newRow.insertCell(5);
+            newCell6.innerHTML = ' <td> <input  id="idBtnSupprimerActivite'+rowNumber+'"  type="button" value="Supprimer" ></td>';
+          
+		    $('.select2').select2();
+
+            $('#idrefNaema'+rowNumber).change(function(){
+			document.getElementById("idrefProduit"+rowNumber).innerHTML = "";
+            {% for tag in produits %}
+				
+				if ($('#idrefNaema'+rowNumber).val() == '{{ tag.naema.id }}') {
+				let opt = document.createElement('option');
+				opt.value = "{{ tag.id }}";
+				opt.innerHTML = "{{ tag.id }}"+"-"+"{{ tag.libelle }}";
+				document.getElementById("idrefProduit"+rowNumber).add(opt);
+				}
+
+			{% endfor %}
+		});
+
+		$('#idBtnSupprimerActivite'+rowNumber).click(function(){
+            var table = document.getElementById("idtab");
+			table.deleteRow(rowNumber);
+         });
+
+       });    
+
+            
+   $("#idBViderCoordonnees").click(function () {
+       //alert("click");
+       document.getElementById("idvoie").value="";
+        document.getElementById("idNumvoie").value="";
+        document.getElementById("idadresse1").value="";
+      
+        document.getElementById("idtelephone1").value="";
+        document.getElementById("idtelephone2").value="";
+        document.getElementById("idemail").value="";
+        document.getElementById("idbp").value="";
+         document.getElementById("idurl").value="";
+
+
+         document.getElementById("idtypevoie").value="Sélectionner...";
+         document.getElementById("region_coordonnees").value="Sélectionner...";
+        document.getElementById("departement_coordonnees").value="Sélectionner...";
+        document.getElementById("cav_coordonnees").value="Sélectionner...";
+        document.getElementById("cacr_coordonnees").value="Sélectionner...";
+        document.getElementById("qvh_coordonnees").value="Sélectionner...";
+                  
+   }); 
+
+	$("#idActivites").click(function () {
+		$('#ni_activite_refSyscoa').select2({
+			dropdownParent: $('#modalActivites')
+		});
+
+		$('#ni_activite_refNaema').select2({
+			dropdownParent: $('#modalActivites')
+		});
+
+		$('#ni_activite_refNaemas').select2({
+			dropdownParent: $('#modalActivites')
+		});
+
+		$('#ni_activite_refCiti').select2({
+			dropdownParent: $('#modalActivites')
+		});
+	});
+
+
+
+function formatPhoneNumber(phoneNumberString) {
+		var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+		var match = cleaned.match(/^(\(33|77|78|72|75|76|36|32|70)[0-9]{7}$/)
+		if (match) {
+
+		return 1;
+		}
+		return 0;
+		}
+
+
+	function formatPhoneNumberPortable(phoneNumberString) {
+		var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+		var match = cleaned.match(/^(\(33|77|78|72|75|76|36|32|70)[0-9]{7}$/)
+		if (match) {
+
+		return 1;
+		}
+		return 0;
+		}
+
+
+	function formatPhoneNumberFixe(phoneNumberString1) {
+		var cleaned = ('' + phoneNumberString1).replace(/\D/g, '')
+		var match = cleaned.match(/^(\(77|78|72|75|76|36|33|70)[0-9]{7}$/)
+		if (match) {
+
+
+		return 1;
+		}
+		return 0;
+		}
+
+
+
+
+ //var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+
+		$('#idtelpersonne').change(function () {
+		if ($.trim($('#idtelpersonne').val()) != "") 
+		{
+			console.log(formatPhoneNumberPortable($.trim($('#idtelpersonne').val())));
+
+			if (formatPhoneNumberPortable($.trim($('#idtelpersonne').val())) == 0) {
+
+			Swal.fire('Le numéro téléphone n\'est pas valide.');
+
+				$('#idtelpersonne').focus();
+			}
+
+		}
+
+		});
+
+
+        			// QVH POUR coordonnees
+	$('#region_coordonnees').change(function () {
+      //  alert("region change");
+
+	let route = "{{ path('departementsRegion') }}" + "/" + $('#region_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let departement = document.getElementById("departement_coordonnees");
+	departement.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	departement.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	departement.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	
+	}
+	})
+	});
+
+    	$('#departement_coordonnees').change(function () {
+	
+	let route = "{{ path('cavDepartement') }}" + "/" + $('#departement_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let cav = document.getElementById("cav_coordonnees");
+	cav.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	cav.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	cav.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	}
+	})
+	});
+	
+	
+	$('#cav_coordonnees').change(function () {
+	
+	let route = "{{ path('cacrCav') }}" + "/" + $('#cav_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let cacr = document.getElementById("cacr_coordonnees");
+	cacr.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	cacr.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	cacr.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	}
+	})
+	});
+	
+	$('#cacr_coordonnees').change(function () {
+	
+	let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let qvh = document.getElementById("qvh_coordonnees");
+	qvh.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	qvh.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	qvh.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	}
+	})
+	});
+
+
+$('#idNumvoie').change(function () {
+		alert($('#idNumvoie').val());
+		});
+
+		$('#idtelephone1').change(function () {
+			if ($.trim($('#idtelephone1').val()) != "") 
+			{
+				if (formatPhoneNumberPortable($.trim($('#idtelephone1').val())) == 0) {
+				Swal.fire('Le numéro téléphone n\'est pas valide.');
+				$('#idtelephone1').focus();
+			}
+			
+			}
+		});
+
+
+		$('#idtelephone2').change(function () {
+			if ($.trim($('#idtelephone2').val()) != "") {
+
+			if (formatPhoneNumberFixe($.trim($('#idtelephone2').val())) == 0) {
+
+			Swal.fire('Le numéro téléphone n\'est pas valide.');
+				$('#idtelephone2').focus();
+			}
+
+			}
+		});
+
+
+	$('#idtelpersonne_dirig1').change(function () {
+		if ($.trim($('#idtelpersonne_dirig1').val() ) != "") {
+		
+		if (formatPhoneNumberPortable($.trim($('#idtelpersonne_dirig1').val())) == 0) {
+		
+		Swal.fire('Le numéro téléphone n\'est pas valide.');
+		$('#idtelpersonne_dirig1').val("");
+		$('#idtelpersonne_dirig1').focus();
+		}
+		
+		}
+		});
+
+
+
+		function controleCNI (cni) {
+			let route = "{{ path('controleCNI') }}" + "/" +cni;	   
+				$.ajax({
+			   	type: 'GET',
+			   	url: route,
+			   	success: function (data) {
+					if (data == 1)
+					{
+						document.getElementById('nincni').innerHTML = "Ce numéro d'identification est déjà utilisé.";
+						$('#idcni').addClass('has_error');
+						$("#idcni").focus();
+
+						document.getElementById('btnSuivant').setAttribute("disabled",true);
+					}
+					else 
+					{
+						$('#idcni').removeClass('has_error');
+						document.getElementById('nincni').innerHTML = "";
+						document.getElementById('btnSuivant').removeAttribute("disabled");
+					}
+				   
+			   	},
+			   error: function (error) {
+				   
+			   console.log(error);
+			   }
+			   });
+	   }
+
+
+
+
+			// Controle sur CNI
+			$('#idcni').change(function () {	
+
+				controleCNI($("#idcni").val());
+
+				var cni = $('#idcni').val();
+				if (cni.length == 14)
+				{
+					var element1 = cni.substring(0,1);		
+					if ( element1 != 1 && element1 != 2 )
+					{
+						$('#idcni').addClass('has_error');
+						Swal.fire("La CNI n'est pas valide.");
+						$("#idcni").val("");
+						$("#idcni").focus();
+					}
+					else
+					{
+						$('#idcni').removeClass('has_error');
+			
+					}
+				}
+				else
+				{
+					Swal.fire("La longueur de la CNI doit être de 13 à 14 caractères.");
+					$("#idcni").val("");
+		
+				}
+				
+			});  
+			
+
+
+	// contole date cni et date passpport
+	$('#idDatecni').change(function () {
+		var dateCNI = new Date($('#idDatecni').val());
+		var dateDuJour = new Date();
+		if (dateCNI > dateDuJour) {
+		Swal.fire('La date de délivrance du CNI  ne doit pas être postérieure à la date du jour.');
+		document.getElementById("idDatecni").value = new Date("");
+		}
+		});
+		
+	$('#idDatepassport').change(function () {
+	var datepassport = new Date($('#idDatepassport').val());
+	var dateDuJour = new Date();
+	if (datepassport > dateDuJour) {
+	Swal.fire('La date du passport ne doit pas être postérieure à la date du jour.');
+	document.getElementById("idDatepassport").value = new Date("");
+	}
+	});
+
+
+	// contole date cni et date passpport
+$('#idDatcni_dirig').change(function () {
+	console.log($ninationalite.val());
+	var dateCNI = new Date($('#idDatcni_dirig').val());
+	var dateDuJour = new Date();
+	if (dateCNI > dateDuJour) {
+	Swal.fire('La date de CNI ne doit pas être postérieure à la date du jour.');
+	document.getElementById("idDatcni_dirig").value = new Date("");
+	}
+	});
+	
+	$('#idDatepassport_dirig').change(function () {
+	var datepassport = new Date($('#idDatepassport_dirig').val());
+	var dateDuJour = new Date();
+	if (datepassport > dateDuJour) {
+	Swal.fire('La date du passport ne doit pas être postérieure à la date du jour.');
+	document.getElementById("idDatepassport_dirig").value = new Date("");
+	}
+	});
+
+
+	$("#idDatenais").change(function() {
+		var dateCNI = new Date($('#idDatecni').val());
+		var datepassport = new Date($('#idDatepassport').val());
+		var datenais =  new Date($('#idDatenais').val());
+		if (datenais > dateCNI)
+		{
+			Swal.fire('La date de naissance ne doit pas être postérieure  à la date de délivrance de la CNI.');
+			document.getElementById("idDatenais").value = new Date("");
+		}
+
+	});
+
+
+
+	// verification de l'Email
+function IsEmail(email) {
+	var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (! regex.test(email)) {
+	return false;
+	} else {
+	return true;
+	}
+	}
+
+	
+	
+	$("#idemailpersonne").change(function () {
+	var inputvalues = $(this).val();
+	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (! regex.test(inputvalues)) {
+	Swal.fire("Entrez une adresse email valide.");
+	$('#idemailpersonne').addClass('has_error');
+	$("#idemailpersonne").val("");
+	$("#idemailpersonne").focus();
+	}
+	
+	});
+
+
+	$("#idemail").change(function () {
+	var inputvalues = $(this).val();
+	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (! regex.test(inputvalues)) {
+	Swal.fire("Entrez une adresse email valide.");
+	$('#idemail').addClass('has_error');
+	$("#idemail").focus();
+	}
+	
+	});
+
+	$("#idemail_dirig").change(function () {
+		var inputvalues = $(this).val();
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if (! regex.test(inputvalues)) {
+		Swal.fire("Entrez une adresse email valide.");
+		$('#idemail_dirig').addClass('has_error');
+		$("#idemail_dirig").focus();
+		}
+		else 
+		{
+			$('#idemail_dirig').removeClass('has_error');
+		}
+		
+		});
+	
+	// CONTROLES SUR LES DATES
+	
+	$('#idDatenais').change(function () {
+	var verifdatenaiss = 0;
+	if ($('#idDatenais').val() != "") {
+	
+	var date1 = new Date($('#idDatenais').val());
+	var dateDuJour = new Date();
+	
+	if (date1 > dateDuJour) {
+	Swal.fire('La   date de naissance  doit être inférieure  à la date du jour.');
+	document.getElementById("idDatenais").value = new Date("");
+	
+	}
+	}
+	});
+
+	$('#idDatenais_dirig').change(function () {
+		var verifdatenaiss = 0;
+		if ($('#idDatenais').val() != "") {
+		
+		var date1 = new Date($('#idDatenais_dirig').val());
+		var dateDuJour = new Date();
+		
+		if (date1 > dateDuJour) {
+		Swal.fire('La   date de naissance  doit être inférieure  à la date du jour.');
+		document.getElementById("idDatenais_dirig").value = new Date("");
+		
+		}
+		}
+		});
+
+
+	
+	// Fonction servant à limiter le nombre de caractere  dans une textarea
+	function maxLength(element, max) {
+	value = element.value;
+	max = parseInt(max);
+	if (value.length > max) {
+	Swal.fire('Nombre de chiffres dépassé.');
+	element.value = value.substr(0, max);
+	}
+	}
+
+
+
+	$("#idBtnsuivantDirigeant").click(function() {
+	    $("#soumettre").click();
+
+	});
+
+
+// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentActivitesEconomiques').click(function () {
+
+$('#idactiviteEconomique').removeClass('active');
+$('#activiteEconomiques').removeClass('active');
+
+$('#idactivite').addClass('active');
+$('#idactivite').attr('href', '#activites');
+$('#activites').addClass('active');
+
+});
+
+	// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentDirigeant').click(function () {
+
+$('#iddirigeant').removeClass('active');
+$('#dirigeants').removeClass('active');
+
+$('#idactiviteEconomique').addClass('active');
+$('#idactiviteEconomique').attr('href', '#activiteEconomiques');
+$('#activiteEconomiques').addClass('active');
+
+});
+
+	// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentActivites').click(function () {
+
+$('#idactivite').removeClass('active');
+$('#activites').removeClass('active');
+
+$('#idcoordonnee').addClass('active');
+$('#idcoordonnee').attr('href', '#coordonnees');
+$('#coordonnees').addClass('active');
+
+});
+
+// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentCoordonnees').click(function () {
+
+$('#idcoordonnee').removeClass('active');
+$('#coordonnees').removeClass('active');
+
+$('#idpersonne').addClass('active');
+$('#idpersonne').attr('href', '#personne');
+$('#personne').addClass('active');
+
+});
+
+
+$(document).keydown(function (eventObject) {
+	if(eventObject.keyCode==39){
+        // $("#btnSuivant").click();
+		var attClass=document.getElementById("personne").getAttribute('class');
+        var indexactive = attClass.indexOf("active");    
+        if(indexactive !== -1){
+             $("#btnSuivant").click();
+			 return;
+        }
+
+		attClass=document.getElementById("coordonnees").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnSuivantCoordonnees").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activites").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnSuivantActivites").click();
+			 return;
+        }
+
+		attClass=document.getElementById("dirigeants").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnsuivantDirigeant").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activiteEconomiques").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnsuivantActivitesEconomiques").click();
+			 return;
+        }
+
+	}
+    else if(eventObject.keyCode==37){
+	
+		attClass=document.getElementById("coordonnees").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentCoordonnees").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activites").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentActivites").click();
+			 return;
+        }
+
+		attClass=document.getElementById("dirigeants").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentDirigeant").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activiteEconomiques").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentActivitesEconomiques").click();
+			 return;
+        }
+
+	}
+   
+});
+
+	
+
+   var $ninationalite_dirig = $('#idnationalite_dirigeant');
+   document.getElementById("tablePassport_dirigeant").style.display = "none";
+
+   $ninationalite_dirig.change(function () {
+
+if ($ninationalite_dirig.val() == "SN") {
+   document.getElementById("tableCni_dirigeant").style.display = "block";
+   document.getElementById("idcni_dirig").setAttribute('required',true);
+   document.getElementById("idDatcni_dirig").setAttribute('required',true);
+   document.getElementById("idDatepassport_dirig").removeAttribute('required');
+   document.getElementById("idPassport").removeAttribute('required',true);
+
+   document.getElementById("tablePassport_dirigeant").style.display = "none";
+
+} else {
+   document.getElementById("tableCni_dirigeant").style.display = "none";
+   document.getElementById("tablePassport_dirigeant").style.display = "block";
+   document.getElementById("idDatepassport_dirig").setAttribute('required',true);
+   document.getElementById("idPassport").setAttribute('required',true);
+   document.getElementById("idcni_dirig").removeAttribute('required');
+   document.getElementById("idDatcni_dirig").removeAttribute('required');
+
+
+}
+});
+
+// Controle sur CNI
+  $('#idcni_dirig').change(function () {	
+		var cni = $('#idcni_dirig').val();
+		if (cni.length == 13 || cni.length == 14)
+		{
+			var element1 = cni.substring(0,1);		
+			if ( element1 != 1 && element1 != 2 )
+			{
+				$('#idcni_dirig').addClass('has_error');
+				Swal.fire("La CNI n'est pas valide.");
+				$("#idcni_dirig").val("");
+				$("#idcni_dirig").focus();
+			}
+			else
+			{
+				$('#idcni_dirig').removeClass('has_error');
+	
+			}
+		}
+		else
+		{
+			Swal.fire("La longueur de la CNI doit être de 13 à 14 caractères.");
+			$("#idcni_dirig").val("");
+
+		}
+		
+	});  
+
+$('#idCivilite').change(function () {
+	if (document.getElementById("idCivilite").value == "1") 
+	{
+		var sexe = document.getElementById("idsexe");
+		sexe.innerHTML = "";
+		var opt = document.createElement('option');
+		opt.innerHTML = "Masculin";
+		opt.value = 1;
+		sexe.add(opt);
+	} else if (document.getElementById("idCivilite").value == "2" || document.getElementById("idCivilite").value == "3") {
+		var sexe = document.getElementById("idsexe");
+		sexe.innerHTML = "";
+		var opt = document.createElement('option');
+		opt.innerHTML = "Féminin";
+		opt.value = 2;
+		sexe.add(opt);
+	}	
+	
+	else if (document.getElementById("idCivilite").value == "0") 
+
+		{
+			var sexe = document.getElementById("idsexe");
+			sexe.innerHTML = "";
+			var opt = document.createElement('option');
+			opt.innerHTML = "Sélectionner ...";
+			opt.value = 0;
+			sexe.add(opt);
+		}
+	
+	});
+
+
+	$('#idcivilite_dirig').change(function () {
+		if (document.getElementById("idcivilite_dirig").value == "1") {
+		
+		document.getElementById("idSexe_dirig").value="M";
+		
+		} else if (document.getElementById("idcivilite_dirig").value == "3" || document.getElementById("idcivilite_dirig").value == "4") {
+		 document.getElementById("idSexe_dirig").value= "F";
+	
+		}
+		
+		});
+
+
+		// QVH POUR coordonnees
+		$('#region').change(function () {
+
+		let route = "{{ path('departementsRegion') }}" + "/" + $('#region').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let departement = document.getElementById("departement");
+		departement.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		departement.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) 
+		{
+			let opt = document.createElement('option');
+			opt.value = data[i][0];
+			opt.innerHTML = data[i][1];
+			departement.add(opt);
+		
+		}
+
+			/*if ( document.getElementById("region").value == "0") 
+			{
+				let departement = document.getElementById("departement");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '0';
+				departement.add(opt);
+			}*/
+
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+		
+		$('#departement').change(function () {
+		
+		let route = "{{ path('cavDepartement') }}" + "/" + $('#departement').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let cav = document.getElementById("cav");
+		cav.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		cav.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) {
+		let opt = document.createElement('option');
+		opt.value = data[i][0];
+		opt.innerHTML = data[i][1];
+		cav.add(opt);		
+		
+		}
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+		
+		
+		$('#cav').change(function () {
+		
+		let route = "{{ path('cacrCav') }}" + "/" + $('#cav').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let cacr = document.getElementById("cacr");
+		cacr.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		cacr.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) {
+		let opt = document.createElement('option');
+		opt.value = data[i][0];
+		opt.innerHTML = data[i][1];
+		cacr.add(opt);
+		
+		
+		}
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+		
+		$('#cacr').change(function () {
+		
+		let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let qvh = document.getElementById("qvh");
+		qvh.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		qvh.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) {
+		let opt = document.createElement('option');
+		opt.value = data[i][0];
+		opt.innerHTML = data[i][1];
+		qvh.add(opt);
+		
+
+		}
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+
+	
+
+			// QVH POUR PERSONNE
+			$('#region_dirigeant').change(function () {
+
+				let route = "{{ path('departementsRegion') }}" + "/" + $('#region_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let departement = document.getElementById("departement_dirigeant");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				departement.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				departement.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#departement_dirigeant').change(function () {
+				
+				let route = "{{ path('cavDepartement') }}" + "/" + $('#departement_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cav = document.getElementById("cav_dirigeant");
+				cav.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cav.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cav.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				
+				$('#cav_dirigeant').change(function () {
+				
+				let route = "{{ path('cacrCav') }}" + "/" + $('#cav_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cacr = document.getElementById("cacr_dirigeant");
+				cacr.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cacr.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cacr.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#cacr_dirigeant').change(function () {
+				
+				let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let qvh = document.getElementById("qvh_dirigeant");
+				qvh.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				qvh.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				qvh.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+
+
+
+             $('#editregion_dirigeant').change(function () {
+                alert("okkk");
+				let route = "{{ path('departementsRegion') }}" + "/" + $('#editregion_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let departement = document.getElementById("editdepartement_dirigeant");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				departement.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				departement.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editdepartement_dirigeant').change(function () {
+				
+				let route = "{{ path('cavDepartement') }}" + "/" + $('#editdepartement_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cav = document.getElementById("editcav_dirigeant");
+				cav.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cav.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cav.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				
+				$('#editcav_dirigeant').change(function () {
+				
+				let route = "{{ path('cacrCav') }}" + "/" + $('#editcav_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cacr = document.getElementById("editcacr_dirigeant");
+				cacr.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cacr.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cacr.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editcacr_dirigeant').change(function () {
+				
+				let route = "{{ path('qvhCacr') }}" + "/" + $('#editcacr_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let qvh = document.getElementById("editqvh_dirigeant");
+				qvh.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				qvh.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				qvh.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+
+
+
+	
+
+					$('#idninEffectifFemSAIS').change(function () {
+						//alert(document.getElementById("idninEffectifFemSAIS").value+" "+ document.getElementById("idninEffect1").value);
+					if(document.getElementById("idninEffect1").value!=""){
+						if (Number(document.getElementById("idninEffectifFemSAIS").value) > Number(document.getElementById("idninEffect1").value)) {
+							Swal.fire("Effectif temporaire femme ne doit pas dépasser l'effectif temporaire total.");
+							document.getElementById("idninEffectifFemSAIS").value="";
+						}
+					}
+					
+					
+					// $("#sectionPersonnePhysique ").hide();
+					// $("#ninea_ninPrenom ").show();
+					
+					});
+
+					$('#idninEffect1').change(function () {
+					if(document.getElementById("idninEffectifFemSAIS").value!=""){
+						if (Number(document.getElementById("idninEffectifFemSAIS").value) > Number(document.getElementById("idninEffect1").value)) {
+							Swal.fire("l'effectif temporaire total doit être supérieur effectif temporaire femme.");
+							document.getElementById("idninEffect1").value="";
+						}
+					}
+					
+					
+					});
+
+					$('#idninEffectifFem').change(function () {
+						
+					if(document.getElementById("idninEffectif").value!=""){
+					//	alert(document.getElementById("idninEffectifFem").value +" "+ document.getElementById("idninEffectif").value);
+						if (Number(document.getElementById("idninEffectifFem").value) > Number(document.getElementById("idninEffectif").value)) {
+							Swal.fire("Effectif permanent femme ne doit pas dépasser l'effectif permanent total.");
+							document.getElementById("idninEffectifFem").value="";
+						}
+					}
+					
+					
+					});
+
+					$('#idninEffectif').change(function () {
+					if(document.getElementById("idninEffectifFem").value!=""){
+						if (Number(document.getElementById("idninEffectifFem").value) > Number(document.getElementById("idninEffectif").value)) {
+							Swal.fire("l'effectif permanent total doit être supérieur à effectif permanent femme.");
+							document.getElementById("idninEffectif").value="";
+						}
+					}
+					
+					
+					});
+
+
+					$('#ni_activite_economique_ninEffectifFemSAIS').change(function () {
+					if(document.getElementById("ni_activite_economique_ninEffect1").value!=""){
+						//alert(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value+ " "+ document.getElementById("ni_activite_economique_ninEffect1").value);
+						if (Number(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value) > Number(document.getElementById("ni_activite_economique_ninEffect1").value)) {
+							Swal.fire("Effectif temporaire femme ne doit pas dépasser l'effectif temporaire total.");
+							document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value="";
+						}
+					}
+					
+					// $("#sectionPersonnePhysique ").hide();
+					// $("#ninea_ninPrenom ").show();
+					
+					});
+
+					$('#ni_activite_economique_ninEffect1').change(function () {
+					if(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value!=""){
+						if (Number(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value)> Number(document.getElementById("ni_activite_economique_ninEffect1").value)) {
+							Swal.fire("l'effectif temporaire total doit être supérieur effectif temporaire femme.");
+							document.getElementById("ni_activite_economique_ninEffect1").value="";
+						}
+					}
+					
+					
+					});
+
+					$('#ni_activite_economique_ninEffectifFem').change(function () {
+						
+					if(document.getElementById("ni_activite_economique_ninEffectif").value!=""){
+						if (Number(document.getElementById("ni_activite_economique_ninEffectifFem").value) > Number(document.getElementById("ni_activite_economique_ninEffectif").value)) {
+							Swal.fire("Effectif permanent femme ne doit pas dépasser l'effectif permanent total.");
+							document.getElementById("ni_activite_economique_ninEffectifFem").value="";
+						}
+					}
+					
+					
+					});
+
+					$('#ni_activite_economique_ninEffectif').change(function () {
+					if(document.getElementById("ni_activite_economique_ninEffectifFem").value!=""){
+						if (Number(document.getElementById("ni_activite_economique_ninEffectifFem").value) > Number(document.getElementById("ni_activite_economique_ninEffectif").value)) {
+							Swal.fire("l'effectif permanent total doit être supérieur à effectif permanent femme.");
+							document.getElementById("ni_activite_economique_ninEffectif").value="";
+						}
+					}
+					});
+
+					$('#idninAnneeCa').change(function () {
+					    var annee=document.getElementById("idninAnneeCa").value;
+						if(annee.length!=4){
+							Swal.fire("l'année du chiffre d'affaire doit être sur 4 chiffres");
+							document.getElementById("idninAnneeCa").value="";
+						}else{
+							var dateDuJour=new Date();
+							//alert(dateDuJour);
+							var anneeActuelle=dateDuJour.getFullYear();
+							if(annee>anneeActuelle){
+								Swal.fire("l'année du chiffre d'affaire doit être antérieur à "+anneeActuelle);
+							    document.getElementById("idninAnneeCa").value="";
+							}
+						}
+					
+					
+					});
+
+					$('#ni_activite_economique_ninAnneeCa').change(function () {
+					//	alert("ca changes");
+					    var annee=document.getElementById("ni_activite_economique_ninAnneeCa").value;
+						if(annee.length!=4){
+							Swal.fire("l'année du chiffre d'affaire doit être sur 4 chiffres");
+							document.getElementById("ni_activite_economique_ninAnneeCa").value="";
+						}
+						else{
+							var dateDuJour=new Date();
+							//alert(dateDuJour);
+							var anneeActuelle=dateDuJour.getFullYear();
+							if(annee>anneeActuelle){
+								Swal.fire("l'année du chiffre d'affaire doit être antérieur à "+anneeActuelle);
+							    document.getElementById("ni_activite_economique_ninAnneeCa").value="";
+							}
+						}
+					
+					
+					});
+
+					 
+                    $("#idninAffaire").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninAnneeCa").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninCapital").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffectif").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffect1").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffectifFem").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffectifFemSAIS").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+				
+</script>{% endblock %}

@@ -1,0 +1,282 @@
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+	<div class="card-body">
+		
+		<form action="{{path('ajouterDirigeants',{id:app.request.attributes.get('id')})}}" method="post">
+			<div class="row">
+				<div class="col-lg-6">
+					<fieldset class="border p-2">						
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm"  style="width: 80%;" required  name="nationalite"  id="idnationalite_dirigeant">
+										<option value="" selected>
+											Sélectionner</option>
+										{% for tag in nationalites %}
+											<option value="{{tag.id}}" {% if tag.id=="SN" %} selected {% endif %}>
+												{{ tag.libelle}}</option>
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninationalite"></span>
+								</td>
+							</tr>
+						</table>
+
+						<div id="tableCni_dirigeant">
+							<table  style="width: 100%;">
+								<tr id="trcni">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>CNI</u></b></label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 60%;" >
+										<input type="text" name="cni" id="idcni_dirig" required 
+											maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm">
+										<span style="color: red;" id="nincni"></span>
+									</td>
+								</tr>
+	
+								<tr id="trcni">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>Date de délivrance: </u></b></label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 60%;" >
+										<input type="date" name="datecni" id="idDatcni_dirig" required class="form-control form-control-sm">
+										<span style="color: red;" id="nincni"></span>
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+						<div id="tablePassport_dirigeant">
+							<table style="width: 100%;" >
+								<tr id="trPassport">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+										<span style="color: red;">*</span>
+									</td>
+									<td style="width: 60%;">
+										<input type="text" name="passport" id="idPassport"   maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm">
+										<span style="color: red;" id="ninpassport"></span>
+									</td>
+								</tr>
+	
+								<tr id="trDatePassport">
+									<td style="width: 40%;">
+										<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
+									</td>
+									<td style="width: 60%;">
+										<input type="date" name="datepassport" id="idDatepassport_dirig" class="form-control form-control-sm">
+										<span style="color: red;" id="nindatepassport"></span>
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Civilite : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 30%;">
+									<select class="form-control form-control-sm" name="civilite" required id="idcivilite_dirig">
+										<option value="" selected>Sélectionner			</option>
+										{% for tag in civilites %}
+											<option value="{{ tag.id}}">		{{ tag.civlibelle}}</option>
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="nincivil"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="prenom"  id="prenom" required class="form-control form-control-sm">
+									<span style="color: red;" id="ninprenom"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for=""><b><u>Nom : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="nom" id="idnom" required class="form-control form-control-sm">
+									<span style="color: red;" id="ninnom"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-select form-select-sm" required name="sexe" id="idSexe_dirig"></select>
+									<span style="color: red;" id="ninsexe"></span>
+
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="date" name="datenais" id="idDatenais_dirig"  required class="form-control form-control-sm">
+									<span style="color: red;" id="nindatenais"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Lieu de naissance</u></b></label>
+									<span style="color: red;">*</span>
+
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="lieunais" id="idlieunais" required class="form-control form-control-sm">
+									<span style="color: red;" id="ninlieunais"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Qualification : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-control form-control-sm" name="qualification" required id="idqualification">
+										<option value="" selected>	Sélectionner</option>
+										{% for tag in qualifications %}
+											<option value="{{tag.id}}" >{{ tag.libelle}}</option>
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninqualications"></span>
+								</td>
+							</tr>
+						</table>
+
+					</fieldset>
+				</div>
+
+				<div class="col-lg-6">
+					<fieldset class="border p-2">
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="telephone" id="idtelpersonne_dirig1" required value="" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm">
+									<span style="color: red;" id="nintelpersonne"></span>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Email : </u></b></label>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="email" id="idemail_dirig" value=""   class="form-control form-control-sm">
+									<span style="color: red;" id="ninemail_dirig"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2 " required  name="region" id="region_dirigeant" style="width: 100%;">
+										<option>Choississez la région</option>
+										{% for tag in regions %}
+											<option value="{{tag.id}}">{{tag.libelle}}</option>
+											{% endfor%}
+										</select>
+										<span style="color: red;" id="ninregion"></span>
+									</td>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2 " required name="departement" id="departement_dirigeant" style="width: 100%;">
+										<option>Select</option>
+									</select>
+									<span style="color: red;" id="nindepartement"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>CAV :</u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2" required name="cav" id="cav_dirigeant" style="width: 100%;">
+										<option>Select</option>
+									</select>
+									<span style="color: red;" id="nincav"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>	</label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2" required name="cacr" id="cacr_dirigeant" style="width: 100%;">
+										<option></option>
+									</select>
+									<span style="color: red;" id="nincacr"></span>
+								</td>
+							</tr>
+							<tr>
+
+								<td style="width: 30%;">
+									<label for="basicpill-firstname-input" class="TXT">
+										<b><u>Quar/Vil/Ham : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 70%;">
+									<select class="form-control form-control-sm select2" required name="qvh" id="qvh_dirigeant" style="width: 100%;">
+										<option value=""></option>
+									</select>
+									<span style="color: red;" id="ninqvh"></span>
+								</td>
+							</tr>
+
+						</table>
+
+					</fieldset>
+
+				</div>
+				<div class="col-lg-8">		</div>
+				<div class="col-lg-4 mt-3" align="right">
+					<input type="submit"  value="Ajouter" name="ajouter" class="mb-3"  data-bs-toggle="modal" data-bs-target=".modal_dirigeants">
+					<input type="submit"  value="Ajouter et Quitter" name="ajouterquitter">
+					<input type="button" data-bs-dismiss="modal" aria-label="Close" required value="Annuler" name="Annuler">
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+</div>
+

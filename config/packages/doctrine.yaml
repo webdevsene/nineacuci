@@ -1,0 +1,59 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                #driver : 'pdo_pgsql'
+                driver : 'pdo_sqlsrv'
+                charset : utf8
+                default_table_options : 
+                    charset : utf8
+                    collate : utf8_unicode_ci
+                url: '%env(resolve:DATABASE_URL)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '13'
+            customer:
+                # configure these for your database server
+                url: '%env(resolve:DATABASE_CUSTOMER_URL)%'
+                driver: 'pdo_mysql'
+                server_version: '5.7'
+                charset: utf8mb4
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                auto_mapping: true
+                connection: default
+                dql:
+                    string_functions:
+                        match: DoctrineExtensions\Query\Mysql\MatchAgainst
+                        replace: DoctrineExtensions\Query\Mysql\Replace
+                mappings:
+                    App:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'
+                        alias: App
+
+                    loggable:
+                        type: annotation
+                        alias: Gedmo
+                        prefix: Gedmo\Loggable\Entity
+                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
+
+            customer:
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                connection: customer
+                mappings:
+                    Customer:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Customer'
+                        # dir: '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity'
+                        prefix: 'App\Entity\Customer'
+                        # prefix: 'Gedmo\Loggable\Entity'
+                        alias: Customer

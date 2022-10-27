@@ -1,0 +1,76 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NiFormejuridique index{% endblock %}
+
+{% block body %}
+
+ <a href="{{ path('app_ni_formejuridique_new') }}" class="btn btn-primary  mt-lg-3">+Ajouter forme juridique</a>
+
+<div class="box mt-lg-2">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste forme juridique
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+  
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Libelle</th>
+                                    <th>actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for ni_formejuridique in ni_formejuridiques %}
+                                <tr>
+                                    <td>{{ ni_formejuridique.id }}</td>
+                                    <td>{{ ni_formejuridique.fojLibelle }}</td>
+                                    <td>
+                                       
+                                        <a href="{{ path('app_ni_formejuridique_edit', {'id': ni_formejuridique.id}) }}">edit</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                               
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+   
+
+   
+{% endblock %}

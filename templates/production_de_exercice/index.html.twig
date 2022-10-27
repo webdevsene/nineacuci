@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductionDeExercice index{% endblock %}
+
+{% block body %}
+    <h1>ProductionDeExercice index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AnneeFinanciere</th>
+                <th>Libelle</th>
+                <th>Unites</th>
+                <th>Submit</th>
+                <th>QtyProdVenduDansEtat</th>
+                <th>ValProdVenduDansEtat</th>
+                <th>QtyProdVenduDansUemoa</th>
+                <th>ValProdVenduDansUemoa</th>
+                <th>QtyProdVenduHorsUemoa</th>
+                <th>ValProdVenduHorsUemoa</th>
+                <th>QtyProdImmobilisee</th>
+                <th>ValProdImmobilisee</th>
+                <th>QtyStkOuverture</th>
+                <th>ValStkOuverture</th>
+                <th>QtyStkCloture</th>
+                <th>ValStkCloture</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for production_de_exercice in production_de_exercices %}
+            <tr>
+                <td>{{ production_de_exercice.id }}</td>
+                <td>{{ production_de_exercice.createdAt ? production_de_exercice.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ production_de_exercice.updatedAt ? production_de_exercice.updatedAt|date('Y-m-d') : '' }}</td>
+                <td>{{ production_de_exercice.anneeFinanciere }}</td>
+                <td>{{ production_de_exercice.libelle }}</td>
+                <td>{{ production_de_exercice.unites }}</td>
+                <td>{{ production_de_exercice.submit }}</td>
+                <td>{{ production_de_exercice.qtyProdVenduDansEtat }}</td>
+                <td>{{ production_de_exercice.valProdVenduDansEtat }}</td>
+                <td>{{ production_de_exercice.qtyProdVenduDansUemoa }}</td>
+                <td>{{ production_de_exercice.valProdVenduDansUemoa }}</td>
+                <td>{{ production_de_exercice.qtyProdVenduHorsUemoa }}</td>
+                <td>{{ production_de_exercice.valProdVenduHorsUemoa }}</td>
+                <td>{{ production_de_exercice.qtyProdImmobilisee }}</td>
+                <td>{{ production_de_exercice.valProdImmobilisee }}</td>
+                <td>{{ production_de_exercice.qtyStkOuverture }}</td>
+                <td>{{ production_de_exercice.valStkOuverture }}</td>
+                <td>{{ production_de_exercice.qtyStkCloture }}</td>
+                <td>{{ production_de_exercice.valStkCloture }}</td>
+                <td>
+                    <a href="{{ path('app_production_de_exercice_show', {'id': production_de_exercice.id}) }}">show</a>
+                    <a href="{{ path('app_production_de_exercice_edit', {'id': production_de_exercice.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="20">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_production_de_exercice_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+
+        <meta charset="utf-8" />
+        <title>ANSD - Agence Nationale de la Statistique et de la Démographie  </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico')}}">
+
+
+        <!-- Bootstrap Css -->
+        <link href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            label{
+                font-size: 12px;
+                color: #676767;
+            }
+            /* When you mouse over link */
+            .ali-trait:hover {
+                color: blue;
+            }
+           
+        .form-control:focus {
+          border-color: #28a745;
+          box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+
+
+           
+ 
+
+           
+        </style>
+
+
+        {% block stylesheets %}
+                
+        {% endblock %}
+        <!-- App Css-->
+        <link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+        
+        <!-- Matomo TODO insert script integration of matomo -->
+        <!-- Matomo -->
+
+  </head>
+  
+  <body data-topbar="dark" data-layout="horizontal">
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            <header id="page-topbar">
+                <div class="navbar-header">
+                    <div class="d-flex">
+                        <!-- LOGO -->
+                        <div class="navbar-brand-box">
+                            <a href="#" class="logo logo-dark">
+                                <span class="logo-sm">
+                                    
+                                </span>
+                                <span class="logo-lg">
+                                    
+                                </span>
+                            </a>
+
+                            <a href="#" class="logo logo-light">
+                                <span class="logo-sm">
+                                    
+                                </span>
+                                <span class="logo-lg">
+                                    
+                                </span>
+                            </a>
+                        </div>
+
+                        <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                            <i class="fa fa-fw fa-bars"></i>
+                        </button>
+
+                        <!-- App Search
+                        <form class="app-search d-none d-lg-block">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="bx bx-search-alt"></span>
+                            </div>
+                        </form>
+                        -->
+                        <div class="dropdown dropdown-mega d-none d-lg-block ms-2">
+                            
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN')  %}
+                                    
+                            <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                <span key="t-megamenu"></span>
+                                <i class="bx bxs-dashboard fa-w-2 fa-2x" ></i> 
+                            </button>
+                                {% endif %}
+                            <div class="dropdown-menu dropdown-megamenu">
+                                <div class="row">
+
+                                    <div class="col-sm-4">
+                                        <div class="row">
+                                            <div class="col-sm-10">
+                                                <h5 class="font-size-14" key="t-ui-components"> Rapports </h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                   
+                                                     {% if is_granted('ROLE_BSE_ADMIN') %}
+                                                            <li>
+                                                                <a class="ali-trait" href="{{ path('app_data_cubing')}}" key="t-lightbox">Cubage des données</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="ali-trait" href="{{path('export_par_cuci_annee_type')}}" key="t-range-slider">Exportation par CUCI/Année/Type</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="ali-trait" href="{{path('effectifMasseSalarialeReport')}}" key="t-range-slider">Rapport pour effectif et masse salariale</a>
+                                                            </li>
+                                                      
+                                                    {% endif %}
+                                                     {% if is_granted('ROLE_BREA_ADMIN') %}
+                                                       <li>
+                                                        <a class="ali-trait" href="{{ path('app_exportationRepertoire')}}" key="t-range-slider">Exportation repertoire</a>
+                                                        </li>
+                                                    {% endif %}
+                                                   
+                                                    
+                                                </ul>
+                                            </div>
+
+                                            <!-- <div class="col-sm-5">
+                                                <div>
+                                                    
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="col-sm-8">
+    
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5 class="font-size-14" key="t-ui-components">Traitement des données</h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                   {% if is_granted('ROLE_BSE_ADMIN') %}
+                                                        <li>
+                                                            <a class="ali-trait"  href="{{path('app_rapport_interTableau')}}" key="t-lightbox">Recherche de non correspondance inter-tableaux</a>
+                                                        </li>
+                                                    
+                                                        <li>
+                                                            <a class="ali-trait" href="{{ path('app_rapport_verification') }}" key="t-sweet-alert">Vérification des données de l'année n-1 fournies en n </a>
+                                                        </li>
+                                                   {% endif %}
+                                                    
+                                                    {% if is_granted('ROLE_BREA_ADMIN') %}
+                                                        <li>
+                                                            <a  class="ali-trait" href="{{path('app_rapport_repertoire')}}" key="t-lightbox">Répertoire</a>
+                                                        </li>                                                       
+
+                                                   {% endif %}
+                                                   
+                                                    
+                                                </ul>
+                                             </div>
+
+                                            <div class="col-md-4">
+                                                <h5 class="font-size-14" key="t-applications">Migration des données</h5>
+                                                <ul class="list-unstyled megamenu-list">
+
+                                                {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BREA_ADMIN') %}
+
+                                                    <li>
+                                                        <a class="ali-trait" href="{{path('app_db_change_index')}}" key="t-ecommerce">Journal des données <i class="bx bx-news"></i> </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="ali-trait" href="{{path('app_updated_data_migrations')}}" key="t-ecommerce">Importation des démat cubés  </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="ali-trait" href="{{path('app_updated_data_migrations_errnoannee')}}" key="t-ecommerce">Correction des états financiers (année)  </a>
+                                                    </li>
+                                                {% endif %}
+                                                
+                                                </ul>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <h5 class="font-size-14" key="t-extra-pages">Applications</h5>
+                                                <ul class="list-unstyled megamenu-list">
+                                                    <li>
+                                                        <a class="ali-trait" href="javascript:void(0);" key="t-light-sidebar">NINEA-WEB<i class="bx bx-link-external"></i></a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="ali-trait" href="javascript:void(0);" key="t-compact-sidebar"></a>
+                                                    </li>
+                                                        {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN') %}
+                                                    <li>
+                                                            {# <a href="{{ path('user_show', {'id': app.user.id}) }}" target="_blank" class="btn btn-primary waves-effect waves-light btn-sm">Paramètres <i class="bx bx-link-external"></i></a> #}
+                                                            <a class="ali-trait" key="t-horizontal" href="javascript:void(0);" target="_blank" > </a>
+                                                            
+
+                                                    </li>
+                                                    <li>
+                                                            {# <a href="{{ path('user_show', {'id': app.user.id}) }}" target="_blank" class="btn btn-primary waves-effect waves-light btn-sm">Paramètres <i class="bx bx-link-external"></i></a> #}
+                                                            <a class="ali-trait" key="t-horizontal" href="javascript:void(0);" target="_blank" > </a>
+                                                            
+
+                                                    </li>
+                                                        {% endif %}
+                                                {# 
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-maintenance">Maintenance</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-coming-soon">Coming Soon</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-timeline">Timeline</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0);" key="t-faqs">FAQs</a>
+                                                    </li>
+                                                #}
+                            
+                                                </ul> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                    <div class="d-flex">
+
+                        
+
+                      
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                <i class="far fa-user-circle fa-w-2 fa-2x"> </i>
+                               
+                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.prenom}} {{app.user.nom}}</span>
+                                <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <!-- item-->
+                                <a class="dropdown-item" href="{{path('user_change_password',{'id':app.user.id})}}"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Changer mot de passe</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('user_show', {'id': app.user.id}) }}"><i class=" bx bx-user-circle font-size-16 align-middle me-1"></i> <span key="t-logout">Profile</span></a>
+
+                                
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="{{path('app_logout')}}"><i class="bx bx-log-out-circle font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Déconnexion</span></a>
+                            </div>
+                        </div>
+
+                        
+            
+                    </div>
+                </div>
+            </header>
+    
+            <div class="topnav">
+                <div class="container-fluid">
+                    <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+
+                        <div class="collapse navbar-collapse" id="topnav-menu-content">
+                            <ul class="navbar-nav">
+
+                             {% if app.user.premierConnexion==0 %}
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                    >
+                                        <i class="bx bx-home-circle me-2"></i><span key="t-dashboards">Tableau de bord</span> <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+
+                                        <a href="{{path('accueil')}}" class="dropdown-item" key="t-default">Tableau de bord</a>
+                                    {% if is_granted('ROLE_NINEA') %}
+                                        <a href="{{path('index')}}" class="dropdown-item" key="t-default">NINEA</a>
+                                     {% endif %}   
+                                    </div>
+                                </li>
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN')  %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                        >
+                                             <i class="bx bxs-user-detail"></i><span key="t-dashboards">Administration</span> <div class="arrow-down"></div>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+                                            <a href="{{path('user_index')}}" class="dropdown-item" key="t-alerts">Gestion des utilisateurs</a>
+                                        </div>
+                                    </li>                                    
+                                {% endif %}
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BREA_AGENT_SAISIE')  %}
+                                   <li class="nav-item ">
+                                       <a class="nav-link dropdown-toggle arrow-none" href="{{path('repertoire_index')}}" id="topnav-dashboard" role="button"
+                                       >
+                                       <i class="bx bx-folder-plus me-2"></i><span key="t-dashboards">Gestion des répertoires</span> 
+                                       </a>
+                                       <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+                                       </div>
+                                   </li>                                
+                                {% endif %}
+
+
+                                 {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                        >
+                                            <i class="bx bx-file  me-2"></i><span key="t-extra-pages">Etats financiers</span> <div class="arrow-down"></div>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+                                            <a href="{{path('saisieEtat')}}" class="dropdown-item" key="t-alerts">Saisie des etats financiers</a>
+                                            <a href="{{path('saisieEtatSmt')}}" class="dropdown-item" key="t-alerts">Saisie des etats financiers smt</a>
+
+                               
+
+                                 {% if is_granted('ROLE_BSE_ADMIN')  %}
+                                        <a href="{{path('import_etat_financier')}}" class="dropdown-item" key="t-alerts">Importation des etats financiers</a>
+                                {% endif %}
+                                        </div>
+                                   
+                                    </li>                                    
+                                {% endif %}
+
+
+                                {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN') %}
+                                    <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button"
+                                    >
+                                    <i class="bx bx-cog me-2"></i>
+                                    <span key="t-ui-elements">Paramètres</span> <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+                                     {% if is_granted('ROLE_BSE_ADMIN') or is_granted('ROLE_BSE_AGENT_SAISIE')  %}
+                                           <a href="{{path('ref_agg_index')}}" class="dropdown-item" key="t-default">Aggrégation</a>
+                                          <a href="{{path('app_ref_agg_smt_index')}}" class="dropdown-item" key="t-default">Aggrégation SMT</a>
+                                    {% endif %}
+                                      {% if is_granted('ROLE_BREA_ADMIN') %}
+                                        <a href="{{path('region_new')}}" class="dropdown-item" key="t-default">Région</a>
+                                         <a href="{{path('departement_new')}}" class="dropdown-item" key="t-default">Département</a>
+                                          <a href="{{path('cav_new')}}" class="dropdown-item" key="t-default">Cav</a>
+                                          <a href="{{path('cacr_new')}}" class="dropdown-item" key="t-default">Cacr</a>
+                                          <a href="{{path('qvh_new')}}" class="dropdown-item" key="t-default">Qvh</a>
+                                    {% endif %}
+                                      
+                                    </div>
+                                    </li>
+                                {% endif %}
+                                
+
+
+
+
+
+                            {% endif %}
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content" style=" margin: 0px;padding: 0px;">
+
+                <div class="page-content"  >
+                    <div class="container-fluid">
+
+                          {% block body %}{% endblock %}
+                        
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+              
+                
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6 d-flex justify-content-left">
+                                <p class="p-1">
+                                    © <script>document.write(new Date().getFullYear())</script>, 
+                                    
+                                    République du Sénégal, tous droits réservés.
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-end d-none d-sm-block">
+                                    <a href="#">
+                                        @ANSD, Fann bel air Imm Cerf volant, Dakar                                       
+                                    </a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        <!-- Right Sidebar -->
+        
+        <!-- /Right-bar -->
+
+        <!-- Right bar overlay-->
+       
+        
+
+        <!-- JAVASCRIPT -->
+        <script src="{{ asset('admin/dist/assets/libs/jquery/jquery.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/metismenu/metisMenu.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+
+        {% block javascript %}
+                
+        {% endblock %}
+
+
+        <script src="{{ asset('admin/dist/assets/js/app.js')}}"></script> 
+      
+       
+        
+       
+    </body>
+
+</html>

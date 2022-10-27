@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Actionnaire{% endblock %}
+
+{% block body %}
+    <h1>Actionnaire</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ actionnaire.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ actionnaire.createdAt ? actionnaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ actionnaire.updatedAt ? actionnaire.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Capital</th>
+                <td>{{ actionnaire.capital }}</td>
+            </tr>
+            <tr>
+                <th>Nationality</th>
+                <td>{{ actionnaire.nationality }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ actionnaire.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ actionnaire.prenom }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('actionnaire_index') }}">back to list</a>
+
+    <a href="{{ path('actionnaire_edit', {'id': actionnaire.id}) }}">edit</a>
+
+    {{ include('actionnaire/_delete_form.html.twig') }}
+{% endblock %}

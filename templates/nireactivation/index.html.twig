@@ -1,0 +1,196 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}Reactivations {% endblock %}
+
+{% block body %}
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Demandes  réactivations
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                            <table class="table" id="demande">
+                                <thead class="tr_entete p-2">
+                                    <tr>
+                                        <th>NINEA</th>
+                                        <th>Raison</th>
+                                        <th>Etat</th>
+                                        <th>Service</th>
+                                        <th>Agent demandeur</th>
+                                        <th>DateReactivation</th>
+                                        <th>Date de création</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for nireactivation in nireactivations %}
+                                        <tr>
+                                            <td>{{ nireactivation.ninea != null ? nireactivation.ninea.ninNinea: "" }}</td>
+                                            <td style=" word-break: break-all; width: 20%;">
+                                                {% if nireactivation.ninea is not null %}
+                                                    {% if  nireactivation.ninea.formeJuridique.niFormeunite.id ==  21 or  nireactivation.ninea.formeJuridique.niFormeunite.id ==  22 %}
+                                                        {{ nireactivation.ninea.niPersonne != null ?  nireactivation.ninea.niPersonne.ninRaison:"" }}
+                                                    {% elseif  nireactivation.ninea.formeJuridique.niFormeunite.id ==  11 or  nireactivation.ninea.formeJuridique.niFormeunite.id ==  12 %} 
+                                                            {{ nireactivation.ninea.niPersonne != null ?  nireactivation.ninea.niPersonne.ninNom :"" }} {{ nireactivation.ninea.niPersonne != null ?  nireactivation.ninea.niPersonne.ninPrenom : "" }} 
+                                                    {% endif %}
+                                                {% endif %}
+                                            
+                                            </td>
+
+                                            <td>
+                                                {% if nireactivation.createdBy is not null %} 
+                                                   {% if nireactivation.createdBy.niAdministration is not null %} 
+                                                                    {{ nireactivation.createdBy.niAdministration.admlibelle}}
+                                                    {% endif %}
+                                                {% endif %}
+                                                </td>
+                                                <td>
+                                                 {% if nireactivation.createdBy is not null %} 
+                                                  {{ nireactivation.createdBy.prenom}} {{ nireactivation.createdBy.nom}}
+                                                  {% endif %}
+                                                </td>
+                                            <td>{% if nireactivation.etat == "a" %}
+                                                <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                                            {% else %}
+                                                    {% if nireactivation.etat == "r" %}
+                                                      <span class="badge badge-pill badge-soft-danger font-size-11">Rejeter</span> 
+                                                    {% else %}
+                                                        {% if nireactivation.etat == "t" %}
+                                                            <span class="badge badge-pill badge-soft-warning font-size-11">Retourner</span> 
+                                                        {% else %}
+                                                             <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}</td>
+                                            <td>{{ nireactivation.dateReactivation ? nireactivation.dateReactivation|date('d/m/Y') : '' }}</td>
+                                            <td>{{ nireactivation.createdAt ? nireactivation.createdAt|date('d/m/Y') : '' }}</td>
+                                        
+                                            <td>
+                                                <a href="{{ path('app_nireactivation_show', {'id': nireactivation.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                {% if nireactivation.etat == "a" or nireactivation.etat == "t" %}
+                                                    <a href="{{ path('app_nireactivation_edit', {'id': nireactivation.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                {% endif %}
+                                            
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5">no records found</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                                                        
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+<script>
+
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+    $("#demande").DataTable({
+         columnDefs: [
+            { type: 'date-uk', targets: 4 }
+          ],
+          
+          "order": [6, "desc" ],
+
+
+        "sDom": 'f<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+</script>
+{% endblock %}

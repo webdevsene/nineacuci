@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SYSCOA{% endblock %}
+
+{% block body %}
+    <h1>Edit SYSCOA</h1>
+
+    {{ include('syscoa/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('s_y_s_c_o_a_index') }}">back to list</a>
+
+    {{ include('syscoa/_delete_form.html.twig') }}
+{% endblock %}

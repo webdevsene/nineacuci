@@ -1,0 +1,212 @@
+{% extends 'ninea.html.twig' %} {% block title %}NiNineaproposition index {% endblock %} {% block stylesheets %}
+<!-- DataTables -->
+<link href="{{ asset('admin/dist/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style></style>
+{% endblock %} {% block body %}
+
+
+<div class="box mt-4">
+        <div class="box-header">
+            <ul class="nav nav-tabs nav-tabs-left">
+                <li class="active">
+                    <a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                        Liste des demandes NINEA
+                    </a></li>
+    
+            </ul>
+        </div>
+    
+        <div class="box-content padded">
+    
+            <div class="tab-content">            
+    
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body table-responsive-lg">
+                
+                
+                                {% for message in app.session.flashbag.get('message')%}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{message}}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                
+                                {% endfor%}
+                
+                                <table id="demande" class="table table-bordered  table-hover  " style="width:100% ;">
+                                    <thead class="tr_entete p-4">
+                                        <tr>
+                                            
+                                            <th >N° </th>
+                                            <th>Raison</th>
+                                            <th>Service</th>
+                                            <th>Agent demandeur</th>
+                                            <th>Statut           </th>
+                                            <th>Date     </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                
+                
+                                    <tbody>
+                                        {% for ni_nineaproposition in ni_nineapropositions %}
+                                        <tr>                           
+                                            <td>{{ ni_nineaproposition.ninnumerodemande }}</td>
+                                            <td style=" word-break: break-all; width: 20%;">
+                                                {% if ni_nineaproposition.ninFormejuridique is not null  %}
+                
+                                                    {% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 11 or ni_nineaproposition.ninFormejuridique.niFormeunite.id == 12 %} 
+                                                    {{ni_nineaproposition.niPersonne != null ? ni_nineaproposition.niPersonne.ninPrenom :""}} {{ni_nineaproposition.niPersonne != null ?  ni_nineaproposition.niPersonne.ninNom :""}}
+                                                    {% else %} 
+                                                        {% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 21  or ni_nineaproposition.ninFormejuridique.niFormeunite.id == 22 %}
+                                                           
+                                                                {{ni_nineaproposition.niPersonne != null ? ni_nineaproposition.niPersonne.ninRaison:""}} 
+                                                            
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td style="width: 20%;"> {% if ni_nineaproposition.createdBy.niAdministration is not null %} 
+                                                        {{ ni_nineaproposition.createdBy.niAdministration.admlibelle}}
+                                                {% endif %}
+                                                    </td>
+                                            <td>{{ ni_nineaproposition.createdBy.prenom}} {{ ni_nineaproposition.createdBy.nom}}</td>
+                
+                                            <td style="width: 10%;">
+                                                {% if ni_nineaproposition.ninlock == true %}
+                                                    <span class="badge badge-pill badge-soft-warning font-size-11">En  validation</span> 
+                
+                                                {% else %}
+                
+                                                    {% if ni_nineaproposition.statut == "c" %}
+                                                        <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                                                        {% else %}
+                                                            {% if ni_nineaproposition.statut == "b" %}
+                                                                <span class="badge badge-pill badge-soft-secondary font-size-11">Brouillon</span> 
+                                                            {% else %}
+                                                               {% if ni_nineaproposition.statut == "r" %}
+                                                                    <span class="badge badge-pill badge-soft-danger font-size-11" >Rejeter
+                                                                        
+                                                                    </span>
+                                                                    <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                    </button>
+                                                                  
+                                                                {% else %}
+                                                                    {% if ni_nineaproposition.statut == "t" %}
+                                                                        <span class="badge badge-pill badge-soft-pink font-size-11" >Retourner
+                                                                            
+                                                                        </span>
+                                                                        <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                        </button>
+                                                                        
+                                                                    {% else %}
+                                                                        <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                                                                        
+                                                                    {% endif %} 
+                                                                 
+                                                            {% endif %} 
+                                                            {% endif %} 
+                                                        
+                                                    {% endif %}
+                                                {% endif %}
+                
+                                            </td>
+                                            <td>{{ ni_nineaproposition.ninmajdate | date("d/m/Y") }}</td>
+                
+                                            <td>
+                                                {% if ni_nineaproposition.statut != 'r' %}
+                                                    {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_DEMANDE_NINEA') %} 
+                                                       
+                                                        {% if ni_nineaproposition.statut == "v"   %}
+                                                            <a href="{{ path('ni_nineaproposition_ninea', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                Détails
+                                                            </a>
+                                                        {% else %} 
+                                                        
+                
+                                                                {% if ni_nineaproposition.ninlock == 1 %}                                     
+                                                                        {% if app.user.id ==  ni_nineaproposition.updatedBy.id %}    
+                                                                            <a  href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                                Détails
+                                                                                <a href="{{ path('liberer_demande', {'id': ni_nineaproposition.id})}}" class="idInconlock" title="Libérer la demande"  style="color: red">
+                                                                                    <i class="fas fa-lock "></i> 
+                                                                                </a>
+                                                                            </a>
+                
+                                                                        {% else %}
+                                                                            <a type="button"  class="idDetails"  style="color: red">
+                                                                                Détails
+                                                                            </a>
+                            
+                                                                            <a type="button" class="idInconlock" onclick="recupUtilisateur( '{{ni_nineaproposition.updatedBy.getPrenomNom}}' );"  style="color: red">
+                                                                                <i class="fas fa-lock "></i> 
+                                                                            </a>
+                                                                        {% endif %}
+                
+                
+                                                                {% else %}
+                                                                {% if ni_nineaproposition.statut == "t" %}
+                                                                {% if app.user.id == ni_nineaproposition.createdBy.id %}
+                                                                    <a href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                        Détails
+                                                                    </a>
+                                                                {% endif %}
+                                                                {% else %}
+                                                                <a href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification">
+                                                                    Détails
+                                                                </a>
+                                                                {% endif %}
+                                                                {% endif %}
+                
+                                                        {% endif %} 
+                                                    {% endif %} 
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                
+                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                                    
+            </div>
+                
+        </div>
+        
+         
+</div>
+
+
+
+
+<!-- end row -->
+
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/js/pages/datatables.init.js')}}"></script>
+
+<script>
+    $('.idDetails').click(function() {
+        Swal.fire("Demande en cours d'utilisation.");
+    });
+
+    function recupUtilisateur(nom)
+    {
+        Swal.fire("Veuiller contacter " + nom + " pour libérer cette demande.");
+
+    }
+</script>
+{% endblock %}

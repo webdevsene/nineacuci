@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Effectifs index{% endblock %}
+
+{% block body %}
+    <h1>Effectifs index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Rank</th>
+                <th>UploadedFileName</th>
+                <th>Units</th>
+                <th>Submit</th>
+                <th>TotalEf</th>
+                <th>TotalMs</th>
+                <th>Qualification</th>
+                <th>Category</th>
+                <th>AnneeFinanciere</th>
+                <th>Facm</th>
+                <th>Facf</th>
+                <th>Hmfef</th>
+                <th>Hmmef</th>
+                <th>Mhmfef</th>
+                <th>Mhmmef</th>
+                <th>Mnfef</th>
+                <th>Mnmef</th>
+                <th>Mumfef</th>
+                <th>Mummef</th>
+                <th>Nfef</th>
+                <th>Nmef</th>
+                <th>Umfef</th>
+                <th>Ummef</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for effectif in effectifs %}
+            <tr>
+                <td>{{ effectif.id }}</td>
+                <td>{{ effectif.createdAt ? effectif.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ effectif.updatedAt ? effectif.updatedAt|date('Y-m-d') : '' }}</td>
+                <td>{{ effectif.rank }}</td>
+                <td>{{ effectif.uploadedFileName }}</td>
+                <td>{{ effectif.units }}</td>
+                <td>{{ effectif.submit }}</td>
+                <td>{{ effectif.totalEf }}</td>
+                <td>{{ effectif.totalMs }}</td>
+                <td>{{ effectif.qualification }}</td>
+                <td>{{ effectif.category }}</td>
+                <td>{{ effectif.anneeFinanciere }}</td>
+                <td>{{ effectif.facm }}</td>
+                <td>{{ effectif.facf }}</td>
+                <td>{{ effectif.hmfef }}</td>
+                <td>{{ effectif.hmmef }}</td>
+                <td>{{ effectif.mhmfef }}</td>
+                <td>{{ effectif.mhmmef }}</td>
+                <td>{{ effectif.mnfef }}</td>
+                <td>{{ effectif.mnmef }}</td>
+                <td>{{ effectif.mumfef }}</td>
+                <td>{{ effectif.mummef }}</td>
+                <td>{{ effectif.nfef }}</td>
+                <td>{{ effectif.nmef }}</td>
+                <td>{{ effectif.umfef }}</td>
+                <td>{{ effectif.ummef }}</td>
+                <td>
+                    <a href="{{ path('app_effectifs_show', {'id': effectif.id}) }}">show</a>
+                    <a href="{{ path('app_effectifs_edit', {'id': effectif.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="27">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_effectifs_new') }}">Create new</a>
+{% endblock %}

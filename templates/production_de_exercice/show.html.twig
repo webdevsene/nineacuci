@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductionDeExercice{% endblock %}
+
+{% block body %}
+    <h1>ProductionDeExercice</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ production_de_exercice.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ production_de_exercice.createdAt ? production_de_exercice.createdAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ production_de_exercice.updatedAt ? production_de_exercice.updatedAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ production_de_exercice.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ production_de_exercice.libelle }}</td>
+            </tr>
+            <tr>
+                <th>Unites</th>
+                <td>{{ production_de_exercice.unites }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ production_de_exercice.submit }}</td>
+            </tr>
+            <tr>
+                <th>QtyProdVenduDansEtat</th>
+                <td>{{ production_de_exercice.qtyProdVenduDansEtat }}</td>
+            </tr>
+            <tr>
+                <th>ValProdVenduDansEtat</th>
+                <td>{{ production_de_exercice.valProdVenduDansEtat }}</td>
+            </tr>
+            <tr>
+                <th>QtyProdVenduDansUemoa</th>
+                <td>{{ production_de_exercice.qtyProdVenduDansUemoa }}</td>
+            </tr>
+            <tr>
+                <th>ValProdVenduDansUemoa</th>
+                <td>{{ production_de_exercice.valProdVenduDansUemoa }}</td>
+            </tr>
+            <tr>
+                <th>QtyProdVenduHorsUemoa</th>
+                <td>{{ production_de_exercice.qtyProdVenduHorsUemoa }}</td>
+            </tr>
+            <tr>
+                <th>ValProdVenduHorsUemoa</th>
+                <td>{{ production_de_exercice.valProdVenduHorsUemoa }}</td>
+            </tr>
+            <tr>
+                <th>QtyProdImmobilisee</th>
+                <td>{{ production_de_exercice.qtyProdImmobilisee }}</td>
+            </tr>
+            <tr>
+                <th>ValProdImmobilisee</th>
+                <td>{{ production_de_exercice.valProdImmobilisee }}</td>
+            </tr>
+            <tr>
+                <th>QtyStkOuverture</th>
+                <td>{{ production_de_exercice.qtyStkOuverture }}</td>
+            </tr>
+            <tr>
+                <th>ValStkOuverture</th>
+                <td>{{ production_de_exercice.valStkOuverture }}</td>
+            </tr>
+            <tr>
+                <th>QtyStkCloture</th>
+                <td>{{ production_de_exercice.qtyStkCloture }}</td>
+            </tr>
+            <tr>
+                <th>ValStkCloture</th>
+                <td>{{ production_de_exercice.valStkCloture }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_production_de_exercice_index') }}">back to list</a>
+
+    <a href="{{ path('app_production_de_exercice_edit', {'id': production_de_exercice.id}) }}">edit</a>
+
+    {{ include('production_de_exercice/_delete_form.html.twig') }}
+{% endblock %}

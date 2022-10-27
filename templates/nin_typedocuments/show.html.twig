@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NinTypedocuments{% endblock %}
+
+{% block body %}
+    <h1>NinTypedocuments</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ nin_typedocument.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ nin_typedocument.libelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_nin_typedocuments_index') }}">back to list</a>
+
+    <a href="{{ path('app_nin_typedocuments_edit', {'id': nin_typedocument.id}) }}">edit</a>
+
+    {{ include('nin_typedocuments/_delete_form.html.twig') }}
+{% endblock %}

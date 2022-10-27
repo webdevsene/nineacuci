@@ -1,0 +1,109 @@
+{{ form_start(activite,{'action':path('ni_nineaproposition_new_activite',{id:id})})}}
+
+<fieldset class="fieldcolor p-2 mb-3">
+  
+    {% if statut == 'c' %}
+        {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA')  %} 
+
+            <label for="basicpill-address-input">
+                <button type="button" id="btnAjouterActivities" data-collection="#idActivities" class="btn btn-primary ajouterActivities waves-effect waves-light btn-sm"><i class="fas fa-plus-circle"></i> Modifier
+
+                </button>
+            </label>
+        {% endif %}
+
+    {% else %}
+        <label for="basicpill-address-input">
+            <button type="button" id="btnAjouterActivities" data-collection="#idActivities" class="btn btn-primary ajouterActivities waves-effect waves-light btn-sm"><i class="fas fa-plus-circle"></i> Ajouter
+            </button>
+        </label>
+
+    {% endif %}
+            <p> <center> <h2> <b>Activités</b></h2>  </center> </p>
+
+    <table class="table table table-bordered dt-responsive" id="idtab" width="100%">
+        <thead style="background:#efefef;">
+            <tr>
+                <th>Libelle</th>
+                <th>NAEMA</th>
+                <th>Statut</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="idActivities" data-prototype="{{include('ni_nineaproposition/activites.html.twig',{'formactivite':activite.ninActivites.vars.prototype})|e }}" data-index="{{ activite.ninActivites|length > 0 ? activite.ninActivites|last.vars.name + 1 : 0 }}"></tbody>
+
+            {% for tag in activite.ninActivites %}
+           
+                <tr>
+                    <td style="width: 40%;">
+                        {{form_widget(tag.ninAutact)}}
+                    </td>
+                    <td style="width: 60%;">
+                        {{form_widget(tag.refNaema)}}
+                    </td>
+                    <td>
+                        {{form_widget(tag.statActivprincipale)}}
+                    </td>
+
+                </tr>
+            
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    
+    <fieldset class="fieldcolor p-2 mt-3">
+        <div class="row text-center  justify-content-center">
+            <h1>Produits</h1>
+            <div class="col-md-4 col-md-offset-2">
+                <select name="from[]" id="undo_redo" class="form-control" size="13" multiple="multiple">
+                    {% for tag in act %}
+                        {% for prod in tag.refNaema.refProduits %}
+                            {% if (in_array(produits, prod ) != true)  %}
+                                <option value="{{ prod.id}}"> {{ prod.id}} - {{ prod.libelle}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
+                </select>
+            </div>
+                
+            <div class="col-md-2">
+                <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button> <br>
+                <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="fas fa-angle-double-right"></i></button> <br>
+                <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="fas fa-angle-right "></i></button><br>
+                <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i class="fas fa-angle-left "></i></button><br>
+                <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i class="fas fa-angle-double-left"></i></button><br>
+                <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
+            </div>
+                
+            <div class="col-md-4">
+                <select name="to[]" id="undo_redo_to" class="form-control" size="13" multiple="multiple">
+                    {% for prod in produits %}
+                          
+                        <option value="{{ prod.refproduits.id}}"> {{ prod.refproduits.id}} -{{ prod.refproduits.libelle}} </option>
+                        
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </fieldset>
+   
+    <div class="row mt-3">
+        <div class="col-lg-12">
+        <div class="mb-3 row">
+            <label class="col-md-6" for="basicpill-firstname-input"></label>
+            <div class="col-md-5" align="right">
+                    <input type="button" value="Precedent" name="precedent" id="idBtnPrecedentActivites" class="btn btn-primary waves-effect waves-light btn-sm">
+            </div>
+            <div class="col-md-1" align="right">
+                    <input type="submit"  value="Suivant" id="idBtnSuivantActivites" name="ajouter" class="btn btn-primary waves-effect waves-light btn-sm">
+            </div>
+        </div>
+        </div>
+    </div>
+
+</fieldset>
+
+{{ form_end(activite)}}
+

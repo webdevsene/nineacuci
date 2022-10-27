@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CACR{% endblock %}
+
+{% block body %}
+    <h1>CACR</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ c_a_c_r.id }}</td>
+            </tr>
+            <tr>
+                <th>CacrID</th>
+                <td>{{ c_a_c_r.cacrID }}</td>
+            </tr>
+            <tr>
+                <th>CacrActiveF</th>
+                <td>{{ c_a_c_r.cacrActiveF }}</td>
+            </tr>
+            <tr>
+                <th>CacrCDATE</th>
+                <td>{{ c_a_c_r.cacrCDATE ? c_a_c_r.cacrCDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CacrCUSER</th>
+                <td>{{ c_a_c_r.cacrCUSER }}</td>
+            </tr>
+            <tr>
+                <th>CacrCD</th>
+                <td>{{ c_a_c_r.cacrCD }}</td>
+            </tr>
+            <tr>
+                <th>CacrCDMIG</th>
+                <td>{{ c_a_c_r.cacrCDMIG }}</td>
+            </tr>
+            <tr>
+                <th>CacrDescription</th>
+                <td>{{ c_a_c_r.cacrDescription }}</td>
+            </tr>
+            <tr>
+                <th>CacrMDATE</th>
+                <td>{{ c_a_c_r.cacrMDATE ? c_a_c_r.cacrMDATE|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CacrMUSER</th>
+                <td>{{ c_a_c_r.cacrMUSER }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('c_a_c_r_index') }}">back to list</a>
+
+    <a href="{{ path('c_a_c_r_edit', {'id': c_a_c_r.id}) }}">edit</a>
+
+    {{ include('cacr/_delete_form.html.twig') }}
+{% endblock %}

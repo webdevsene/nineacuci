@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit JournalCreancesImpayeesSmt{% endblock %}
+
+{% block body %}
+    <h1>Edit JournalCreancesImpayeesSmt</h1>
+
+    {{ include('journal_creances_impayees_smt/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_journal_creances_impayees_smt_index') }}">back to list</a>
+
+    {{ include('journal_creances_impayees_smt/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {# {% extends "base.html.twig" %} #}
+        {% block stylesheets %}
+            <!-- Bootstrap Css -->
+        <link href="{{ absolute_url(asset('admin/dist/assets/css/bootstrap.min.css'))}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{{ absolute_url(asset('admin/dist/assets/css/icons.min.css'))}}" rel="stylesheet" type="text/css" />
+
+        <style>
+
+                
+            body {
+                width: 95% !important;
+                height: 100% !important;
+                background: url("{{ absolute_url(asset('admin/dist/assets/images/logos/workOrder.id.png')) }}") no-repeat;
+                -webkit-background-size: cover;
+                -o-background-size: cover;
+                -moz-background-size: cover;
+                background-size: cover;
+                padding: 15px 15px 15px 15px;
+            }
+            .body2{
+                background-image: {{ absolute_url(asset('admin/dist/assets/images/logos/workOrder.id.png')) }};
+            }
+            #divOne{
+                margin:0 auto;       
+                width:400px;
+                text-align:center;
+                border: 1px solid black;
+            }
+            #tblOne{
+                width:300px;
+                margin:0 auto;       
+                border: 0px solid white;
+                border-top: 0;
+                border-bottom: 0;            
+            }
+
+            td{
+                font-family: Calibri;
+                text-align: left;
+            }
+            th{
+                font-family: Calibri;
+                text-align: left;
+            }
+            #tbltwo{
+                width:700px;
+                margin-left: 100px;       
+            }
+        </style>
+
+
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+        
+            <div class="container">
+                    <div class="row-lg-12">
+                        
+                    </div>
+                    <div class="row ">
+                        
+                    </div>
+                    <div class="row-lg-12 mb-5">
+                        
+                    </div>
+                    <!-- ici sera le header -->
+                     <div class="row justify-content-between">
+                        <div class="col-md-5" >
+                        <h2 class="text-title " style="font-weight: bold; font-family: Calibri; font-size: 20px;">REPUBLIQUE DU SENEGAL <br/>MINISTERE DE L'ECONOMIE, <br/>DU PLAN ET DE LA COOPERATION<span class="badge "></span></h2>
+                        </div>
+                        <div class="col-md-1 p-3" >
+                            {# util pour espacing #}
+                            <img src="{{ absolute_url(asset('admin/dist/assets/images/logos/newlogo1.png'))}}"  height="55">
+
+                        </div>
+                        <div class="col-md-1 p-3 " >
+                        </div>
+                        <div class="col-md-5">
+                            <h2 class="text-title text-right" style="font-weight: bold; font-family: Calibri; font-size: 20px;">Décret N° 2012 - 886 du 27/08/2012 abrogeant et remplaçant le décret </br> N° 95 - 364 du 14/04/1995</h2>
+                        </div>
+                    </div>
+                    <!-- ici sera le end header -->
+
+                    <!-- afficher le title Avis d'immatriculation-->
+
+                    <div class="mt-5" id="divOne">
+                        <table id="tblOne">
+                            <tr>
+                                <td>
+                                        <h4 class="text-title text-center" style="font-weight: bold; font-family: Calibri;"> {{titre_doc|upper}} </h4>
+                                
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    </br></br>
+                    <p class="card-title text-center font-size-10">
+                        Le <code>numéro</code> ci-dessous vous est définitivement attribué à la suite des modifications intervenues
+                        dans le nouveau systéme d'immatriculation.
+                    </p>
+
+                    
+                    <div class="row">              
+                        <div class="col-xl-6 ">            
+                            <table class="table table-sm m-0" style="border: #FFFFFF;" id="tbltwo">
+                                <thead >
+                                    <tr >
+                                        <th style="text-align: right; font-size: x-large;" scope="row">N.I.N.E.A :</th>
+                                        <td style="text-align: left; font-size: x-large;" >{{some.ninea}}</td>
+                                    </tr>
+                                    <tr style="text-align: left;">
+                                        <th  style="text-align: right;" scope="row">DATE DE SUSPENSION :</th>
+                                        <td style="text-align: left;">{{some.dateCessation ? some.dateCessation|date('d/m/Y') : '' }}</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                                    <div class="row mt-4 ">        
+                                        <div class="col-lg-12">
+                                            <div class=" border border-danger">
+                                                <!--<div class="card-body">-->
+                                                    <p class="card-text font-size-16">Le NINEA doit obligatoirement figurer sur toutes les quittances, factures ou lettres reçues ou établies par vous et sur les actes,
+                                                        déclarations ou piéces produits, émis ou passés dans vos relations avec les Administrations Publiques ou Privées et les Entreprises.
+                                                        Il vous est par conséquent demandé de prendre les dispositions utiles pour vous conformer à la législation.
+                                                    </p>
+                                                <!--</div>-->
+                                            </div>
+                                        </div>
+
+                    
+                                    </div>
+                                    <!-- end row -->
+
+
+                                    <div class="row mt-5">
+                                        <div class="col-sm-6 d-flex justify-content-left">
+                                        <h4 class="" style="padding-left: 100pt;">VISA DU CNI</h4>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="text-sm-end d-none d-sm-block">
+                                                <a href="#" class="font-size-18">
+
+                                                    {#Dakar, le {{ some.ninCreation ? some.ninCreation|date('d-m-Y H:i') : 'Unavailable' }}#}
+                                                    Dakar, le {{ "now"|date('d/m/Y') }}
+                                                </a> 
+                                            </div>
+                                        </div>
+                                    </div>
+            </div>
+
+                <!-- alerte popup embeded l'avis -->
+            {% block javascripts %}
+
+                    <!-- JAVASCRIPT -->
+                    <script src="{{ absolute_url(asset("admin/dist/assets/libs/jquery/jquery.min.js"))}}"></script>
+                    <script src="{{ absolute_url(asset("admin/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js"))}}"></script>
+                    <script src="{{ absolute_url(asset("admin/dist/assets/libs/metismenu/metisMenu.min.js"))}}"></script>
+                    <script src="{{ absolute_url(asset("admin/dist/assets/libs/simplebar/simplebar.min.js"))}}"></script>
+                    <script src="{{ absolute_url(asset("admin/dist/assets/libs/node-waves/waves.min.js"))}}"></script>
+                    <!-- masonry pkgd -->
+                    <script src="{{ absolute_url(asset("admin/dist/assets/libs/masonry-layout/masonry.pkgd.min.js"))}}"></script>
+
+            {% endblock %}
+        {% endblock %}
+    </body>
+</html>

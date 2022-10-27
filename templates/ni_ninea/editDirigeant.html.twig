@@ -1,0 +1,327 @@
+
+<form action="{{path('ninea_editDirigeant',{id:app.request.attributes.get('id')})}}" method="post">
+
+	<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-lg-6">
+					<fieldset class="border p-2">
+						<legend class=" float-none w-auto p-2">
+							Etat civil
+						</legend>
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-control form-control-sm" name="nationalite"  id="idnationalite_dirig">
+										<option value="" selected>			Sélectionner</option>
+										{% for tag in nationalites %}
+											{% if tag.id == nationalite %}
+												<option value="{{tag.id}}"  selected >	{{ tag.libelle}}		</option>
+											{% else %}
+												<option value="{{tag.id}}">		{{ tag.libelle}}	</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninationalite"></span>
+								</td>
+							</tr>
+						</table>
+						
+							<div id="tableCni_dirig">
+								<table  style="width: 100%;">
+									<tr id="trcni">
+										<td style="width: 40%;">
+											<label for="" class="TXT"><b><u>CNI</u></b></label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;" >
+											<input type="text" name="cni" id="idcni_dirig" value="{{ Cni}}" class="form-control form-control-sm">
+											<span style="color: red;" id="nincni"></span>
+										</td>
+									</tr>
+
+									<tr id="trcni">
+										<td style="width: 40%;">
+											<label for="" class="TXT"><b><u>Date de délivrance CNI : </u></b></label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;" >
+											<input type="date" name="datecni" id="idDatcni_dirig" value="{{ dateCni}}" class="form-control form-control-sm">
+											<span style="color: red;" id="nincni"></span>
+										</td>
+									</tr>
+								</table>
+							</div>
+						
+							<div id="tablePassportdirig">
+								<table style="width: 100%;" >
+									<tr id="trPassport">
+										<td style="width: 40%;">
+											<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+											<span style="color: red;">*</span>
+										</td>
+										<td style="width: 60%;">
+											<input type="text" name="passport" id="idPassport"  value="{{ passport}}" class="form-control form-control-sm">
+											<span style="color: red;" id="ninpassport"></span>
+										</td>
+									</tr>
+
+									<tr id="trDatePassport">
+										<td style="width: 40%;">
+											<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
+										</td>
+										<td style="width: 60%;">
+											<input type="date" name="datepassport" id="idDatepassport_dirig"  value="{{ datepassport}}" class="form-control form-control-sm">
+											<span style="color: red;" id="nindatepassport"></span>
+										</td>
+									</tr>
+								</table>
+							</div>
+						
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Civilite : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 30%;">
+									<select class="form-control form-control-sm" name="civilite" id="idcivilite_dirig">
+										<option value="" selected>Sélectionner			</option>
+										{% for tag in civilites %}
+											{% if tag.id == civilite %}
+												<option value="{{ tag.id}}" selected>	{{ tag.civlibelle}}</option>
+											{% else %}
+												<option value="{{ tag.id}}" >	{{ tag.civlibelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="nincivil"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Prénom :  </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="prenom" id="idprenom"  value="{{ prenom}}" class="form-control form-control-sm">
+									<span style="color: red;" id="ninprenom"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for=""><b><u>Nom : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="nom" id="idnom"  value="{{ nom}}" class="form-control form-control-sm">
+									<span style="color: red;" id="ninnom"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-select form-select-sm" name="sexe"  value="" id="idSexe_dirig">
+										{% for tag in sexe %}
+											{% if tag.id == nsexe %}
+												<option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+											{% else %}
+												<option value="{{tag.id}}" >{{tag.libelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninsexe"></span>
+
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<input type="date" name="datenais" id="idDatenais_dirig" value="{{datenais}}" class="form-control form-control-sm">
+									<span style="color: red;" id="nindatenais"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Lieu de naissance</u></b></label>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="lieunais" id="idlieunais" value="{{lieunais}}"  class="form-control form-control-sm">
+									<span style="color: red;" id="ninlieunais"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Qualification : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 60%;">
+									<select class="form-control form-control-sm" name="qualification"  id="idqualification">
+										<option value="" selected>	Sélectionner</option>
+										{% for tag in qualifications %}
+											{% if tag.id == qualification %}
+												<option value="{{ tag.id}}" selected>	{{ tag.libelle}}</option>
+											{% else %}
+												<option value="{{ tag.id}}" >	{{ tag.libelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="ninqualications"></span>
+								</td>
+							</tr>
+						</table>
+
+					</fieldset>
+				</div>
+
+				<div class="col-lg-6">
+					<fieldset class="border p-2">
+						<legend class=" float-none w-auto p-2">		Adresses		</legend>
+						<table style="width: 100%;">
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Téléphone portable : </u></b></label>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="telephone1" id="idtelpersonne_dirig1" value="{{telephone1}}" class="form-control form-control-sm">
+									<span style="color: red;" id="nintelpersonne"></span>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Téléphone fixe: </u></b></label>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="telephone2" id="idtelpersonne_dirig2" value="{{telephone2}}" class="form-control form-control-sm">
+									<span style="color: red;" id="nintelpersonne"></span>
+								</td>
+							</tr>
+							<tr>
+								<td style="width: 40%;">
+									<label for="" class="TXT"><b><u>Email : </u></b></label>
+								</td>
+								<td style="width: 60%;">
+									<input type="text" name="email" id="idemail_dirig" value="{{email}}" class="form-control form-control-sm">
+									<span style="color: red;" id="ninemail_dirig"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2 " name="region" id="region_dirigeant" style="width: 100%;">
+										<option>Choississez la région</option>
+										{% for tag in regions %}
+											{% if tag.id == region_dirig %}
+												<option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+											{% else %}
+												<option value="{{tag.id}}" >{{tag.libelle}}</option>
+											{% endif %}
+										{% endfor %}
+										</select>
+										<span style="color: red;" id="ninregion"></span>
+									</td>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2 " name="departement" id="departement_dirigeant" style="width: 100%;">
+										{% for tag in departements %}
+											{% if tag.id == departement_dirig %}
+												<option value="{{tag.id}}" selected>{{tag.description}}</option>
+											{% else %}
+												<option value="{{tag.id}}" >{{tag.description}}</option>
+											{% endif %}
+									{% endfor %}
+									</select>
+									<span style="color: red;" id="nindepartement"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="numvoie" class="TXT"><b><u>CAV :</u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2" name="cav" id="cav_dirigeant" style="width: 100%;">
+										{% for tag in cavs %}
+											{% if tag.id == cav_dirig %}
+												<option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+											{% else %}
+												<option value="{{tag.id}}" >{{tag.libelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="nincav"></span>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>	</label>
+									<span style="color: red;">*</span>
+								</td>
+								<td>
+									<select class="form-control form-control-sm select2" name="cacr" id="cacr_dirigeant" style="width: 100%;">
+										{% for tag in cacrs %}
+											{% if tag.id == cacr_dirig %}
+												<option value="{{tag.id}}" selected>{{tag.libelle}}</option>
+											{% else %}
+												<option value="{{tag.id}}" >{{tag.libelle}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<span style="color: red;" id="nincacr"></span>
+								</td>
+							</tr>
+							<tr>
+
+								<td style="width: 30%;">
+									<label for="basicpill-firstname-input" class="TXT">
+										<b><u>Quartier/Village/Hameau: : </u></b></label>
+									<span style="color: red;">*</span>
+								</td>
+								<td style="width: 70%;">
+									<select class="form-control form-control-sm select2" name="qvh_dirig" id="qvh_dirigeant" style="width: 100%;">
+										<option value="{{qvh_dirig.id}}" selected>{{qvh_dirig.libelle}}</option>
+									</select>
+									<span style="color: red;" id="ninqvh"></span>
+								</td>
+							</tr>
+
+						</table>
+
+					</fieldset>
+
+				</div>
+				<div class="col-lg-8">		</div>
+				<div class="col-lg-4" align="right">
+					<input type="submit" value="Modifier" name="editer">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

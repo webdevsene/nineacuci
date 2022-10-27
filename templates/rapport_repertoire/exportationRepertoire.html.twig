@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}exportation répertoire!{% endblock %}
+
+{% block body %}
+<div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+            
+                    <center>
+                    <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="get" >
+                    
+                         
+                        <table width="100%">
+                            <tr>
+                                <td width="20%">
+                                
+                               
+                                </td>
+                                <td width="20%">Date debut de l'exercice  <input class="form-control form-control-sm" type="date" name="dateDebut" 
+                                {% if dateDebut!=""%}
+                                    value={{dateDebut|date("Y-m-d")}}
+                                {% endif %} placeholder="Date debut "
+                                ><br></td>
+                                <td width="20%">Date fin de l'exercice <input class="form-control form-control-sm" type="date" name="dateFin"
+                                {% if dateFin!=""%}
+                                    value={{dateFin|date("Y-m-d")}}
+                                {% endif %}  placeholder="Date fin "><br></td>
+                            
+                                
+                                
+                                <td width="30%" >
+                                
+                                </td>
+                            </tr>
+                            <tr>
+                            <td width="20%">
+                             
+                              
+                            </td>
+                            <td width="20%">Date debut mise à jour  <input class="form-control form-control-sm" type="date" name="datedebutMaj" 
+                            {% if datedebutMaj!=""%}
+                                value={{datedebutMaj|date("Y-m-d")}}
+                            {% endif %} placeholder="Date debut mise à jour"
+                            ><br></td>
+                            <td width="20%">Date fin mise à jour <input class="form-control form-control-sm" type="date" name="datefinMaj"
+                            {% if datefinMaj!=""%}
+                                value={{datefinMaj|date("Y-m-d")}}
+                            {% endif %}  placeholder="date fin mise à jour "><br></td>
+                           
+                            
+                            
+                            <td width="30%" >
+                               
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="20%">
+                             
+                               <button type="submit" value="1" class="btn btn-secondary btn-sm valider " name="filtrer"><i class="bx bx-cloud-upload"></i> Exporter les unités</button><br><br>
+                            </td>
+                            <td width="20%"></td>
+                            <td width="30%" >
+                               
+                            </td>
+                        </tr>
+                        </table>
+                        </form>
+                        </center>
+            </div>
+        </div>
+           
+   
+                       
+{% endblock %}
+
+{% block javascript %}
+ 
+ <script>
+        $(document).ready(function(){
+            $('.valider').click(function(e){
+                  $('#idspan').addClass('spinner-border');
+                  $('#idspan').addClass('spinner-border-sm');
+                      
+            });
+        });
+    </script>
+{% endblock %}

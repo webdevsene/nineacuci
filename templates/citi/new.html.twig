@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Citi{% endblock %}
+
+{% block body %}
+   <div class="row">
+        <div class="col-xl-6">
+            <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th data-priority="3">Code  </th>
+                                    <th data-priority="3">Libelle</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {% for tag in citis %}
+                                <tr>
+                                   
+                                    <td>{{ tag.id }}</td>
+                                    <td>{{ tag.libelle }}</td>
+                                </tr>
+                                {% else %}
+                                        <tr>
+                                            <td colspan="12">Aucun enregistrement trouvé</td>
+                                        </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-6">
+            <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                <div class="card-body">
+                    
+                     
+                <div class="row">
+                        <!-- begin to upload file -->
+                        <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="post" action="{{ path('importCategoryCiti')}}">
+                                     <div class="form-group">
+                                        <!-- <label for="_file" class="control-label col-sm-3">Charger le template</label> -->
+                                        <div class="col-sm-9">
+                                            <input class="form-control" type="file" name="_file" id="_file" title="Charger un template">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-6-offset-2">
+                                          <input type="submit" class="btn btn-secondary" value="Charger">
+                                        </div>
+                                     </div>
+                        </form>
+                            
+                </div> <!-- end col -->
+
+                     
+                <div class="row">
+                        <!-- begin to upload file -->
+                        <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="post" action="{{ path('importCiti')}}">
+                                     <div class="form-group">
+                                        <!-- <label for="_file" class="control-label col-sm-3">Charger le template</label> -->
+                                        <div class="col-sm-9">
+                                            <input class="form-control" type="file" name="_file" id="_file" title="Charger un template">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-6-offset-2">
+                                          <input type="submit" class="btn btn-secondary" value="Charger">
+                                        </div>
+                                     </div>
+                        </form>
+                            
+                </div> <!-- end col -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,218 @@
+{% extends app.user.roles[0] == "ROLE_NINEA_ADMIN" or app.user.roles[0] == "ROLE_VALIDER_DEMANDE_NINEA" or app.user.roles[0] == "ROLE_DEMANDE_NINEA"
+    ? 'ninea.html.twig' 
+    : 'base.html.twig' %}
+
+{% block title %}NAEMA index{% endblock %}
+
+{% block body %}
+
+
+<a href="{{ path('naema_new') }}"  class="btn btn-primary btn-sm  mt-lg-3">+Ajouter nouvelle activité</a>
+
+<div class="box ">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste des codes activités NAEMA
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">                                
+                            <table class="table" id="naemaList">
+                                <thead>
+                                    <tr>
+                                        <th>Code activité</th>
+                                        <th>Libelle</th>
+                                        <th >Actions</th>
+                                        <th >Produits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for n_a_e_m_a in n_a_e_m_as %}
+                                    <tr>
+                                        <td>{{ n_a_e_m_a.id }}</td>
+                                        <td>{{ n_a_e_m_a.libelle }}</td>
+                                        <td>
+                                            <a  href="{{ path('n_a_e_m_a_edit', {'id': n_a_e_m_a.id}) }}"> <i class="fas fa-pen btn btn-outline-primary btn-sm " title="Modifier"></i> </a>
+                                        </td>
+                                        <td>
+                                            <!--<a  href="{{ path('produitByNaemaList', {'id': n_a_e_m_a.id}) }}" id="showProducts" data-id="" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                    data-bs-whatever="@mdo"> <i class="fas fa-list btn btn-outline-primary btn-sm showProducts " title="Modifier"></i> </a>
+                                            <a  href="{{ path('produitByNaemaList', {'id': n_a_e_m_a.id}) }}" id="showProducts" data-id="" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                    data-bs-whatever="{{n_a_e_m_a.libelle}}"> <i class="fas fa-list btn btn-outline-primary btn-sm showProducts " title="Modifier"></i> </a>
+                                                    -->
+                                            <a  href="{{ path('n_a_e_m_a_show', {'id': n_a_e_m_a.id}) }}" id="showProducts" data-id=""> <i class="fas fa-list btn btn-outline-primary btn-sm showProducts " title="Modifier"></i> </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>                               
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+
+                                        
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">NAEMA Libelle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table" id="produitCat">
+                        <thead>
+                            <tr>
+                                <th>Code produit</th>
+                                <th>Libelle</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for ref_produit in ref_produits %}
+                            <tr>
+                                <td>{{ ref_produit.id }}</td>
+                                <td>{{ ref_produit.libelle }}</td>
+                                <td>
+                                    <a href="{{ path('app_ref_produits_show', {'id': ref_produit.id}) }}"></a>
+                                    <a href="{{ path('app_ref_produits_edit', {'id': ref_produit.id}) }}"></a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3">no records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!--<form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+    <!-- App js -->
+    <script src="{{ asset('admin/dist/assets/js/pages/modal.init.js')}}"></script>
+    
+    
+    <script>
+
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+            "date-uk-pre": function ( a ) {
+                if (a == null || a == "") {
+                    return 0;
+                }
+                var ukDatea = a.split('/');
+                return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+            },
+        
+            "date-uk-asc": function ( a, b ) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+        
+            "date-uk-desc": function ( a, b ) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+
+        });
+
+        $("#naemaList").DataTable({
+            columnDefs: [
+                { type: 'date-uk', targets: 1 }
+            ],
+            
+            "order": [1, "desc" ],
+
+
+            "sDom": 'f<"top">tip',
+            "language": {
+
+                "processing": "Traitement en cours...",
+
+                "search": "Rechercher",
+
+                "width": "5%",
+
+                "lengthMenu": "Afficher _MENU_ ",
+
+                "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+                "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+                "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+                "infoPostFix": "",
+
+                "loadingRecords": "Chargement en cours...",
+
+                "zeroRecords": "Rien &agrave; afficher",
+
+                "emptyTable": "Aucune donnée disponible dans le tableau",
+
+                "paginate": {
+
+                    first: "Premier",
+
+                    previous: "Pr&eacute;c&eacute;dent",
+
+                    next: "Suivant",
+
+                    last: "Dernier"
+
+                },
+
+            }
+        });
+
+
+    </script>
+       
+
+{% endblock %}

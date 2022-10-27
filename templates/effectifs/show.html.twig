@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Effectifs{% endblock %}
+
+{% block body %}
+    <h1>Effectifs</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ effectif.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ effectif.createdAt ? effectif.createdAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ effectif.updatedAt ? effectif.updatedAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Rank</th>
+                <td>{{ effectif.rank }}</td>
+            </tr>
+            <tr>
+                <th>UploadedFileName</th>
+                <td>{{ effectif.uploadedFileName }}</td>
+            </tr>
+            <tr>
+                <th>Units</th>
+                <td>{{ effectif.units }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ effectif.submit }}</td>
+            </tr>
+            <tr>
+                <th>TotalEf</th>
+                <td>{{ effectif.totalEf }}</td>
+            </tr>
+            <tr>
+                <th>TotalMs</th>
+                <td>{{ effectif.totalMs }}</td>
+            </tr>
+            <tr>
+                <th>Qualification</th>
+                <td>{{ effectif.qualification }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ effectif.category }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ effectif.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Facm</th>
+                <td>{{ effectif.facm }}</td>
+            </tr>
+            <tr>
+                <th>Facf</th>
+                <td>{{ effectif.facf }}</td>
+            </tr>
+            <tr>
+                <th>Hmfef</th>
+                <td>{{ effectif.hmfef }}</td>
+            </tr>
+            <tr>
+                <th>Hmmef</th>
+                <td>{{ effectif.hmmef }}</td>
+            </tr>
+            <tr>
+                <th>Mhmfef</th>
+                <td>{{ effectif.mhmfef }}</td>
+            </tr>
+            <tr>
+                <th>Mhmmef</th>
+                <td>{{ effectif.mhmmef }}</td>
+            </tr>
+            <tr>
+                <th>Mnfef</th>
+                <td>{{ effectif.mnfef }}</td>
+            </tr>
+            <tr>
+                <th>Mnmef</th>
+                <td>{{ effectif.mnmef }}</td>
+            </tr>
+            <tr>
+                <th>Mumfef</th>
+                <td>{{ effectif.mumfef }}</td>
+            </tr>
+            <tr>
+                <th>Mummef</th>
+                <td>{{ effectif.mummef }}</td>
+            </tr>
+            <tr>
+                <th>Nfef</th>
+                <td>{{ effectif.nfef }}</td>
+            </tr>
+            <tr>
+                <th>Nmef</th>
+                <td>{{ effectif.nmef }}</td>
+            </tr>
+            <tr>
+                <th>Umfef</th>
+                <td>{{ effectif.umfef }}</td>
+            </tr>
+            <tr>
+                <th>Ummef</th>
+                <td>{{ effectif.ummef }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_effectifs_index') }}">back to list</a>
+
+    <a href="{{ path('app_effectifs_edit', {'id': effectif.id}) }}">edit</a>
+
+    {{ include('effectifs/_delete_form.html.twig') }}
+{% endblock %}

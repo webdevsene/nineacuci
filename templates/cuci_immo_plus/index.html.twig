@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CuciImmoPlus index{% endblock %}
+
+{% block body %}
+    <h1>CuciImmoPlus index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AmortPr</th>
+                <th>AnneeFinanciere</th>
+                <th>Brut</th>
+                <th>CodeCuci</th>
+                <th>Net</th>
+                <th>Submit</th>
+                <th>Valeur</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cuci_immo_plu in cuci_immo_pluses %}
+            <tr>
+                <td>{{ cuci_immo_plu.id }}</td>
+                <td>{{ cuci_immo_plu.createdAt ? cuci_immo_plu.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ cuci_immo_plu.updatedAt ? cuci_immo_plu.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ cuci_immo_plu.amortPr }}</td>
+                <td>{{ cuci_immo_plu.anneeFinanciere }}</td>
+                <td>{{ cuci_immo_plu.brut }}</td>
+              
+                <td>{{ cuci_immo_plu.net }}</td>
+                <td>{{ cuci_immo_plu.submit }}</td>
+                <td>{{ cuci_immo_plu.valeur }}</td>
+                <td>
+                    <a href="{{ path('cuci_immo_plus_show', {'id': cuci_immo_plu.id}) }}">show</a>
+                    <a href="{{ path('cuci_immo_plus_edit', {'id': cuci_immo_plu.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('cuci_immo_plus_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+
+        <meta charset="utf-8" />
+        <title>ANSD - Agence Nationale de la Statistique et de la Démographie - Portail NINEA_CUCI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico')}}">
+
+
+        <!-- Bootstrap Css -->
+        <link href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            label{
+                font-size: 12px;
+                color: #676767;
+            }
+        </style>
+
+
+        {% block stylesheets %}
+                
+        {% endblock %}
+
+       
+
+  </head>
+  
+  <body data-topbar="dark" data-layout="horizontal">
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            <header id="page-topbar">
+                <div class="navbar-header">
+                    <div class="d-flex">
+                        <!-- LOGO -->
+                        <div class="navbar-brand-box">
+                            <a href="#" class="logo logo-dark">
+                                <span class="logo-sm">
+                                    
+                                </span>
+                                <span class="logo-lg">
+                                    
+                                </span>
+                            </a>
+
+                            <a href="#" class="logo logo-light">
+                                <span class="logo-sm">
+                                    
+                                </span>
+                                <span class="logo-lg">
+                                    
+                                </span>
+                            </a>
+                        </div>
+
+                        <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                            <i class="fa fa-fw fa-bars"></i>
+                        </button>
+
+                      
+
+                        
+                    </div>
+
+                    <div class="d-flex">
+
+                        
+
+                      
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                {% if app.user.sexe == "M" %}
+                                    
+                                <img class="rounded-circle header-profile-user" src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                    alt="Header Avatar">
+                                {% else %}
+                                    <img class="rounded-circle header-profile-user" src="{{ asset('admin/dist/assets/images/users/avatar-1.jpg')}}"
+                                        alt="Header Avatar">
+
+                                {% endif %}
+                               
+                                <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{app.user.prenom}} {{app.user.nom}}</span>
+                                <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <!-- item-->
+                                <a class="dropdown-item" href="{{path('user_change_password',{'id':app.user.id})}}"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Changer mot de passe</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('user_show', {'id': app.user.id}) }}"><i class=" bx bx-user-circle font-size-16 align-middle me-1"></i> <span key="t-logout">Profile</span></a>
+
+                                
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="{{path('app_logout')}}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Déconnexion</span></a>
+                            </div>
+                        </div>
+
+                        
+            
+                    </div>
+                </div>
+            </header>
+    
+            <div class="topnav">
+                <div class="container-fluid">
+                    <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+
+                        <div class="collapse navbar-collapse" id="topnav-menu-content">
+                            <ul class="navbar-nav">
+
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content" >
+                    <div class="container-fluid">
+                                <div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-4"></h4>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                
+                                            </div>
+                        
+                                            <div class="col-lg-4">
+                                                <div class="card bg-success text-white-50">
+                                                    <div class="card-body">
+                                                        <h5 class="mb-4 text-white"><i></i> NINEA </h5>
+                                                        <p class="card-text">Numéro d’Identification national des Entreprises et des Associations (NINEA) </p><br>
+                                                        <a href="{{path('ninea_accueil')}}" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                        
+                                            <div class="col-lg-4">
+                                                <div class="card bg-info text-white-50">
+                                                    <div class="card-body">
+                                                        <h5 class="mb-4 text-white"><i></i> CUCI </h5>
+                                                        <p class="card-text">Centre Unique de Collecte de l'Information (CUCI) </p><br><br>
+                                                        <a href="{{path('accueil')}}" class="small-box-footer">Plus d'informations <i class="fas fa-arrow-circle-right"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                
+                                            </div>
+                        
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                        
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+              
+                
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6 d-flex justify-content-left">
+                                <p class="p-1">
+                                    © <script>document.write(new Date().getFullYear())</script>, 
+                                    
+                                    République du Sénégal, tous droits réservés.
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-end d-none d-sm-block">
+                                    <a href="#">
+                                        @ANSD, Fann bel air Imm Cerf volant, Dakar
+                                    </a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        <!-- Right Sidebar -->
+        <div class="right-bar">
+            <div data-simplebar class="h-100">
+                <div class="rightbar-title d-flex align-items-center px-3 py-4">
+            
+                    <h5 class="m-0 me-2">Settings</h5>
+
+                    <a href="javascript:void(0);" class="right-bar-toggle ms-auto">
+                        <i class="mdi mdi-close noti-icon"></i>
+                    </a>
+                </div>
+
+                <!-- Settings -->
+                <hr class="mt-0" />
+                <h6 class="text-center mb-0">Choose Layouts</h6>
+
+                <div class="p-4">
+                    <div class="mb-2">
+                        <
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input theme-choice" type="checkbox" id="light-mode-switch" checked>
+                        <label class="form-check-label" for="light-mode-switch">Light Mode</label>
+                    </div>
+    
+                    <div class="mb-2">
+                       
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input theme-choice" type="checkbox" id="dark-mode-switch">
+                        <label class="form-check-label" for="dark-mode-switch">Dark Mode</label>
+                    </div>
+    
+                    <div class="mb-2">
+                       
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input theme-choice" type="checkbox" id="rtl-mode-switch">
+                        <label class="form-check-label" for="rtl-mode-switch">RTL Mode</label>
+                    </div>
+
+                    <div class="mb-2">
+                        
+                    </div>
+                    <div class="form-check form-switch mb-5">
+                        <input class="form-check-input theme-choice" type="checkbox" id="dark-rtl-mode-switch">
+                        <label class="form-check-label" for="dark-rtl-mode-switch">Dark RTL Mode</label>
+                    </div>
+
+            
+                </div>
+
+            </div> <!-- end slimscroll-menu-->
+        </div>
+        <!-- /Right-bar -->
+
+        <!-- Right bar overlay-->
+        <div class="rightbar-overlay"></div> 
+        
+
+        <!-- JAVASCRIPT -->
+        <script src="{{ asset('admin/dist/assets/libs/jquery/jquery.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/metismenu/metisMenu.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+
+
+
+        {% block javascript %}
+        <script>
+        
+
+            console.log('{{path_absolu}}'); 
+            
+        </script>
+                
+        {% endblock %}
+        
+       
+        
+       
+    </body>
+
+</html>

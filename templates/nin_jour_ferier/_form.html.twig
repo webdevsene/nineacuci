@@ -1,0 +1,46 @@
+{{ form_start(form) }}
+
+    <div  style="border: 1px solid #ccc;">
+            <div >
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <br>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.Ninjour) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.Ninjour)}}</span>
+                                    {{form_widget(form.Ninjour)}}
+                                </div>
+                            </div>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.Nindescription) }} </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <span style="color: red;" id="idPrenom"> {{form_errors(form.Nindescription)}}</span>
+                                    {{form_widget(form.Nindescription)}}
+                                </div>
+                            </div>
+                            
+
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> </b> 
+                                </label>
+                                <div class="col-md-4 col-sm-4 ">
+                                <button class="btn btn-secondary m-1">{{ button_label|default('Sauvegarder') }}</button>
+                                </div>
+                            </div>
+                    </div> 
+                    <br>
+                </div>
+            </div>
+        
+    </div>
+    <a href="{{ path('app_nin_jour_ferier_index') }}">Liste des jours fériés</a>
+{{ form_end(form) }}

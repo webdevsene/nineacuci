@@ -1,0 +1,1113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Bilan{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+    .larger{
+
+        width: 100%;
+
+    }
+ </style>
+
+
+         
+{% endblock %}
+{% block body %}
+
+    {% for message in app.flashes('notice') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-outline me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endfor %}
+
+        <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <div class=" p-2">
+                    <a href="{{ path('bilan_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Bilan <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('compte_de_resultats_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Compte résultat <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('flux_des_tresoreries_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Flux des trésoreries<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('immo_brut_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations brutes <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('cuci_immo_plus_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations: Plus-value et moins-value de cession <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_effectifs_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Effectifs, masse salariale et personnel exterieur <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_production_de_exercice_new') }}" class="btn btn-primary waves-effect waves-light btn-sm">Production de l'exercice <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('achat_production_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Achats destinés à la production <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+         <span style="font-size:14px; color:#60b9c7;border-bottom: 1px solid #60b9c7; width:100%;" >Production de l'exercice</span>
+    </div>
+        <!-- end page title -->
+
+
+
+ <br>
+<div class="row">
+    <div class="col-xl-12">
+        
+<div class="card paage" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    
+            {{ form_start(form)}}
+    <div class="card-body coorps" style="margin: 0%;padding: 0%;">
+                            <div class="row">
+                             <div class="col-xl-12" > 
+                                  
+                                <table class="table table-bordered " style="margin-top: 0px; padding: 0px;">
+                                    <tr style="margin-top:0px;">
+                                        <td  style="width: 15%;">Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                                            <input readonly type="text"  class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                                        <td style="text-align: right; width: 15%;">Désignation entité :<span style="color:red">*</span></td><td  style="width: 20%;">
+                                            <input type="text" disabled class="form-control form-control-sm" name="" id="denomination"></td>
+                                        <td style="text-align: right; width: 10%;">Année financière :<span style="color:red">*</span></td><td  style="width: 5%;">
+                                         <input readonly type="text" class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'"></td>
+                                    </tr>
+                                </table>
+                                         
+                                <div class="card">
+                                 <div class="card-body">
+
+                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                         <button type="button" class="btn btn-secondary waves-effect waves-light resetBtnProd" 
+                                            id="resetBtn">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                        
+                                         <a type="button" id="sauvegarderProd1" class="btn btn-success waves-effect waves-light sauvegarderProd">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </a>
+                                         <button id="validerprodexer" type="button" class="btn btn-dark bt-soft waves-effect waves-light validerprod">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                     </div>
+                                 </div>
+                                </div>
+                             </div>
+                             <div class="d-flex flex-wrap gap-2 justify-content-between" style="margin-left: 1rem;">
+                                    <button id="ajouterline" type="button" class="btn btn-dark bt-soft opacity-25 waves-effect waves-light ajouterline" data-collection="#idProdexer">
+                                        <i class="bx bx-plus font-size-16 align-middle me-2"></i> Ajouter
+                                    </button>
+                             
+                             </div>
+
+
+                            <div class="col-12"  style="width:1800px;overflow-y:hidden;overflow-x:scroll;white-space: nowrap;-webkit-overflow-scrolling: touch;background-color: #ffffff;">
+                                    <div class="table-responsive mb-3 fixed-solution" data-pattern="priority-columns"
+                                        style="width:1800px;overflow-y:hidden;overflow-x:scroll;white-space: nowrap;-webkit-overflow-scrolling: touch;background-color: #ffffff;">
+                                        <table name="form2" id="form2" class="table table-striped table-bordered " style="max-width: none;">
+                                            <thead style="background: #008000; color:white;">
+
+                                                <!-- t header remplacer ///////////////////////////// -->
+                                                <tr class=" opacity-65" style="background: #008000;">
+                                                    <th scope="col" colspan="5" class="text-center ">
+                                                        <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px;" id="txtcuci-prod"></span> 
+                                                    </th>
+                                                    <th colspan="5" scope="col" class="text-center ">
+
+                                                        <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignation-prod"></span>  
+                                                    </th>
+                                                    <th colspan="5" scope="col" class="text-center ">
+                                                        <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinanciere-prod"></span>
+                                                    </th>
+                                                </tr>
+                                                        <!-- //////////////////////////////////// t header remplacer -->
+                                                
+                                                <tr>
+                                                    <th scope="row" colspan="3" class="text-center ">
+                                                    </th>
+                                                    <th scope="col" colspan="2" class="text-center font-size-10">
+                                                            Production vendue dans pays
+                                                    </th>
+                                                    <th scope="col" colspan="2" class="text-center font-size-10">
+                                                            Production vendue dans UEMOA
+                                                    </th>
+                                                    <th scope="col" colspan="2" class="text-center font-size-10">
+                                                            Production vendue hors UEMOA
+                                                    </th>
+                                                    <th scope="col" colspan="2" class="text-center font-size-10">
+                                                            Production immobilisée
+                                                    </th>
+                                                    <th scope="col" colspan="2" class="text-center font-size-10">
+                                                            Stock ouverture de l'exercice
+                                                    </th>
+                                                    <th scope="col" colspan="2" class="text-center font-size-10">
+                                                            Stock clôture de l'exercice
+                                                    </th>
+                                                </tr>
+                                                <tr class="opacity-65" >
+                                                    <th scope="col" colspan="" class="text-center ">
+                                                    
+                                                    </th>
+                                                    <th scope="col" colspan="" class="text-center font-size-10">
+                                                        Désignation du Produits
+                                                    <br>
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Unité de Quantité Choisie
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Quantité
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                        Valeur
+                                                        </span> 
+                                                    </th>                                                
+                                                    <th scope="col" colspan="" class="text-center  font-size-10">
+                                                    Quantité
+                                                    </th>
+                                                    <th scope="col" colspan="" class="text-center font-size-10">
+                                                        Valeur
+                                                    <br>
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Quantité
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Valeur
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Quantité
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Valeur
+                                                        </span> 
+                                                    </th><th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Quantité
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Valeur
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Quantité
+                                                        </span> 
+                                                    </th>
+                                                    <th colspan="" scope="col" class="text-center font-size-10">
+                                                        <span class="text" id="annee">
+                                                            Valeur
+                                                        </span> 
+                                                    </th>                                                
+                                                </tr>
+                                            </thead>
+                                            
+                                    
+                                            <!-- debut tbody inputs -->
+
+                                            <tbody id="idProdexer" data-prototype="{{include('production_de_exercice/productionexercice.html.twig',{'form':form.productionDeExercices.vars.prototype})|e }}" data-index="{{ form.productionDeExercices|length > 0 ? form.productionDeExercices|last.vars.name + 1 : 0 }}">
+                                              {% for row in form.productionDeExercices %}
+                                                <tr>
+                                                        <td></td>
+                                                        <td>{{ form_widget(row.libelle) }}</td>
+                                                        <td> {{ form_widget(row.unites) }}</td>
+                                                        <td>{{ form_widget(row.qtyProdVenduDansEtat) }}</td>
+                                                        <td>{{ form_widget(row.valProdVenduDansEtat) }}</td>
+                                                        <td>{{ form_widget(row.qtyProdVenduDansUemoa) }}</td>
+                                                        <td>{{ form_widget(row.valProdVenduDansUemoa) }}</td>
+                                                        <td>{{ form_widget(row.qtyProdVenduHorsUemoa) }}</td>
+                                                        <td>{{ form_widget(row.valProdVenduHorsUemoa) }}</td>
+                                                        <td>{{ form_widget(row.qtyProdImmobilisee) }}</td>
+                                                        <td>{{ form_widget(row.valProdImmobilisee) }}</td>
+                                                        <td>{{ form_widget(row.qtyStkOuverture) }}</td>
+                                                        <td>{{ form_widget(row.valStkOuverture) }}</td>
+                                                        <td>{{ form_widget(row.qtyStkCloture) }}</td>
+                                                        <td>{{ form_widget(row.valStkCloture) }}</td>
+                                                </tr>
+                                              {% endfor %}
+                                            
+                                            </tbody> 
+                                                <tfoot>
+                                                    <tr class="text-center text-white opacity-65" style="color: white; font-weight: bold; background: #82C46C; border:#ced4da;">
+                                                        <td scope="row" colspan="3">Total</td>     
+                                                        
+                                                        <td><input type="text" id="" disabled class="form-control form-control-sm" ></td>
+                                                        <td><input type="text" id="total-vend-in-etat" class="form-control form-control-sm calcul" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"></td>
+                                                        <td><input type="text" id="" disabled class="form-control form-control-sm" ></td>
+                                                        <td><input type="text" id="total-vend-in-uemoa" class="form-control form-control-sm calcul" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"></td>
+                                                        <td><input type="text" id="" disabled class="form-control form-control-sm" ></td>
+                                                        <td><input type="text" id="total-vend-huemoa" class="form-control form-control-sm calcul" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"></td>
+                                                        <td><input type="text" id="" disabled class="form-control form-control-sm" ></td>
+                                                        <td><input type="text" id="total-prod-immobilise" class="form-control form-control-sm calcul" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"></td>
+                                                        <td><input type="text" id="" disabled class="form-control form-control-sm" ></td>
+                                                        <td><input type="text" id="total-stock-ouv" class="form-control form-control-sm calcul" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"></td>
+                                                        <td><input type="text" id="" disabled class="form-control form-control-sm" ></td>
+                                                        <td><input type="text" id="total-stock-clos" class="form-control form-control-sm calcul" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"></td>
+                                                    </tr>
+
+                                                </tfoot>
+                                                
+                                            <!-- end tbody -->
+                                            
+                                        
+                                        
+                                        </table>
+                                    
+                                        
+                                    </div>
+                            </div>
+
+
+                                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                         <button type="button" class="btn btn-secondary waves-effect waves-light resetBtnProd" 
+                                            id="resetBtn2">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                         <a type="button" id="sauvegarderProd2" class="btn btn-success waves-effect waves-light sauvegarderProd">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </a>
+                                         <button id="validerprod2" type="button" class="btn btn-dark bt-soft waves-effect waves-light validerprod">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                        <input name="submited" id="submited" type="submit" value="1" style="display:none;"/>
+                                        <input name="notsubmited" id="notsubmited" type="submit" value="0" style="display:none;"/>
+                                     </div>
+                                 </div>
+                            </div>
+                            
+                            <!--<button type="submit" class="btn btn-success waves-effect waves-light">
+                                <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                            </button> -->        
+    {{ form_end(form)}}
+
+        </div>
+    </div>
+</div>
+             
+{% endblock %}
+
+
+
+{% block javascript %}
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+
+<script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+
+        <!-- Init js -->
+        <!-- form mask init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+
+
+
+<script type="text/javascript">
+
+
+    var $validerToto=1;
+    var $tab_item_id = []; // tab des id element 
+    var totalVenduDansEtat = totalVenduDansUemoa = totalVenduHorUemoa = prodImmobilisee = variationStockOuverture = variationStockCloture = 0;
+
+    function remplacer(vartester){
+         
+         
+        if(vartester == "" || vartester == null){
+            return 0;
+
+        }
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        
+        return vartester;
+    }
+
+
+    function is_int(value){
+        value=value.replace(".", "");
+        value=value.replace(",", "");
+      if((parseFloat(value) == parseInt(value)) && !isNaN(value)){ 
+          
+          return true;
+      } else {
+          
+          return false;
+      }
+    }
+
+ $(document).ready(function(){
+
+    var j = 0;
+    {% for row in form.productionDeExercices %}
+        var id_valProdVenduDansEtat  ="production_de_exercice_util_productionDeExercices_"+j+"_valProdVenduDansEtat"; 
+        var id_valProdVenduDansUemoa ="production_de_exercice_util_productionDeExercices_"+j+"_valProdVenduDansUemoa"; 
+        var id_valProdVenduHorsUemoa ="production_de_exercice_util_productionDeExercices_"+j+"_valProdVenduHorsUemoa"; 
+        var id_valProdImmobilisee    ="production_de_exercice_util_productionDeExercices_"+j+"_valProdImmobilisee"; 
+        var id_valStkOuverture       ="production_de_exercice_util_productionDeExercices_"+j+"_valStkOuverture"; 
+        var id_valStkCloture        ="production_de_exercice_util_productionDeExercices_"+j+"_valStkCloture"; 
+
+        j++;
+
+        $tab_item_id.push([
+            id_valProdVenduDansEtat,  
+            id_valProdVenduDansUemoa, 
+            id_valProdVenduHorsUemoa, 
+            id_valProdImmobilisee,    
+            id_valStkOuverture ,      
+            id_valStkCloture        
+
+        ]);
+
+
+    {%endfor%}
+
+
+    
+    const newItemProductionExercice = (e) => {
+        var collections = document.querySelector(e.currentTarget.dataset.collection);
+        let index = parseInt(collections.dataset.index);
+        let item = document.createElement("tr");
+        item.setAttribute('style', "border:#ced4da;");
+
+        collections.dataset.index = index + 1;
+        let prototype = collections.dataset.prototype;
+        item.innerHTML = prototype.replace(/__name__/g, index);
+        collections.appendChild(item);
+        
+        var id_valProdVenduDansEtat  ="production_de_exercice_util_productionDeExercices_"+index+"_valProdVenduDansEtat"; 
+        var id_valProdVenduDansUemoa ="production_de_exercice_util_productionDeExercices_"+index+"_valProdVenduDansUemoa"; 
+        var id_valProdVenduHorsUemoa ="production_de_exercice_util_productionDeExercices_"+index+"_valProdVenduHorsUemoa"; 
+        var id_valProdImmobilisee    ="production_de_exercice_util_productionDeExercices_"+index+"_valProdImmobilisee"; 
+        var id_valStkOuverture       ="production_de_exercice_util_productionDeExercices_"+index+"_valStkOuverture"; 
+        var id_valStkCloture        ="production_de_exercice_util_productionDeExercices_"+index+"_valStkCloture"; 
+
+        $tab_item_id.push([
+            id_valProdVenduDansEtat,  
+            id_valProdVenduDansUemoa, 
+            id_valProdVenduHorsUemoa, 
+            id_valProdImmobilisee,    
+            id_valStkOuverture ,      
+            id_valStkCloture        
+
+        ]);
+        item.querySelector(".btn-removeProd").addEventListener("click", () => item.remove());
+        
+        $(".form-control").bind("keypress", function(e) {
+            if (e.keyCode == 13) {
+                var inps = $("input.calcul"); //add select too
+                for (var x = 0; x < inps.length; x++) {
+                    if (inps[x] == this) {
+                        while ((inps[x]).name == (inps[x + 1]).name) {
+                        x++;
+                        }
+                        if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                    }
+                }   e.preventDefault();
+            }
+        });
+
+
+
+        ///rendre obligatoire l'unite TODO trait ici
+        for(key = 0; key<$tab_item_id.length; key++){
+            //var sel = document.getElementById('production_de_exercice_util_productionDeExercices_'+key+'_unites').required;
+            //console.log(key);
+        }
+
+
+
+    };
+
+
+    document.querySelectorAll(".ajouterline").forEach(btn => btn.addEventListener("click", newItemProductionExercice));
+    //document.getElementById('ajouterline').click();
+
+
+
+ {% if app.session.get("codeCuci")!=""%}
+  
+    var value='{{app.session.get("codeCuci")}}';
+    document.getElementById('txtcuci-prod').innerHTML=value;
+
+    document.getElementById('idcuci').setAttribute('value',value);     
+    $('.ajouterline').attr('disabled',false);  // activer le btn pour ajouter une ligne 
+
+    var  route="{{path('nineaNumProduction')}}"+"/"+ value;
+
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+                    
+                    let denomination=document.getElementById("denomination");
+                    document.getElementById('txtdesignation-prod').innerHTML=data;
+                   
+                    denomination.value=data;               
+
+                },
+                error : function(error){
+                    console.log(error);
+                }
+    });
+
+
+   {% if app.session.get("annee")!=""%}
+           document.getElementById('txtfinanciere-prod').innerHTML='{{app.session.get("annee")}}';
+          document.getElementById("annee").value='{{app.session.get("annee")}}';
+   //       // route="{{path('immoBrutjson')}}"+"/"+ '{{app.session.get("annee")}}';
+   //       route="";
+   //         var form = $(this).closest("form");
+   //        $.ajax({
+   //            type: 'GET',
+   //            url : route,
+   //            dataType : "json",
+   //            success: function(data){
+   //                var tbody=document.getElementById("tbody");
+   //                tbody.innerHTML="";                   
+   //            } ,
+   //            error : function(error){
+   //                console.log(error);
+   //            }
+   //        });    
+
+   {% endif %} 
+   
+{% else %}
+
+    $('.ajouterline').attr('disabled',true);   // desactiver la ligne pour bloquer le formulaire 
+
+ {% endif %}
+
+    
+    //submit form when 'Enter' key is pressed while in myInputID
+    //document.getElementById("myInputID1").addEventListener("keypress", function(event) {
+    $(".form-control").bind("keypress", function(e) {
+        if (event.keyCode === 13) {
+             var inps = $("input"); //add select too
+                for (var x = 0; x < inps.length; x++) {
+                    if (inps[x] == this) {
+                        while ((inps[x]).name == (inps[x + 1]).name) {
+                            x++;
+                        }
+                        if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                    }
+                } e.preventDefault();
+    		// return false;
+        }
+    });
+
+    
+    $(function(){
+                        $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                        $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")})
+    ;
+
+
+
+
+
+}); // end DOM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $('#total-vend-in-etat').on("blur change", function(){
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][0]).value));
+        }
+
+        
+        totalVenduDansEtat = parseInt(remplacer(document.getElementById('total-vend-in-etat').value));
+
+        if($som!=totalVenduDansEtat){
+
+            $validerToto =0;
+            Swal.fire('Vérifier les valeurs saisies pour la production VENDUE dans état ');
+        }
+        else{
+
+            $validerToto =1;
+
+        }
+
+
+
+    });
+
+
+    /// traitement total prod vendu dans uemoa 
+    $('#total-vend-in-uemoa').on("blur change", function(){
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][1]).value));
+        }
+
+        
+        totalVenduDansUemoa = parseInt(remplacer(document.getElementById('total-vend-in-uemoa').value));
+
+        if($som!=totalVenduDansUemoa){
+
+            $validerToto =0;
+            Swal.fire('Vérifier les valeurs saisies pour la production VENDUE dans UEMOA');
+        }
+
+        else{
+
+            $validerToto =1;
+
+        }
+    });    /// end traitement total prod vendu dans uemoa 
+    
+    
+    
+    /// traitement total prod vendu hors uemoa 
+    $('#total-vend-huemoa').on("blur change", function(){
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][2]).value));
+        }
+
+        
+        totalVenduHorUemoa = parseInt(remplacer(document.getElementById('total-vend-huemoa').value));
+
+        if($som!=totalVenduHorUemoa){
+
+            $validerToto =0;
+            Swal.fire('Vérifier les valeurs saisies pour la production VENDUE dans UEMOA ');
+        }
+        else{
+
+            $validerToto =1;
+
+        }
+
+    });    /// end traitement total prod vendu hors uemoa 
+    
+    
+    /// traitement total prod immobilisee
+    $('#total-prod-immobilise').on("blur change", function(){
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][3]).value));
+        }
+
+        
+        prodImmobilisee = parseInt(remplacer(document.getElementById('total-prod-immobilise').value));
+
+        if($som!=prodImmobilisee){
+
+            $validerToto =0;
+            Swal.fire('Vérifier les valeurs saisies pour la production IMMOBILISEE ');
+        }
+        else{
+
+            $validerToto =1;
+
+        }
+
+    });    /// end traitement total prod immobiliseee 
+    
+    
+    /// traitement total stock ouverture
+    $('#total-stock-ouv').on("blur change", function(){
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][4]).value));
+        }
+        
+        variationStockOuverture = parseInt(remplacer(document.getElementById('total-stock-ouv').value));
+
+        if($som!=variationStockOuverture){
+
+            $validerToto =0;
+            Swal.fire('Vérifier les valeurs saisies pour le STOCK OUVERTURE ');
+        }
+        else{
+
+            $validerToto =1;
+
+        }
+
+    });    /// end traitement total stock ouverture 
+
+
+    /// traitement total stock cloture
+    $('#total-stock-clos').on("blur change", function(){
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][5]).value));
+        }
+        
+        variationStockCloture = parseInt(remplacer(document.getElementById('total-stock-clos').value));
+
+        if($som!=variationStockCloture){
+
+            $validerToto =0;
+            Swal.fire('Vérifier les valeurs saisies pour le STOCK CLOTURE ');
+        }
+        else{
+
+            $validerToto =1;
+
+        }
+
+    });    /// end traitement total stock cloture 
+
+
+    
+
+$('.validerprod').click(function(e){
+
+
+
+        var $validerToto = 1;
+
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][0]).value));
+        }
+
+        
+        totalVenduDansEtat = parseInt(remplacer(document.getElementById('total-vend-in-etat').value));
+
+        if($som!=totalVenduDansEtat){
+
+            $validerToto =0;
+            Swal.fire('Vérifier le total saisi pour la production VENDUE dans état !'+$som);
+        }//////end test
+
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][1]).value));
+        }
+
+        
+        totalVenduDansUemoa = parseInt(remplacer(document.getElementById('total-vend-in-uemoa').value));
+
+        if($som!=totalVenduDansUemoa){
+
+            $validerToto =0;
+            Swal.fire('Vérifier le total saisi pour la production VENDUE dans UEMOA !'+$som);
+        }
+        
+
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][2]).value));
+        }
+
+        
+        totalVenduHorUemoa = parseInt(remplacer(document.getElementById('total-vend-huemoa').value));
+
+        if($som!=totalVenduHorUemoa){
+
+            $validerToto =0;
+            Swal.fire('Vérifier le total saisi pour la production VENDUE dans UEMOA !'+$som);
+        }//// end 
+
+
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][3]).value));
+        }
+
+        
+        prodImmobilisee = parseInt(remplacer(document.getElementById('total-prod-immobilise').value));
+
+        if($som!=prodImmobilisee){
+
+            $validerToto =0;
+            Swal.fire('Vérifier le total saisi pour la production IMMOBILISEE !'+$som);
+        } ////////end test
+
+
+
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][4]).value));
+        }
+        
+        variationStockOuverture = parseInt(remplacer(document.getElementById('total-stock-ouv').value));
+
+        if($som!=variationStockOuverture){
+
+            $validerToto =0;
+            Swal.fire('Vérifier le total saisi pour le STOCK OUVERTURE !'+$som);
+        }
+
+
+
+        var $som=0 ;
+        /// get total colonne prod dans etat
+        for(i=0; i<$tab_item_id.length; i++){
+            
+            $som += parseInt(remplacer(document.getElementById($tab_item_id[i][5]).value));
+        }
+        
+        variationStockCloture = parseInt(remplacer(document.getElementById('total-stock-clos').value));
+
+        if($som!=variationStockCloture){
+
+            $validerToto =0;
+            Swal.fire('Vérifier le total saisi pour le STOCK CLOTURE !'+$som);
+        }
+
+
+
+
+
+
+
+
+    if ($validerToto==1) {
+
+
+
+        //console.log("click sauv passif"); return;
+        var empt = 1;
+        //var checkboxList = document.getElementsByClassName('calcul');
+        var elemts =  $('input.calcul');
+        for (i = 0; i < elemts.length; i++) {
+            if (elemts[i].value != "") {
+                //console.log(elemts[i].value);
+                empt = 0;
+            }
+        }
+        if(empt!=1){
+
+            /// rendre obligatoire les libelles 
+            var elemLibelles = $('input.calcul.libelle');
+            var emptLib=1;
+            for (i = 0; i < elemLibelles.length; i++) {
+                if (elemLibelles[i].value == "" || elemLibelles[i].value == undefined) {
+                    //console.log(elemts[i].value);
+                    emptLib = 0;
+                    var j = elemLibelles.length-1;
+                    Swal.fire('Vous pouvez choisir un libellé à la ligne ' + j); return;
+
+                }
+            }
+
+
+
+            if(emptLib==1){
+
+
+                /// rendre select bi obligat 
+
+                var opt;
+                var selReq = 1;
+                //var strUser = e.options[e.selectedIndex].text;
+                for(key = 0; key<$tab_item_id.length; key++){
+                    opt = $("#"+"production_de_exercice_util_productionDeExercices_"+key+"_unites").val();
+                    
+
+                    if(opt==""){
+                        //console.log('tester selected oblig'+opt); return;
+                        selReq = 0;
+
+                        Swal.fire('Selectionner une unité !');return;
+
+                    }else{
+                        selReq=1;
+                    }
+                }
+
+                if(selReq==1){
+
+                    var a=$(this);
+                    Swal.fire({
+                    title:"Confirmation",
+                    text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                    icon:"success",
+                    showCancelButton:true,
+                    confirmButtonText:"Oui",
+                    cancelButtonText:"Non",
+                    confirmButtonClass:"btn btn-success mt-2",
+                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                    buttonsStyling:!1}).then(function(t)
+                    {
+                    if (t.value) {
+                    //var form = $(this).closest("form").submit();
+                    // $(this).closest("form").submit();
+                        document.getElementById("submited").click();
+                        document.getElementById("submited").click();
+                    }else
+                        e.preventDefault();
+                    })
+                }
+
+
+
+
+
+            }
+        }
+
+    }
+
+       
+});
+    
+
+$('.sauvegarderProd').click(function(e){
+
+
+    //console.log("click sauv passif"); return;
+    var empt = 1;
+    //var checkboxList = document.getElementsByClassName('calcul');
+    var elemts =  $('input.calcul');
+    for (i = 0; i < elemts.length; i++) {
+        if (elemts[i].value != "") {
+            //console.log(elemts[i].value);
+            empt = 0;
+        }
+    }
+    if(empt!=1){
+
+        /// rendre obligatoire les libelles 
+        var elemLibelles = $('input.calcul.libelle');
+        var emptLib=1;
+        for (i = 0; i < elemLibelles.length; i++) {
+            if (elemLibelles[i].value == "" || elemLibelles[i].value == undefined) {
+                //console.log(elemts[i].value);
+                emptLib = 0;
+                var j = elemLibelles.length-1;
+                Swal.fire('Vous pouvez choisir un libellé à la ligne ' + j); return;
+
+            }
+        }
+        if(emptLib==1){
+
+
+                /// rendre select bi obligat 
+
+                var opts;
+                var selReqs = 1;
+                //var strUser = e.options[e.selectedIndex].text;
+                for(key = 0; key<$tab_item_id.length; key++){
+                    opts = $("#"+"production_de_exercice_util_productionDeExercices_"+key+"_unites").val();
+
+                    console.log(key+opts);
+                    
+
+                    if(opts==""){
+                        //console.log('tester selected oblig'+opt); return;
+                        selReqs = 0;
+
+                        Swal.fire('Selectionner une unité !');return;
+
+                    }else{
+                        selReqs=1;
+                    }
+                }
+
+                if(selReqs==1){
+
+                    var a=$(this);
+                    Swal.fire({
+                        title:"Confirmation",
+                        text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                        icon:"warning",
+                        showCancelButton:true,
+                        confirmButtonText:"Oui",
+                        cancelButtonText:"Non",
+                        confirmButtonClass:"btn btn-success mt-2",
+                        cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                        buttonsStyling:!1}).then(function(t){
+                            if (t.value) {
+                                //var form = $(this).closest("form").submit();
+                                //$(this).closest("form").submit();
+                                document.getElementById("notsubmited").click();
+                                document.getElementById("notsubmited").click();
+                            }else{
+                                e.preventDefault();
+                            }
+                        })
+
+                }
+
+
+
+        }
+
+    }
+
+
+
+
+       
+});
+
+
+    
+    $('.resetBtnProd').click(function(e){
+
+        
+
+                        var elemts =  $('input.calcul');
+                        for (i = 0; i < elemts.length; i++) {
+                            elemts[i].value="";
+                        }
+        
+
+    });     //////////fin trait btn reset efecctifmasse salariale 
+
+
+
+
+
+
+
+$('#idcuci').change(function(){
+            
+            let route="{{path('nineaNumProduction')}}"+"/"+ $('#idcuci').val();
+            document.getElementById('txtfinanciere-prod').innerHTML=$('#annee').val();
+            document.getElementById('txtcuci-prod').innerHTML=$('#idcuci').val(); 
+             
+            $.ajax({
+                type: 'GET',
+                url : route,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+
+                    console.log(data);
+                    
+                    let denomination=document.getElementById("denomination");
+                    denomination.value=data;
+                    document.getElementById('txtdesignation-prod').innerHTML=data;
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+});
+
+
+
+    
+    ////// ecouteur sur le input annee fin generer le formulaire
+    $('#annee').change(function(e){
+
+            e.preventDefault();
+            document.getElementById('txtfinanciere-prod').innerHTML=$('#annee').val();
+
+            var form = $(this).closest("form");
+
+    });
+    ///// end generer formulaire 
+
+
+    
+    // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000);
+
+</script>
+
+
+{% endblock %}
+

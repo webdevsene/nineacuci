@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AchatProduction index{% endblock %}
+
+{% block body %}
+    <h1>AchatProduction index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Libelle</th>
+                <th>QtyProduitDansEtat</th>
+                <th>QtyAcheteeDansEtat</th>
+                <th>QtyAcheteeHorsPays</th>
+                <th>ValProduitDansEtat</th>
+                <th>ValAcheteeDansPays</th>
+                <th>ValAcheteeHorsPays</th>
+                <th>VariationDesStocks</th>
+                <th>Unites</th>
+                <th>AnneeFinanciere</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for achat_production in achat_productions %}
+            <tr>
+                <td>{{ achat_production.id }}</td>
+                <td>{{ achat_production.libelle }}</td>
+                <td>{{ achat_production.qtyProduitDansEtat }}</td>
+                <td>{{ achat_production.qtyAcheteeDansEtat }}</td>
+                <td>{{ achat_production.qtyAcheteeHorsPays }}</td>
+                <td>{{ achat_production.valProduitDansEtat }}</td>
+                <td>{{ achat_production.valAcheteeDansPays }}</td>
+                <td>{{ achat_production.valAcheteeHorsPays }}</td>
+                <td>{{ achat_production.variationDesStocks }}</td>
+                <td>{{ achat_production.unites ? achat_production.unites|json_encode : '' }}</td>
+                <td>{{ achat_production.anneeFinanciere }}</td>
+                <td>{{ achat_production.createdAt ? achat_production.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ achat_production.updatedAt ? achat_production.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('achat_production_show', {'id': achat_production.id}) }}">show</a>
+                    <a href="{{ path('achat_production_edit', {'id': achat_production.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('achat_production_new') }}">Create new</a>
+{% endblock %}

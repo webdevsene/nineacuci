@@ -1,0 +1,309 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Repertoire index{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+ <link href="{{ asset('admin/dist/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+      
+{% endblock %}
+
+{% block body %}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+             <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item active"><a href="{{path('repertoire_new')}}" class="btn btn-success" style="color:#fff;">Saisie nouvelle unité <br></a></li>
+             </ol>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                  
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+  <div class="col-12">
+        {% for message in app.session.flashbag.get('message')%}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{message}}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div> 
+
+        {% endfor%}
+    <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+      <div class="card-body " style="margin: 0%;padding: 0%;">
+       <br>
+            <form>
+          <div class="row">
+            <div class="col-2">
+                    <table width="100%;">
+                        <tr>
+                          <td ><b>NINEA:</b></td>
+                          <td><input type="text" name="ninea" value="{{ninea}}" class="form-control form-control-sm"></td>
+                        </tr>
+                    </table>     
+            </div>
+            <div class="col-2">
+                     <table width="100%;">
+                        <tr>
+                          <td><b>CUCI:</b></td>
+                          <td><input type="text" name="cuci" value="{{cuci}}" class="form-control form-control-sm"></td>
+                        </tr>
+                    </table>  
+            </div>
+            <div class="col-4">
+                  <table width="100%;">
+                        <tr>
+                          <td><b>Dénomination sociale:</b></td>
+                          <td><input type="text" name="denomination" value="{{denomination}}" class="form-control form-control-sm"></td>
+                        </tr>
+                    </table>  
+            </div>
+            <div class="col-3">
+                  <table width="100%;">
+                        <tr>
+                          <td><b>N° RC:</b></td>
+                          <td><input type="text" name="rccm" class="form-control form-control-sm"
+                           value="{{rccm}}"></td>
+                          
+                        </tr>
+                    </table>  
+            </div>
+            <div class="col-1">
+                  <table width="100%;">
+                        <tr>
+                          <td><button type="submit" class="btn btn-success" name="filtre" value="filtre">Filtrer </button></td>
+                        </tr>
+                  </table>  
+            </div>
+          </div>
+           
+        </form>
+         <br>
+        
+      </div>
+    </div>
+    <br>
+    <br>
+     {% for message in app.session.flashbag.get('filtre')%}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{message}}
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div> 
+
+        {% endfor%}
+   {% if repertoires|length > 0 %}
+    <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+      <div class="card-body " style="margin: 0%;padding: 0%;">
+       <div  style="overflow-x:auto;" >
+       
+        <table id="repertoire" class="table table-bordered  table-hover " width="100%">
+            <thead class="tr_entete" style=" margin-top: 0px;">
+                <tr >
+                    <th> <center><b>NINEA</b><br> <input id="ninea" type="text" class="form-control form-control-sm filter"
+                        data-column-index="0"></center> </th>
+                    <th>
+                        <center>  <b>N° CUCI</b>
+                        <input  type="text" class="form-control form-control-sm filter"
+                            data-column-index="1" width="100%"></center>
+                    
+                    </th>
+                    <th>
+                        <center>
+                        <b>Dénomination sociale</b>
+                        <input  type="text" class="form-control form-control-sm filter"
+                        data-column-index="2"></center>
+                    </th>
+                    
+                    <th> <center>
+                        <b>N° du RC</b>
+                    <input  type="text" class="form-control form-control-sm filter"
+                        data-column-index="3"></center>
+                    </th>
+                
+                    <th>
+                        <center><b>Adresse</b>
+                            <input  type="text" class="form-control form-control-sm filter"
+                            data-column-index="4"></center>
+                    </th>
+                    <th>
+                        <center><b>Activité principale</b>
+                        <input  type="text" class="form-control form-control-sm filter"
+                            data-column-index="5"></center>
+                    </th>
+                
+                    <th>
+                        <center><b>Région</b>
+                        <input  type="text" class="form-control form-control-sm filter"
+                            data-column-index="6"></center>
+                    </th>
+                    <th>
+                        <center><b>Année exercice</b>
+                        <input  type="text" class="form-control form-control-sm filter"
+                            data-column-index="7"></center>
+                    </th>
+                    
+                  
+
+                    <th>
+                        <center><b>Actif</b>
+                            <input  type="text" class="form-control form-control-sm filter"
+                            data-column-index="8"></center>
+                    </th>
+                
+                
+                    
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for repertoire in repertoires %}
+                    <tr>
+                        <td style="width: 10%;">{{ repertoire.ninea }}</td>
+                        <td style="width: 10%;">{{ repertoire.codeCuci }}</td>
+                        <td style="width: 15%;">{{ repertoire.DenominationSocial }}</td>
+                        
+                        <td style="width: 10%;">{{ repertoire.NumeroRegistreCommerce }}</td>
+                       
+                        <td style="width: 10%;">{{ repertoire.addresseComplete }}</td>
+                        <td style="width: 15%;">{{ repertoire.activitePrincipale }}</td>
+                        <td style="width: 15%;">{{ repertoire.qvh ? repertoire.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle  : "" }}</td>
+                        <td style="width: 15%;">  {{ repertoire.debutExerciceComptable ? repertoire.debutExerciceComptable|date("Y")  : "" }}</td>
+                      
+                        <td style="width: 7%;">
+                         {{ repertoire.statut ? "Oui" : "Non" }}
+                        </td>
+                        <td style="width: 8%;">
+                            
+                             <a href="{{ path('repertoire_show', {'id': repertoire.id}) }}"  title="Détails"><i class="fa fa-eye"></i></a>
+                          
+                           
+                            <a href="{{ path('repertoire_edit', {'id': repertoire.id}) }}"  title="Modifier une unité"><i class="fa fa-edit"></i></a>
+                           {% if is_granted('ROLE_BREA_ADMIN')   %}
+                                <a  href="{{ path('repertoire_delete', {'id': repertoire.id}) }}" class="supprimer"  title="Supprimer une unité"><i class="fa fa-trash "></i></a> 
+                          {% endif%}
+                           
+                        </td>
+                    </tr>
+               
+                {% endfor %}
+            </tbody>
+           
+        </table>
+       
+      </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div> <!-- end col -->
+</div> <!-- end row -->
+
+    
+{% endblock %}
+{% block javascript %}
+  
+ <!-- Responsive Table js -->
+        <script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+ <!-- Required datatable js -->
+  <script src="{{ asset('admin/dist/assets/js/pages/table-responsive.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<!-- Sweet Alerts js -->
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+									<!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+									
+<!-- Buttons examples -->
+
+
+
+<script >
+
+
+$(document).ready(function() {
+    
+   var datatableReherche = $("#repertoire").DataTable({
+       
+       
+        
+       
+        "order": [7, "desc" ],
+        "sDom": 'B<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+       
+    });
+
+   
+   
+    $('.filter').on('keyup change', function() {
+        //clear global search values
+        datatableReherche.search('');
+        datatableReherche.column($(this).data('columnIndex')).search(this.value).draw();
+    });
+    });
+
+
+    
+    // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000);
+
+
+</script>  
+
+
+ 
+
+
+
+
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends 'ninea.html.twig' %} {% block title %}NiNineaproposition index {% endblock %} {% block stylesheets %}
+<!-- DataTables -->
+<link href="{{ asset('admin/dist/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}">
+	<!-- Icons Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+<style>
+
+</style>
+{% endblock %} {% block body %}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% for message in app.session.flashbag.get('message')%}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{message}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                {% endfor %}
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div>
+                            <div class="accordion mb-3" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <h5 class="font-size-14">Rechercher ancien NINEA</h5>
+                                        </button>
+                                    </h2>
+                                    
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div class="text-muted">
+                                                <form action="" method="get">
+                                                    <fieldset class="p-2">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <table >
+                                                                    <tr>
+                                                                        <td style="width: 30%;"><label for=""><b><u> N° NINEA : </u></b> </label></td>
+                                                                        <td><input type="text" name="numNinea"></td>
+                                                                    </tr>
+                                                                    <tr class="mt-2">
+                                                                        <td><label for=""><b><u> NINEA Mère : </u></b> </label></td>
+                                                                        <td><input type="text" name="nineamere"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label for=""><b><u> Raison sociale : </u></b> </label></td>
+                                                                        <td><input type="text" name="raisonsociale"></td>
+                                                                    </tr>
+                                                                    <tr class="mt-2">
+                                                                        <td><label for=""><b><u> Sigle</u></b> </label></td>
+                                                                        <td><input type="text" name="sigle"></td>
+                                                                    </tr>
+                                                                    <tr class="mt-2">
+                                                                        <td><label for=""><b><u> Enseigne : </u></b> </label></td>
+                                                                        <td><input type="text" name="enseigne"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label for=""><b><u> Date de naissance : </u></b> </label></td>
+                                                                        <td><input type="date" name="datenais"></td>
+                                                                    </tr>
+                                                                
+                                                                </table>   
+                                                            </div>
+                                                            
+                                                            <div class="col-lg-6">
+                                                                <table >                                                               
+                                                                    <tr class="mt-2" >
+                                                                        <td style="width: 50%;"><label for=""><b><u> RC : </u></b> </label></td>
+                                                                        <td><input type="text" name="regcom"></td>
+                                                                    </tr>
+                                                                    <tr class="mt-2">
+                                                                        <td><label for=""><b><u> Date du RC: </u></b> </label></td>
+                                                                        <td><input type="date" name="dateregcom"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label for=""><b><u> CNI/Passport</u></b> </label></td>
+                                                                        <td><input type="text" name="cni/passport"></td>
+                                                                    </tr>
+                                                                    <tr class="mt-2">
+                                                                        <td><label for=""><b><u> Téléphone : </u></b> </label></td>
+                                                                        <td><input type="text" name="telephone"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><label for=""><b><u> Email : </u></b> </label></td>
+                                                                        <td><input type="email" name="email"></td>
+                                                                    </tr>
+                                                                                        
+                                                                </table>   
+                                                            </div>
+                                                        </div>                                                                                              
+
+                                                        <div class="row mt-3">
+                                                            <div class="col-lg-8"></div>
+                                                            <div class="col-lg-4" align="right">
+                                                                <input type="submit" value="Rechercher" name="filtre">
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <!-- end accordion -->
+                        </div>
+                    </div>
+                    <!-- end col -->
+
+                   
+                </div>
+
+
+
+                <table id="nineaTable" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                    <thead class="tr_entete" >
+                        <tr>
+                            <th>NINEA</th>
+                            <th>Enseigne</th>
+                            <th>Raison</th>
+                            <th>RC</th>
+                            <th>Owner</th>
+                           
+                            <th>Date </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for tag in ninineas %}
+                            <tr>
+                                <td>{{ tag.ninNinea }}</td>
+                                <td>{{ tag.ninEnseigne }}</td>
+                                <td>{{ tag.ninRaison }}</td>
+                                <td>
+                                    {% if tag.ninRegcom is not null %} 
+                                    {{ tag.createdBy.niAdministration.admlibelle}}
+                                   {% endif %}
+                                </td>
+
+                                <td>{{ tag.createdBy.prenom}} {{ tag.createdBy.nom}}</td>
+                                <td>{{ tag.ninmajdate | date("d/m/Y") }}</td>
+                                <td> 
+                                    <a href="{{ path('nininea_show', {'id': tag.id}) }}" id="modification">
+                                        <span class="badge badge-pill badge-soft-warning font-size-11">Détails</span> 
+                                    </a>
+                                </td>
+                                                                
+                            </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="108">Pas de données trouvées</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+                <a href="{{path_absolu}}/../avis/THIES-EYES-2022pdf" id="pop" rel="pop"> click 1.</a>
+
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+</div>
+
+
+<!-- end row -->
+{% endblock %} {% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.11.5/sorting/date-uk.js"></script>
+<script src="{{ asset('admin/dist/assets/js/pages/datatables.init.js')}}"></script>
+        <!-- App js -->
+        <script src="{{ asset('admin/dist/assets/libs/jquery/jquery.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/js/pages/modal.init.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+
+<script type="text/javascript">
+        
+    $(document).ready(function(){
+
+        var route="{{path('pdfAction')}}"+"/"+ $('#trigger').val();
+
+        $.ajax({
+            type : "POST",
+            url : route,
+            dataType : "json",
+            contentType : 'application/json; charset=utf-8',
+            data : JSON.stringify(params),
+            success : function(data) {
+                var myResponse = eval(data);
+
+                let $dialog = document.getElementById('dialog');
+                $dialog.setAttribute('src',myResponse);
+                $("<iframe />") // create an iframe
+                  // add the source
+                  .attr('src', 'data:application/pdf;base64,' + myResponse.base64EncodedResponse)
+                  .appendTo('.modal-body'); // append to modal body or wherever you want
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        });   
+
+ 
+});  // end DOM document ready function
+
+$('.avis-contant').click(function(e){
+
+        /*
+            let todoId = cb.getAttribute('data-id');
+         * this will generate a path with ReplaceMeWithCorrectValue instead of the correct value.
+         * You have to use a placeholder that correspond to the restrictions defined in your route.
+        let url = "{{ (path('pdfAction', {'todo_id': 'ReplaceMeWithCorrectValue'})) }}";
+
+        url = url.replace("ReplaceMeWithCorrectValue", todoId);
+         */
+
+        let i = 1;
+
+
+        //var route="{{path('pdfAction')}}"+"/"+ $('#trigger').val();
+        var route="{{path('pdfAction')}}"+"/"+i;
+
+        $.ajax({
+            type : "GET",
+            url : route,
+            dataType : "json",
+            contentType : 'application/json; charset=utf-8',
+            success : function(data) {
+                var myResponse = eval(data);
+
+                console.log(myResponse); 
+                $("<iframe />") // create an iframe
+                  // add the source
+                  .attr('src', 'data:application/pdf;base64,' + myResponse.base64EncodedResponse)
+                  .appendTo('.modal-body'); // append to modal body or wherever you want
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        });   
+
+});
+
+
+
+</script>
+      
+{% endblock %}

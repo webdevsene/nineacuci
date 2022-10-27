@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AchatProduction{% endblock %}
+
+{% block body %}
+    <h1>AchatProduction</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ achat_production.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ achat_production.libelle }}</td>
+            </tr>
+            <tr>
+                <th>QtyProduitDansEtat</th>
+                <td>{{ achat_production.qtyProduitDansEtat }}</td>
+            </tr>
+            <tr>
+                <th>QtyAcheteeDansEtat</th>
+                <td>{{ achat_production.qtyAcheteeDansEtat }}</td>
+            </tr>
+            <tr>
+                <th>QtyAcheteeHorsPays</th>
+                <td>{{ achat_production.qtyAcheteeHorsPays }}</td>
+            </tr>
+            <tr>
+                <th>ValProduitDansEtat</th>
+                <td>{{ achat_production.valProduitDansEtat }}</td>
+            </tr>
+            <tr>
+                <th>ValAcheteeDansPays</th>
+                <td>{{ achat_production.valAcheteeDansPays }}</td>
+            </tr>
+            <tr>
+                <th>ValAcheteeHorsPays</th>
+                <td>{{ achat_production.valAcheteeHorsPays }}</td>
+            </tr>
+            <tr>
+                <th>VariationDesStocks</th>
+                <td>{{ achat_production.variationDesStocks }}</td>
+            </tr>
+            <tr>
+                <th>Unites</th>
+                <td>{{ achat_production.unites ? achat_production.unites|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ achat_production.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ achat_production.createdAt ? achat_production.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ achat_production.updatedAt ? achat_production.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('achat_production_index') }}">back to list</a>
+
+    <a href="{{ path('achat_production_edit', {'id': achat_production.id}) }}">edit</a>
+
+    {{ include('achat_production/_delete_form.html.twig') }}
+{% endblock %}

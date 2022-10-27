@@ -1,0 +1,182 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}demandes{% endblock %}
+
+{% block body %}
+
+ 
+
+<div class="box mt-lg-2">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste de demandes
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+  
+
+     <table class="table" id="demande">
+        <thead>
+            <tr>
+                
+                <th>Motif</th>
+                <th>Description</th>
+                <th>ninea</th>
+                <th>etat</th>
+                <th>Date de cessation</th>
+                <th>Date de création</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ni_cessation in ni_cessations %}
+            <tr>
+              
+                <td>{{ ni_cessation.motif }}</td>
+                <td>{{ ni_cessation.description }}</td>
+                <td>{{ ni_cessation.ninea is not null ? ni_cessation.ninea.ninNinea : '' }}</td>
+                <td>
+                 {% if ni_cessation.etat == "a" %}
+                     <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                {% else %}
+                    
+                        <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                     
+                {% endif %}
+                </td>
+                <td>{{ ni_cessation.dateCessation ? ni_cessation.dateCessation|date('d/m/Y') : '' }}</td>
+                <td>{{ ni_cessation.createdAt ? ni_cessation.createdAt|date('d/m/Y') : '' }}</td>
+
+                <td>
+                    {% if ni_cessation.etat == "a" %}
+                        <a href="{{ path('app_ni_cessation_edit', {'id': ni_cessation.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                        <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    {% endif %}
+                     {% if ni_cessation.etat == "v" %}
+                        <a target="_blank" href="{{ path('pdfActionDownCessation', {'id': ni_cessation.id}) }}" title="Version imprimable" id="vimprimable" class="btn btn-outline-primary btn-sm vimprime">
+                        <i class="bx bx-printer"></i>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                        
+                               
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+   
+
+   
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+<script>
+
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+
+
+    $("#demande").DataTable({
+
+        columnDefs: [
+            { type: 'date-uk-desc', targets: 6 }
+          ],
+
+          "order": [6, "desc" ],
+
+        "sDom": 'f<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+</script>
+{% endblock %}

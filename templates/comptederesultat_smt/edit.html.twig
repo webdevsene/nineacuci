@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ComptederesultatSmt{% endblock %}
+
+{% block body %}
+    <h1>Edit ComptederesultatSmt</h1>
+
+    {{ include('comptederesultat_smt/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_comptederesultat_smt_index') }}">back to list</a>
+
+    {{ include('comptederesultat_smt/_delete_form.html.twig') }}
+{% endblock %}

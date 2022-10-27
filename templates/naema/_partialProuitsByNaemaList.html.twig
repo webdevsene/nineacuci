@@ -1,0 +1,158 @@
+{% extends app.user.roles[0] == "ROLE_NINEA_ADMIN" or app.user.roles[0] == "ROLE_VALIDER_DEMANDE_NINEA" or app.user.roles[0] == "ROLE_DEMANDE_NINEA"
+    ? 'ninea.html.twig' 
+    : 'base.html.twig' %}
+
+{% block title %}NAEMA index{% endblock %}
+
+{% block body %}
+
+
+<a hidden href="{{ path('naema_new') }}"  class="btn btn-primary btn-sm  mt-lg-3">+Ajouter nouvelle activité</a>
+
+<div class="box mt-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste des produits dans <span class="badge w-10 badge-soft-info"> {{ n_a_e_m_a.libelle }} </span>
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">                                
+
+                            <table class="table" id="produitCat">
+                                <thead>
+                                    <tr>
+                                        <th>Code produit</th>
+                                        <th>Libelle</th>
+                                        <th>#Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for ref_produit in ref_produits %}
+                                    <tr>
+                                        <td>{{ ref_produit.id }}</td>
+                                        <td>{{ ref_produit.libelle }}</td>
+                                        <td>
+                                            <a href="{{ path('app_ref_produits_edit', {'id': ref_produit.id}) }}"><i class="fas fa-pen btn btn-outline-primary btn-sm " title="Modifier"></i> </a>
+                                            <a href="{{ path('app_ref_produits_delete', {'id': ref_produit.id}) }}"><i class="fas fa-trash btn btn-outline-danger btn-sm " title="Supprimer"></i> </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+    <!-- App js -->
+    <script src="{{ asset('admin/dist/assets/js/pages/modal.init.js')}}"></script>
+    
+    
+    <script>
+
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+            "date-uk-pre": function ( a ) {
+                if (a == null || a == "") {
+                    return 0;
+                }
+                var ukDatea = a.split('/');
+                return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+            },
+        
+            "date-uk-asc": function ( a, b ) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+        
+            "date-uk-desc": function ( a, b ) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+
+        });
+
+        $("#produitCat").DataTable({
+            columnDefs: [
+                { type: 'date-uk', targets: 1 }
+            ],
+            
+            "order": [1, "desc" ],
+
+
+            "sDom": 'f<"top">tip',
+            "language": {
+
+                "processing": "Traitement en cours...",
+
+                "search": "Rechercher",
+
+                "width": "5%",
+
+                "lengthMenu": "Afficher _MENU_ ",
+
+                "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+                "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+                "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+                "infoPostFix": "",
+
+                "loadingRecords": "Chargement en cours...",
+
+                "zeroRecords": "Rien &agrave; afficher",
+
+                "emptyTable": "Aucune donnée disponible dans le tableau",
+
+                "paginate": {
+
+                    first: "Premier",
+
+                    previous: "Pr&eacute;c&eacute;dent",
+
+                    next: "Suivant",
+
+                    last: "Dernier"
+
+                },
+
+            }
+        });
+
+
+    </script>
+       
+
+{% endblock %}

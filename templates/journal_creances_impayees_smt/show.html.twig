@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalCreancesImpayeesSmt{% endblock %}
+
+{% block body %}
+    <h1>JournalCreancesImpayeesSmt</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ journal_creances_impayees_smt.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ journal_creances_impayees_smt.createdAt ? journal_creances_impayees_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ journal_creances_impayees_smt.updatedAt ? journal_creances_impayees_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ journal_creances_impayees_smt.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ journal_creances_impayees_smt.status }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ journal_creances_impayees_smt.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>DatePaiement</th>
+                <td>{{ journal_creances_impayees_smt.DatePaiement ? journal_creances_impayees_smt.DatePaiement|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ journal_creances_impayees_smt.montant }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ journal_creances_impayees_smt.nom }}</td>
+            </tr>
+            <tr>
+                <th>NumFacture</th>
+                <td>{{ journal_creances_impayees_smt.numFacture }}</td>
+            </tr>
+            <tr>
+                <th>DateJ</th>
+                <td>{{ journal_creances_impayees_smt.dateJ ? journal_creances_impayees_smt.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_creances_impayees_smt_index') }}">back to list</a>
+
+    <a href="{{ path('app_journal_creances_impayees_smt_edit', {'id': journal_creances_impayees_smt.id}) }}">edit</a>
+
+    {{ include('journal_creances_impayees_smt/_delete_form.html.twig') }}
+{% endblock %}

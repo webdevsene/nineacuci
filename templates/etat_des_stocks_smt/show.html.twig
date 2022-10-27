@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EtatDesStocksSmt{% endblock %}
+
+{% block body %}
+    <h1>EtatDesStocksSmt</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ etat_des_stocks_smt.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ etat_des_stocks_smt.createdAt ? etat_des_stocks_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ etat_des_stocks_smt.updatedAt ? etat_des_stocks_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ etat_des_stocks_smt.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ etat_des_stocks_smt.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ etat_des_stocks_smt.status }}</td>
+            </tr>
+            <tr>
+                <th>Reference</th>
+                <td>{{ etat_des_stocks_smt.reference }}</td>
+            </tr>
+            <tr>
+                <th>Designation</th>
+                <td>{{ etat_des_stocks_smt.designation }}</td>
+            </tr>
+            <tr>
+                <th>Quantite</th>
+                <td>{{ etat_des_stocks_smt.quantite }}</td>
+            </tr>
+            <tr>
+                <th>PrixUnitaire</th>
+                <td>{{ etat_des_stocks_smt.prixUnitaire }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ etat_des_stocks_smt.montant }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_etat_des_stocks_smt_index') }}">back to list</a>
+
+    <a href="{{ path('app_etat_des_stocks_smt_edit', {'id': etat_des_stocks_smt.id}) }}">edit</a>
+
+    {{ include('etat_des_stocks_smt/_delete_form.html.twig') }}
+{% endblock %}

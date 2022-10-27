@@ -1,0 +1,89 @@
+{% extends app.user.roles[0] == "ROLE_NINEA_ADMIN" or app.user.roles[0] == "ROLE_VALIDER_DEMANDE_NINEA" or app.user.roles[0] == "ROLE_DEMANDE_NINEA"
+    ? 'ninea.html.twig' 
+    : 'base.html.twig' %}
+
+{% block title %}New NAEMA{% endblock %}
+
+{% block body %}
+
+<a href="{{ path('n_a_e_m_a_index') }}"  class="btn btn-primary btn-sm mt-lg-3">Liste des activités NAEMA</a>
+<div class="box ">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Liste des codes activités NAEMA
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                        <div class="card-body">
+
+                            <table class="table table-hover mb-0">
+
+                                <thead>
+                                    <tr>
+                                        <th data-priority="3">Code  activité</th>
+                                        <th data-priority="3">Description</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for tag in n_a_e_m_a %}
+                                    <tr>
+                                    
+                                        <td>{{ tag.id }}</td>
+                                        <td>{{ tag.libelle }}</td>
+                                    </tr>
+                                    {% else %}
+                                            <tr>
+                                                <td colspan="12">Aucun enregistrement trouvé</td>
+                                            </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>                                
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-6 mt-5">
+                        <!-- begin to upload file 
+                        <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="post" action="{{ path('importCategoryNaema')}}">
+                                     <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input class="form-control form-control-sm" type="file" name="_file" id="_file" title="Charger un template" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-6-offset-2 p-2">
+                                          <input type="submit" class="btn btn-sm btn-secondary" value="Charger">
+                                        </div>
+                                     </div>
+                        </form>
+                        -->
+
+                        {{ include('naema/_form.html.twig') }}
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+
+{% endblock %}

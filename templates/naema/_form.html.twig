@@ -1,0 +1,40 @@
+{{ form_start(form) }}
+    <div class="item row">
+        <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+        </label>
+        <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.id) }} </b> 
+        </label>                            
+        <div class="col-md-6 col-sm-4 ">
+            <span style="color: red;" id="idPrenom"> {{form_errors(form.id)}}</span>
+            {{form_widget(form.id)}}
+        </div>
+    </div>
+    <div class="item row">
+        <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+        </label>
+        <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.libelle) }} </b> 
+        </label>                            
+        <div class="col-md-6 col-sm-4 ">
+            <span style="color: red;" id="idPrenom"> {{form_errors(form.libelle)}}</span>
+            {{form_widget(form.libelle)}}
+        </div>
+    </div>
+    <div class="item row">
+        <label class="col-form-label col-md-4 col-sm-3 " for="first-name"><b> {{ form_label(form.refNaemaNew) }} </b> 
+        </label>                            
+        <div class="col-md-6 col-sm-4 ">
+            <span style="color: red;" id="idPrenom"> {{form_errors(form.refNaemaNew)}}</span>
+            {{form_widget(form.refNaemaNew)}}
+        </div>
+    </div>
+
+    <div class="item row">
+        <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+        </label>
+        <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> </b> 
+        </label>
+        <div class="col-md-4 col-sm-4 ">
+            <button class="btn btn-secondary ">{{ button_label|default('Sauvegarder') }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}

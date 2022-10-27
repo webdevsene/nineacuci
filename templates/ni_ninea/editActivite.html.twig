@@ -1,0 +1,87 @@
+
+<div class="accordion-item">
+	<h2 class="accordion-header" id="headingTwo">
+		<button class="accordion-button fw-medium collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+		
+			Ajouter activité 
+		
+		</button>
+	</h2>
+</div>
+
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+	<div class="card-body">
+		{{ form_start(form,{'action':path('ninea_editActivites',{id:app.request.attributes.get('id')})})}}
+		
+			<div class="row">
+               
+                <div class="col-lg-10">
+                    <fieldset class="border p-2">                        
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.ninAutact)}}</label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    
+									{{form_widget(form.ninAutact)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.refSyscoa)}}</label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.refSyscoa)}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.refNaema)}}</label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.refNaema)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.refNaemas)}}</label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.refNaemas)}}
+                                </td>
+                            </tr>
+							<tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.refCiti)}}</label>
+                                    <span style="color: red;">*</span>
+
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.refCiti)}}
+                                </td>
+                            </tr>                           
+                        </table>
+
+                    </fieldset>
+                </div>
+				<div class="col-lg-8">		</div>
+				<div class="col-lg-4 mt-3" align="right">
+					<input type="submit"  value="Ajouter" name="ajouter">
+					<input type="button" data-bs-dismiss="modal" aria-label="Close" value="Annuler" name="annuler">
+				</div>
+			</div>
+
+			{{ form_end(form) }}
+	</div>
+
+</div>

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit BilanSmt{% endblock %}
+
+{% block body %}
+    <h1>Edit BilanSmt</h1>
+
+    {{ include('bilan_smt/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_bilan_smt_index') }}">back to list</a>
+
+    {{ include('bilan_smt/_delete_form.html.twig') }}
+{% endblock %}

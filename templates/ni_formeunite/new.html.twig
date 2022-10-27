@@ -1,0 +1,47 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}New NiFormeunite{% endblock %}
+
+{% block body %}
+    
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Nouveau forme unité
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+  
+
+                        {{ include('ni_formeunite/_form.html.twig') }}
+
+                       <a href="{{ path('app_ni_formeunite_index') }}"> Liste forme unité</a>
+                                
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+		</div>
+			
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FluxDesTresoreries{% endblock %}
+
+{% block body %}
+    <h1>FluxDesTresoreries</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ flux_des_tresorery.id }}</td>
+            </tr>
+            <tr>
+                <th>Annee_financiere</th>
+                <td>{{ flux_des_tresorery.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Ref_code</th>
+                <td>{{ flux_des_tresorery.refCode }}</td>
+            </tr>
+            <tr>
+                <th>Net1</th>
+                <td>{{ flux_des_tresorery.net1 }}</td>
+            </tr>
+            <tr>
+                <th>Net2</th>
+                <td>{{ flux_des_tresorery.net2 }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ flux_des_tresorery.status }}</td>
+            </tr>
+            <tr>
+                <th>Upload_file_name</th>
+                <td>{{ flux_des_tresorery.uploadFileName }}</td>
+            </tr>
+            <tr>
+                <th>Rank</th>
+                <td>{{ flux_des_tresorery.rank }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ flux_des_tresorery.createdAt ? flux_des_tresorery.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ flux_des_tresorery.updatedAt ? flux_des_tresorery.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedBy</th>
+                <td>{{ flux_des_tresorery.createdBy ? flux_des_tresorery.createdBy|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedBy</th>
+                <td>{{ flux_des_tresorery.updatedBy ? flux_des_tresorery.updatedBy|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('flux_des_tresoreries_index') }}">back to list</a>
+
+    <a href="{{ path('flux_des_tresoreries_edit', {'id': flux_des_tresorery.id}) }}">edit</a>
+
+    {{ include('flux_des_tresoreries/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TempNINinea{% endblock %}
+
+{% block body %}
+    <h1>TempNINinea</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ temp_n_i_ninea.id }}</td>
+            </tr>
+            <tr>
+                <th>NinRaison</th>
+                <td>{{ temp_n_i_ninea.ninRaison }}</td>
+            </tr>
+            <tr>
+                <th>NinRegcom</th>
+                <td>{{ temp_n_i_ninea.ninRegcom }}</td>
+            </tr>
+            <tr>
+                <th>NinNumattrib</th>
+                <td>{{ temp_n_i_ninea.ninNumattrib }}</td>
+            </tr>
+            <tr>
+                <th>NinNinea</th>
+                <td>{{ temp_n_i_ninea.ninNinea }}</td>
+            </tr>
+            <tr>
+                <th>NinMisajour</th>
+                <td>{{ temp_n_i_ninea.ninMisajour ? temp_n_i_ninea.ninMisajour|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NinSigle</th>
+                <td>{{ temp_n_i_ninea.ninSigle }}</td>
+            </tr>
+            <tr>
+                <th>NinCreation</th>
+                <td>{{ temp_n_i_ninea.ninCreation ? temp_n_i_ninea.ninCreation|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NinCuci</th>
+                <td>{{ temp_n_i_ninea.ninCuci }}</td>
+            </tr>
+            <tr>
+                <th>NinDatcre</th>
+                <td>{{ temp_n_i_ninea.ninDatcre ? temp_n_i_ninea.ninDatcre|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NinDatreg</th>
+                <td>{{ temp_n_i_ninea.ninDatreg ? temp_n_i_ninea.ninDatreg|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NinEmployninEmploy</th>
+                <td>{{ temp_n_i_ninea.ninEmployninEmploy }}</td>
+            </tr>
+            <tr>
+                <th>NinEnseigne</th>
+                <td>{{ temp_n_i_ninea.ninEnseigne }}</td>
+            </tr>
+            <tr>
+                <th>NinEtabsecond</th>
+                <td>{{ temp_n_i_ninea.ninEtabsecond }}</td>
+            </tr>
+            <tr>
+                <th>NinEtat</th>
+                <td>{{ temp_n_i_ninea.ninEtat }}</td>
+            </tr>
+            <tr>
+                <th>NinMetier</th>
+                <td>{{ temp_n_i_ninea.ninMetier }}</td>
+            </tr>
+            <tr>
+                <th>NinNetab</th>
+                <td>{{ temp_n_i_ninea.ninNetab }}</td>
+            </tr>
+            <tr>
+                <th>NinNineamere</th>
+                <td>{{ temp_n_i_ninea.ninNineamere }}</td>
+            </tr>
+            <tr>
+                <th>NinNumetab</th>
+                <td>{{ temp_n_i_ninea.ninNumetab }}</td>
+            </tr>
+            <tr>
+                <th>NinSiglemere</th>
+                <td>{{ temp_n_i_ninea.ninSiglemere }}</td>
+            </tr>
+            <tr>
+                <th>Ninmajdate</th>
+                <td>{{ temp_n_i_ninea.ninmajdate ? temp_n_i_ninea.ninmajdate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Ninmaj</th>
+                <td>{{ temp_n_i_ninea.ninmaj }}</td>
+            </tr>
+            <tr>
+                <th>NinNumerodemande</th>
+                <td>{{ temp_n_i_ninea.ninNumerodemande }}</td>
+            </tr>
+            <tr>
+                <th>NinCreationninea</th>
+                <td>{{ temp_n_i_ninea.ninCreationninea ? temp_n_i_ninea.ninCreationninea|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FormeUnite</th>
+                <td>{{ temp_n_i_ninea.formeUnite }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ temp_n_i_ninea.createdAt ? temp_n_i_ninea.createdAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ temp_n_i_ninea.updatedAt ? temp_n_i_ninea.updatedAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NiLibelleactiviteglobale</th>
+                <td>{{ temp_n_i_ninea.niLibelleactiviteglobale }}</td>
+            </tr>
+            <tr>
+                <th>NinTitrefoncier</th>
+                <td>{{ temp_n_i_ninea.ninTitrefoncier }}</td>
+            </tr>
+            <tr>
+                <th>NinAgrement</th>
+                <td>{{ temp_n_i_ninea.ninAgrement }}</td>
+            </tr>
+            <tr>
+                <th>NinArrete</th>
+                <td>{{ temp_n_i_ninea.ninArrete }}</td>
+            </tr>
+            <tr>
+                <th>NinRecepisse</th>
+                <td>{{ temp_n_i_ninea.ninRecepisse }}</td>
+            </tr>
+            <tr>
+                <th>NinAccord</th>
+                <td>{{ temp_n_i_ninea.ninAccord }}</td>
+            </tr>
+            <tr>
+                <th>NinBordereau</th>
+                <td>{{ temp_n_i_ninea.ninBordereau }}</td>
+            </tr>
+            <tr>
+                <th>NinBail</th>
+                <td>{{ temp_n_i_ninea.ninBail }}</td>
+            </tr>
+            <tr>
+                <th>NinPermisoccuper</th>
+                <td>{{ temp_n_i_ninea.ninPermisoccuper }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_temp_n_i_ninea_index') }}">back to list</a>
+
+    <a href="{{ path('app_temp_n_i_ninea_edit', {'id': temp_n_i_ninea.id}) }}">edit</a>
+
+    {{ include('temp_ni_ninea/_delete_form.html.twig') }}
+{% endblock %}

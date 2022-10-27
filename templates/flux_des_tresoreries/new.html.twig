@@ -1,0 +1,2217 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New FluxDesTresoreries{% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- Responsive Table css -->
+    <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+{% endblock %}
+
+{% block body %}
+
+
+    {% for message in app.flashes('notice') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-alert-outline me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endfor %}
+
+        <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <div class=" p-2">
+                    <a href="{{ path('bilan_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Bilan <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('compte_de_resultats_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Compte résultat <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('flux_des_tresoreries_new') }}" class="btn btn-primary waves-effect waves-light btn-sm">Flux des trésoreries<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('immo_brut_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations brutes <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('cuci_immo_plus_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Immobilisations: Plus-value et moins-value de cession <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_effectifs_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Effectifs, masse salariale et personnel exterieur <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_production_de_exercice_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Production de l'exercice <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('achat_production_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Achats destinés à la production <i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+         <span style="font-size:14px; color:#60b9c7;border-bottom: 1px solid #60b9c7; width:100%;" >Etats des flux des trésorerie</span>
+    </div>
+        <!-- end page title -->
+    
+ <br>
+<div class="row">
+    <div class="col-xl-12">
+
+
+        <!-- debut form -->
+        
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <form method="post" action="{{path('flux_des_tresoreries_new')}}" id="idformfluxtresor" name="idformfluxtresor">
+    <div class="card-body " style="margin: 0%;padding: 0%;">
+        <div class="row">
+        <div class="col-xl-12"> 
+       
+        
+            <table class="table table-bordered mt-2" >
+                <tr style="margin-top:0px;">
+                    <td  style="width: 15%;">Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                        <input readonly type="text"  class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                    <td style="text-align: right; width: 15%;">Désignation entité :<span style="color:red">*</span></td><td  style="width: 20%;">
+                        <input type="text" disabled class="form-control form-control-sm" name="denomination" id="denomination"></td>
+                    <td style="text-align: right; width: 10%;">Année financière :<span style="color:red">*</span></td><td  style="width: 5%;">
+                     <input readonly type="text" class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'"></td>
+                </tr>
+            </table>
+         
+             <div class="card">
+                 <div class="card-body">
+
+                     <div class="d-flex flex-wrap gap-2 justify-content-center">
+                         <button type="button" class="btn btn-secondary waves-effect waves-light resetBtn" id="resetBtn">
+                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                         </button>
+                         <a type="submit" class="btn btn-success waves-effect waves-light sauvegarderFlux" id="saveBtn" name="saveBtn">
+                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                         </a>
+                         {#<button type="button" class="btn btn-dark bg-soft opacity-25" name="valider" id="valider">#}
+                         <button type="button" class="btn btn-dark bt-soft waves-effect waves-light valider" name="valider" id="valider">
+                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                         </button>
+                         </div>
+             </div>
+         </div>
+
+         <div class="col-12">
+            <div class="table-responsive">
+                <table name="form2" id="form2" class="table table-bordered table-striped" width="100%;">
+                    <thead style="color: white;">
+
+                          <!-- t header remplacer ///////////////////////////// -->
+                        <tr class=" opacity-65" style="background: #008000;">
+                            <th scope="col" colspan="4" class="text-center ">
+                                <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px;" id="txtcuci-flux"></span> 
+                            </th>
+                            <th colspan="3" scope="col" class="text-center ">
+                                
+                                  <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignation-flux"></span>  
+                            </th>
+                            <th colspan="2" scope="col" class="text-center ">
+                                 <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinanciere-flux"></span>
+                            </th>
+                        </tr>
+                        <!-- //////////////////////////////////// t header remplacer -->
+                        <tr class=" opacity-80" style="background: #008000;">
+                           <th scope="col" colspan="2"   rowspan="2" class="text-center " style="width:2%;">
+                                                    REF 
+                                                </th>
+                                                 <th scope="col" colspan="2"  rowspan="2"  class="text-center " style="width:26%;">
+                                                   Libellé  
+                                                </th>
+                            <th colspan="3" scope="col" class="text-center text-white" style="width:36%;">
+                              Exercice au 31/12/<span class="text" id="anneeN"></span> 
+                            </th>
+                            <th colspan="3" scope="col" class="text-center text-white" style="width:36%;">
+                              Exercice au 31/12/<span class="text" id="anneeN-1"></span>
+                            </th>
+                          </tr>
+
+
+                        
+                          <tr class=" opacity-80" style="background: #008000;">
+
+                           
+                            <th colspan="3" scope="col" class="text-center text-white">
+                              NETN
+                            </th>
+                            <th colspan="3" scope="col" class="text-center text-white">
+                              NETN-1
+                            </th>
+                          </tr>
+                    </thead>
+
+                    <!-- debut tbody inputs -->
+                    <tbody id="tbody">
+                
+                    
+                    
+                    </tbody>
+                    <!-- end tbody -->
+                </table> </br>
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                   <button type="button" class="btn btn-secondary waves-effect waves-light resetBtn"
+                        id="resetBtn2">
+                       <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                   </button>
+                   <a type="submit" class="btn btn-success waves-effect waves-light sauvegarderFlux">
+                       <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                   </a>
+                   <button type="button" class="btn btn-dark bt-soft waves-effect waves-light valider"
+                    id="valider2">
+                       <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                   </button>
+                    <input name="submited" id="submited" type="submit" value="1" style="display:none;"/>
+                    <input name="notsubmited" id="notsubmited" type="submit" value="0" style="display:none;"/>
+
+               </div>
+            </div>
+         </div>
+
+         </div>
+            <!-- <input type="hidden" name="type" value="1" >
+            <button type="submit" class="btn btn-success waves-effect waves-light">
+                <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+            </button> -->
+                         
+        </div>
+        </form>
+</div>
+
+<!-- end formulaire -->
+
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+
+        <!-- form mask init -->
+<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
+<script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function(){
+   
+       {% if app.session.get("codeCuci")!=""%}
+        
+          var value='{{app.session.get("codeCuci")}}';
+      
+          document.getElementById('idcuci').setAttribute('value',value);
+          document.getElementById('txtcuci-flux').innerHTML=value;
+      
+          let route="{{path('cucicodeNum')}}"+"/"+ $('#idcuci').val();
+   
+                  $.ajax({
+                      type: 'GET',
+                      url : route,
+                      dataType : "json",
+                      success: function(data){
+                          
+                          let denomination=document.getElementById("denomination");
+                          document.getElementById('txtdesignation-flux').innerHTML=data;
+                          denomination.value=data;
+      
+                        
+                      } ,
+                      error : function(error){
+                          console.log(error);
+                      }
+          })
+      
+          {% if app.session.get("annee")!=""%}
+            document.getElementById('txtfinanciere-flux').innerHTML='{{app.session.get("annee")}}';
+            document.getElementById("annee").value='{{app.session.get("annee")}}';
+            let routeurl="{{path('fluxtresorjson')}}"+"/"+ '{{app.session.get("annee")}}';
+            var form = $(this).closest("form");
+
+            $.ajax({
+                type: 'GET',
+                url : routeurl,
+                dataType : "json",
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 800000,
+                success: function(data){
+                    var tbody=document.getElementById("tbody");
+                    var ann=document.getElementById("annee");
+                    var anneeN_1=document.getElementById("anneeN-1");
+                    var anneeN=document.getElementById("anneeN");
+                    tbody.innerHTML="";
+                    ann.innerHTML="";
+                    anneeN.value = ann.value;
+                    anneeN.setAttribute('value', anneeN.value);
+                    anneeN.innerHTML=anneeN.value;
+                    anneeN_1.innerHTML=anneeN.value-1;
+    
+                    ////////
+                    //console.log(data[2]); return;                
+    
+                    for (var i = data[2].length - 1; i >= 0; i--) {
+                        
+    
+                        for (var j = data[1].length - 1; j >= 0; j--) {
+                                      
+                            if (data[2][i][0]==data[1][j][2]) {
+    
+                                var tr=document.createElement('tr'); /// tr cree pour les agregats fils
+                                tr.setAttribute('style'," border:#ced4da;");
+                                var td1=document.createElement('td');
+                                var td2=document.createElement('td');
+    
+                                var td5=document.createElement('td');
+                                var td6=document.createElement('td');
+    
+                                td1.setAttribute('colspan',2); 
+                                td1.setAttribute('scope',"col"); 
+                                td1.setAttribute('class',"text-center form");           
+                                td1.innerHTML=  data[1][j][0];
+                                tr.appendChild(td1) ;
+                                
+                                td2.setAttribute('colspan',2); 
+                                td2.setAttribute('class',"text-left form");           
+                                td2.setAttribute('scope',"col"); 
+                                          
+                                td2.innerHTML=  data[1][j][1];
+                                tr.appendChild(td2) ;
+    
+    
+                                td5.setAttribute('colspan',3); 
+                                td5.setAttribute('scope',"col"); 
+                                td5.setAttribute('class',"text-center");
+                                var input5=document.createElement('input');
+                                input5.setAttribute('type','text');
+ 
+                                input5.setAttribute('name',data[1][j][0]+"net1"); 
+                                input5.setAttribute('id',data[1][j][0]+"net1"); 
+
+                                if(data[1][j][0]=="FF"){
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FG"){
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FH"){
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FI"){
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FJ"){
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else{
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+
+                                }
+
+                                
+                                input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                                input5.setAttribute('data-sousclasse',data[1][j][2]);
+                                if(data[0][data[1][j][0]]){
+                                    input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                                }
+    
+                                // input5.addEventListener ("change", function(e){
+                                //     var sousclasse= $(this).data('sousclasse');
+                                //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                                //     
+                                //     console.log(total);
+                                //     if($(this).hasClass('net1')){
+                                //          $('input.total.net1').val(total);
+                                //     }else{
+                                //         $('input.total.net2').val(total);
+                                //     }
+                                //    
+                                // });
+                                td5.appendChild(input5);
+                                tr.appendChild(td5) ;
+                                
+    
+    
+                                td6.setAttribute('colspan',3); 
+                                td6.setAttribute('scope',"col"); 
+                                td6.setAttribute('class',"text-center");           
+                                var input6=document.createElement('input');  
+                                input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                                input6.setAttribute('type','text');
+ 
+                                input6.setAttribute('name',data[1][j][0]+"net2"); 
+                                input6.setAttribute('id',data[1][j][0]+"net2"); 
+
+                                if(data[1][j][0]=="FF"){
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FG"){
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FH"){
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FI"){
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else if(data[1][j][0]=="FJ"){
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');");
+                                }else{
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+
+                                }
+                                
+                                input6.setAttribute('data-sousclasse',data[1][j][2]);
+                                if(data[0][data[1][j][0]]){
+                                input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                                }
+    
+                                // on commente cette partie pour tester la methode hard
+                                //input6.addEventListener ("change", function(e){
+                                //    var sousclasse= $(this).data('sousclasse');
+                                //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                                //    console.log(total);
+                                //    if($(this).hasClass('net2')){
+                                //         $('input.total.net1').val(total);
+                                //    }else{
+                                //        $('input.total.net2').val(total);
+                                //    }
+                                //    // my update here 
+                                //});
+                                td6.appendChild(input6);
+                                tr.appendChild(td6) ;
+    
+    
+                                tbody.appendChild(tr);  
+    
+    
+                            }
+                        }
+                        
+                        var tr=document.createElement('tr'); /// tr pour les agregats parents
+                        // tr.setAttribute('class',"bg-dark bg-soft opacity-65");                     
+                        tr.setAttribute('class'," opacity-65");
+                        tr.setAttribute('style',"background: #82C46C; color: white; border:#ced4da;"); 
+         
+    
+                        var td1=document.createElement('td');
+                        var td2=document.createElement('td');
+                        var td5=document.createElement('td');
+                        var td6=document.createElement('td');
+    
+                        td1.setAttribute('colspan',2); 
+                        td1.setAttribute('scope',"col"); 
+                        td1.setAttribute('class',"text-center form");           
+                        td1.innerHTML=  data[2][i][0]; // sont stockés les ref
+                        tr.appendChild(td1) ;
+                        
+                        td2.setAttribute('colspan',2); 
+                        td2.setAttribute('class',"text-left form");           
+                        td2.setAttribute('scope',"col"); 
+                                   
+                        td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
+                        tr.appendChild(td2) ;
+    
+    
+                        td5.setAttribute('colspan',3); 
+                        td5.setAttribute('scope',"col"); 
+                        td5.setAttribute('class',"text-center");
+                        var input1=document.createElement('input'); 
+                        input1.setAttribute('type','text');
+                        input1.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+
+                        
+                        input1.setAttribute('name',data[2][i][0]+"net1"); 
+                        input1.setAttribute('id',data[2][i][0]+"net1"); 
+                        input1.setAttribute('style','font-weight: bold;');
+                        input1.setAttribute('class','form-control form-control-sm calcul total net1 '+data[2][i][0]);   
+                        if(data[0][data[2][i][0]]){
+                            input1.setAttribute('value',data[0][data[2][i][0]][1]);
+                            // faut appeler la function sum ici
+                        }
+    
+                        td5.appendChild(input1);
+                        tr.appendChild(td5) ;
+                        
+    
+    
+                        td6.setAttribute('colspan',3); 
+                        td6.setAttribute('scope',"col"); 
+                        td6.setAttribute('class',"text-center");           
+                        var input2=document.createElement('input'); 
+                        input2.setAttribute('type','text');
+                        input2.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+ 
+                        input2.setAttribute('name',data[2][i][0]+"net2"); 
+                        input2.setAttribute('id',data[2][i][0]+"net2"); 
+                        input2.setAttribute('style','font-weight: bold;');
+                        input2.setAttribute('class','form-control form-control-sm calcul total net2 '+data[2][i][0]);
+                        if(data[0][data[2][i][0]]){
+                            input2.setAttribute('value',data[0][data[2][i][0]][2]);
+                          }
+                                
+                        td6.appendChild(input2);
+                        tr.appendChild(td6) ;
+    
+    
+                        tbody.appendChild(tr);  
+                            
+                       
+                    }
+
+                    
+    
+                    $(".form-control").bind("keypress", function(e) {
+    
+                        if (e.keyCode == 13) {
+                            var inps = $("input"); //add select too
+                            for (var x = 0; x < inps.length; x++) {
+                                if (inps[x] == this) {
+                                    while ((inps[x]).name == (inps[x + 1]).name) {
+                                    x++;
+                                    }
+                                    if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                                }
+                            }   e.preventDefault();
+                        }
+                    });
+
+                    $(function(){
+                        $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                        $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")});
+                   
+                } ,
+                error : function(error){
+                    console.log(error);
+                }
+            })
+        
+
+       
+         {% endif %}
+       {% endif %}
+      
+    });
+
+
+
+    // tenter de faire un regex pour enlever le symbole '-' au niveau des decaissements
+    $('#tbody').on("input", "#FFnet1", function(){
+
+        var input5 = $('#FFnet1');
+
+        input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9]/g, '');")
+
+    });
+
+    $('#idcuci').change(function(){
+        
+        let route="{{path('cucicodeNum')}}"+"/"+ $('#idcuci').val();
+        document.getElementById('txtcuci-flux').innerHTML=$('#idcuci').val();
+        $.ajax({
+            type: 'GET',
+            url : route,
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function(data){
+                
+                let denomination=document.getElementById("denomination");
+                denomination.value=data;
+                
+                document.getElementById('txtdesignation-flux').innerHTML=data;
+                
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        })
+    });
+
+
+    ////// ecouteur sur le input annee fin generer le formulaire
+    $('#annee').change(function(e){
+
+        e.preventDefault();
+            
+        document.getElementById('txtfinanciere-flux').innerHTML=$('#annee').val();        
+        let route="{{path('fluxtresorjson')}}"+"/"+ $('#annee').val(); 
+        
+        $.ajax({
+            type: 'GET',
+            url : route,
+            dataType : "json",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function(data){
+                var tbody=document.getElementById("tbody");
+                var ann=document.getElementById("annee");
+                var anneeN_1=document.getElementById("anneeN-1");
+                var anneeN=document.getElementById("anneeN");
+                tbody.innerHTML="";
+                ann.innerHTML="";
+                anneeN.value = ann.value;
+                anneeN.setAttribute('value', anneeN.value);
+                anneeN.innerHTML=anneeN.value;
+                anneeN_1.innerHTML=anneeN.value-1;
+
+                ////////
+                //console.log(data[2]); return;                
+
+                for (var i = data[2].length - 1; i >= 0; i--) {
+                    
+
+                    for (var j = data[1].length - 1; j >= 0; j--) {
+                                  
+                        if (data[2][i][0]==data[1][j][2]) {
+
+                            var tr=document.createElement('tr');
+                            tr.setAttribute('style'," border:#ced4da;");
+                            var td1=document.createElement('td');
+                            var td2=document.createElement('td');
+
+                            var td5=document.createElement('td');
+                            var td6=document.createElement('td');
+
+                            td1.setAttribute('colspan',2); 
+                            td1.setAttribute('scope',"col"); 
+                            td1.setAttribute('class',"text-center form");           
+                            td1.innerHTML=  data[1][j][0];
+                            tr.appendChild(td1) ;
+                            
+                            td2.setAttribute('colspan',2); 
+                            td2.setAttribute('class',"text-left form");           
+                            td2.setAttribute('scope',"col"); 
+                                      
+                            td2.innerHTML=  data[1][j][1];
+                            tr.appendChild(td2) ;
+
+
+                            td5.setAttribute('colspan',3); 
+                            td5.setAttribute('scope',"col"); 
+                            td5.setAttribute('class',"text-center");
+                            var input5=document.createElement('input');
+                            input5.setAttribute('type','text');
+                            input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+ 
+                            input5.setAttribute('name',data[1][j][0]+"net1"); 
+                            input5.setAttribute('id',data[1][j][0]+"net1"); 
+                            input5.setAttribute('class','form-control form-control-sm calcul net1 '+data[1][j][2]); 
+                            input5.setAttribute('data-sousclasse',data[1][j][2]);
+                            if(data[0][data[1][j][0]]){
+                                input5.setAttribute('value',data[0][data[1][j][0]][1]);
+                            }
+
+                            // input5.addEventListener ("change", function(e){
+                            //     var sousclasse= $(this).data('sousclasse');
+                            //     var total = somme($(this).hasClass('net1')? 'net1':'net2',sousclasse);
+                            //     
+                            //     console.log(total);
+                            //     if($(this).hasClass('net1')){
+                            //          $('input.total.net1').val(total);
+                            //     }else{
+                            //         $('input.total.net2').val(total);
+                            //     }
+                            //    
+                            // });
+                            td5.appendChild(input5);
+                            tr.appendChild(td5) ;
+                            
+
+
+                            td6.setAttribute('colspan',3); 
+                            td6.setAttribute('scope',"col"); 
+                            td6.setAttribute('class',"text-center");           
+                            var input6=document.createElement('input');  
+                            input6.setAttribute('class','form-control form-control-sm calcul net2 '+data[1][j][2]); 
+                            input6.setAttribute('type','text');
+                            input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+ 
+                            input6.setAttribute('name',data[1][j][0]+"net2"); 
+                            input6.setAttribute('id',data[1][j][0]+"net2"); 
+                            input6.setAttribute('data-sousclasse',data[1][j][2]);
+                            if(data[0][data[1][j][0]]){
+                            input6.setAttribute('value',data[0][data[1][j][0]][2]);
+                            }
+
+                            // on commente cette partie pour tester la methode hard
+                            //input6.addEventListener ("change", function(e){
+                            //    var sousclasse= $(this).data('sousclasse');
+                            //    var total = somme($(this).hasClass('net2')? 'net1':'net2',sousclasse);
+                            //    console.log(total);
+                            //    if($(this).hasClass('net2')){
+                            //         $('input.total.net1').val(total);
+                            //    }else{
+                            //        $('input.total.net2').val(total);
+                            //    }
+                            //    // my update here 
+                            //});
+                            td6.appendChild(input6);
+                            tr.appendChild(td6) ;
+
+
+                            tbody.appendChild(tr);  
+
+
+                        }
+                    }
+                    
+                    var tr=document.createElement('tr');
+                    // tr.setAttribute('class',"bg-dark bg-soft opacity-65");                     
+                    tr.setAttribute('class'," opacity-65");
+                    tr.setAttribute('style',"color:white;background: #82C46C; border:#ced4da;");
+           
+
+                    var td1=document.createElement('td');
+                    var td2=document.createElement('td');
+                    var td5=document.createElement('td');
+                    var td6=document.createElement('td');
+
+                    td1.setAttribute('colspan',2); 
+                    td1.setAttribute('scope',"col"); 
+                    td1.setAttribute('class',"text-center form");           
+                    td1.innerHTML=  data[2][i][0]; // sont stockés les ref
+                    tr.appendChild(td1) ;
+                    
+                    td2.setAttribute('colspan',2); 
+                    td2.setAttribute('class',"text-left form");           
+                    td2.setAttribute('scope',"col"); 
+                               
+                    td2.innerHTML=  data[2][i][1]; // sont stockes les libelles
+                    tr.appendChild(td2) ;
+
+
+                    td5.setAttribute('colspan',3); 
+                    td5.setAttribute('scope',"col"); 
+                    td5.setAttribute('class',"text-center");
+                    var input1=document.createElement('input'); 
+                    input1.setAttribute('type','text');
+                    input1.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+ 
+                    
+                    input1.setAttribute('name',data[2][i][0]+"net1"); 
+                    input1.setAttribute('id',data[2][i][0]+"net1"); 
+                    input1.setAttribute('class','form-control form-control-sm total net1 '+data[2][i][0]);   
+                    if(data[0][data[2][i][0]]){
+                        input1.setAttribute('value',data[0][data[2][i][0]][1]);
+                        // faut appeler la function sum ici
+                    }
+
+                    td5.appendChild(input1);
+                    tr.appendChild(td5) ;
+                    
+
+
+                    td6.setAttribute('colspan',3); 
+                    td6.setAttribute('scope',"col"); 
+                    td6.setAttribute('class',"text-center");           
+                    var input2=document.createElement('input'); 
+                    input2.setAttribute('type','text'); 
+                    input2.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+
+                    input2.setAttribute('name',data[2][i][0]+"net2"); 
+                    input2.setAttribute('id',data[2][i][0]+"net2"); 
+                    input2.setAttribute('class','form-control form-control-sm total net2 '+data[2][i][0]);
+                    if(data[0][data[2][i][0]]){
+                        input2.setAttribute('value',data[0][data[2][i][0]][2]);
+                      }
+                            
+                    td6.appendChild(input2);
+                    tr.appendChild(td6) ;
+
+
+                    tbody.appendChild(tr);  
+                        
+                   
+                }
+
+                $(".form-control").bind("keypress", function(e) {
+
+                    if (e.keyCode == 13) {
+                        var inps = $("input"); //add select too
+                        for (var x = 0; x < inps.length; x++) {
+                            if (inps[x] == this) {
+                                while ((inps[x]).name == (inps[x + 1]).name) {
+                                x++;
+                                }
+                                if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                            }
+                        }   e.preventDefault();
+                    }
+                });
+                $(function(){
+                        $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                        $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")});
+               
+            } ,
+            error : function(error){
+                console.log(error);
+            }
+        })
+    });
+    ///// end generer formulaire
+
+
+
+
+    
+     function remplacer(vartester){
+                  
+        if(vartester == null || vartester == ""){
+            return 0;
+
+        }
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(".", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        vartester=vartester.replace(",", "");
+        
+        return vartester;
+    }
+   
+    
+    
+    // javascript function to verify integer value is
+    function isInt(valeur) {
+
+      if(valeur!=null || valeur!=""){
+        var $val=remplacer(valeur);
+       
+      if((parseFloat($val) == parseFloat($val)) && !isNaN($val)){ 
+       
+          return true;
+      } else {
+          
+          return false;
+      }
+      }else 
+          return false;
+        
+
+        // return !isNaN(value) && 
+        //        parseFloat(Number(value)) == value ;
+    }
+
+
+
+////////////// controles automatique sur les Agg [8] parents Net1  ////////////////
+    
+    
+    // ZA
+    $('#tbody').on('blur change', "#ZAnet1", function(){
+
+                     
+            let route="{{path('sumZA')}}"+"/"+ $('#idcuci').val();
+            $.ajax({
+                   type: 'GET',
+                   url : route,
+                   dataType : "json",
+                   processData: false,
+                   contentType: false,
+                   cache: false,
+                   timeout: 800000,
+                   success: function(data){ 
+
+                        //if(JSON.stringify(data) === JSON.stringify(xin)){
+
+                       if(parseInt (data) != parseInt(remplacer(document.getElementById('ZAnet1').value)) ){
+                            console.log(data);
+                            Swal.fire('Verifier les valeurs NET1 saisies pour Trésorerie nette au 1er janvier \nZA = BT(actif) - DT(passif) '+' ?'+parseInt (data)); return;
+
+                       }else{}
+                    }
+            });
+
+    });
+    
+    
+    // ZB
+    $('#tbody').on('blur change', "#ZBnet1", function(){
+
+        // ZB=FA-FB-FC-FD+FE
+        
+        var sumZB = 0; 
+
+        var zb = 0; // recuperer la input value
+
+        var testVar1 = "Flux de trésorerie provenant des activités opérationnelles ZB = FA-FB-FC-FD+FE !";
+
+        if(isInt(document.getElementById('FAnet1').value) == true){
+
+            sumZB = sumZB+parseInt(remplacer(document.getElementById('FAnet1').value));
+
+        }
+        if(isInt(document.getElementById('FBnet1').value) == true ){
+
+            // sumZB =sumZB-Math.abs(parseInt(remplacer(document.getElementById('FBnet1').value))); 
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FBnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FCnet1').value) == true ){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FCnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FDnet1').value) == true){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FDnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FEnet1').value) == true){
+
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FEnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('ZBnet1').value) == true){
+            zb = parseInt(remplacer(document.getElementById('ZBnet1').value));
+        }
+        
+        if(zb != sumZB){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ; //casser le flux d'execution
+                     
+        }        
+        
+    });
+    
+    // ZC
+    $('#tbody').on('blur change', "#ZCnet1", function(){
+
+        // traitement sum Flux  de trésorerie provenant des activités d'investissement
+        // sumZC = FI+FJ-FF-FG-FH
+        
+        var sumZC = 0; 
+        var testVar1 = "Flux  de trésorerie provenant des activités d'investissement \nZC = FI+FJ-FF-FG-FH";
+        var zc = 0;
+
+        if(isInt(document.getElementById('FInet1').value) == true){
+
+            sumZC = sumZC+parseInt(remplacer(document.getElementById('FInet1').value));
+
+        }
+        if(isInt(document.getElementById('FJnet1').value) == true ){
+
+            sumZC =sumZC+parseInt(remplacer(document.getElementById('FJnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FFnet1').value) == true ){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FFnet1').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FGnet1').value) == true){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FGnet1').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FHnet1').value) == true){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FHnet1').value))); 
+
+        }
+
+
+        if(isInt(document.getElementById('ZCnet1').value) == true){
+            zc = parseInt(remplacer(document.getElementById('ZCnet1').value));
+        }
+        
+        if(zc != sumZC){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }else{}
+
+
+    });
+    
+    // ZD
+    $('#tbody').on('blur change', "#ZDnet1", function(){
+
+
+        // traitement sum Flux  de trésorerie provenant du financement par les capitaux propres
+        // sumZD = FK+FL-FM-FN
+        
+        var sumZD = 0; 
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux propres ZD = FK+FL-FM-FN !";
+        
+        var zd = 0;
+        
+        if(isInt(document.getElementById('FKnet1').value) == true){
+
+            sumZD = sumZD+parseInt(remplacer(document.getElementById('FKnet1').value));
+
+        }
+        if(isInt(document.getElementById('FLnet1').value) == true ){
+
+            sumZD =sumZD+parseInt(remplacer(document.getElementById('FLnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FMnet1').value) == true ){
+            sumZD =sumZD-Math.abs(parseInt(remplacer(document.getElementById('FMnet1').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FNnet1').value == true)){
+            sumZD =sumZD-Math.abs(parseInt(remplacer(document.getElementById('FNnet1').value))); 
+
+        }
+
+
+        if(isInt(document.getElementById('ZDnet1').value) == true){
+            zd = parseInt(remplacer(document.getElementById('ZDnet1').value));
+        }
+        
+        if(zd != sumZD){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+    
+    // ZE
+    $('#tbody').on('blur change', "#ZEnet1", function(){
+
+        //// traitement sum Flux  de trésorerie provenant du financement par les capitaux étrangers
+        //   sumZE=FO+FP-FQ
+
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux étrangers \nZE=FO+FP-FQ ";
+        
+        var ze = 0;
+        var sumZE = 0; 
+
+        if(isInt(document.getElementById('FOnet1').value) == true){
+
+            sumZE = sumZE+parseInt(remplacer(document.getElementById('FOnet1').value));
+
+        }
+        if(isInt(document.getElementById('FPnet1').value) == true ){
+
+            sumZE =sumZE+parseInt(remplacer(document.getElementById('FPnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FQnet1').value) == true ){
+            //sumZE =sumZE-parseInt(remplacer(document.getElementById('FQnet1').value)); 
+            sumZE =sumZE-Math.abs(parseInt(remplacer(document.getElementById('FQnet1').value))); 
+
+        }
+
+
+        if(isInt(document.getElementById('ZEnet1').value) == true){
+            ze = parseInt(remplacer(document.getElementById('ZEnet1').value));
+        }
+        
+        if(ze != sumZE){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+    
+    // ZF
+    $('#tbody').on('blur change', "#ZFnet1", function(){
+
+        ///// traitement sum Flux  de trésorerie provenant des capitaux étrangers
+        // sumZF=ZD+ZE
+        var testVar1 = "Flux  de trésorerie provenant des capitaux étrangers \nZF=ZD+ZE !";
+        
+        var zf = 0;
+        
+        var sumZF = 0; 
+        
+        if(isInt(document.getElementById('ZDnet1').value) == true){
+
+            sumZF = sumZF+parseInt(remplacer(document.getElementById('ZDnet1').value));
+
+        }
+        if(isInt(document.getElementById('ZEnet1').value) == true ){
+
+            sumZF =sumZF+parseInt(remplacer(document.getElementById('ZEnet1').value)); 
+                    
+        }
+
+
+        if(isInt(document.getElementById('ZFnet1').value) == true){
+            zf = parseInt(remplacer(document.getElementById('ZFnet1').value));
+        }
+        
+        if(zf != sumZF){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+    
+    // ZG
+    
+    $('#tbody').on('blur change', "#ZGnet1", function(){
+
+
+        ///// traitement sum VARIATION DE LA TRESORERIE NETTE DE LA PERIODE
+        // sumZG = ZB+ZC+ZF
+        var testVar1 = "VARIATION DE LA TRESORERIE NETTE DE LA PERIODE \nZG = ZB+ZC+ZF !";
+        
+        var sumZG = 0; 
+        var zg = 0;
+        
+        if(isInt(document.getElementById('ZBnet1').value) == true){
+
+            sumZG = sumZG+parseInt(remplacer(document.getElementById('ZBnet1').value));
+
+        }
+        if(isInt(document.getElementById('ZCnet1').value) == true ){
+
+            sumZG =sumZG+parseInt(remplacer(document.getElementById('ZCnet1').value)); 
+                    
+        }
+        if(isInt(document.getElementById('ZFnet1').value) == true ){
+
+            sumZG =sumZG+parseInt(remplacer(document.getElementById('ZFnet1').value)); 
+                    
+        }
+
+
+        if(isInt(document.getElementById('ZGnet1').value) == true){
+            zg = parseInt(remplacer(document.getElementById('ZGnet1').value));
+        }
+        
+        if(zg != sumZG){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+
+
+    // ZH
+    
+    $('#tbody').on('blur change', "#ZHnet1", function(){
+
+
+        ///// traitement sum Trésorerie nette au 31 décembre
+        // sumZH=ZG+ZA
+        
+        var zh = 0;
+        var testVar1 = "Trésorerie nette au 31 décembre \nZH = ZG+ZA !";
+        var sumZH = 0; 
+        
+        if(isInt(document.getElementById('ZGnet1').value) == true){
+
+            sumZH = sumZH+parseInt(remplacer(document.getElementById('ZGnet1').value));
+
+        }
+        if(isInt(document.getElementById('ZAnet1').value) == true ){
+
+            sumZH =sumZH+parseInt(remplacer(document.getElementById('ZAnet1').value)); 
+                    
+        }
+
+
+        if(isInt(document.getElementById('ZHnet1').value) == true){
+            zh = parseInt(remplacer(document.getElementById('ZHnet1').value));
+        }
+        
+        if(zh != sumZH){
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });    
+    
+    
+    
+////////////// end controles automatique sur les Agg [8] parents Net1////////////////
+
+
+
+
+
+
+////////////// controles automatique sur les Agg [8] parents Net2 ////////////////
+
+//////////////////////////                  //////////////////////////////////
+    
+    
+    // ZA
+    /*$('#tbody').on('blur change', "#ZAnet2", function(){
+
+                     
+            let route="{{path('sumZA')}}"+"/"+ $('#idcuci').val();
+            $.ajax({
+                   type: 'GET',
+                   url : route,
+                   dataType : "json",
+                   processData: false,
+                   contentType: false,
+                   cache: false,
+                   timeout: 800000,
+                   success: function(data){ 
+
+                        //if(JSON.stringify(data) === JSON.stringify(xin)){
+
+                       if(parseInt (data) != parseInt(remplacer(document.getElementById('ZAnet2').value)) ){
+                           console.log(data);
+                           Swal.fire('Verifier les valeurs NET2 saisies pour Trésorerie nette au 1er janvier \nZA = tresorerie actif n-1(BT) - tresorerie passif n-1(DT) '+' ?'+parseInt (data)); return;
+                       }else{}
+                    }
+            });
+
+    });*/
+    
+    
+    // ZB
+    $('#tbody').on('blur change', "#ZBnet2", function(){
+
+        // ZB=FA-FB-FC-FD+FE
+        
+        var sumZB = 0; 
+
+        var zb = 0; // recuperer la input value
+
+        var testVar1 = "Flux de trésorerie provenant des activités opérationnelles \nZB = FA-FB-FC-FD+FE !";
+
+        if(isInt(document.getElementById('FAnet2').value) == true){
+
+            sumZB = sumZB+parseInt(remplacer(document.getElementById('FAnet2').value));
+
+        }
+        if(isInt(document.getElementById('FBnet2').value) == true ){
+
+            // sumZB =sumZB-Math.abs(parseInt(remplacer(document.getElementById('FBnet2').value))); 
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FBnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FCnet2').value) == true ){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FCnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FDnet2').value) == true){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FDnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FEnet2').value) == true){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FEnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('ZBnet2').value) == true){
+            zb = parseInt(remplacer(document.getElementById('ZBnet2').value));
+        }
+        
+        if(zb != sumZB){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ; //casser le flux d'execution
+                     
+        }        
+        
+    });
+    
+    // ZC
+    $('#tbody').on('blur change', "#ZCnet2", function(){
+
+        // traitement sum Flux  de trésorerie provenant des activités d'investissement
+        // sumZC = FI+FJ-FF-FG-FH
+        
+        var sumZC = 0; 
+        var testVar1 = "Flux  de trésorerie provenant des activités d'investissement \nZC = FI+FJ-FF-FG-FH";
+        var zc = 0;
+
+        if(isInt(document.getElementById('FInet2').value) == true){
+
+            sumZC = sumZC+parseInt(remplacer(document.getElementById('FInet2').value));
+
+        }
+        if(isInt(document.getElementById('FJnet2').value) == true ){
+
+            sumZC =sumZC+parseInt(remplacer(document.getElementById('FJnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FFnet2').value) == true ){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FFnet2').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FGnet2').value) == true){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FGnet2').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FHnet2').value) == true){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FHnet2').value))); 
+
+        }
+
+
+        if(isInt(document.getElementById('ZCnet2').value) == true){
+            zc = parseInt(remplacer(document.getElementById('ZCnet2').value));
+        }
+        
+        if(zc != sumZC){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }else{}
+
+
+    });
+    
+    // ZD
+    $('#tbody').on('blur change', "#ZDnet2", function(){
+
+
+        // traitement sum Flux  de trésorerie provenant du financement par les capitaux propres
+        // sumZD = FK+FL-FM-FN
+        
+        var sumZD = 0; 
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux propres ZD = FK+FL-FM-FN !";
+        
+        var zd = 0;
+        
+        if(isInt(document.getElementById('FKnet2').value) == true){
+
+            sumZD = sumZD+parseInt(remplacer(document.getElementById('FKnet2').value));
+
+        }
+        if(isInt(document.getElementById('FLnet2').value) == true ){
+
+            sumZD =sumZD+parseInt(remplacer(document.getElementById('FLnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FMnet2').value) == true ){
+            sumZD =sumZD-Math.abs(parseInt(remplacer(document.getElementById('FMnet2').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FNnet2').value) == true){
+            sumZD =sumZD-Math.abs(parseInt(remplacer(document.getElementById('FNnet2').value))); 
+
+        }
+
+
+        if(isInt(document.getElementById('ZDnet2').value) == true){
+            zd = parseInt(remplacer(document.getElementById('ZDnet2').value));
+        }
+        
+        if(zd != sumZD){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+    
+    // ZE
+    $('#tbody').on('blur change', "#ZEnet2", function(){
+
+        //// traitement sum Flux  de trésorerie provenant du financement par les capitaux étrangers
+        //   sumZE=FO+FP-FQ
+
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux étrangers \nZE=FO+FP-FQ ";
+        
+        var ze = 0;
+        var sumZE = 0; 
+
+        if(isInt(document.getElementById('FOnet2').value) == true){
+
+            sumZE = sumZE+parseInt(remplacer(document.getElementById('FOnet2').value));
+
+        }
+        if(isInt(document.getElementById('FPnet2').value) == true ){
+
+            sumZE =sumZE+parseInt(remplacer(document.getElementById('FPnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FQnet2').value) == true ){
+            //sumZE =sumZE-parseInt(remplacer(document.getElementById('FQnet2').value)); 
+            sumZE =sumZE-Math.abs(parseInt(remplacer(document.getElementById('FQnet2').value))); 
+
+        }
+
+
+        if(isInt(document.getElementById('ZEnet2').value) == true){
+            ze = parseInt(remplacer(document.getElementById('ZEnet2').value));
+        }
+        
+        if(ze != sumZE){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+    
+    // ZF
+    $('#tbody').on('blur change', "#ZFnet2", function(){
+
+        ///// traitement sum Flux  de trésorerie provenant des capitaux étrangers
+        // sumZF=ZD+ZE
+        var testVar1 = "Flux  de trésorerie provenant des capitaux étrangers \nZF=ZD+ZE !";
+        
+        var zf = 0;
+        
+        var sumZF = 0; 
+        
+        if(isInt(document.getElementById('ZDnet2').value) == true){
+
+            sumZF = sumZF+parseInt(remplacer(document.getElementById('ZDnet2').value));
+
+        }
+        if(isInt(document.getElementById('ZEnet2').value) == true ){
+
+            sumZF =sumZF+parseInt(remplacer(document.getElementById('ZEnet2').value)); 
+                    
+        }
+
+
+        if(isInt(document.getElementById('ZFnet2').value) == true){
+            zf = parseInt(remplacer(document.getElementById('ZFnet2').value));
+        }
+        
+        if(zf != sumZF){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+    
+    // ZG
+    
+    $('#tbody').on('blur change', "#ZGnet2", function(){
+
+
+        ///// traitement sum VARIATION DE LA TRESORERIE NETTE DE LA PERIODE
+        // sumZG = ZB+ZC+ZF
+        var testVar1 = "VARIATION DE LA TRESORERIE NETTE DE LA PERIODE \nZG = ZB+ZC+ZF !";
+        
+        var sumZG = 0; 
+        var zg = 0;
+        
+        if(isInt(document.getElementById('ZBnet2').value) == true){
+
+            sumZG = sumZG+parseInt(remplacer(document.getElementById('ZBnet2').value));
+
+        }
+        if(isInt(document.getElementById('ZCnet2').value) == true ){
+
+            sumZG =sumZG+parseInt(remplacer(document.getElementById('ZCnet2').value)); 
+                    
+        }
+        if(isInt(document.getElementById('ZFnet2').value) == true ){
+
+            sumZG =sumZG+parseInt(remplacer(document.getElementById('ZFnet2').value)); 
+                    
+        }
+
+
+        if(isInt(document.getElementById('ZGnet2').value) == true){
+            zg = parseInt(remplacer(document.getElementById('ZGnet2').value));
+        }
+        
+        if(zg != sumZG){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });
+
+
+    // ZH
+    
+    $('#tbody').on('blur change', "#ZHnet2", function(){
+
+
+        ///// traitement sum Trésorerie nette au 31 décembre
+        // sumZH=ZG+ZA
+        
+        var zh = 0;
+        var testVar1 = "Trésorerie nette au 31 décembre \nZH = ZG+ZA !";
+        var sumZH = 0; 
+        
+        if(isInt(document.getElementById('ZGnet2').value) == true){
+
+            sumZH = sumZH+parseInt(remplacer(document.getElementById('ZGnet2').value));
+
+        }
+        if(isInt(document.getElementById('ZAnet2').value) == true ){
+
+            sumZH =sumZH+parseInt(remplacer(document.getElementById('ZAnet2').value)); 
+                    
+        }
+
+
+        if(isInt(document.getElementById('ZHnet2').value) == true){
+            zh = parseInt(remplacer(document.getElementById('ZHnet2').value));
+        }
+        
+        if(zh != sumZH){
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+    });    
+    
+    
+    
+////////////// end controles automatique sur les Agg [8] parents Net2////////////////
+
+
+
+
+
+    $('.valider').click(function(e){
+
+        e.preventDefault();
+
+        var swalMsg = "Verifier les valeurs NET1 saisie pour ";
+        
+        var tagnet,net=0,somme=0, valider=1;
+        
+        // traitement sum Flux de trésorerie provenant des activités opérationnelles 
+        // ZB=FA-FB-FC-FD+FE
+        
+        var sumZB = 0; 
+        if(isInt(document.getElementById('FAnet1').value) == true){
+
+            sumZB = sumZB+parseInt(remplacer(document.getElementById('FAnet1').value));
+
+        }
+        if(isInt(document.getElementById('FBnet1').value) == true ){
+
+            // sumZB =sumZB-Math.abs(parseInt(remplacer(document.getElementById('FBnet1').value))); 
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FBnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FCnet1').value) == true ){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FCnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FDnet1').value) == true){
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FDnet1').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FEnet1').value) == true){
+
+            sumZB =sumZB+parseInt(remplacer(document.getElementById('FEnet1').value)); 
+
+        }
+
+
+        var zb = 0;
+        if(isInt(document.getElementById('ZBnet1').value) == true){
+            zb = parseInt(remplacer(document.getElementById('ZBnet1').value));
+        }
+        
+        var testVar1 = "Flux de trésorerie provenant des activités opérationnelles \nZB = FA-FB-FC-FD+FE !";
+        if(zb != sumZB){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            console.log(sumZB);
+            return ;
+                     
+        }
+
+        // traitement sum Flux  de trésorerie provenant des activités d'investissement
+        // sumZC = FI+FJ-FF-FG-FH
+        
+        var sumZC = 0; 
+        if(isInt(document.getElementById('FInet1').value) == true){
+
+            sumZC = sumZC+parseInt(remplacer(document.getElementById('FInet1').value));
+
+        }
+        if(isInt(document.getElementById('FJnet1').value) == true ){
+
+            sumZC =sumZC+parseInt(remplacer(document.getElementById('FJnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FFnet1').value) == true ){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FFnet1').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FGnet1').value) == true){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FGnet1').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FHnet1').value) == true){
+            sumZC =sumZC-Math.abs(parseInt(remplacer(document.getElementById('FHnet1').value))); 
+
+        }
+
+
+       var zc = 0;
+        if(isInt(document.getElementById('ZCnet1').value) == true){
+            zc = parseInt(remplacer(document.getElementById('ZCnet1').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant des activités d'investissement \nZC = FI+FJ-FF-FG-FH !";
+        if(zc != sumZC){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+        
+        // traitement sum Flux  de trésorerie provenant du financement par les capitaux propres
+        // sumZD = FK+FL-FM-FN
+        
+        var sumZD = 0; 
+        if(isInt(document.getElementById('FKnet1').value) == true){
+
+            sumZD = sumZD+parseInt(remplacer(document.getElementById('FKnet1').value));
+
+        }
+        if(isInt(document.getElementById('FLnet1').value) == true ){
+
+            sumZD =sumZD+parseInt(remplacer(document.getElementById('FLnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FMnet1').value) == true ){
+            sumZD =sumZD-Math.abs(parseInt(remplacer(document.getElementById('FMnet1').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FNnet1').value) == true){
+            sumZD =sumZD-Math.abs(parseInt(remplacer(document.getElementById('FNnet1').value))); 
+
+        }
+
+
+        var zd = 0;
+        if(isInt(document.getElementById('ZDnet1').value) == true){
+            zd = parseInt(remplacer(document.getElementById('ZDnet1').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux propres \nZD = FK+FL-FM-FN !";
+        if(zd != sumZD){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+        //// traitement sum Flux  de trésorerie provenant du financement par les capitaux étrangers
+        //   sumZE=FO+FP-FQ
+
+        
+        var sumZE = 0; 
+        if(isInt(document.getElementById('FOnet1').value) == true){
+
+            sumZE = sumZE+parseInt(remplacer(document.getElementById('FOnet1').value));
+
+        }
+        if(isInt(document.getElementById('FPnet1').value) == true ){
+
+            sumZE =sumZE+parseInt(remplacer(document.getElementById('FPnet1').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FQnet1').value) == true ){
+            //sumZE =sumZE-parseInt(remplacer(document.getElementById('FQnet1').value)); 
+            sumZE =sumZE-Math.abs(parseInt(remplacer(document.getElementById('FQnet1').value))); 
+
+        }
+
+
+       var ze = 0;
+        if(isInt(document.getElementById('ZEnet1').value) == true){
+            ze = parseInt(remplacer(document.getElementById('ZEnet1').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux étrangers \nZE=FO+FP-FQ !";
+        if(ze != sumZE){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+        ///// traitement sum Flux  de trésorerie provenant des capitaux étrangers
+        // sumZF=ZD+ZE
+        
+        var sumZF = 0; 
+        if(isInt(document.getElementById('ZDnet1').value) == true){
+
+            sumZF = sumZF+parseInt(remplacer(document.getElementById('ZDnet1').value));
+
+        }
+        if(isInt(document.getElementById('ZEnet1').value) == true ){
+
+            sumZF =sumZF+parseInt(remplacer(document.getElementById('ZEnet1').value)); 
+                    
+        }
+
+
+       var zf = 0;
+        if(isInt(document.getElementById('ZFnet1').value) == true){
+            zf = parseInt(remplacer(document.getElementById('ZFnet1').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant des capitaux étrangers \nZF=ZD+ZE !";
+        if(zf != sumZF){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+        ///// traitement sum VARIATION DE LA TRESORERIE NETTE DE LA PERIODE
+        // sumZG = ZB+ZC+ZF
+        
+        var sumZG = 0; 
+        if(isInt(document.getElementById('ZBnet1').value) == true){
+
+            sumZG = sumZG+parseInt(remplacer(document.getElementById('ZBnet1').value));
+
+        }
+        if(isInt(document.getElementById('ZCnet1').value) == true ){
+
+            sumZG =sumZG+parseInt(remplacer(document.getElementById('ZCnet1').value)); 
+                    
+        }
+        if(isInt(document.getElementById('ZFnet1').value) == true ){
+
+            sumZG =sumZG+parseInt(remplacer(document.getElementById('ZFnet1').value)); 
+                    
+        }
+
+
+        var zg = 0;
+        if(isInt(document.getElementById('ZGnet1').value) == true){
+            zg = parseInt(remplacer(document.getElementById('ZGnet1').value));
+        }
+        
+        var testVar1 = "VARIATION DE LA TRESORERIE NETTE DE LA PERIODE \nZG = ZB+ZC+ZF !";
+        if(zg != sumZG){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+        ///// traitement sum Trésorerie nette au 31 décembre
+        // sumZH=ZG+ZA
+        
+        var sumZH = 0; 
+        if(isInt(document.getElementById('ZGnet1').value) == true){
+
+            sumZH = sumZH+parseInt(remplacer(document.getElementById('ZGnet1').value));
+
+        }
+        if(isInt(document.getElementById('ZAnet1').value) == true ){
+
+            sumZH =sumZH+parseInt(remplacer(document.getElementById('ZAnet1').value)); 
+                    
+        }
+
+
+        var zh = 0;
+        if(isInt(document.getElementById('ZHnet1').value) == true){
+            zh = parseInt(remplacer(document.getElementById('ZHnet1').value));
+        }
+        
+        var testVar1 = "Trésorerie nette au 31 décembre \nZH = ZG+ZA !";
+        if(zh != sumZH){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET1 saisie pour '+ testVar1); 
+            return ;
+                     
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// controle la colonne NET2 en validation ////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        
+        // traitement sum Flux de trésorerie provenant des activités opérationnelles 
+        // ZB=FA-FB-FC-FD+FE
+        
+        var sumZBNET2 = 0; 
+        if(isInt(document.getElementById('FAnet2').value) == true){
+
+            sumZBNET2 = sumZBNET2+parseInt(remplacer(document.getElementById('FAnet2').value));
+
+        }
+        if(isInt(document.getElementById('FBnet2').value) == true ){
+
+            // sumZBNET2 =sumZBNET2-Math.abs(parseInt(remplacer(document.getElementById('FBnet1').value))); 
+            sumZBNET2 =sumZBNET2+parseInt(remplacer(document.getElementById('FBnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FCnet2').value) == true ){
+            sumZBNET2 =sumZBNET2+parseInt(remplacer(document.getElementById('FCnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FDnet2').value) == true){
+            sumZBNET2 =sumZBNET2+parseInt(remplacer(document.getElementById('FDnet2').value)); 
+
+        }
+
+        if(isInt(document.getElementById('FEnet2').value) == true){
+            sumZBNET2 =sumZBNET2+parseInt(remplacer(document.getElementById('FEnet2').value)); 
+
+        }
+
+
+        var zb2 = 0;
+        if(isInt(document.getElementById('ZBnet2').value) == true){
+            zb2 = parseInt(remplacer(document.getElementById('ZBnet2').value));
+        }
+        
+        var testVar1 = "Flux de trésorerie provenant des activités opérationnelles \nZB = FA-FB-FC-FD+FE !";
+        if(zb2 != sumZBNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            console.log(sumZBNET2);
+            return ;
+                     
+        } //// fin traitement ZBnet2
+
+
+
+        // traitement sum Flux  de trésorerie provenant des activités d'investissement
+        // sumZC = FI+FJ-FF-FG-FH
+        
+        var sumZCNET2 = 0; 
+        if(isInt(document.getElementById('FInet2').value) == true){
+
+            sumZCNET2 = sumZCNET2+parseInt(remplacer(document.getElementById('FInet2').value));
+
+        }
+        if(isInt(document.getElementById('FJnet2').value) == true ){
+
+            sumZCNET2 =sumZCNET2+parseInt(remplacer(document.getElementById('FJnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FFnet2').value) == true ){
+            sumZCNET2 =sumZCNET2-Math.abs(parseInt(remplacer(document.getElementById('FFnet2').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FGnet2').value) == true){
+            sumZCNET2 =sumZCNET2-Math.abs(parseInt(remplacer(document.getElementById('FGnet2').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FHnet2').value) == true){
+            sumZCNET2 =sumZCNET2-Math.abs(parseInt(remplacer(document.getElementById('FHnet2').value))); 
+
+        }
+
+
+        var zc2 = 0;
+        if(isInt(document.getElementById('ZCnet2').value) == true){
+            zc2 = parseInt(remplacer(document.getElementById('ZCnet2').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant des activités d'investissement \nZC = FI+FJ-FF-FG-FH !";
+        if(zc2 != sumZCNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }  /// fin traitement ZCnet2
+
+
+
+        
+        // traitement sum Flux  de trésorerie provenant du financement par les capitaux propres
+        // sumZD = FK+FL-FM-FN
+        
+        var sumZDNET2 = 0; 
+        if(isInt(document.getElementById('FKnet2').value) == true){
+
+            sumZDNET2 = sumZDNET2+parseInt(remplacer(document.getElementById('FKnet2').value));
+
+        }
+        if(isInt(document.getElementById('FLnet2').value) == true ){
+
+            sumZDNET2 =sumZDNET2+parseInt(remplacer(document.getElementById('FLnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FMnet2').value) == true ){
+            sumZDNET2 =sumZDNET2-Math.abs(parseInt(remplacer(document.getElementById('FMnet2').value))); 
+
+        }
+
+        if(isInt(document.getElementById('FNnet2').value) == true){
+            sumZDNET2 =sumZDNET2-Math.abs(parseInt(remplacer(document.getElementById('FNnet2').value))); 
+
+        }
+
+
+       var zd2 = 0;
+        if(isInt(document.getElementById('ZDnet2').value) == true){
+            zd2 = parseInt(remplacer(document.getElementById('ZDnet2').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux propres \nZD = FK+FL-FM-FN !";
+        if(zd2 != sumZDNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }  ///////// fin traitement  ZDnet2
+
+
+        //// traitement sum Flux  de trésorerie provenant du financement par les capitaux étrangers
+        //   sumZE=FO+FP-FQ
+
+        
+        var sumZENET2 = 0; 
+        if(isInt(document.getElementById('FOnet2').value) == true){
+
+            sumZENET2 = sumZENET2+parseInt(remplacer(document.getElementById('FOnet2').value));
+
+        }
+        if(isInt(document.getElementById('FPnet2').value) == true ){
+
+            sumZENET2 =sumZENET2+parseInt(remplacer(document.getElementById('FPnet2').value)); 
+                    
+        }
+
+        if(isInt(document.getElementById('FQnet2').value) == true ){
+            //sumZE =sumZE-parseInt(remplacer(document.getElementById('FQnet1').value)); 
+            sumZENET2 =sumZENET2-Math.abs(parseInt(remplacer(document.getElementById('FQnet2').value))); 
+
+        }
+
+
+       var ze2 = 0;
+        if(isInt(document.getElementById('ZEnet2').value) == true){
+            ze2 = parseInt(remplacer(document.getElementById('ZEnet2').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant du financement par les capitaux étrangers \nZE=FO+FP-FQ !";
+        if(ze2 != sumZENET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }  /////fin traitement ZEnet2
+
+
+
+        ///// traitement sum Flux  de trésorerie provenant des capitaux étrangers
+        // sumZF=ZD+ZE
+        
+        var sumZFNET2 = 0; 
+        if(isInt(document.getElementById('ZDnet2').value) == true){
+
+            sumZFNET2 = sumZFNET2+parseInt(remplacer(document.getElementById('ZDnet2').value));
+
+        }
+        if(isInt(document.getElementById('ZEnet2').value) == true ){
+
+            sumZFNET2 =sumZFNET2+parseInt(remplacer(document.getElementById('ZEnet2').value)); 
+                    
+        }
+
+
+       var zf2 = 0;
+        if(isInt(document.getElementById('ZFnet2').value) == true){
+            zf2 = parseInt(remplacer(document.getElementById('ZFnet2').value));
+        }
+        
+        var testVar1 = "Flux  de trésorerie provenant des capitaux étrangers \nZF=ZD+ZE !";
+        if(zf2 != sumZFNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        } /// fin traitement ZFnet2
+
+
+
+        ///// traitement sum VARIATION DE LA TRESORERIE NETTE DE LA PERIODE
+        // sumZG = ZB+ZC+ZF
+        
+        var sumZGNET2 = 0; 
+        if(isInt(document.getElementById('ZBnet2').value) == true){
+
+            sumZGNET2 = sumZGNET2+parseInt(remplacer(document.getElementById('ZBnet2').value));
+
+        }
+        if(isInt(document.getElementById('ZCnet2').value) == true ){
+
+            sumZGNET2 =sumZGNET2+parseInt(remplacer(document.getElementById('ZCnet2').value)); 
+                    
+        }
+        if(isInt(document.getElementById('ZFnet2').value) == true ){
+
+            sumZGNET2 =sumZGNET2+parseInt(remplacer(document.getElementById('ZFnet2').value)); 
+                    
+        }
+
+
+        var zg2 = 0;
+        if(isInt(document.getElementById('ZGnet2').value) == true){
+            zg2 = parseInt(remplacer(document.getElementById('ZGnet2').value));
+        }
+        
+        var testVar1 = "VARIATION DE LA TRESORERIE NETTE DE LA PERIODE \nZG = ZB+ZC+ZF !";
+        if(zg2 != sumZGNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        } //// fin traitement ZGnet2
+
+
+        ///// traitement sum Trésorerie nette au 31 décembre
+        // sumZH=ZG+ZA
+        
+        var sumZHNET2 = 0; 
+        if(isInt(document.getElementById('ZGnet2').value) == true){
+
+            sumZHNET2 = sumZHNET2+parseInt(remplacer(document.getElementById('ZGnet2').value));
+
+        }
+        if(isInt(document.getElementById('ZAnet2').value) == true ){
+
+            sumZHNET2 =sumZHNET2+parseInt(remplacer(document.getElementById('ZAnet2').value)); 
+                    
+        }
+
+
+        var zh2 = 0;
+        if(isInt(document.getElementById('ZHnet2').value) == true){
+            zh2 = parseInt(remplacer(document.getElementById('ZHnet2').value));
+        }
+        
+        var testVar1 = "Trésorerie nette au 31 décembre \nZH = ZG+ZA !";
+        if(zh2 != sumZHNET2){
+
+            valider=0;
+
+            Swal.fire('Verifier les valeurs NET2 saisie pour '+ testVar1); 
+            return ;
+                     
+        }  //// fin traitement ZHnet2
+
+
+
+        
+        if (valider==1) {
+            
+
+            var empt = 1;
+            //var checkboxList = document.getElementsByClassName('inputclass');
+            var checkboxList = $('input.calcul');
+            for (i = 0; i < checkboxList.length; i++) {
+                if (checkboxList[i].value != "") {                    
+                    empt = 0;
+                }
+            }
+            console.log(empt);
+            
+            if(empt!=1){
+
+
+
+
+            //// ici traitement de sumZA Trésorerie nette au 1er janvier
+            // sumZA = tresorerie actif n-1(BT) - tresorerie passif n-1(DT) 
+            
+                     
+            let route="{{path('sumZA')}}"+"/"+ $('#idcuci').val();
+            $.ajax({
+                   type: 'GET',
+                   url : route,
+                   dataType : "json",
+                   processData: false,
+                   contentType: false,
+                   cache: false,
+                   timeout: 800000,
+                   success: function(data){ 
+
+                        //if(JSON.stringify(data) === JSON.stringify(xin)){
+
+                       if(parseInt (data) != parseInt(remplacer(document.getElementById('ZAnet1').value)) ){
+                           console.log(data);
+                           valider=0;
+                           Swal.fire('Verifier les valeurs NET1 saisies pour Trésorerie nette au 1er janvier \nZA = BT(actif) - DT(passif) '+data); return;
+                       }else{
+
+                           {
+                            e.preventDefault();
+                            var a=$(this);
+                            Swal.fire({
+                            title:"Confirmation",
+                            text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                            icon:"success",
+                            showCancelButton:true,
+                            confirmButtonText:"Oui",
+                            cancelButtonText:"Non",
+                            confirmButtonClass:"btn btn-success mt-2",
+                            cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                            buttonsStyling:!1}).then(function(t)
+                           {
+                             if (t.value) {
+                               // document.getElementById("idformfluxtresor").submit()
+                                document.getElementById("submited").click()
+                             }else
+                                 e.preventDefault();
+           
+                           })}
+                       }
+                                          
+                       
+                   } ,
+                   error : function(error){
+                       console.log(error);
+                   }
+               });
+
+            }
+
+        }
+    });
+
+    
+
+  /// btn sauvegarder flux sans valider 
+  
+  $('.sauvegarderFlux').click(function(){
+
+                var empt = 1;
+                //var checkboxList = document.getElementsByClassName('calcul');
+                var elemts =  $('input.calcul');
+                for (i = 0; i < elemts.length; i++) {
+                    if (elemts[i].value != "") {
+                        //console.log(elemts[i].value);
+                        empt = 0;
+                    }
+                }
+                console.log(empt);
+                if(empt!=1)
+                {
+                
+                    Swal.fire({
+                    title:"Confirmation",
+                    type:"warning",
+                    text:"Êtes-vous sûr de vouloir sauvegarder  sans valider ?",
+                    icon:"warning",
+                    showCancelButton:true,
+                    confirmButtonText:"Oui",
+                    cancelButtonText:"Non",
+                    confirmButtonClass:"btn btn-success mt-2",
+                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                    buttonsStyling:!1}).then(function(t)
+                    {
+                    if (t.value) {
+                        document.getElementById("notsubmited").click();
+                    }
+                    })
+                }
+  }) ;//// end traitement du btn sauvegarder flux 
+
+    
+    
+    
+    $('.resetBtn').click(function(e){
+        
+
+
+
+        var elemts =  $('input.calcul');
+                    for (i = 0; i < elemts.length; i++) {
+                        elemts[i].value="";
+                    }
+        // e.preventDefault(); 
+        //$("#idformcompte")[0].reset.click();
+
+    });
+
+
+
+    
+    // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000); 
+
+</script>
+
+
+
+{% endblock %}

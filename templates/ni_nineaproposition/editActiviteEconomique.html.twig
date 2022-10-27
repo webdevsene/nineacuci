@@ -1,0 +1,102 @@
+   
+   
+   {{ form_start(form,{'action':path('ni_nineaproposition_editActivitesEconomiques',{id:app.request.attributes.get('id')})})}}
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+	<div class="card-body">
+			<div class="row justify-content-center">               
+                <div class="col-lg-7">
+                    <fieldset class="border p-2">                        
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 50%;">
+                                    <label for="">{{form_label(form.ninAffaire)}}</label>
+                                </td>
+                                <td style="width: 40%;">
+									{{form_widget(form.ninAffaire)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">
+                                    <label for="">{{form_label(form.ninAnneeCa)}}</label>
+                                </td>
+                                <td style="width: 40%;">
+                                    {{form_widget(form.ninAnneeCa)}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 50%;">
+                                    <label for="">{{form_label(form.ninCapital)}}</label>
+                                </td>
+                                <td style="width: 40%;">
+                                    {{form_widget(form.ninCapital)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">
+                                    <label for="">{{form_label(form.ninEffectif)}}</label>
+                                </td>
+                                <td style="width: 40%;">
+                                    {{form_widget(form.ninEffectif)}}
+                                </td>
+                            </tr>
+							<tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.ninEffect1)}}</label>
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.ninEffect1)}}
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.ninEffectifFem)}}</label>
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.ninEffectifFem)}}
+                                </td>
+                            </tr>
+							<tr>
+                                <td style="width: 30%;">
+                                    <label for="">{{form_label(form.ninEffectifFemSAIS)}}</label>
+                                </td>
+                                <td style="width: 70%;">
+                                    {{form_widget(form.ninEffectifFemSAIS)}}
+                                </td>
+                            </tr>     
+                            {% if nineapropsition.ninStatut.id == 2 %}
+                                <div id="etsEtab">
+                                    <tr id="ETSMERENINEA">
+                                        <td>
+                                            <label for="">Ninea Etablissement Mère</label>
+                                            <span style="color: red;"></span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="nineamere" value="{{nineamere}}" id="ninNineamere" class="form-control form-control-sm">
+                                        </td>
+                                    </tr>
+                                    <tr id="ETSMERESIGLE">
+                                        <td>
+                                            <label for="">Sigle Etanlissement Mère</label>
+                                            <span style="color: red;"></span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="siglemere" value="{{siglemere}}" id="ninSiglemere" class="form-control form-control-sm">
+                                        </td>
+
+                                    </tr>
+                                </div>                           
+                            {% endif %}
+                        </table>
+                    </fieldset>
+                </div>
+
+				<div class="col-lg-8">		</div>
+				<div class="col-lg-4 mt-3" align="right">
+					<input type="submit"  value="Modifier" name="ajouter">
+				</div>
+			</div>		
+	</div>
+</div>
+
+{{ form_end(form) }}

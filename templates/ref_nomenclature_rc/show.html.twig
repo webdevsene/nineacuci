@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RefNomenclatureRc{% endblock %}
+
+{% block body %}
+    <h1>RefNomenclatureRc</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ref_nomenclature_rc.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ ref_nomenclature_rc.libelle }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ref_nomenclature_rc_index') }}">back to list</a>
+
+    <a href="{{ path('app_ref_nomenclature_rc_edit', {'id': ref_nomenclature_rc.id}) }}">edit</a>
+
+    {{ include('ref_nomenclature_rc/_delete_form.html.twig') }}
+{% endblock %}

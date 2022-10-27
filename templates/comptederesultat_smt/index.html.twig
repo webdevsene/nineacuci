@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ComptederesultatSmt index{% endblock %}
+
+{% block body %}
+    <h1>ComptederesultatSmt index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Rank</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>RefCode</th>
+                <th>AnneeFinanciere</th>
+                <th>UploadedFileName</th>
+                <th>Net1</th>
+                <th>Net2</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for comptederesultat_smt in comptederesultat_smts %}
+            <tr>
+                <td>{{ comptederesultat_smt.id }}</td>
+                <td>{{ comptederesultat_smt.rank }}</td>
+                <td>{{ comptederesultat_smt.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ comptederesultat_smt.status }}</td>
+                <td>{{ comptederesultat_smt.refCode }}</td>
+                <td>{{ comptederesultat_smt.anneeFinanciere }}</td>
+                <td>{{ comptederesultat_smt.uploadedFileName }}</td>
+                <td>{{ comptederesultat_smt.net1 }}</td>
+                <td>{{ comptederesultat_smt.net2 }}</td>
+                <td>{{ comptederesultat_smt.createdAt ? comptederesultat_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ comptederesultat_smt.updatedAt ? comptederesultat_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_comptederesultat_smt_show', {'id': comptederesultat_smt.id}) }}">show</a>
+                    <a href="{{ path('app_comptederesultat_smt_edit', {'id': comptederesultat_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_comptederesultat_smt_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalCreancesImpayeesSmt index{% endblock %}
+
+{% block body %}
+    <h1>JournalCreancesImpayeesSmt index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>AnneeFinanciere</th>
+                <th>DatePaiement</th>
+                <th>Montant</th>
+                <th>Nom</th>
+                <th>NumFacture</th>
+                <th>DateJ</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for journal_creances_impayees_smt in journal_creances_impayees_smts %}
+            <tr>
+                <td>{{ journal_creances_impayees_smt.id }}</td>
+                <td>{{ journal_creances_impayees_smt.createdAt ? journal_creances_impayees_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_creances_impayees_smt.updatedAt ? journal_creances_impayees_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_creances_impayees_smt.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ journal_creances_impayees_smt.status }}</td>
+                <td>{{ journal_creances_impayees_smt.anneeFinanciere }}</td>
+                <td>{{ journal_creances_impayees_smt.DatePaiement ? journal_creances_impayees_smt.DatePaiement|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_creances_impayees_smt.montant }}</td>
+                <td>{{ journal_creances_impayees_smt.nom }}</td>
+                <td>{{ journal_creances_impayees_smt.numFacture }}</td>
+                <td>{{ journal_creances_impayees_smt.dateJ ? journal_creances_impayees_smt.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_journal_creances_impayees_smt_show', {'id': journal_creances_impayees_smt.id}) }}">show</a>
+                    <a href="{{ path('app_journal_creances_impayees_smt_edit', {'id': journal_creances_impayees_smt.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_creances_impayees_smt_new') }}">Create new</a>
+{% endblock %}

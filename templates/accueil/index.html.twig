@@ -1,0 +1,421 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AccueilController!{% endblock %}
+
+{% block body %}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                    <h4 class="mb-sm-0 font-size-18">Tableau de Bord </h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item active"></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">{{annee_financiere}}</a></li>
+                                        </ol>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            
+                            <div class="col-xl-12">
+
+
+
+                                <div class="row">
+                                    <h5 class="bg-primary bg-soft waves-effect waves-light mb-2 p-2 text-center">Exercice {{annee_financiere}} </h5>
+
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Répertoires</h5>
+                                                        <h4 class="mb-0">{{nombr_rep_miseAjour}}/{{ tousRepertoire }}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center">
+                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                                            <span class="avatar-title">
+                                                            {% if is_granted('ROLE_BREA_AGENT_SAISIE') %}
+                                                                <a href="{{ path("repertoire_index") }}">
+                                                                    <i class="dripicons-folder-open font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true" >
+                                                                    <i class="dripicons-folder-open font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% endif %}
+
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Actifs</h5>
+                                                        <h4 class="mb-0">{{ tousActif }}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center ">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a class="ms-2 text-truncate" href="{{ path("bilan_new") }}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a class="ms-2 text-truncate" role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Passifs</h5>
+                                                        <h4 class="mb-0">{{ tousPassif }}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center">
+                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a class="ms-2 text-truncate" href="{{ path("bilan_new") }}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a class="ms-2 text-truncate" role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium" >Comptes résultats</h5>
+                                                        <h4 class="mb-0">{{ touscompteresultat }}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center">
+                                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
+                                                            <span class="avatar-title">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a href="{{ path("compte_de_resultats_new") }}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true" >
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <!-- end row -->
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Flux de trésorerie</h5>
+                                                        <h4 class="mb-0">{{tousfluxtresorerie}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center ">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a href="{{ path('flux_des_tresoreries_new')}}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Immo brut</h5>
+                                                        <h4 class="mb-0">{{immoBrut}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center ">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a href="{{ path('flux_des_tresoreries_new')}}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Immo plus</h5>
+                                                        <h4 class="mb-0">{{immoPlus}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center ">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a href="{{ path('flux_des_tresoreries_new')}}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Effectifs</h5>
+                                                        <h4 class="mb-0">{{effectifs}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN')%}
+                                                                <a href="{{ path('user_index')}}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Production</h5>
+                                                        <h4 class="mb-0">{{productionDeExercice}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center ">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a href="{{ path('flux_des_tresoreries_new')}}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Achats</h5>
+                                                        <h4 class="mb-0">{{achatProduction}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center ">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BSE_AGENT_SAISIE') %}
+                                                                <a href="{{ path('flux_des_tresoreries_new')}}">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-document font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="col-md-3">
+                                        <div class="card mini-stats-wid radius-10 border-start border-0 border-5 border-primary">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="text-muted fw-medium">Utilisateurs</h5>
+                                                        <h4 class="mb-0">{{alluser}}</h4>
+                                                    </div>
+
+                                                    <div class="flex-shrink-0 align-self-center">
+                                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-primary">
+                                                            {% if is_granted('ROLE_BREA_ADMIN') or is_granted('ROLE_BSE_ADMIN')%}
+                                                                <a href="{{ path('user_index')}}">
+                                                                    <i class="dripicons-user-group font-size-24" style="color: white;"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a role="link" aria-disabled="true">
+                                                                    <i class="dripicons-user-group font-size-24" style="color: white;"></i>
+                                                                </a>
+
+                                                            {% endif %}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end row -->
+
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+
+                    </div> 
+                    <!-- end container-fluid -->
+
+
+                
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <script>document.write(new Date().getFullYear())</script> © Skote.
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-end d-none d-sm-block">
+                                    Design & Develop by Themesbrand
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+{% endblock %}
+
+{% block javascripts %}
+
+        <!-- JAVASCRIPT -->
+      
+        <script src="{{ asset('admin/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+        
+        <script src="{{ asset('admin/dist/assets/libs/metismenu/metisMenu.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+        <!-- dashboard init -->
+        <script src="{{ asset('admin/dist/assets/js/pages/dashboard.init.js')}}"></script>
+
+        <!-- apexcharts -->
+        <script src="{{ asset('admin/dist/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+        
+        <!-- Saas dashboard init -->
+        <script src="{{ asset('admin/dist/assets/js/pages/saas-dashboard.init.js')}}"></script>
+
+    
+{% endblock %}

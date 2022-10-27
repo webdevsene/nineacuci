@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalTresorerie index{% endblock %}
+
+{% block body %}
+    <h1>JournalTresorerie index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AnneeFinanciere</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>DateJ</th>
+                <th>Libelle</th>
+                <th>Recettes</th>
+                <th>Depenses</th>
+                <th>Solde</th>
+                <th>VrVentes</th>
+                <th>VrAutres</th>
+                <th>VdMobiliers</th>
+                <th>VdMarchandises</th>
+                <th>VdFournitures</th>
+                <th>VdLoyer</th>
+                <th>VdSalaires</th>
+                <th>VdImpots</th>
+                <th>VdAutres</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for journal_tresorerie in journal_tresoreries %}
+            <tr>
+                <td>{{ journal_tresorerie.id }}</td>
+                <td>{{ journal_tresorerie.createdAt ? journal_tresorerie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_tresorerie.updatedAt ? journal_tresorerie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_tresorerie.anneeFinanciere }}</td>
+                <td>{{ journal_tresorerie.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ journal_tresorerie.status }}</td>
+                <td>{{ journal_tresorerie.dateJ ? journal_tresorerie.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ journal_tresorerie.libelle }}</td>
+                <td>{{ journal_tresorerie.recettes }}</td>
+                <td>{{ journal_tresorerie.depenses }}</td>
+                <td>{{ journal_tresorerie.solde }}</td>
+                <td>{{ journal_tresorerie.vrVentes }}</td>
+                <td>{{ journal_tresorerie.vrAutres }}</td>
+                <td>{{ journal_tresorerie.vdMobiliers }}</td>
+                <td>{{ journal_tresorerie.vdMarchandises }}</td>
+                <td>{{ journal_tresorerie.vdFournitures }}</td>
+                <td>{{ journal_tresorerie.vdLoyer }}</td>
+                <td>{{ journal_tresorerie.vdSalaires }}</td>
+                <td>{{ journal_tresorerie.vdImpots }}</td>
+                <td>{{ journal_tresorerie.vdAutres }}</td>
+                <td>
+                    <a href="{{ path('app_journal_tresorerie_show', {'id': journal_tresorerie.id}) }}">show</a>
+                    <a href="{{ path('app_journal_tresorerie_edit', {'id': journal_tresorerie.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="21">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_tresorerie_new') }}">Create new</a>
+{% endblock %}

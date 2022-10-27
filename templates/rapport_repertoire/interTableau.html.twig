@@ -1,0 +1,495 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} RapportRepertoireController!{% endblock %}
+
+{% block body %}
+<div class="card" style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+            
+                    <center>
+                        <form  enctype="multipart/form-data" class="form-horizontal d-flex align-items-center justify-content-right" method="get" >
+                        
+                            <table width="50%">
+                            <tr>
+                                <td width="75%">
+                                </td>
+                                <td width="15%">
+
+                   
+
+                                
+                                 <input class="form-control form-control-sm input-mask" data-inputmask="'mask': '9999'" type="text" name="annee" 
+                                {% if annee!=""%}
+                                    value={{annee}}
+                                {% endif %}
+                                > <br></td>
+                                <td width="10%">
+                                <button type="submit" value="1" class="btn btn-secondary btn-sm valider " name="filtrer"> Filtrer</button>
+                                <br>
+                                <br>
+                                </td>
+                                
+                            </tr>
+                            </table>
+                        </form>
+                    </center>
+            </div>
+        </div>
+            
+   
+<!-- end page title -->
+
+<div class="row" style="border:3px solid #eeeeee;">
+    <div class="col-xl-12" style="overflow-x: auto;">
+            <table id="repertoire" class="table table-bordered  table-hover "  style="siez-font:8px; ">
+            <thead class="tr_entete" style=" margin-top: 0px; ">
+            <tr >
+                <th>
+                    <center>  <b>N° CUCI</b>
+                    <input  type="text" class="form-control form-control-sm filter"
+                        data-column-index="0" width="100%"></center>
+                
+                </th>
+                <th>
+                    <center>
+                    <b>Saisie du Bilan actif</b>
+                    <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="1"></center>
+                </th>
+                <th> <center>
+                     <b>Saisie du Bilan passif</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="2"></center>
+                </th>
+                 <th> <center>
+                     <b>Compte de resultats</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="3"></center>
+                </th>
+
+                <th> <center>
+                     <b>Etat des flux de Trésorerie</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="4"></center>
+                </th>
+
+
+                 <th> <center>
+                     <b>Achats déstinés à la production</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="5"></center>
+                </th>
+
+                <th> <center>
+                     <b>Effectifs,Masse salariale, Personnel exterieur</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="6"></center>
+                </th>
+
+                <th> <center>
+                     <b>Production de l'excercice</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="7"></center>
+                </th>
+
+                <th> <center>
+                     <b>Immoblisations brutes</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="8"></center>
+                </th>
+                 <th> <center>
+                     <b> Immobilisations: Plus-value et moins-value de cession</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="9"></center>
+                </th>
+                <th> <center>
+                     <b> Creation</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="10"></center>
+                </th>
+                <th> <center>
+                     <b> Modification</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="11"></center>
+                </th>
+                 <th> <center>
+                     <b> Créer par</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="12"></center>
+                </th>
+                 <th> <center>
+                     <b> Modifier par</b>
+                 <input  type="text" class="form-control form-control-sm filter"
+                    data-column-index="13"></center>
+                </th>
+              
+            </tr>
+            </thead>
+           
+        </table>
+
+               
+
+                
+
+    </div> <!-- end col -->
+
+   <!-- end col -->
+</div> <!-- end row -->
+</div> <!-- end row -->
+</div> <!-- end row -->
+
+ <!-- end row -->
+{% endblock %}
+
+{% block javascript %}
+  
+ <script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+        <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+ 
+
+<!-- Required datatable js -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<!-- Buttons examples -->
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/jszip/jszip.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js')}}"></script>
+
+
+
+
+<script >
+function tab($rep){
+    
+    {% for bilan in bilansactif %}
+     {% if bilan.id is not null  %}
+        if( $rep=="{{bilan.id}}" ){
+            return ["{{bilan.nom}}","{{bilan.nommodifier}}","{{bilan.createdAt|date('d/m/y H:i')}}", "{{bilan.updatedAt|date('d/m/y H:i')}}"];
+        }
+    
+      {% endif %} 
+
+        
+       
+    {% endfor %} 
+     
+    return ["","","",""];
+ }
+
+
+
+ function verificationBilanactif($rep){
+    
+    {% for bilan in bilansactif %}
+     {% if bilan.id is not null  %}
+        if( $rep=="{{bilan.id}}" ){
+           
+            {% if bilan.submit==true %}
+               return ["{{bilan.nom}}","{{bilan.nommodifier}}","{{bilan.createdAt|date('d/m/y H:i')}}", "{{bilan.updatedAt|date('d/m/y H:i')}}","Oui-validé"];
+            {% else %}
+             
+              return ["{{bilan.nom}}","{{bilan.nommodifier}}","{{bilan.createdAt|date('d/m/y H:i')}}", "{{bilan.updatedAt|date('d/m/y H:i')}}","Oui-Non-validé"];
+
+            {% endif %} 
+        }else {}   
+    
+      {% endif %} 
+
+        
+       
+    {% endfor %} 
+     
+    
+    return ["","","", "","Non"];
+
+ }
+
+ function verificationBilanpassif($rep){
+    
+    {% for bilan in bilanspassif %}
+     {% if bilan.id is not null  %}
+        if( $rep=="{{bilan.id}}" ){
+           
+            {% if bilan.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+     {% endif %} 
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ function verificationCompteDeResultats($rep){
+    
+    {% for tag in compteDeResultats %}
+     {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+         {% endif%} 
+
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ function verificationFluxDesTresoreries($rep){
+    
+    {% for tag in fluxDesTresoreries %}
+      {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+        {% endif%} 
+
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ function verificationachatProduction($rep){
+    
+    {% for tag in achatProduction %}
+      {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+          {% endif%} 
+
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ function verificationEffectifs($rep){
+     
+       {% for tag in effectifs %}
+       {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+           {% endif%} 
+
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ 
+ function verificationproductionDeExercice($rep){
+    
+    {% for tag in productionDeExercice %}
+       {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+          {% endif%} 
+
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ function verificationimmoBrut($rep){
+    
+    {% for tag in immoBrut %}
+       {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+         {% endif%} 
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+
+ function verificationcuciImmoPlus($rep){
+    
+    {% for tag in cuciImmoPlus %}
+     {% if tag.id is not null  %}
+        if( $rep=="{{tag.id}}" ){
+           
+            {% if tag.submit==true %}
+               return "Oui-validé";
+            {% else %}
+              return "Oui-Non-validé";
+            {% endif %} 
+        }else {
+
+          
+            
+        }
+      {% endif%} 
+
+        
+       
+    {% endfor %} 
+     
+    return "Non";
+ }
+ 
+$(document).ready(function() {
+    var data = [];
+
+
+
+    
+    {% for repertoire in repertoires %}
+      
+    var elment =verificationBilanactif("{{repertoire.id}}");
+
+    data.push( [ '{{ repertoire.CodeCuci }}',elment[4], verificationBilanpassif("{{repertoire.id}}"),verificationCompteDeResultats("{{repertoire.id}}"), 
+    verificationFluxDesTresoreries("{{repertoire.id}}"),verificationachatProduction("{{repertoire.id}}"),verificationEffectifs("{{repertoire.id}}")
+    , verificationproductionDeExercice("{{repertoire.id}}"),verificationimmoBrut("{{repertoire.id}}"),verificationcuciImmoPlus("{{repertoire.id}}"),elment[2],elment[3],elment[0],elment[1]] );
+              
+    {% endfor %}
+    
+   
+   var datatableReherche = $("#repertoire").DataTable({
+        data: data,
+       
+        buttons:["excel"],
+        "sDom": 'B<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+       
+    });
+     
+     var bt=datatableReherche.buttons().container().appendTo("#repertoire_wrapper .col-md-6:eq(0)");
+
+
+   
+    $('.filter').on('keyup change', function() {
+        //clear global search values
+        datatableReherche.search('');
+        datatableReherche.column($(this).data('columnIndex')).search(this.value).draw();
+    });
+    });
+
+</script>  
+
+
+ 
+
+
+
+
+{% endblock %}

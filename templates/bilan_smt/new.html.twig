@@ -1,0 +1,1996 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Bilan{% endblock %}
+{% block stylesheets %}
+ <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+
+  <!-- Responsive Table css -->
+    <link href="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+<style type="text/css">
+   
+
+    .has_error{
+       background-color: #E8F0FE;
+       border-color: red;
+      
+    }
+    .larger{
+
+        width: 100%;
+
+    }
+
+  
+    
+ </style>
+
+
+         
+{% endblock %}
+{% block body %}
+
+        <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content " style="font-size:8px;">
+                <div class=" p-2">
+                    <a href="{{ path('app_bilan_smt_new') }}" class="btn btn-primary waves-effect waves-light btn-sm">Bilan smt<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    <a href="{{ path('app_comptederesultat_smt_new') }}" class="btn btn-secondary waves-effect waves-light btn-sm">Compte résultat smt<i class="mdi mdi-arrow-right ms-1"></i></a>
+                </div>
+                <div class=" p-2">
+                    {# 
+                    <a role="link" aria-disabled="true" class="btn btn-secondary waves-effect waves-light btn-sm">{{'SUIVI DU MATERIEL, DU MOBILIER ET DES CAUTIONS' | lower | capitalize }}<i class="mdi mdi-arrow-right ms-1"></i></a>
+                    #}
+                </div>
+                <div class=" p-2">
+                {#
+                    <a href=" {{path('app_etat_des_stocks_smt_new')}} " class="btn btn-secondary waves-effect waves-light btn-sm">{{'ETAT DES STOCKS' | lower | capitalize }} <i class="mdi mdi-arrow-right ms-1"></i></a>
+                #}
+                </div>
+                <div class=" p-2">
+                {#
+                    <a href=" {{path('app_dettes_creances_smt_new')}} " class="btn btn-secondary waves-effect waves-light btn-sm">{{'ETAT DES CREANCES ET DES DETTES NON ECHUES' | lower | capitalize }}<i class="mdi mdi-arrow-right ms-1"></i></a>
+                #}
+                </div>
+                <div class=" p-2">
+                {#
+                    <a href="{{path('app_journal_tresorerie_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">Journal de trésorerie <i class="mdi mdi-arrow-right ms-1"></i></a>
+                #}
+                </div>
+                <div class=" p-2">
+                {#
+                    <a href="{{path('app_journal_creances_impayees_smt_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">Journal de suivi des créances <i class="mdi mdi-arrow-right ms-1"></i></a>
+                #}
+                </div>
+                <div class=" p-2">
+                {#
+                    <a href="{{path('app_journal_dettes_payer_smt_new')}}" class="btn btn-secondary waves-effect waves-light btn-sm">{{'JOURNAL DE SUIVI DES DETTES A PAYER SMT' | lower | capitalize }} <i class="mdi mdi-arrow-right ms-1"></i></a>
+                #}
+                </div>
+            </div>
+        </div>
+         <span style="font-size:14px; color:#60b9c7;border-bottom: 1px solid #60b9c7; width:100%;" >Saisie Bilan smt</span>
+    </div>
+        <!-- end page title -->
+
+<br>
+<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+    <div class="card-title">
+    
+         <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab">
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">Actif</span>    
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab">
+                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                    <span class="d-none d-sm-block">Passif</span>    
+                </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+    <div class="card-body " style="margin: 0%;padding: 0%;">
+       
+        <div class="tab-content p-3 text-muted" style="margin-top: 0px;">
+            <div class="tab-pane active" id="home" role="tabpanel">
+                <form method="post" action="{{path('app_bilan_smt_new')}}" id="idformpas" style="margin: 0px; padding: 0px;">
+                            <div class="row" style="margin-top: 0px; padding: 0px;">
+                                <div class="col-xl-12" > 
+                                      
+                                    <table class="table table-bordered " style="margin-top: 0px; padding: 0px;">
+                                                             <tr style="margin-top:0px;">
+                                                              
+                                                              <td  style="width: 12%; color: #495057;" >Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                                                                  <input type="text"  class="form-control form-control-sm" name="codecuci" id="idcuci" ></td>
+                                                              <td style="text-align: right; width: 13%;">Désignation entité :<span style="color:red">*</span></td><td  style="width: 20%;">
+                                                                  <input type="text" disabled class="form-control form-control-sm" name="" id="denomination"></td>
+                                                              <td style="text-align: right; width: 12%;">Année financière :<span style="color:red">*</span></td><td  style="width: 8%;">
+                                                                  <input type="text" class="form-control form-control-sm input-mask" name="annee" id="annee"  data-inputmask="'mask': '9999'"></td>
+                                                             </tr>
+                                    </table>
+                                             
+                                    <div class="card">
+                                     <div class="card-body">
+                        
+                                         <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                             <button type="button" class="btn btn-secondary waves-effect waves-light effacerActif">
+                                                 <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                             </button>
+                                            
+                                            
+                                             <button  type="button" class="btn btn-success waves-effect waves-light sauvegarderActif">
+                                                 <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                                 Sauvegarder
+                                             </button>
+                                             <button id="valider" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
+                                                 <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                             </button>
+                                             <input name="submited" id="submited" type="submit" value="1" style="display:none;"/>
+                                             <input name="notsubmited" id="notsubmited" type="submit" value="0" style="display:none;"/>
+                                         </div>
+                                     </div>
+                                    </div>
+                                 </div>
+
+                            <div class="col-12">
+                                <div class="table-responsive">
+
+                                    <table name="form2" id="form1" class="table table-striped table-bordered " >
+                                        <thead style="background: #008000; color:white;" class="table-bordered">
+                                            <tr class=" opacity-65" >
+                                                <th scope="col" colspan="5" class="text-center ">
+                                                    <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px;" id="txtcuci"></span> 
+                                                </th>
+                                                <th colspan="4" scope="col" class="text-center ">
+                                                    
+                                                      <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignation"></span>  
+                                                </th>
+                                                <th colspan="3" scope="col" class="text-center ">
+                                                   
+                                                     <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinanciere"></span>
+                                                </th>
+                                            </tr>
+                                              
+                                            <tr class=" opacity-80" >
+                                                <th scope="col" colspan="2"   rowspan="2" class="text-center ">
+                                                    REF 
+                                                </th>
+                                                 <th scope="col" colspan="2"  rowspan="2"  class="text-center ">
+                                                   Libellé  
+                                                </th>
+                                                 <th scope="col" colspan="6" class="text-center ">
+                                                     Exercice 31/12/<span id="idN"> </span>
+                                                </th>
+                                                <th colspan="2" scope="col" class="text-center ">
+                                                     Exercice 31/12/<span id="idN-1"> </span>
+                                                </th>
+                                               
+                                                
+
+                                            </tr>
+                                            <tr class=" opacity-65" >
+
+                                  
+                                               <th  scope="col" colspan="2" class="text-center ">
+                                                  Brut
+                                                </th>
+                                                <th  scope="col" colspan="2" class="text-center ">
+                                                  Amortissement/Provision
+                                                </th>
+                                                <th  scope="col" colspan="2" class="text-center ">
+                                                  NETN
+                                                </th>
+                                                <th  scope="col" colspan="2" class="text-center ">
+                                                  NETN-1
+                                                </th>
+                                               
+                                               
+                                              </tr>
+                                        </thead>
+
+                                        <!-- debut tbody inputs -->
+                                        <tbody id="tbody">
+                                    
+                                        
+                                        
+                                        </tbody>
+                                        <!-- end tbody -->
+                                    </table>
+                                     <br><br><br>
+                                </div>
+                            </div>
+
+
+                             <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+                                         <button type="button" class="btn btn-secondary waves-effect waves-light effacerActif">
+                                             <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                         </button>
+                                        
+                                         <button  type="button" class="btn btn-success waves-effect waves-light sauvegarderActif">
+                                             <i class="bx bx-check-double font-size-16 align-middle me-2"></i>
+                                             Sauvegarder
+                                         </button>
+                                         <button id="valider2" type="button" class="btn btn-dark bt-soft waves-effect waves-light valider">
+                                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                         </button>
+                                          
+                                     </div>           
+
+                            </div>
+                            <input type="hidden" name="type" value="1" >
+                          
+
+                  
+                </form>
+            </div>
+            <div class="tab-pane" id="profile" role="tabpanel">
+                <form method="post" action="{{path('app_bilan_smt_new')}}" id="formPassif">
+                            <div class="row">
+                                                <div class="col-xl-12"> 
+                                                        <table id="tech-companies-1" class="table table-striped">
+                                                                 <tr>
+                                                                  <td style="width: 15%;">Numéro d'identification :<span style="color:red">*</span></td><td style="width: 10%;">
+                                                                      <input type="text" readonly  class="form-control form-control-sm" name="codecuciPassif" id="idcuciPassif"></td>
+                                                                  <td style="text-align: right; width: 15%;">Désignation entité :<span style="color:red">*</span></td>
+                                                                  <td  style="width: 20%;">
+                                                                      <input type="text" disabled class="form-control form-control-sm" name="" id="denominationPassif"></td>
+                                                                      <td  style=" text-align: right;width: 10%;">            
+                                                                       Année financière :<span style="color:red">*</span></td>
+                                                                       <td  style="width: 5%;">
+                                                                      <input type="text" readonly  class="form-control form-control-sm input-mask" name="anneePassif" id="anneePassif"  data-inputmask="'mask': '9999'"></td>
+                                                                 </tr>
+                                                        </table>
+                                                        <div class="card">
+                                                         <div class="card-body">
+
+                                                             <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                                                 <button type="button" class="btn btn-secondary waves-effect waves-light effacerPassif">
+                                                                     <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                                                 </button>
+                                                                 <button type="button" class="btn btn-success waves-effect waves-light sauvegardPassif ">
+                                                                     <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                                                                 </button>
+                                                                    <input name="submitedPassif" id="submitedPassif" type="submit" value="1" style="display:none;"/>
+                                                                    <input name="notsubmitedPassif" id="notsubmitedPassif" type="submit" value="0" style="display:none;"/>
+                                                                 <button type="button" class="btn btn-dark bt-soft waves-effect waves-light validerPassif"
+                                                                  id="validerPassif">
+                                                                     <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                                                 </button>
+                                                             </div>
+                                                         </div>
+                                                        </div>
+                                                </div>
+
+                                        <div class="col-12">
+                                            <div class="table-resp">
+                                                <table name="form2" id="form2" class="table table-striped table-bordered">
+                                                            <thead style="background: #008000; color:white;">
+                                                <tr class=" opacity-65" >
+                                                <th scope="col" colspan="4" class="text-center " style="width: 20%;">
+                                                    <span style="color:orange; font-size:10px;">Numéro d'identification : </span><span style="color:orange; font-size:10px;" id="txtcucip"></span> 
+                                                </th>
+                                                <th colspan="2" scope="col" class="text-center " style="width: 40%;">
+                                                    
+                                                      <span style="color:orange; font-size:10px;">Désignation entité : </span><span style="color:orange; font-size:10px;" id="txtdesignationp"></span>  
+                                                </th>
+                                                <th colspan="2" scope="col" class="text-center " style="width: 40%;">
+                                                   
+                                                     <span style="color:orange; font-size:10px;">Année financière : </span><span style="color:orange; font-size:10px;" id="txtfinancierep"></span>
+                                                </th>
+                                            </tr>
+                                              
+                                            <tr class=" opacity-80" >
+                                                <th scope="col" colspan="2"   rowspan="2" class="text-center ">
+                                                    REF 
+                                                </th>
+                                                 <th scope="col" colspan="2"  rowspan="2"  class="text-center ">
+                                                   Libellé  
+                                                </th>
+                                                 <th scope="col" colspan="2" class="text-center ">
+                                                     Exercice 31/12/<span id="idNp"> </span>
+                                                </th>
+                                                <th colspan="2" scope="col" class="text-center ">
+                                                     Exercice 31/12/<span id="idNp-1"> </span>
+                                                </th>
+                                               
+                                                
+
+                                            </tr>
+                                            <tr class=" opacity-80" >
+                                                
+                                                
+                                                <th colspan="2" scope="col" class="text-center">
+                                                    NETN
+                                                </th>
+                                                <th colspan="2" scope="col" class="text-center">
+                                                    NETN-1
+                                                </th>
+                                                
+                                                </tr>
+                                                            </thead>
+
+                                                            <!-- debut tbody inputs -->
+                                                            <tbody id="tbodyPassif">
+                                                        
+                                                            
+                                                            
+                                                            </tbody>
+                                                            <!-- end tbody -->
+                                                        </table>
+                                                        </div>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                         <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                                                 <button type="button" class="btn btn-secondary waves-effect waves-light effacerPassif">
+                                                                     <i class="bx bx-error font-size-16 align-middle me-2"></i> Effacer les données
+                                                                 </button>
+                                                                 <button type="button" class="btn btn-success waves-effect waves-light sauvegardPassif ">
+                                                                     <i class="bx bx-check-double font-size-16 align-middle me-2"></i> Sauvegarder
+                                                                 </button>
+                                                                 <button type="button" class="btn btn-dark bt-soft waves-effect waves-light validerPassif"
+                                                                  id="validerPassif">
+                                                                     <i class="bx bx-block font-size-16 align-middle me-2"></i> Valider la saisie
+                                                                 </button>
+                                                             </div>
+                                                    
+                                                </div>
+                                                
+
+                            </div>
+                            <input type="hidden" name="typePassif" value="2" >
+                  
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>   
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/admin-resources/rwd-table/rwd-table.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+
+           {% if app.request.get('routpassif')  is defined and  app.request.get('routpassif')==2 %}
+                $('[href="#profile"]').tab('show');
+            {% endif %}
+
+              $(".form-control").bind("keypress", function(e) {
+
+                    if (e.keyCode == 13) {
+                        var inps = $("input"); //add select too
+                        for (var x = 0; x < inps.length; x++) {
+                            if (inps[x] == this) {
+                                while ((inps[x]).name == (inps[x + 1]).name) {
+                                x++;
+                                }
+                                if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                            }
+                        }   e.preventDefault();
+                    }
+                });
+
+          
+
+            var $error=0;
+            {% if app.session.get("codeCuci")!=""%}
+  
+                var value='{{app.session.get("codeCuci")}}';
+                document.getElementById('idcuci').setAttribute('value',value);
+                document.getElementById('txtcuci').innerHTML=value;
+                document.getElementById('txtcucip').innerHTML=value;
+                document.getElementById('idcuciPassif').setAttribute('value',value);
+                var route="{{path('nineaNum')}}"+"/"+ value;
+                $.ajax({
+                        type: 'GET',
+                        url : route,
+                        dataType : "json",
+                        success: function(data){
+                            let denomination=document.getElementById("denomination");
+                            let denominationPassif=document.getElementById("denominationPassif");
+                            document.getElementById('txtdesignation').innerHTML=data;
+                            document.getElementById('txtdesignationp').innerHTML=data;
+                            denominationPassif.value=data;
+                            denomination.value=data;
+                        } ,
+                        error : function(error){
+                            console.log(error);
+                        }
+                })
+
+                {% if app.session.get("annee")!=""%}
+          
+                    document.getElementById('annee').setAttribute('value','{{app.session.get("annee")}}');
+                    document.getElementById('anneePassif').setAttribute('value','{{app.session.get("annee")}}');
+                   
+                    document.getElementById('txtfinanciere').innerHTML='{{app.session.get("annee")}}';
+                    document.getElementById('txtfinancierep').innerHTML='{{app.session.get("annee")}}';
+                    document.getElementById('idN').innerHTML='{{app.session.get("annee")}}';
+                    document.getElementById('idNp').innerHTML='{{app.session.get("annee")}}';
+                    document.getElementById('idN-1').innerHTML=parseFloat('{{app.session.get("annee")}}')-1;
+                    document.getElementById('idNp-1').innerHTML=parseFloat('{{app.session.get("annee")}}')-1;
+                    document.getElementById("annee").setAttribute('readonly','readonly');
+                    document.getElementById('idcuci').setAttribute('readonly','readonly');
+                    var route="{{path('smtbilansjson')}}"+"/"+'{{app.session.get("annee")}}';
+                    var form = $(this).closest("form");
+                    $.ajax({
+                        type: 'GET',
+                        url : route,
+                        dataType : "json",
+                        success: function(tab){
+                            var tbody=document.getElementById("tbody");
+                            tbody.innerHTML="";
+                            
+                            if(tab[2]!=""){
+                                var data=tab[0];
+                                if(tab[3]==1){
+                                    swal.fire('Les données ont été déjà chargées.')
+                                }
+
+                                for (var i = 0; i < data[1].length; i++) {
+                                    var tr=document.createElement('tr');
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    var td5=document.createElement('td');
+                                    var td6=document.createElement('td');
+                                    td1.setAttribute('colspan',2); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                    tr.setAttribute('style',"border:#ced4da;");
+                                        
+                                    td1.innerHTML=  data[1][i][0];
+                                    tr.appendChild(td1) ;
+
+                                    td2.setAttribute('colspan',2); 
+                                    td2.setAttribute('scope',"col"); 
+                                            
+                                    td2.innerHTML=  data[1][i][1];
+                                    tr.appendChild(td2) ;
+
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+
+
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input3.setAttribute('name',data[1][i][0]+"brut");
+                                    input3.setAttribute('id',data[1][i][0]+"brut");
+                                    if(data[0][data[1][i][0]]){
+                                    input3.setAttribute('value',data[0][data[1][i][0]][1]);
+                                    }
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputActif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                                    input4.setAttribute('name',data[1][i][0]+"ammo");
+                                    input4.setAttribute('id',data[1][i][0]+"ammo");
+                                    if(data[0][data[1][i][0]]){
+                                    input4.setAttribute('value',data[0][data[1][i][0]][2]);
+                                    } 
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                
+
+
+                                    td5.setAttribute('colspan',2); 
+                                    td5.setAttribute('scope',"col"); 
+                                    td5.setAttribute('class',"text-center");
+                                    var input5=document.createElement('input'); 
+                                    input5.setAttribute('type','text'); 
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input5.setAttribute('name',data[1][i][0]+"net1"); 
+                                    input5.setAttribute('id',data[1][i][0]+"net1"); 
+                                    input5.setAttribute('class','form-control form-control-sm inputActif');
+                                    if(data[0][data[1][i][0]]){
+                                    input5.setAttribute('value',data[0][data[1][i][0]][3]);
+                                    } 
+                                    td5.appendChild(input5);
+                                    tr.appendChild(td5) ;
+
+                                    td6.setAttribute('colspan',2); 
+                                    td6.setAttribute('scope',"col"); 
+                                    td6.setAttribute('class',"text-center");           
+                                    var input6=document.createElement('input'); 
+                                    input6.setAttribute('type','text'); 
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input6.setAttribute('name',data[1][i][0]+"net2"); 
+                                    input6.setAttribute('id',data[1][i][0]+"net2"); 
+                                    input6.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    if(data[0][data[1][i][0]]){
+                                    input6.setAttribute('value',data[0][data[1][i][0]][4]);
+                                    }
+                                    td6.appendChild(input6);
+                                    tr.appendChild(td6) ;
+                                    tbody.appendChild(tr);           
+                                
+                                }
+                                    var tr=document.createElement('tr');
+                                     tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    var td5=document.createElement('td');
+                                    var td6=document.createElement('td');
+                                    td1.setAttribute('colspan',4); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                   
+                                        
+                                    td1.innerHTML=  "TOTAL ACTIF";
+                                    tr.appendChild(td1) ;
+
+                                    
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+
+
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input3.setAttribute('name',"totalbrut");
+                                    input3.setAttribute('id',"totalbrut");
+                                   
+                                    input3.setAttribute('value',tab[4][0]);
+                                   
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputActif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                                    input4.setAttribute('name',"totalammo");
+                                    input4.setAttribute('id',"totalammo");
+                                    
+                                    input4.setAttribute('value',tab[4][1]);
+                                   
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                
+
+
+                                    td5.setAttribute('colspan',2); 
+                                    td5.setAttribute('scope',"col"); 
+                                    td5.setAttribute('class',"text-center");
+                                    var input5=document.createElement('input'); 
+                                    input5.setAttribute('type','text'); 
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input5.setAttribute('name',"totalnet1"); 
+                                    input5.setAttribute('id',"totalnet1"); 
+                                    input5.setAttribute('class','form-control form-control-sm inputActif');
+                                   
+                                    input5.setAttribute('value',tab[4][2]);
+                                    
+                                    td5.appendChild(input5);
+                                    tr.appendChild(td5) ;
+
+                                    td6.setAttribute('colspan',2); 
+                                    td6.setAttribute('scope',"col"); 
+                                    td6.setAttribute('class',"text-center");           
+                                    var input6=document.createElement('input'); 
+                                    input6.setAttribute('type','text'); 
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input6.setAttribute('name',"totalnet2"); 
+                                    input6.setAttribute('id',"totalnet2"); 
+                                    input6.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    
+                                    input6.setAttribute('value',tab[4][3]);
+                                  
+                                    td6.appendChild(input6);
+                                    tr.appendChild(td6) ;
+                                    tbody.appendChild(tr);           
+                                
+
+
+                                var passiftbody=document.getElementById("tbodyPassif");
+                                passiftbody.innerHTML="";
+                                var dataPassif=tab[1];
+                                
+                                for (var i = 0; i < dataPassif[1].length; i++) {
+                                    var tr=document.createElement('tr');
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    td1.setAttribute('colspan',2); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                  
+                                    td1.innerHTML=  dataPassif[1][i][0];
+                                    tr.appendChild(td1) ;
+                                    td2.setAttribute('colspan',2); 
+                                    td2.setAttribute('scope',"col"); 
+                                    td2.innerHTML=  dataPassif[1][i][1];
+                                    tr.appendChild(td2) ;
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputPassif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input3.setAttribute('name',dataPassif[1][i][0]+"PassifNet1");
+                                    input3.setAttribute('id',dataPassif[1][i][0]+"PassifNet1");
+                                    if(dataPassif[0][dataPassif[1][i][0]]){
+                                        input3.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][1]);
+                                    }
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputPassif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input4.setAttribute('name',dataPassif[1][i][0]+"PassifNet2");
+                                    input4.setAttribute('id',dataPassif[1][i][0]+"PassifNet2");
+                                    if(dataPassif[0][dataPassif[1][i][0]]){
+                                        input4.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][2]);
+                                    } 
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                    passiftbody.appendChild(tr);  
+                                }
+                                 var tr=document.createElement('tr');
+                                    tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    td1.setAttribute('colspan',4); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                    td1.innerHTML=  "Total passif";
+                                    tr.appendChild(td1) ;
+                                  
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputPassif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input3.setAttribute('name',"totalPassifNet1");
+                                    input3.setAttribute('id',"totalPassifNet1");
+                                    
+                                    input3.setAttribute('value',tab[4][4]);
+                                    
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputPassif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input4.setAttribute('name',"totalPassifNet2");
+                                    input4.setAttribute('id',"totalPassifNet2");
+                                   
+                                     input4.setAttribute('value',tab[4][5]);
+                                  
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                    passiftbody.appendChild(tr);
+                            }
+
+                            $(".form-control").bind("keypress", function(e) {
+                                if (e.keyCode == 13) {
+                                    var inps = $("input"); //add select too
+                                    for (var x = 0; x < inps.length; x++) {
+                                        if (inps[x] == this) {
+                                            while ((inps[x]).name == (inps[x + 1]).name) {
+                                            x++;
+                                            }
+                                            if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                                        }
+                                    }   e.preventDefault();
+                                }
+                            });
+                            $(function(){
+                                $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                                $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")
+                            });
+                        
+                        } ,
+                        error : function(error){
+                            console.log(error);
+                        }
+                    })
+                {% endif %}
+           {% endif %}
+            $('#idcuci').change(function(){ 
+                let route="{{path('nineaNum')}}"+"/"+ $('#idcuci').val();
+                let codecuciPassif=document.getElementById("idcuciPassif");
+                document.getElementById('txtcuci').innerHTML=$('#idcuci').val();
+                document.getElementById('txtcucip').innerHTML=$('#idcuci').val();
+                codecuciPassif.value=$('#idcuci').val();
+                $.ajax({
+                    type: 'GET',
+                    url : route,
+                    dataType : "json",
+                    success: function(data){
+                        if(data!=0){
+                            let denomination=document.getElementById("denomination");
+                            denomination.value=data;
+                            document.getElementById('txtdesignation').innerHTML=data;
+                            document.getElementById('txtdesignationp').innerHTML=data;
+                            let denominationPassif=document.getElementById("denominationPassif");
+                            denominationPassif.value=data;
+                        }else{
+                            let denomination=document.getElementById("denomination");
+                            denomination.value="";
+                            var tbody=document.getElementById("tbody");
+                            tbody.innerHTML="";
+                            var tbody=document.getElementById("tbodyPassif");
+                            tbody.innerHTML="";
+                            document.getElementById('txtdesignation').innerHTML="";
+                            document.getElementById('txtdesignationp').innerHTML="";
+                            let denominationPassif=document.getElementById("denominationPassif");
+                            denominationPassif.value="";
+                            Swal.fire('Vérifier le numéro de CUCI que vous avez entrez.'); 
+                        }
+                    } ,
+                    error : function(error){
+                        console.log(error);
+                    }
+                })
+            });
+            $('#annee').change(function(){
+                
+                var dateDuJour=new Date();
+                //alert(dateDuJour);
+                var anneeActuelle=dateDuJour.getFullYear();
+                
+                if($('#annee').val()>anneeActuelle){
+                    Swal.fire("l'année financiére doit être antérieur à "+anneeActuelle);
+                    document.getElementById("annee").value="";
+                }
+                if($('#annee').val()>999 ){
+                    
+                    document.getElementById("annee").setAttribute('readonly','readonly');
+                    document.getElementById('idcuci').setAttribute('readonly','readonly');
+                     
+                    let route="{{path('smtbilansjson')}}"+"/"+ $('#annee').val();
+                    document.getElementById('txtfinanciere').innerHTML=$('#annee').val();
+                    document.getElementById('txtfinancierep').innerHTML=$('#annee').val();
+                    document.getElementById('idN').innerHTML=$('#annee').val();
+                    document.getElementById('idNp').innerHTML=$('#annee').val();
+                    document.getElementById('idN-1').innerHTML=parseFloat($('#annee').val())-1;
+                    document.getElementById('idNp-1').innerHTML=parseFloat($('#annee').val())-1;
+                    var form = $(this).closest("form");
+                    $.ajax({
+                        type: 'GET',
+                        url : route,
+                        dataType : "json",
+                        success: function(tab){
+                            var tbody=document.getElementById("tbody");
+                            tbody.innerHTML="";
+                            document.getElementById("anneePassif").value=$('#annee').val();
+                            if(tab[2]!=""){
+                                var data=tab[0];
+                                if(tab[3]==1){
+                                    swal.fire('Les données ont été déjà chargées.')
+                                }
+
+                                for (var i = 0; i < data[1].length; i++) {
+                                    var tr=document.createElement('tr');
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    var td5=document.createElement('td');
+                                    var td6=document.createElement('td');
+                                    td1.setAttribute('colspan',2); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                    tr.setAttribute('style',"border:#ced4da;");
+                                        
+                                    td1.innerHTML=  data[1][i][0];
+                                    tr.appendChild(td1) ;
+
+                                    td2.setAttribute('colspan',2); 
+                                    td2.setAttribute('scope',"col"); 
+                                            
+                                    td2.innerHTML=  data[1][i][1];
+                                    tr.appendChild(td2) ;
+
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+
+
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                                    input3.setAttribute('name',data[1][i][0]+"brut");
+                                    input3.setAttribute('id',data[1][i][0]+"brut");
+                                    if(data[0][data[1][i][0]]){
+                                    input3.setAttribute('value',data[0][data[1][i][0]][1]);
+                                    }
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputActif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
+                                    input4.setAttribute('name',data[1][i][0]+"ammo");
+                                    input4.setAttribute('id',data[1][i][0]+"ammo");
+                                    if(data[0][data[1][i][0]]){
+                                    input4.setAttribute('value',data[0][data[1][i][0]][2]);
+                                    } 
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                
+
+
+                                    td5.setAttribute('colspan',2); 
+                                    td5.setAttribute('scope',"col"); 
+                                    td5.setAttribute('class',"text-center");
+                                    var input5=document.createElement('input'); 
+                                    input5.setAttribute('type','text'); 
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                                    input5.setAttribute('name',data[1][i][0]+"net1"); 
+                                    input5.setAttribute('id',data[1][i][0]+"net1"); 
+                                    input5.setAttribute('class','form-control form-control-sm inputActif');
+                                    if(data[0][data[1][i][0]]){
+                                    input5.setAttribute('value',data[0][data[1][i][0]][3]);
+                                    } 
+                                    td5.appendChild(input5);
+                                    tr.appendChild(td5) ;
+
+                                    td6.setAttribute('colspan',2); 
+                                    td6.setAttribute('scope',"col"); 
+                                    td6.setAttribute('class',"text-center");           
+                                    var input6=document.createElement('input'); 
+                                    input6.setAttribute('type','text'); 
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                                    input6.setAttribute('name',data[1][i][0]+"net2"); 
+                                    input6.setAttribute('id',data[1][i][0]+"net2"); 
+                                    input6.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    if(data[0][data[1][i][0]]){
+                                    input6.setAttribute('value',data[0][data[1][i][0]][4]);
+                                    }
+                                    td6.appendChild(input6);
+                                    tr.appendChild(td6) ;
+                                    tbody.appendChild(tr);           
+                                
+                                }
+                                    var tr=document.createElement('tr');
+                                     tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    var td5=document.createElement('td');
+                                    var td6=document.createElement('td');
+                                    td1.setAttribute('colspan',4); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                   
+                                        
+                                    td1.innerHTML=  "TOTAL ACTIF";
+                                    tr.appendChild(td1) ;
+
+                                    
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+
+
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                                    input3.setAttribute('name',"totalbrut");
+                                    input3.setAttribute('id',"totalbrut");
+                                   
+                                    input3.setAttribute('value',tab[4][0]);
+                                   
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputActif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
+                                    input4.setAttribute('name',"totalammo");
+                                    input4.setAttribute('id',"totalammo");
+                                    
+                                    input4.setAttribute('value',tab[4][1]);
+                                   
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                
+
+
+                                    td5.setAttribute('colspan',2); 
+                                    td5.setAttribute('scope',"col"); 
+                                    td5.setAttribute('class',"text-center");
+                                    var input5=document.createElement('input'); 
+                                    input5.setAttribute('type','text'); 
+                                    input5.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                                    input5.setAttribute('name',"totalnet1"); 
+                                    input5.setAttribute('id',"totalnet1"); 
+                                    input5.setAttribute('class','form-control form-control-sm inputActif');
+                                   
+                                    input5.setAttribute('value',tab[4][2]);
+                                    
+                                    td5.appendChild(input5);
+                                    tr.appendChild(td5) ;
+
+                                    td6.setAttribute('colspan',2); 
+                                    td6.setAttribute('scope',"col"); 
+                                    td6.setAttribute('class',"text-center");           
+                                    var input6=document.createElement('input'); 
+                                    input6.setAttribute('type','text'); 
+                                    input6.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');"); 
+                                    input6.setAttribute('name',"totalnet2"); 
+                                    input6.setAttribute('id',"totalnet2"); 
+                                    input6.setAttribute('class','form-control form-control-sm inputActif'); 
+                                    
+                                    input6.setAttribute('value',tab[4][3]);
+                                  
+                                    td6.appendChild(input6);
+                                    tr.appendChild(td6) ;
+                                    tbody.appendChild(tr);           
+                                
+
+
+                                var passiftbody=document.getElementById("tbodyPassif");
+                                passiftbody.innerHTML="";
+                                var dataPassif=tab[1];
+                                
+                                for (var i = 0; i < dataPassif[1].length; i++) {
+                                    var tr=document.createElement('tr');
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    td1.setAttribute('colspan',2); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                  
+                                    td1.innerHTML=  dataPassif[1][i][0];
+                                    tr.appendChild(td1) ;
+                                    td2.setAttribute('colspan',2); 
+                                    td2.setAttribute('scope',"col"); 
+                                    td2.innerHTML=  dataPassif[1][i][1];
+                                    tr.appendChild(td2) ;
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputPassif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input3.setAttribute('name',dataPassif[1][i][0]+"PassifNet1");
+                                    input3.setAttribute('id',dataPassif[1][i][0]+"PassifNet1");
+                                    if(dataPassif[0][dataPassif[1][i][0]]){
+                                        input3.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][1]);
+                                    }
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputPassif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input4.setAttribute('name',dataPassif[1][i][0]+"PassifNet2");
+                                    input4.setAttribute('id',dataPassif[1][i][0]+"PassifNet2");
+                                    if(dataPassif[0][dataPassif[1][i][0]]){
+                                        input4.setAttribute('value',dataPassif[0][dataPassif[1][i][0]][2]);
+                                    } 
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                    passiftbody.appendChild(tr);  
+                                }
+                                 var tr=document.createElement('tr');
+                                    tr.setAttribute('style',"background: #82C46C;color:white;border:#ced4da;");
+                                    var td1=document.createElement('td');
+                                    var td2=document.createElement('td');
+                                    var td3=document.createElement('td');
+                                    var td4=document.createElement('td');
+                                    td1.setAttribute('colspan',4); 
+                                    td1.setAttribute('scope',"col"); 
+                                    td1.setAttribute('class',"text-center form");
+                                    td1.innerHTML=  "Total passif";
+                                    tr.appendChild(td1) ;
+                                  
+                                    td3.setAttribute('colspan',2); 
+                                    td3.setAttribute('scope',"col"); 
+                                    td3.setAttribute('class',"text-center"); 
+                                    var input3=document.createElement('input');  
+                                    input3.setAttribute('class','form-control form-control-sm inputPassif'); 
+                                    input3.setAttribute('type','text'); 
+                                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input3.setAttribute('name',"totalPassifNet1");
+                                    input3.setAttribute('id',"totalPassifNet1");
+                                    
+                                    input3.setAttribute('value',tab[4][4]);
+                                    
+                                    td3.appendChild(input3);
+                                    tr.appendChild(td3) ;
+                                    td4.setAttribute('colspan',2); 
+                                    td4.setAttribute('scope',"col"); 
+                                    td4.setAttribute('class',"text-center");           
+                                    var input4=document.createElement('input');  
+                                    input4.setAttribute('class','form-control form-control-sm inputPassif');
+                                    input4.setAttribute('type','text'); 
+                                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');"); 
+                                    input4.setAttribute('name',"totalPassifNet2");
+                                    input4.setAttribute('id',"totalPassifNet2");
+                                   
+                                     input4.setAttribute('value',tab[4][5]);
+                                  
+                                    td4.appendChild(input4);
+                                    tr.appendChild(td4) ;
+                                    passiftbody.appendChild(tr);
+                            }
+
+                            $(".form-control").bind("keypress", function(e) {
+                                if (e.keyCode == 13) {
+                                    var inps = $("input"); //add select too
+                                    for (var x = 0; x < inps.length; x++) {
+                                        if (inps[x] == this) {
+                                            while ((inps[x]).name == (inps[x + 1]).name) {
+                                            x++;
+                                            }
+                                            if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+                                        }
+                                    }   e.preventDefault();
+                                }
+                            });
+                            $(function(){
+                                $(".table-responsive").responsiveTable({addDisplayAllBtn:"btn btn-secondary"}),
+                                $(".btn-toolbar [data-toggle=dropdown]").attr("data-bs-toggle","dropdown")
+                            });
+                        
+                        } ,
+                        error : function(error){
+                            console.log(error);
+                        }
+                    })
+                }
+                
+            });
+
+   $('.effacerActif').click(function(){
+     var checkboxList = document.getElementsByClassName('inputActif');
+                for (i = 0; i < checkboxList.length; i++) {
+                   checkboxList[i].value="";
+                }
+   });
+   $('.sauvegarderActif').click(function(){
+
+                var empt = 1;
+                var checkboxList = document.getElementsByClassName('inputActif');
+                for (i = 0; i < checkboxList.length; i++) {
+                    if (checkboxList[i].value != "") {
+                        console.log(checkboxList[i].value);
+                        empt = 0;
+                    }
+                }
+               
+                if(empt!=1)
+                {
+                
+                    Swal.fire({
+                    title:"Confirmation",
+                    text:"Êtes-vous sûr de vouloir sauvegarder  sans valider ?",
+                    icon:"warning",
+                    showCancelButton:true,
+                    confirmButtonText:"Oui",
+                    cancelButtonText:"Non",
+                    confirmButtonClass:"btn btn-success mt-2",
+                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                    buttonsStyling:!1}).then(function(t)
+                    {
+                    if (t.value) {
+                        document.getElementById("notsubmited").click()
+                    }
+                    })
+                }
+   })
+   $('.effacerPassif').click(function(){
+                var checkboxList = document.getElementsByClassName('inputPassif');
+                for (i = 0; i < checkboxList.length; i++) {
+                   checkboxList[i].value="";
+                }
+    });
+    $('.sauvegardPassif').click(function(){
+
+                var empt = 1;
+                var checkboxList = document.getElementsByClassName('inputPassif');
+                for (i = 0; i < checkboxList.length; i++) {
+                    if (checkboxList[i].value != "") {
+                        console.log(checkboxList[i].value);
+                        empt = 0;
+                    }
+                }
+               
+                if(empt!=1)
+                {
+                
+                    Swal.fire({
+                    title:"Confirmation",
+                    text:"Êtes-vous sûr de vouloir sauvegarder  sans valider ?",
+                    icon:"warning",
+                    showCancelButton:true,
+                    confirmButtonText:"Oui",
+                    cancelButtonText:"Non",
+                    confirmButtonClass:"btn btn-success mt-2",
+                    cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                    buttonsStyling:!1}).then(function(t)
+                    {
+                    if (t.value) {
+                        document.getElementById("notsubmitedPassif").click()
+                    }
+                    })
+                }
+    })
+
+            function remplacer(value){
+                value=value.replace(".", "");
+                value=value.replace(".", "");
+                value=value.replace(".", "");
+                value=value.replace(".", "");
+                value=value.replace(".", "");
+                value=value.replace(".", "");
+                value=value.replace(",", "");
+                value=value.replace(",", "");
+                value=value.replace(",", "");
+                value=value.replace(",", "");
+                value=value.replace(",", "");
+                value=value.replace(",", "");
+                value=value.replace(",", "");
+                return value;
+            }
+            function is_int(value){
+            
+                var  $val= remplacer(value);
+                
+                if((parseFloat($val) == parseFloat($val)) && !isNaN($val)){ 
+                
+                    return true;
+                } else {
+                    
+                    return false;
+                }
+            }
+
+            var tagbrut,tagammo,tagnet,brut=0,ammo=0,net=0,somme=0, valider=1,validerPassif=1;
+            $('#tbody').on('change', "#1net1", function(){
+                    if(is_int(document.getElementById("1brut").value)==true){
+                    brut=parseFloat(remplacer(document.getElementById("1brut").value));
+                    }else brut=0;
+
+                    if(is_int(document.getElementById("1ammo").value)==true){
+                    ammo=parseFloat(remplacer(document.getElementById("1ammo").value));
+                    }else ammo=0;
+
+                    if(is_int(document.getElementById("1net1").value)==true){
+                        net=parseFloat(remplacer(document.getElementById("1net1").value));
+                    } else net=0;
+                    somme=brut-ammo;
+                    if (somme!=net) {
+                        valider=0;
+                        Swal.fire('Vérifier opération : ADbrut'+ ' - ADammo'+' = ADnet1');
+                    
+                    }else{
+                    
+                    } 
+
+            }); 
+            $('#tbody').on('change', "#2net1", function(){
+                    if(is_int(document.getElementById("2brut").value)==true){
+                    brut=parseFloat(remplacer(document.getElementById("2brut").value));
+                    }else brut=0;
+
+                    if(is_int(document.getElementById("2ammo").value)==true){
+                    ammo=parseFloat(remplacer(document.getElementById("2ammo").value));
+                    }else ammo=0;
+
+                    if(is_int(document.getElementById("2net1").value)==true){
+                        net=parseFloat(remplacer(document.getElementById("2net1").value));
+                    } else net=0;
+                    somme=brut-ammo;
+                    if (somme!=net) {
+                        valider=0
+                        Swal.fire('Vérifier opération : 2brut'+ ' - 2ammo'+' = 2net1');
+                    
+                    }else{
+                    
+                    } 
+
+            });
+            $('#tbody').on('change', "#3net1", function(){
+                    if(is_int(document.getElementById("3brut").value)==true){
+                    brut=parseFloat(remplacer(document.getElementById("3brut").value));
+                    }else brut=0;
+
+                    if(is_int(document.getElementById("3ammo").value)==true){
+                    ammo=parseFloat(remplacer(document.getElementById("3ammo").value));
+                    }else ammo=0;
+
+                    if(is_int(document.getElementById("3net1").value)==true){
+                        net=parseFloat(remplacer(document.getElementById("3net1").value));
+                    } else net=0;
+                    somme=brut-ammo;
+                    if (somme!=net) {
+                        valider=0
+                        Swal.fire('Vérifier opération : 3brut'+ ' - 3ammo'+' = 3net1');
+                    
+                    }else{
+                    
+                    } 
+
+            }); 
+            $('#tbody').on('change', "#4net1", function(){
+                    if(is_int(document.getElementById("4brut").value)==true){
+                    brut=parseFloat(remplacer(document.getElementById("4brut").value));
+                    }else brut=0;
+
+                    if(is_int(document.getElementById("4ammo").value)==true){
+                    ammo=parseFloat(remplacer(document.getElementById("4ammo").value));
+                    }else ammo=0;
+
+                    if(is_int(document.getElementById("4net1").value)==true){
+                        net=parseFloat(remplacer(document.getElementById("4net1").value));
+                    } else net=0;
+                    somme=brut-ammo;
+                    if (somme!=net) {
+                        valider=0
+                        Swal.fire('Vérifier opération : 3brut'+ ' - 3ammo'+' = 3net1');
+                    
+                    }else{
+                    
+                    } 
+
+            }); 
+            $('#tbody').on('change', "#5net1", function(){
+                    if(is_int(document.getElementById("5brut").value)==true){
+                    brut=parseFloat(remplacer(document.getElementById("5brut").value));
+                    }else brut=0;
+
+                    if(is_int(document.getElementById("5ammo").value)==true){
+                    ammo=parseFloat(remplacer(document.getElementById("5ammo").value));
+                    }else ammo=0;
+
+                    if(is_int(document.getElementById("5net1").value)==true){
+                        net=parseFloat(remplacer(document.getElementById("5net1").value));
+                    } else net=0;
+                    somme=brut-ammo;
+                    if (somme!=net) {
+                        valider=0
+                        Swal.fire('Vérifier opération : 5brut'+ ' - 5ammo'+' = 5net1');
+                    
+                    }else{
+                    
+                    } 
+
+            });
+
+            $('#tbody').on('change', "#totalbrut", function(){
+
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("1brut").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1brut").value));
+                    }
+
+                    if(is_int(document.getElementById("2brut").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2brut").value));
+                    }
+
+
+                    if(is_int(document.getElementById("3brut").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3brut").value));
+                    }
+
+                    if(is_int(document.getElementById("4brut").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4brut").value));
+                    }
+
+
+                    if(is_int(document.getElementById("5brut").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5brut").value));
+                    }
+
+                    
+                    var azbrut=0;
+                    if(document.getElementById("totalbrut").value!="")
+                        azbrut=remplacer(document.getElementById("totalbrut").value);
+
+
+                    if (sommeAZ==parseFloat(azbrut)) {
+
+                    }else{
+                        valider=0
+                         Swal.fire('Vérifier les totaux  des valeurs Brut .');
+
+                    }
+            });
+            $('#tbody').on('change', "#totalammo", function(){
+
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("1ammo").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1ammo").value));
+                    }
+
+                    if(is_int(document.getElementById("2ammo").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2ammo").value));
+                    }
+
+
+                    if(is_int(document.getElementById("3ammo").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3ammo").value));
+                    }
+
+                    if(is_int(document.getElementById("4ammo").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4ammo").value));
+                    }
+
+
+                    if(is_int(document.getElementById("5ammo").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5ammo").value));
+                    }
+
+                    
+                    var azammo=0;
+                    if(document.getElementById("totalammo").value!="")
+                        azammo=remplacer(document.getElementById("totalammo").value);
+
+
+                    if (sommeAZ==parseFloat(azammo)) {
+
+                    }else{
+                         valider=0
+                         Swal.fire('Vérifier les totaux  des valeurs ammo .');
+
+                    }
+            });
+            $('#tbody').on('change', "#totalnet1", function(){
+
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("1net1").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1net1").value));
+                    }
+
+                    if(is_int(document.getElementById("2net1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2net1").value));
+                    }
+
+
+                    if(is_int(document.getElementById("3net1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3net1").value));
+                    }
+
+                    if(is_int(document.getElementById("4net1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4net1").value));
+                    }
+
+
+                    if(is_int(document.getElementById("5net1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5net1").value));
+                    }
+
+                    
+                    var aznet1=0;
+                    if(document.getElementById("totalnet1").value!="")
+                        aznet1=remplacer(document.getElementById("totalnet1").value);
+
+
+                    if (sommeAZ==parseFloat(aznet1)) {
+
+                    }else{
+                         valider=0
+                         Swal.fire('Vérifier les totaux  des valeurs net1 .');
+
+                    }
+            }); 
+            $('#tbody').on('change', "#totalnet2", function(){
+
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("1net2").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1net2").value));
+                    }
+
+                    if(is_int(document.getElementById("2net2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2net2").value));
+                    }
+
+
+                    if(is_int(document.getElementById("3net2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3net2").value));
+                    }
+
+                    if(is_int(document.getElementById("4net2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4net2").value));
+                    }
+
+
+                    if(is_int(document.getElementById("5net2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5net2").value));
+                    }
+
+                    
+                    var aznet2=0;
+                    if(document.getElementById("totalnet2").value!="")
+                        aznet2=remplacer(document.getElementById("totalnet2").value);
+
+
+                    if (sommeAZ==parseFloat(aznet2)) {
+
+                    }else{
+                        valider=0
+                         Swal.fire('Vérifier les totaux  des valeurs net2 .');
+
+                    }
+            });
+
+            $('#tbodyPassif').on('change', "#totalPassifNet2", function(){
+
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("6PassifNet2").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("6PassifNet2").value));
+                    }
+
+                    if(is_int(document.getElementById("7PassifNet2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("7PassifNet2").value));
+                    }
+
+
+                    if(is_int(document.getElementById("8PassifNet2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("8PassifNet2").value));
+                    }
+
+                    if(is_int(document.getElementById("9PassifNet2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("9PassifNet2").value));
+                    }
+
+
+                    
+                    var aznet2=0;
+                    if(document.getElementById("totalPassifNet2").value!="")
+                        aznet2=remplacer(document.getElementById("totalPassifNet2").value);
+
+
+                    if (sommeAZ==parseFloat(aznet2)) {
+
+                    }else{
+                        valider=0
+                         Swal.fire('Vérifier les totaux  des valeurs net2 .');
+
+                    }
+            });
+            
+            $('#tbodyPassif').on('change', "#totalPassifNet1", function(){
+
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("6PassifNet1").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("6PassifNet1").value));
+                    }
+
+                    if(is_int(document.getElementById("7PassifNet1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("7PassifNet1").value));
+                    }
+
+
+                    if(is_int(document.getElementById("8PassifNet1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("8PassifNet1").value));
+                    }
+
+                    if(is_int(document.getElementById("8PassifNet1").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("8PassifNet1").value));
+                    }
+
+
+                    
+                    var aznet2=0;
+                    if(document.getElementById("totalPassifNet1").value!="")
+                        aznet2=remplacer(document.getElementById("totalPassifNet1").value);
+
+
+                    if (sommeAZ==parseFloat(aznet2)) {
+
+                    }else{
+                        validerPassif=0
+                         Swal.fire('Vérifier les totaux  des valeurs net1 .');
+
+                    }
+            }); 
+            $('.valider').click(function(e){
+               var valider=1;
+                
+                if(is_int(document.getElementById("1brut").value)==true){
+                brut=parseFloat(remplacer(document.getElementById("1brut").value));
+                }else brut=0;
+
+                if(is_int(document.getElementById("1ammo").value)==true){
+                ammo=parseFloat(remplacer(document.getElementById("1ammo").value));
+                }else ammo=0;
+
+                if(is_int(document.getElementById("1net1").value)==true){
+                    net=parseFloat(remplacer(document.getElementById("1net1").value));
+                } else net=0;
+                somme=brut-ammo;
+                if (somme!=net) {
+                    valider=0;
+                    Swal.fire('Vérifier opération : 1brut'+ ' - 1ammo'+' = 1net1');
+                
+                }else{
+                   
+                        if(is_int(document.getElementById("2brut").value)==true){
+                        brut=parseFloat(remplacer(document.getElementById("2brut").value));
+                        }else brut=0;
+
+                        if(is_int(document.getElementById("2ammo").value)==true){
+                        ammo=parseFloat(remplacer(document.getElementById("2ammo").value));
+                        }else ammo=0;
+
+                        if(is_int(document.getElementById("2net1").value)==true){
+                            net=parseFloat(remplacer(document.getElementById("2net1").value));
+                        } else net=0;
+                        somme=brut-ammo;
+                        if (somme!=net) {
+                            valider=0
+                            Swal.fire('Vérifier opération : 2brut'+ ' - 2ammo'+' = 2net1');
+                        
+                        }else{
+
+                            if(is_int(document.getElementById("3brut").value)==true){
+                            brut=parseFloat(remplacer(document.getElementById("3brut").value));
+                            }else brut=0;
+
+                            if(is_int(document.getElementById("3ammo").value)==true){
+                            ammo=parseFloat(remplacer(document.getElementById("3ammo").value));
+                            }else ammo=0;
+
+                            if(is_int(document.getElementById("3net1").value)==true){
+                                net=parseFloat(remplacer(document.getElementById("3net1").value));
+                            } else net=0;
+                            somme=brut-ammo;
+                            if (somme!=net) {
+                                valider=0
+                                Swal.fire('Vérifier opération : 3brut'+ ' - 3ammo'+' = 3net1');
+                            
+                            }else{
+
+                                    if(is_int(document.getElementById("4brut").value)==true){
+                                    brut=parseFloat(remplacer(document.getElementById("4brut").value));
+                                    }else brut=0;
+
+                                    if(is_int(document.getElementById("4ammo").value)==true){
+                                    ammo=parseFloat(remplacer(document.getElementById("4ammo").value));
+                                    }else ammo=0;
+
+                                    if(is_int(document.getElementById("4net1").value)==true){
+                                        net=parseFloat(remplacer(document.getElementById("4net1").value));
+                                    } else net=0;
+                                    somme=brut-ammo;
+                                    if (somme!=net) {
+                                        valider=0
+                                        Swal.fire('Vérifier opération : 4brut'+ ' - 4ammo'+' = 4net1');
+                                    
+                                    }else{
+                                        
+
+                                            if(is_int(document.getElementById("5brut").value)==true){
+                                            brut=parseFloat(remplacer(document.getElementById("5brut").value));
+                                            }else brut=0;
+
+                                            if(is_int(document.getElementById("5ammo").value)==true){
+                                            ammo=parseFloat(remplacer(document.getElementById("5ammo").value));
+                                            }else ammo=0;
+
+                                            if(is_int(document.getElementById("5net1").value)==true){
+                                                net=parseFloat(remplacer(document.getElementById("5net1").value));
+                                            } else net=0;
+                                            somme=brut-ammo;
+                                            if (somme!=net) {
+                                                valider=0
+                                                Swal.fire('Vérifier opération : 5brut'+ ' - 5ammo'+' = 5net1');
+                                            
+                                            }else{
+
+                                                var sommeAZ=0;
+                                                if(is_int(document.getElementById("1brut").value)==true){
+                                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1brut").value));
+                                                }
+
+                                                if(is_int(document.getElementById("2brut").value)==true){
+                                                    sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2brut").value));
+                                                }
+
+
+                                                if(is_int(document.getElementById("3brut").value)==true){
+                                                    sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3brut").value));
+                                                }
+
+                                                if(is_int(document.getElementById("4brut").value)==true){
+                                                    sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4brut").value));
+                                                }
+
+
+                                                if(is_int(document.getElementById("5brut").value)==true){
+                                                    sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5brut").value));
+                                                }
+
+                                                
+                                                var azbrut=0;
+                                                if(document.getElementById("totalbrut").value!="")
+                                                    azbrut=remplacer(document.getElementById("totalbrut").value);
+
+
+                                                if (sommeAZ==parseFloat(azbrut)) {
+                                                   
+
+                                                     var sommeAZ=0;
+                                                    if(is_int(document.getElementById("1ammo").value)==true){
+                                                    sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1ammo").value));
+                                                    }
+
+                                                    if(is_int(document.getElementById("2ammo").value)==true){
+                                                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2ammo").value));
+                                                    }
+
+
+                                                    if(is_int(document.getElementById("3ammo").value)==true){
+                                                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3ammo").value));
+                                                    }
+
+                                                    if(is_int(document.getElementById("4ammo").value)==true){
+                                                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4ammo").value));
+                                                    }
+
+
+                                                    if(is_int(document.getElementById("5ammo").value)==true){
+                                                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5ammo").value));
+                                                    }
+
+                                                    
+                                                    var azammo=0;
+                                                    if(document.getElementById("totalammo").value!="")
+                                                        azammo=remplacer(document.getElementById("totalammo").value);
+
+
+                                                    if (sommeAZ==parseFloat(azammo)) {
+
+
+                                                         var sommeAZ=0;
+                                                        if(is_int(document.getElementById("1net1").value)==true){
+                                                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1net1").value));
+                                                        }
+
+                                                        if(is_int(document.getElementById("2net1").value)==true){
+                                                            sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2net1").value));
+                                                        }
+
+
+                                                        if(is_int(document.getElementById("3net1").value)==true){
+                                                            sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3net1").value));
+                                                        }
+
+                                                        if(is_int(document.getElementById("4net1").value)==true){
+                                                            sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4net1").value));
+                                                        }
+
+
+                                                        if(is_int(document.getElementById("5net1").value)==true){
+                                                            sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5net1").value));
+                                                        }
+
+                                                        
+                                                        var aznet1=0;
+                                                        if(document.getElementById("totalnet1").value!="")
+                                                            aznet1=remplacer(document.getElementById("totalnet1").value);
+
+
+                                                        if (sommeAZ==parseFloat(aznet1)) {
+
+                                                             var sommeAZ=0;
+                                                            if(is_int(document.getElementById("1net2").value)==true){
+                                                            sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("1net2").value));
+                                                            }
+
+                                                            if(is_int(document.getElementById("2net2").value)==true){
+                                                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("2net2").value));
+                                                            }
+
+
+                                                            if(is_int(document.getElementById("3net2").value)==true){
+                                                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("3net2").value));
+                                                            }
+
+                                                            if(is_int(document.getElementById("4net2").value)==true){
+                                                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("4net2").value));
+                                                            }
+
+
+                                                            if(is_int(document.getElementById("5net2").value)==true){
+                                                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("5net2").value));
+                                                            }
+
+                                                            
+                                                            var aznet2=0;
+                                                            if(document.getElementById("totalnet2").value!="")
+                                                                aznet2=remplacer(document.getElementById("totalnet2").value);
+
+
+                                                            if (sommeAZ==parseFloat(aznet2)) {
+
+                                                            }else{
+                                                                valider=0
+                                                                Swal.fire('Vérifier les totaux  des valeurs net2 .');
+
+                                                            }
+
+
+                                                        }else{
+                                                            valider=0
+                                                            Swal.fire('Vérifier les totaux  des valeurs net1 .');
+
+                                                        }
+
+                                                    }else{
+                                                        valider=0
+                                                        Swal.fire('Vérifier les totaux  des valeurs ammo .');
+
+                                                    }
+
+
+
+
+                                                }else{
+                                                    valider=0
+                                                    Swal.fire('Vérifier les totaux  des valeurs Brut .');
+
+                                                }
+                                            
+                                            } 
+                                    } 
+                            
+                            } 
+                        
+                        } 
+                } 
+                  
+                if (valider==1) {
+                     console.log(valider);
+                        var empt = 1;
+                        var checkboxList = document.getElementsByClassName('inputActif');
+                        for (i = 0; i < checkboxList.length; i++) {
+                            if (checkboxList[i].value != "") {
+                                console.log(checkboxList[i].value);
+                                empt = 0;
+                            }
+                        }
+                    
+                        if(empt!=1)
+                        {
+                        e.preventDefault();
+                        var a=$(this);
+                        Swal.fire({
+                        title:"Confirmation",
+                        text:"Êtes-vous sûr de vouloir sauvegarder les données de cet enrégistrement ?",
+                        icon:"success",
+                        showCancelButton:true,
+                        confirmButtonText:"Oui",
+                        cancelButtonText:"Non",
+                        confirmButtonClass:"btn btn-success mt-2",
+                        cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                        buttonsStyling:!1}).then(function(t)
+                        {
+                        if (t.value) {
+                            document.getElementById("submited").click()
+                        }else
+                            e.preventDefault();
+
+                        })
+                        }
+                }
+            }); 
+            $('.validerPassif').click(function(e){
+               
+                    var validerPassif=1;
+                    var sommeAZ=0;
+                    if(is_int(document.getElementById("6PassifNet2").value)==true){
+                       sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("6PassifNet2").value));
+                    }
+
+                    if(is_int(document.getElementById("7PassifNet2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("7PassifNet2").value));
+                    }
+
+
+                    if(is_int(document.getElementById("8PassifNet2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("8PassifNet2").value));
+                    }
+
+                    if(is_int(document.getElementById("9PassifNet2").value)==true){
+                        sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("9PassifNet2").value));
+                    }
+
+
+                    
+                    var aznet2=0;
+                    if(document.getElementById("totalPassifNet2").value!="")
+                        aznet2=remplacer(document.getElementById("totalPassifNet2").value);
+
+
+                    if (sommeAZ==parseFloat(aznet2)) {
+
+                            var sommeAZ=0;
+                            if(is_int(document.getElementById("6PassifNet1").value)==true){
+                            sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("6PassifNet1").value));
+                            }
+
+                            if(is_int(document.getElementById("7PassifNet1").value)==true){
+                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("7PassifNet1").value));
+                            }
+
+
+                            if(is_int(document.getElementById("8PassifNet1").value)==true){
+                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("8PassifNet1").value));
+                            }
+
+                            if(is_int(document.getElementById("8PassifNet1").value)==true){
+                                sommeAZ=sommeAZ + parseFloat(remplacer(document.getElementById("8PassifNet1").value));
+                            }
+
+
+                            
+                            var aznet2=0;
+                            if(document.getElementById("totalPassifNet1").value!="")
+                                aznet2=remplacer(document.getElementById("totalPassifNet1").value);
+
+
+                            if (sommeAZ==parseFloat(aznet2)) {
+
+                                var totalnet1=0;
+                                if(document.getElementById("totalnet1").value!="")
+                                    totalnet1=remplacer(document.getElementById("totalnet1").value);
+                                var totalPassifNet1=0;
+                                if(document.getElementById("totalPassifNet1").value!="")
+                                    totalPassifNet1=remplacer(document.getElementById("totalPassifNet1").value);
+
+                                if (totalPassifNet1==parseFloat(totalnet1)) {
+
+                                
+                                var totalnet2=0;
+                                if(document.getElementById("totalnet2").value!="")
+                                    totalnet2=remplacer(document.getElementById("totalnet2").value);
+                                var totalPassifNet2=0;
+                                if(document.getElementById("totalPassifNet2").value!="")
+                                    totalPassifNet2=remplacer(document.getElementById("totalPassifNet2").value);
+
+                                if (totalPassifNet2==parseFloat(totalnet2)) {
+
+                                
+                                /////////////// 
+                                    
+                                    
+                                }
+                                else
+                                {
+
+                                validerPassif=0;
+                                    
+                                Swal.fire('Vérifier les valeurs  total general actif et total general passif pour net2.');
+                                    
+                                } 
+                                    
+                                    
+                                }
+                                else
+                                {
+
+                                validerPassif=0;
+                                    
+                                Swal.fire('Vérifier les valeurs  total general actif et total general passif pour net1.');
+                                    
+                                } 
+
+                            }else{
+                                validerPassif=0
+                                Swal.fire('Vérifier les totaux  des valeurs net1 .');
+
+                            }
+
+                    }else{
+                        validerPassif=0
+                         Swal.fire('Vérifier les totaux  des valeurs net2 .');
+
+                    }
+                 
+               if (validerPassif==1) {
+                        var empt = 1;
+                        var checkboxList = document.getElementsByClassName('inputPassif');
+                        for (i = 0; i < checkboxList.length; i++) {
+                            if (checkboxList[i].value != "") {
+                                console.log(checkboxList[i].value);
+                                empt = 0;
+                            }
+                        }
+                      
+                        if(empt!=1){
+                        e.preventDefault();
+                        var a=$(this);
+                        Swal.fire({
+                        title:"Confirmation",
+                        text:"Êtes-vous sûr de vouloir sauvegarder les données  ?",
+                        icon:"success",
+                        showCancelButton:true,
+                        confirmButtonText:"Oui",
+                        cancelButtonText:"Non",
+                        confirmButtonClass:"btn btn-success mt-2",
+                        cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                        buttonsStyling:!1}).then(function(t)
+                        {
+                        if (t.value) {
+                            document.getElementById("submitedPassif").click()
+                        }else
+                            e.preventDefault();
+
+                        })
+               }
+                }
+            });
+       
+
+        });
+
+
+
+        // Auto Close Bootstrap alerts
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 2000);
+
+   </script>
+
+{% endblock %}
+

@@ -1,0 +1,335 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}Hello AccueilController!{% endblock %}
+
+{% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('admin/dist/assets/libs/toastr/build/toastr.min.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('admin/dist/assets/css/sb-admin-2.min.css')}}">
+
+                <!-- Bootstrap Css dashboard saas assets -->
+        <link href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+
+
+{% endblock %}
+
+{% block body %}
+
+    <!-- une integration dashborad saas template -->
+
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+
+                    <div class="container-fluid mb-0">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                    <h4 class="mb-sm-0 font-size-18 mt-2">Tableau de bord</h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">NINEAWEB</a></li>
+                                            <li class="breadcrumb-item active">{{ "now"|date("d-m-Y", "Europe/Paris") }}</li>
+                                        </ol>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0 me-3">
+                                                        <img src="{{ asset('admin/dist/assets/images/avatar.png')}}" alt="" class="avatar-md rounded-circle img-thumbnail">
+                                                    </div>
+                                                    <div class="flex-grow-1 align-self-center">
+                                                        <div class="text-muted">
+                                                            <p class="mb-2"></p>
+                                                            <h5 class="mb-1">{{ app.user.username}}</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div class="col-lg-8 align-self-center">
+                                                <div class="text-lg-center mt-4 mt-lg-0">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted mb-2">Total demandes validées</p>
+                                                                <h5 class="mb-0"><span class="badge badge-soft-success font-size-18">{{nbDemandesV}}</span></h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted mb-2">Total demandes envoyées</p>
+                                                                <h5 class="mb-0"><span class="badge badge-soft-info font-size-18">{{nbDemandesE['totaldmd']}}</span></h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted mb-2">Total demandes en attente</p>
+                                                                <h5 class="mb-0"><span class="badge badge-soft-warning font-size-18">{{totaldmdStandby['totaldmdStandby']}}</span></h5>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+                                        <!-- end row -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+
+                    {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA')  %}
+                    
+
+                        <div class="row">
+                            <!--div class="col-xl-4">
+                                <div class="card bg-primary bg-soft">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="text-primary p-3">
+                                                    <h5 class="text-primary">Plateforme de gestion du Numéro d'Identification</h5>
+                                                    <p>des Entreprises & Associations</p>
+
+                                                    <ul class="ps-3 mb-0">
+                                                        <li class="py-1">+ {{ totalDemandeValide }} immatriculations</li>
+                                                        <li class="py-1">+ {{nbDemandesC}} traitements en attente </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div-->
+                            <div class="col-xl-12">
+                                <div class="row">
+                                {% for tag in formeunites %}
+                                    <div class="col-sm-3">
+                                        <div class="card radius-10 border-start border-0 border-5 border-info">
+                                            <div class="card-body">
+
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <p class="mb-0 text-secondary">{{tag["libelle"]}}</p>
+                                                        <h4 class="my-1 text-info">{{tag["nombre"]}}</h4>
+                                                        {# <p class="mb-0 font-13">+2.5% from last week</p> #}
+                                                    </div>
+                                                    <div class="widgets-icons-2 rounded-circle bg-primary bg-soft font-size-20 text-white"><i class="fas fa-file-alt "></i>
+                                                    </div>
+                                                </div>
+
+
+                                              {#   <div class="d-flex align-items-center mb-3">
+                                                    <div class="avatar-xs me-3">
+                                                        <span class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                                            <i class="bx bx-copy-alt"></i>
+                                                        </span>
+                                                    </div>
+                                                    <h5 class="font-size-14 mb-0">{{tag["libelle"]}}</h5>
+                                                </div>
+                                                <div class="text-center mt-4">
+                                                    <h4>{{tag["nombre"]}} </h4>
+                                                    
+                                                </div> #}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                                   
+                                </div>
+                                <!-- end row -->
+                            </div>
+                        </div>
+                    
+                    
+                    {% endif %}
+
+                    </div> <!-- container-fluid -->
+
+
+    <!--ligne pour les stats pour chaque agent dans le systeme -->
+    <div class="row">  
+
+            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA')  %}
+
+                            
+                            <div class="col-xl-6">
+                                <div class="card radius-10 border-start border-0 border-5 border-info">
+                                    <div class="card-title bg-info text-center text-white mt-0 mp-0" style="width: 100%">
+                                                NINEA par SRSD
+                                    </div>
+                                    <div class="card-body">
+                                        
+
+                                        
+
+                                        <div class="table-responsive ">
+                                            <table class="table align-middle table-nowrap" style="width: 100%">
+                                                <tbody>
+                                                    {% for tag in nbreDemandesValidees %}
+                                                        <tr>
+                                                            <td style="width: 30%">
+                                                                <p class="mb-0"> {{tag.admlibelle}} </p>
+                                                            </td>
+                                                            <td style="width: 25%">
+                                                                <h5 class="mb-0"> {{tag.nombre}} </h5></td>
+                                                            
+                                                        </tr> 
+                                                    {%  endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+            {% endif %}
+
+
+
+
+            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
+                            
+                            <div class="col-xl-6">
+                                <div class="card  radius-10 border-start border-0 border-5 border-success">
+                                  <div class="card-title bg-success text-center text-white mt-0 mp-0" style="width: 100%">
+                                               NINEA par agent de validation
+                                    </div>
+                                    <div class="card-body">
+                                        
+
+                                        <div class="table-responsive ">
+                                            <table class="table align-middle table-nowrap">
+                                                <tbody>
+                                                    {% for tag in nombreDemandesValideesparAgent %}
+                                                        <tr>
+                                                            <td style="width: 30%">
+                                                                <p class="mb-0"> {{ tag.prenom }} {{tag.nom}} </p>
+                                                            </td>
+                                                            <td style="width: 25%">
+                                                                <h5 class="mb-0"> {{tag.nombre}} </h5></td>
+                                                           
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            {% endif %}
+
+
+    </div>
+    <div class="row">  
+
+            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_DEMANDE_NINEA') %} 
+
+                            <div class="col-xl-6">
+                                <div class="card radius-10 border-start border-0 border-5 border-warning">
+                                   <div class="card-title bg-warning text-center text-white mt-0 mp-0" style="width: 100%">
+                                              Demandes validées pour l'agent de saisie
+                                    </div>
+                                 
+                                    <div class="card-body">
+                                        
+
+
+                                        <div class="table-responsive ">
+                                            <table class="table align-middle table-nowrap">
+                                                <tbody>
+                                                    {% for tag in nbreDemandesparAgent %}
+                                                        <tr>
+                                                            <td style="width: 30%">
+                                                                <p class="mb-0">{{tag.prenom}} {{tag.nom}}</p>
+                                                            </td>
+                                                            <td style="width: 25%">
+                                                                <h5 class="mb-0"> {{ tag.nombre }} </h5></td>
+                                                           
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                            
+                            <div class="col-xl-6">
+                                <div class="card radius-10 border-start border-0 border-5 border-pink ">
+                                   <div class="card-title bg-pink text-center text-white  mt-0 mp-0" style="width: 100%">
+                                              Demandes envoyées par agent de saisie
+                                    </div>
+                                    <div class="card-body">
+                                       
+
+                                        <div class="table-responsive ">
+                                            <table class="table align-middle table-nowrap">
+                                                <tbody>
+                                                    {% for tag in nbreDemandes %}
+                                                        <tr>
+                                                            <td style="width: 30%">
+                                                                <p class="mb-0"> {{ tag.prenom }} {{ tag.nom }}  </p>
+                                                            </td>
+                                                            <td style="width: 25%">
+                                                                <h5 class="mb-0"> {{ tag.nombre }} </h5></td>
+                                                          
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+            {% endif %}
+
+
+    </div><!--end row -->
+
+   
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+    <!-- JAVASCRIPT -->
+    <script src="{{ asset('admin/dist/assets/libs/jquery/jquery.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/metismenu/metisMenu.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+
+
+{% endblock %}

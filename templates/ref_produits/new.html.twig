@@ -1,0 +1,55 @@
+{% extends app.user.roles[0] == "ROLE_NINEA_ADMIN" or app.user.roles[0] == "ROLE_VALIDER_DEMANDE_NINEA" or app.user.roles[0] == "ROLE_DEMANDE_NINEA"
+    ? 'ninea.html.twig' 
+    : 'base.html.twig' %}
+
+{% block title %}New RefProduits{% endblock %}
+
+{% block stylesheets %}
+    	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block body %}
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Nouveau produit
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                                
+                            {{ include('ref_produits/_form.html.twig') }}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+                            
+                <a href="{{ path('app_ref_produits_index') }}" >Liste des produits</a>
+								
+		</div>
+			
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery-ui.min.js')}}"></script>
+{% endblock %}

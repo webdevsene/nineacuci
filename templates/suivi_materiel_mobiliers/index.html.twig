@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SuiviMaterielMobilier index{% endblock %}
+
+{% block body %}
+    <h1>SuiviMaterielMobilier index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>DateJ</th>
+                <th>Designation</th>
+                <th>Montant</th>
+                <th>DateDeSortie</th>
+                <th>PrixDeCession</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Submit</th>
+                <th>AnneeFinanciere</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for suivi_materiel_mobilier in suivi_materiel_mobiliers %}
+            <tr>
+                <td>{{ suivi_materiel_mobilier.id }}</td>
+                <td>{{ suivi_materiel_mobilier.dateJ ? suivi_materiel_mobilier.dateJ|date('Y-m-d') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier.designation }}</td>
+                <td>{{ suivi_materiel_mobilier.montant }}</td>
+                <td>{{ suivi_materiel_mobilier.dateDeSortie ? suivi_materiel_mobilier.dateDeSortie|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier.prixDeCession }}</td>
+                <td>{{ suivi_materiel_mobilier.createdAt ? suivi_materiel_mobilier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier.updatedAt ? suivi_materiel_mobilier.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ suivi_materiel_mobilier.anneeFinanciere }}</td>
+                <td>{{ suivi_materiel_mobilier.status }}</td>
+                <td>
+                    <a href="{{ path('app_suivi_materiel_mobiliers_show', {'id': suivi_materiel_mobilier.id}) }}">show</a>
+                    <a href="{{ path('app_suivi_materiel_mobiliers_edit', {'id': suivi_materiel_mobilier.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_suivi_materiel_mobiliers_new') }}">Create new</a>
+{% endblock %}

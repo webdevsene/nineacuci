@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SuiviMaterielMobilierCaution index{% endblock %}
+
+{% block body %}
+    <h1>SuiviMaterielMobilierCaution index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>AnneeFinanciere</th>
+                <th>DateJ</th>
+                <th>Designation</th>
+                <th>Montant</th>
+                <th>DateDeSortie</th>
+                <th>PrixDeCession</th>
+                <th>Submit</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for suivi_materiel_mobilier_caution in suivi_materiel_mobilier_cautions %}
+            <tr>
+                <td>{{ suivi_materiel_mobilier_caution.id }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.createdAt ? suivi_materiel_mobilier_caution.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.updatedAt ? suivi_materiel_mobilier_caution.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.anneeFinanciere }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.dateJ ? suivi_materiel_mobilier_caution.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.designation }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.montant }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.dateDeSortie ? suivi_materiel_mobilier_caution.dateDeSortie|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.prixDeCession }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.submit ? 'Yes' : 'No' }}</td>
+                <td>{{ suivi_materiel_mobilier_caution.status }}</td>
+                <td>
+                    <a href="{{ path('app_suivi_materiel_mobilier_caution_show', {'id': suivi_materiel_mobilier_caution.id}) }}">show</a>
+                    <a href="{{ path('app_suivi_materiel_mobilier_caution_edit', {'id': suivi_materiel_mobilier_caution.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_suivi_materiel_mobilier_caution_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}NiDirigeant index{% endblock %}
+
+{% block body %}
+    <h1>NiDirigeant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NinPrenom</th>
+                <th>NinNom</th>
+                <th>NinNumero</th>
+                <th>NinAddresse</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ni_dirigeant in ni_dirigeants %}
+            <tr>
+                <td>{{ ni_dirigeant.id }}</td>
+                <td>{{ ni_dirigeant.ninPrenom }}</td>
+                <td>{{ ni_dirigeant.ninNom }}</td>
+                <td>{{ ni_dirigeant.ninNumero }}</td>
+                <td>{{ ni_dirigeant.ninAddresse }}</td>
+                <td>{{ ni_dirigeant.createdAt ? ni_dirigeant.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ ni_dirigeant.updatedAt ? ni_dirigeant.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_ni_dirigeant_show', {'id': ni_dirigeant.id}) }}">show</a>
+                    <a href="{{ path('app_ni_dirigeant_edit', {'id': ni_dirigeant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ni_dirigeant_new') }}">Create new</a>
+{% endblock %}

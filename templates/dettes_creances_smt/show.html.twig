@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DettesCreancesSmt{% endblock %}
+
+{% block body %}
+    <h1>DettesCreancesSmt</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ dettes_creances_smt.id }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ dettes_creances_smt.type }}</td>
+            </tr>
+            <tr>
+                <th>DateJ</th>
+                <td>{{ dettes_creances_smt.dateJ ? dettes_creances_smt.dateJ|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ dettes_creances_smt.nom }}</td>
+            </tr>
+            <tr>
+                <th>Montant1</th>
+                <td>{{ dettes_creances_smt.montant1 }}</td>
+            </tr>
+            <tr>
+                <th>Montant2</th>
+                <td>{{ dettes_creances_smt.montant2 }}</td>
+            </tr>
+            <tr>
+                <th>Variation</th>
+                <td>{{ dettes_creances_smt.variation }}</td>
+            </tr>
+            <tr>
+                <th>AnneeFinanciere</th>
+                <td>{{ dettes_creances_smt.anneeFinanciere }}</td>
+            </tr>
+            <tr>
+                <th>Submit</th>
+                <td>{{ dettes_creances_smt.submit ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ dettes_creances_smt.status }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ dettes_creances_smt.createdAt ? dettes_creances_smt.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ dettes_creances_smt.updatedAt ? dettes_creances_smt.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_dettes_creances_smt_index') }}">back to list</a>
+
+    <a href="{{ path('app_dettes_creances_smt_edit', {'id': dettes_creances_smt.id}) }}">edit</a>
+
+    {{ include('dettes_creances_smt/_delete_form.html.twig') }}
+{% endblock %}
