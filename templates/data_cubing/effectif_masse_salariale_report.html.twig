@@ -24,13 +24,7 @@
       
     }
  </style>
-<link href="{{ asset('static/vendors/google-code-prettify/bin/prettify.min.css')}}" rel="stylesheet">
-<!-- Select2 -->
-<link href="{{ asset('static/vendors/select2/dist/css/select2.min.css')}}" rel="stylesheet">
-<!-- Switchery -->
-<link href="{{ asset('static/vendors/switchery/dist/switchery.min.css')}}" rel="stylesheet">
-<!-- starrr -->
-<link href="{{ asset('static/vendors/starrr/dist/starrr.css')}}" rel="stylesheet">          
+<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
 {% endblock %}
 {% block body %}
 
@@ -48,18 +42,28 @@
                             <div class="col-xl-12 " >
                                 <div class="card " style="-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
                                     <div class="card-body" style="border: 1px solid #ccc;">
+                                        <div class="mb-3" id="process" style="display:none;">
+                                            <div class="progress">
+                                                <!-- <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                    <span id="process_data">0</span> - <span id="total_data">0</span>
+                                                -->
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                                            </div>
+                                        </div>
                                         <h4 class="card-title mb-4 text-center" >Rapport des effectifs et masse salariale</h4>
 
                                         <form name="myForm" method="post" onsubmit="return validateForm();" style="margin: auto; width: 50%; margin-left : 35vw; ">
+
+                                        
                                             <div class="row mb-2">
                                                 <label for="horizontal-firstname-input" class="col-sm-3 col-form-label" >Année</label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                   <input type="text" class="form-control form-control-sm input-mask" data-inputmask="'mask': '9999'" id="annne-input" name="annee-input" placeholder="Enter année fin ">
                                                 </div>
                                             </div>
                                             <div class="row mb-2">
                                                 <label for="horizontal-email-input" class="col-sm-3 col-form-label">Numéro de CUCI</label>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <input type="text" class="form-control form-control-sm" id="cuci-input"  name="cuci-input" placeholder="Enter numéro cuci">
                                                 </div>
                                             </div>
@@ -67,7 +71,7 @@
                                             <div class="row justify-content-end">
                                                 <div class="col-sm-10">
                                                     <div>
-                                                        <button type="submit" class="btn btn-secondary w-md">Générer rapport </button>
+                                                        <button id="idsubmit-templ" name="submit-templ" type="submit" class="btn btn-secondary btn-sm w-md">Générer rapport </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -89,19 +93,21 @@
         <script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
         <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
 
-        <!-- materialdesign icon js-->
-        <script src="{{ asset('admin/dist/assets/js/pages/materialdesign.init.js')}}"></script>
+
+        <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
 
         <script>
             function validateForm() {
                 let x = document.forms["myForm"]["annee-input"].value;
-                let y = document.forms["myForm"]["cuci-input"].value;
-                if (x == "" || y == "") {
-                  alert("Année ou numéro Cuci ne doit pas être vide !");
+                if (x == "") {
+                  Swal.fire("Année ou numéro Cuci ne doit pas être vide !");
                   return false;
                 }
             }
+
+
+
         </script>
 
 

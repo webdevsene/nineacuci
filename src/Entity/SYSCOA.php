@@ -53,11 +53,6 @@ class SYSCOA
      */
     private $niActivites;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TempNiActivite::class, mappedBy="refSyscoa")
-     */
-    private $tempNiActivites;
-
     public function getId(): ?string
     {
         return $this->id;
@@ -68,7 +63,7 @@ class SYSCOA
         $this->activite = new ArrayCollection();
         $this->repertoires = new ArrayCollection();
         $this->niActivites = new ArrayCollection();
-        $this->tempNiActivites = new ArrayCollection();
+        
     }
 
 
@@ -239,33 +234,7 @@ class SYSCOA
         return $this;
     }
 
-    /**
-     * @return Collection<int, TempNiActivite>
-     */
-    public function getTempNiActivites(): Collection
-    {
-        return $this->tempNiActivites;
-    }
+   
 
-    public function addTempNiActivite(TempNiActivite $tempNiActivite): self
-    {
-        if (!$this->tempNiActivites->contains($tempNiActivite)) {
-            $this->tempNiActivites[] = $tempNiActivite;
-            $tempNiActivite->setRefSyscoa($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTempNiActivite(TempNiActivite $tempNiActivite): self
-    {
-        if ($this->tempNiActivites->removeElement($tempNiActivite)) {
-            // set the owning side to null (unless already changed)
-            if ($tempNiActivite->getRefSyscoa() === $this) {
-                $tempNiActivite->setRefSyscoa(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }

@@ -2,11 +2,16 @@
 
 {% block title %}demandes{% endblock %}
 
+{% block stylesheets %}
+        <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- Responsive Table css -->
+{% endblock %}
+
 {% block body %}
 
  
 
-<div class="box mt-lg-2">
+<div class="box mt-lg-2">    
 	<div class="box-header">
 		<ul class="nav nav-tabs nav-tabs-left">
 			<li class="active">
@@ -93,14 +98,61 @@
                                     <td>{{ ni_cessation.createdAt ? ni_cessation.createdAt|date('d/m/Y') : '' }}</td>
                                     
                                     <td>
-                                        <a href="{{ path('app_ni_cessation_show', {'id': ni_cessation.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        {% if ni_cessation.etat == "a" or  ni_cessation.etat == "t" %}
-                                            <a href="{{ path('app_ni_cessation_edit', {'id': ni_cessation.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
+
+                                        {% if ni_cessation.etat != 'r' %}
+                                                    {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_DEMANDE_NINEA') %}                                                       
+                                                        {% if ni_cessation.etat == "v"   %}
+                                                            <a href="{{ path('app_ni_cessation_show', {'id': ni_cessation.id}) }}" id="modification" >
+                                                                Détails
+                                                            </a>
+                                                        {% else %}                                                      
+                                                                {% if ni_cessation.ninlock == 1 %}                                     
+                                                                        {% if app.user.id ==  ni_cessation.updatedBy.id %}    
+                                                                            <a  href="{{ path('app_ni_cessation_show', {'id': ni_cessation.id}) }}" id="modification" >
+                                                                                Détails
+                                                                                <a href="#" class="idInconlock" title="Libérer la demande"  style="color: red">
+                                                                                    <i class="fas fa-lock "></i> 
+                                                                                </a>
+                                                                            </a>
+                
+                                                                        {% else %}
+                                                                            <a type="button"  class="idDetails"  style="color: red">
+                                                                                Détails
+                                                                            </a>
+                            
+                                                                            <a type="button" class="idInconlock" onclick="recupUtilisateur( '{{ni_cessation.updatedBy.getPrenomNom}}' );"  style="color: red">
+                                                                                <i class="fas fa-lock "></i> 
+                                                                            </a>
+                                                                        {% endif %}
+                
+                
+                                                                {% else %}
+                                                                {% if ni_cessation.etat == "t" %}
+                                                                {% if app.user.id == ni_cessation.createdBy.id %}
+                                                                    <a href="{{ path('app_ni_cessation_show', {'id': ni_cessation.id}) }}" id="modification" >
+                                                                        Détails
+                                                                    </a>
+                                                                {% endif %}
+                                                                {% else %}
+                                                                <a href="{{ path('app_ni_cessation_show', {'id': ni_cessation.id}) }}" id="modification">
+                                                                    Détails
+                                                                </a>
+                                                                {% endif %}
+                                                                {% endif %}
+                
+                                                        {% endif %} 
+                                                    {% endif %} 
                                         {% endif %}
+                                        
+                                        <!--a href="{{ path('app_ni_cessation_show', {'id': ni_cessation.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                            Détails
+                                        </a>
+                                        <a href="{{ path('app_ni_cessation_edit', {'id': ni_cessation.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                                            {% if ni_cessation.etat == "a" or  ni_cessation.etat == "t" %}
+                                                    <i class="fas fa-pencil-alt"></i>
+                                            {% endif %}
+                                        </a-->
+                                
                                     </td>
                                 </tr>
                             {% else %}
@@ -131,6 +183,11 @@
 
 {% block javascript %}
 
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+  <!-- Sweet alert init js-->
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+
 <script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 
@@ -158,7 +215,7 @@
 
     $("#demande").DataTable({
          columnDefs: [
-            { type: 'date-uk', targets: 6 }
+            { type: 'date-uk', targets: 7 }
           ],
           
           "order": [7, "desc" ],
@@ -203,5 +260,17 @@
 
         }
     });
+
+
+    $('.idDetails').click(function() {
+        Swal.fire("Demande en cours d'utilisation.");
+    });
+
+    function recupUtilisateur(nom)
+    {
+        Swal.fire("Veuiller contacter " + nom + " pour libérer cette demande.");
+
+    }
+    
 </script>
 {% endblock %}

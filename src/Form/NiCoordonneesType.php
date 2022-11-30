@@ -17,6 +17,7 @@ class NiCoordonneesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        
         $builder
             ->add('ninnumVoie',TextType::class,
                 array('label'=>'Numéro voie ',

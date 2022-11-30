@@ -40,8 +40,8 @@
                         <div class="card">
                             <div class="card-body">
                 
-                                {% for message in app.session.flashbag.get('message')%}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {% for message in app.session.flashbag.get('messageDonnee')%}
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                     {{message}}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
@@ -205,15 +205,9 @@
                                     {% endif %}
                                  </td>
                                 <td style="width: 10%;"> 
-                                    <!--<a href="{{ path('nininea_show', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                     <a href="{{ path('n_i_ninea_delete', {'id': tag.id}) }}" title="Supprimer" id="modification"  class="btn btn-outline-danger btn-sm">
-                                       <i class="fas fa-trash"></i>
-                                    </a>-->
-                                    <a href="{{ path('modifier_Ninea_Reactivation', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                                    <a href="{{ path('app_demande_modification_new', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
+                                    </a>                                    
 
 
                                     
@@ -316,6 +310,18 @@
 
         }
     });
+
+
+
+
+    
+    // Auto Close Bootstrap alerts
+    window.setTimeout(function() {
+        $(".alert-warning").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 2000); 
+    
 </script>
 
 

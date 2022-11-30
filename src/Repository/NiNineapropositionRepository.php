@@ -84,6 +84,7 @@ class NiNineapropositionRepository extends ServiceEntityRepository
     }
 
     
+   
     public function findByCentre($user)
     {
         return $this->createQueryBuilder('n')
@@ -106,7 +107,7 @@ class NiNineapropositionRepository extends ServiceEntityRepository
             ->andWhere('u.niAdministration = :administration and n.statut != :statut')
             ->setParameter('administration', $user->getNiAdministration())
             ->setParameter('statut', $notStatut)
-            ->orderBy('n.id', 'ASC')
+            ->orderBy('n.id', 'desc')
             ->getQuery()
             ->getResult()
         ;          
@@ -159,6 +160,51 @@ class NiNineapropositionRepository extends ServiceEntityRepository
     ;          
     }
 
+    
+    public function findDirigeantEtrangerByNinea($cni,$ind, $idDemande,$iddirig)
+    {
+        $query = $this->createQueryBuilder('n')
+        ->innerJoin('n.ninDirigeants', 'p')
+        ->addSelect('p')
+        ->innerJoin('p.ninNationalite', 'na')
+        ->addSelect('na')
+        ->andWhere('p.ninCni LIKE :cni')
+        ->setParameter('cni', $cni)
+        ->andWhere('na.id = :ind')
+        ->andWhere('n.ninNinea is null')
+        ->setParameter('ind', $ind)
+        ->andWhere('n.id = :idDemande')
+        ->setParameter('idDemande', $idDemande);
+        
+       
+        if($iddirig){
+            $query=$query ->andWhere('p.id != :iddirig')
+              ->setParameter('iddirig', $iddirig);
+        }
+       
+
+        return $query=$query
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findDirigeantCNIByNinea($cni,$ind)
+    {
+        $query = $this->createQueryBuilder('n')
+        ->innerJoin('n.ninDirigeants', 'p')
+        ->addSelect('p')
+        ->innerJoin('p.ninNationalite', 'na')
+        ->addSelect('na')
+        ->andWhere('p.ninCni LIKE :cni')
+        ->setParameter('cni', $cni)
+        ->andWhere('na.id = :ind')
+        ->setParameter('ind', $ind)
+        ->getQuery()
+        ->getResult();
+
+        return $query;
+    }
+
 
     public function findDemandeEnAttenteByCentre()
     {
@@ -177,6 +223,7 @@ class NiNineapropositionRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult() ;          
     }
+
 
     //pour l'agent de saisie toutes les demandes validées
     public function findDemandeValideeByUser($user,$dateDebut, $dateFin)
@@ -352,19 +399,21 @@ public function findByDemandeEnValidation( $statut)
     public function findAValider()
     {
         return $this->createQueryBuilder('n')
-            ->andWhere('n.statut = :statut or n.statut = :valider or n.statut = :rejeter')
+            //->andWhere('n.statut = :statut /*or n.statut = :valider or n.statut = :rejeter*/')
+            ->andWhere('n.statut = :statut ')
             ->setParameter('statut', "c")
-            ->setParameter('valider', "t")
-            ->setParameter('rejeter', "r")
+            //->setParameter('valider', "t")
+            //->setParameter('rejeter', "r")
             ->orderBy('n.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
+    
     public function findDemande()
     {
         return $this->createQueryBuilder('n')
-            ->andWhere('n.statut != :statut')
+            ->andWhere('n.statut != :statut ')
             ->setParameter('statut', "b")
             ->orderBy('n.id', 'ASC')
             ->getQuery()

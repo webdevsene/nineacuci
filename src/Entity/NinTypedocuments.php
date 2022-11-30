@@ -34,10 +34,30 @@ class NinTypedocuments
      */
     private $nINineas;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=NiFormejuridique::class, mappedBy="typeDocument")
+     */
+    private $niFormejuridiques;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TempNINinea::class, mappedBy="niTypedocument")
+     */
+    private $tempNINineas;
+
+    /**
+     * @ORM\OneToMany(targetEntity=HistoryNINinea::class, mappedBy="niTypedocument")
+     */
+    private $historyNINineas;
+
+   
+
     public function __construct()
     {
         $this->niNineapropositions = new ArrayCollection();
         $this->nINineas = new ArrayCollection();
+        $this->niFormejuridiques = new ArrayCollection();
+        $this->tempNINineas = new ArrayCollection();
+        $this->historyNINineas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,4 +136,93 @@ class NinTypedocuments
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, NiFormejuridique>
+     */
+    public function getNiFormejuridiques(): Collection
+    {
+        return $this->niFormejuridiques;
+    }
+
+    public function addNiFormejuridique(NiFormejuridique $niFormejuridique): self
+    {
+        if (!$this->niFormejuridiques->contains($niFormejuridique)) {
+            $this->niFormejuridiques[] = $niFormejuridique;
+            $niFormejuridique->addTypeDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNiFormejuridique(NiFormejuridique $niFormejuridique): self
+    {
+        if ($this->niFormejuridiques->removeElement($niFormejuridique)) {
+            $niFormejuridique->removeTypeDocument($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TempNINinea>
+     */
+    public function getTempNINineas(): Collection
+    {
+        return $this->tempNINineas;
+    }
+
+    public function addTempNINinea(TempNINinea $tempNINinea): self
+    {
+        if (!$this->tempNINineas->contains($tempNINinea)) {
+            $this->tempNINineas[] = $tempNINinea;
+            $tempNINinea->setNiTypedocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTempNINinea(TempNINinea $tempNINinea): self
+    {
+        if ($this->tempNINineas->removeElement($tempNINinea)) {
+            // set the owning side to null (unless already changed)
+            if ($tempNINinea->getNiTypedocument() === $this) {
+                $tempNINinea->setNiTypedocument(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HistoryNINinea>
+     */
+    public function getHistoryNINineas(): Collection
+    {
+        return $this->historyNINineas;
+    }
+
+    public function addHistoryNINinea(HistoryNINinea $historyNINinea): self
+    {
+        if (!$this->historyNINineas->contains($historyNINinea)) {
+            $this->historyNINineas[] = $historyNINinea;
+            $historyNINinea->setNiTypedocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoryNINinea(HistoryNINinea $historyNINinea): self
+    {
+        if ($this->historyNINineas->removeElement($historyNINinea)) {
+            // set the owning side to null (unless already changed)
+            if ($historyNINinea->getNiTypedocument() === $this) {
+                $historyNINinea->setNiTypedocument(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

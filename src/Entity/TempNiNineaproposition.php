@@ -19,10 +19,7 @@ class TempNiNineaproposition
      */
     private $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TempNiActivite::class, mappedBy="niNineaproposition")
-     */
-    private $tempNiActivites;
+   
 
     /**
      * @ORM\OneToMany(targetEntity=TempNiActiviteEconomique::class, mappedBy="niNineaproposition")
@@ -51,7 +48,8 @@ class TempNiNineaproposition
 
     public function __construct()
     {
-        $this->tempNiActivites = new ArrayCollection();
+       
+        
         $this->tempNiActiviteEconomiques = new ArrayCollection();
         $this->tempNiCoordonnees = new ArrayCollection();
         $this->tempNiDirigeants = new ArrayCollection();
@@ -64,35 +62,9 @@ class TempNiNineaproposition
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, TempNiActivite>
-     */
-    public function getTempNiActivites(): Collection
-    {
-        return $this->tempNiActivites;
-    }
+   
 
-    public function addTempNiActivite(TempNiActivite $tempNiActivite): self
-    {
-        if (!$this->tempNiActivites->contains($tempNiActivite)) {
-            $this->tempNiActivites[] = $tempNiActivite;
-            $tempNiActivite->setNiNineaproposition($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTempNiActivite(TempNiActivite $tempNiActivite): self
-    {
-        if ($this->tempNiActivites->removeElement($tempNiActivite)) {
-            // set the owning side to null (unless already changed)
-            if ($tempNiActivite->getNiNineaproposition() === $this) {
-                $tempNiActivite->setNiNineaproposition(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection<int, TempNiActiviteEconomique>

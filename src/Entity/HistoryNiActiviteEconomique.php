@@ -84,6 +84,21 @@ class HistoryNiActiviteEconomique
      */
     private $DeteDeCloture;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=NiSourcefinancement::class, inversedBy="historyNiActiviteEconomiques")
+     */
+    private $ninOcc;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NiModaliteexploitation::class, inversedBy="historyNiActiviteEconomiques")
+     */
+    private $ninMode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NiNatureLocaliteExploitation::class, inversedBy="historyNiActiviteEconomiques")
+     */
+    private $ninNature;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -241,6 +256,42 @@ class HistoryNiActiviteEconomique
     public function setDeteDeCloture(?\DateTimeInterface $DeteDeCloture): self
     {
         $this->DeteDeCloture = $DeteDeCloture;
+
+        return $this;
+    }
+
+    public function getNinOcc(): ?NiSourcefinancement
+    {
+        return $this->ninOcc;
+    }
+
+    public function setNinOcc(?NiSourcefinancement $ninOcc): self
+    {
+        $this->ninOcc = $ninOcc;
+
+        return $this;
+    }
+
+    public function getNinMode(): ?NiModaliteexploitation
+    {
+        return $this->ninMode;
+    }
+
+    public function setNinMode(?NiModaliteexploitation $ninMode): self
+    {
+        $this->ninMode = $ninMode;
+
+        return $this;
+    }
+
+    public function getNinNature(): ?NiNatureLocaliteExploitation
+    {
+        return $this->ninNature;
+    }
+
+    public function setNinNature(?NiNatureLocaliteExploitation $ninNature): self
+    {
+        $this->ninNature = $ninNature;
 
         return $this;
     }

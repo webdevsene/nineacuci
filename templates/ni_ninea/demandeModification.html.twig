@@ -107,7 +107,13 @@
                                                                                     
                                                                                     <div class="col-lg-6">
                                                                                         
-                                                                                        <table width="100%">     
+                                                                                        <table width="100%"> 
+                                                                                          <tr>
+                                                                                                <td style="width: 30%;"><label for=""><b><u> Adresse : </u></b> </label></td>
+                                                                                                <td style="width: 70%;"><input type="text" name="adresse" id="id_raison" onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm"
+                                                                                                    {% if adresse !="" %} value="{{adresse}}" {% endif %}>
+                                                                                                </td>
+                                                                                            </tr>     
                                                                                             <tr>
                                                                                                 <td style="width: 30%;"><label for=""><b><u> Raison sociale : </u></b> </label></td>
                                                                                                 <td style="width: 70%;"><input type="text" name="raisonsociale" onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm"
@@ -216,7 +222,7 @@
                                     {% endif %}
                                  </td>
                                 <td style="width: 10%;"> 
-                                    <a href="{{ path('modifier_Ninea', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                                    <a href="{{ path('app_demande_modification_new', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
                                        <i class="fas fa-pencil-alt"></i>
                                     </a>
                                 </td>
@@ -261,6 +267,24 @@
 
 
 <script >
+ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
     $(".dTable").dataTable({
 
             bJQueryUI: !1,
@@ -276,7 +300,8 @@
 
         "order": [0, "asc" ],
         "columnDefs": [
-            { "visible": false, "targets": 0 }
+            { "visible": false, "targets": 0 },
+              { type: 'date-uk', targets: 4 }
           ],
 
         "sDom": 'f<"top">tip',

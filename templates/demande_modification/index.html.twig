@@ -1,0 +1,224 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}DemandeModification index{% endblock %}
+
+{% block stylesheets %}
+<!-- DataTables -->
+<link href="{{ asset('admin/dist/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+	<!-- Icons Css -->
+	<link	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+
+    <link href="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery-ui.theme.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+
+{% endblock %}
+
+
+{% block body %}
+    
+
+<div class="box mt-4">
+
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+            	<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+					Demande de modification
+                  </a></li>
+
+		</ul>
+	</div>
+
+	<div class="box-content padded mt-4">
+
+		<div class="tab-content">            
+
+            <div class="card">
+            <div class="card-body ">
+            <div class="tab-pane box active table-responsive-lg" id="list">
+
+			<table id="demande" class="table table-bordered  table-hover  " style="width:100% ;">
+                    <thead class="tr_entete" >
+                        <tr>
+                            
+                            <th>N°</th>
+                            <th>NINEA</th>
+                            <th>Raison</th>
+                            <th>Enseigne</th>
+                            <th>Etat</th>                           
+                            <th>Détails</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for tag in demande_modifications %}
+                            <tr>
+                              
+                                <td>{{ tag.id }}</td>
+                                <td>{{ tag.tempNinea.ninNinea }}</td>
+                                <td style=" word-break: break-all; width: 20%;">
+                                    
+                                    {% if tag.tempNinea.formeJuridique.niFormeunite.id ==  11 or tag.tempNinea.formeJuridique.niFormeunite.id ==  12 %} 
+                                            {{tag.tempNinea.tempNiPersonnes[0] != null ? tag.tempNinea.tempNiPersonnes[0].ninNom :"" }} {{tag.tempNinea.tempNiPersonnes[0] != null ? tag.tempNinea.tempNiPersonnes[0].ninPrenom : "" }} 
+                                    {% else %}
+                                       
+                                        {{tag.tempNinea.tempNiPersonnes[0] != null ? tag.tempNinea.tempNiPersonnes[0].ninRaison:"" }}
+                                    {% endif %}
+                                </td>
+                                <td style=" word-break: break-all; width: 20%;">{{ tag.tempNinea.ninEnseigne }}</td>
+                                
+
+                                <td> 
+                                   {% if tag.etat == "true" %}
+                                                    <span class="badge badge-pill badge-soft-warning font-size-11">En  validation</span> 
+                
+                                                {% else %}
+                
+                                                    {% if tag.etat == "c" %}
+                                                        <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                                                        {% else %}
+                                                            {% if tag.etat == "b" %}
+                                                                <span class="badge badge-pill badge-soft-secondary font-size-11">Brouillon</span> 
+                                                            {% else %}
+                                                               {% if tag.etat == "r" %}
+                                                                    <span class="badge badge-pill badge-soft-danger font-size-11" >Rejeter
+                                                                        
+                                                                    </span>
+                                                                    <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                    </button>
+                                                                  
+                                                                {% else %}
+                                                                    {% if tag.etat == "t" %}
+                                                                        <span class="badge badge-pill badge-soft-pink font-size-11" >Retourner
+                                                                            
+                                                                        </span>
+                                                                        <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                        </button>
+                                                                        
+                                                                    {% else %}
+                                                                        <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                                                                        
+                                                                    {% endif %} 
+                                                                 
+                                                            {% endif %} 
+                                                            {% endif %} 
+                                                        
+                                                    {% endif %}
+                                                {% endif %}
+
+                                 </td>
+                                <td style="width: 10%;"> 
+                                    <a href="{{ path('modifier_Ninea', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    
+                                </td>
+                                                                
+                            </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="108">Pas de données trouvées</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+               
+			</div>
+
+          
+
+		</div>
+
+	</div>
+
+</div>
+    
+{% endblock %}
+
+{% block javascript %}
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+<script>
+   
+$(document).ready(function() {
+     jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+   
+
+
+  $("#demande").DataTable({
+
+        "order": [0, "desc" ],
+       
+        "columnDefs": [
+             { type: 'date-uk', targets: 4 }
+          ],
+        "sDom": 'f<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+
+ 
+
+
+  
+});
+   
+</script>
+{% endblock %}

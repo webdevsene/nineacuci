@@ -6,10 +6,12 @@ use App\Repository\NiCoordonneesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NiCoordonneesRepository::class)
- *  * @ORM\Table(name="`ni_adresse`")
+ * @ORM\Table(name="`ni_adresse`")
+ * @Gedmo\Loggable
  */
 class NiCoordonnees
 {
@@ -37,6 +39,7 @@ class NiCoordonnees
 
     /**
      * @ORM\Column(type="text", length=200,  nullable=true, name="nin_Adresse1")
+     * @Gedmo\Versioned 
      */
     private $ninadresse1;
 
@@ -44,16 +47,19 @@ class NiCoordonnees
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninEmail;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true, name="nin_AdresseDomicile")
+     * @Gedmo\Versioned 
      */
     private $ninadresse2;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true, name="nin_Telephon2" )
+     * @Gedmo\Versioned 
      */
     private $nintelephon2;
 
@@ -61,18 +67,21 @@ class NiCoordonnees
 
     /**
      * @ORM\Column(type="string", length=10, name="nin_Telephon1")
+     * @Gedmo\Versioned 
      */
     private $ninTelephon1;
 
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Gedmo\Versioned 
      */
     private $create_by;
 
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Gedmo\Versioned 
      */
     private $update_by;
 
@@ -88,6 +97,7 @@ class NiCoordonnees
 
     /**
      * @ORM\ManyToOne(targetEntity=NINinea::class, inversedBy="niCoordonnees")
+     * @Gedmo\Versioned 
      */
     private $ninNinea;
 
@@ -104,16 +114,19 @@ class NiCoordonnees
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true, name="nin_BP")
+     * @Gedmo\Versioned 
      */
     private $ninBP;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninUrl;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $DateFin;
 

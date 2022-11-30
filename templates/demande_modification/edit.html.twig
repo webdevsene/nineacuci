@@ -1,0 +1,13 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}Edit DemandeModification{% endblock %}
+
+{% block body %}
+    <h1>Edit DemandeModification</h1>
+
+    {{ include('demande_modification/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_demande_modification_index') }}">back to list</a>
+
+    {{ include('demande_modification/_delete_form.html.twig') }}
+{% endblock %}

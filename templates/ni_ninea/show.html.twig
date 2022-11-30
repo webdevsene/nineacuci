@@ -1,5 +1,5 @@
 {% extends 'ninea.html.twig' %}
-{% block title %}New NiNineaproposition
+{% block title %}Demande NINEA
 {% endblock %}
 {% block stylesheets %}
 
@@ -122,11 +122,9 @@ a:focus{
 {% block body %}
 
 
-	<div class="row mt-4" >
+	<div class="row mt-2" >
 
-		<div class="col-lg-2" align="left">
-		  <input type="button" value="Retourner" onclick="history.back()">
-		</div>
+		
 
 		<div class="col-lg-2" align="left">
 			{% if  nineamere is not null %}
@@ -134,383 +132,153 @@ a:focus{
 			{% endif %}
 		  </div>
 		
-		<div class="col-lg-8" align="right">            
-		
-			<span style="font-size: 10px;">[ {{ninea.createdAt| date('d-m-Y')}} ]</span>
+			<div class="col-lg-10" align="right">            
+				<input type="button" value="Retourner" onclick="history.back()" class="btn-outline-secondary">
+			</div>
+
+			{# <span style="font-size: 10px;">[ {{ninea.createdAt| date('d-m-Y')}} ]</span> #}
 		</div>
 	</div>
 
 
-	
-
-	<div class="row">
-
-		<div class="col-xl-12">
+	<div class="box ">
+			<div class="box-header">
+				<ul class="nav nav-tabs nav-tabs-left">
+					<li class="active">
+						<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+							NINEA
+						</a></li>
 		
-			<div>
-				<div class="accordion mb-3" id="accordionExample">
-					<div class="accordion-item">
-						<h2 class="accordion-header" id="headingOne">
-							<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-								<h5 class="font-size-14">CONSULTATION NINEA</h5>
-							</button>
-							
-						</h2>
-						<div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-							<div class="accordion-body">
-								<div class="text-muted">
-									<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
-									<div class="row mb-0">
-										<div class="col-lg-12">
-											<fieldset class=" p-2 fieldcolor ">
-												<div class="row">
-													<div class="col-lg-6">
-														<table style="width: 100%;">
-															<tr>
-																<td style="width: 30%;">
-																	<label for="" class="TXT" ><b><u> NINEA : </u> </b> </label>	
-																		
-																</td>
-																<td style="width: 70%;">
-																	<label for="" class="TXT">	{{ninea.ninNinea}}</label>	
-																</td>
-															</tr>
-															<tr>
-																<td style="width: 30%;">
-																	<label for="" ><b><u>Forme unité :</u> </b> </label>	
-																		
-																</td>
-																<td style="width: 70%;">
-																	<label for="" class="TXT">	{{ninea.formeJuridique.niFormeunite.libelle}}</label>	
-																</td>
-															</tr>
-						
-															<tr>
-																<td style="width: 30%;">
-																	<label  for="basicpill-firstname-input"><b><u>Régime juridique :</u></b> 
-																		
-																	</label>
-																</td>
-																<td style="width: 70%;">
-																	<label class="TXT" for="basicpill-firstname-input"></label>{{ninea.formeJuridique.fojLibelle}}</label>
-																	
-																</td>
-															</tr>
+				</ul>
+			</div>
+		
+			<div class="box-content padded">
+		
+				<div class="tab-content">            
+					<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+						<div class="row mb-0">
+							<div class="col-lg-12">
+								<fieldset class=" p-2 fieldcolor ">
+									<div class="row">
+										<div class="col-lg-6">
+											<table style="width: 100%;">
+												<tr>
+													<td style="width: 30%;">
+														<label for="" class="TXT" ><b><u> NINEA : </u> </b> </label>	
 															
-														{#	<tr>
-																<td style="width: 50%;">
-																	<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
-																	</label>
-																</td>
-																<td style="width: 50%;">
-																	<label for="basicpill-firstname-input" class="TXT">	{{ninea.ninStatut.statLibelle}}</label>
-						
-																</td>
-															</tr> #}
-													
-														</table>
-													</div>
-						
-													<div class="col-lg-6">
-														<table style="width: 100%;">
-
-															{% if ninea.formeJuridique.id == 26  or ninea.formeJuridique.id == 96 or ninea.formeJuridique.id == 99 %}
-																{% if ninea.formeJuridique.id != 99 %}
-
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																		</td>
-																	</tr>
-																{% endif %}
-																{% if ninea.ninTitrefoncier != "" %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u> Titre foncier:</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninTitrefoncier}}</label>
-
-																		</td>
-																	</tr>
-																
-																{% else %}
-																{% if  ninea.ninBail != ""  %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Bail:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<label for="basicpill-firstname-input" class="TXT">{{ninea.ninBail}}</label>
-
-																			</td>
-																		</tr>
-																{% else  %}
-																	{% if  ninea.ninPermisoccuper != ""  %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Permis d'occuper:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<label for="basicpill-firstname-input" class="TXT">{{ninea.ninPermisoccuper}}</label>
-
-																			</td>
-																		</tr>
-																	{% endif %}
-																{% endif %}
-															{% endif %}
-																
-															{% elseif ninea.formeJuridique.id == 98 or  ninea.formeJuridique.id == 94 %}
-
-															{% elseif ninea.formeJuridique.id == 90 %}
-
-																<tr>
-																	<td style="width: 50%;">
-																		<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b>	 											</label>
-																	</td>
-																	<td style="width: 50%;">
-																		<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-							
-																	</td>
-																</tr>
-																<tr>
-																	<td style="width: 30%;">
-																		<label for=""> <b><u> Accord:</u></b> </label>
-																	</td>
-																	<td style="width: 70%;">
-																		<label for="basicpill-firstname-input" class="TXT">{{ninea.ninAccord}}</label>
-
-																	</td>
-																</tr>
-
-															{% elseif ninea.formeJuridique.id == 92 %}
-																<tr>
-																	<td style="width: 30%;">
-																		<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																	</td>
-																	<td style="width: 70%;">
-																		<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																	</td>
-																</tr>
-																<tr>
-																	<td style="width: 30%;">
-																		<label for=""> <b><u> Bordereau:</u></b> </label>
-																	</td>
-																	<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninBordereau}}</label>
-																	</td>
-																</tr>
-
-															{% elseif ninea.formeJuridique.id == 29  or ninea.formeJuridique.id == 91	 %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																		</td>
-																	</tr>	
-																{% if ninea.ninRegcom != "" %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u>Régistre de commerce :</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<label for="" class="TXT">{{ninea.ninRegcom}}</label>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u>Date de régistre :</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<label for=""  class="TXT">{{ninea.ninDatreg|date('d/m/Y')}}</label>
-																			</td>
-																		</tr>
-																{% else %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u> Bordereau:</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninBordereau}}</label>
-																		</td>
-																	</tr>
-																{% endif %}
-
-															{% elseif ninea.formeJuridique.id == 27	%}
-																<tr>
-																	<td style="width: 30%;">
-																		<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																	</td>
-																	<td style="width: 70%;">
-																		<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																	</td>
-																</tr>
-
-																{% if ninea.ninRegcom != "" %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u>Régistre de commerce :</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="" class="TXT">{{ninea.ninRegcom}}</label>
-													
-																		</td>
-																	</tr>
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u>Date de régistre :</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for=""  class="TXT">{{ninea.ninDatreg|date('d/m/Y')}}</label>
-
-																		</td>
-																	</tr>
-																{% else %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u> Agrément:</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for=""  class="TXT">{{ninea.ninAgrement}}</label>
-
-																		</td>
-																	</tr>
-																{% endif %}
-				
-															{% elseif ninea.formeJuridique.id == 44  or ninea.formeJuridique.id == 48 %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																		</td>
-																	</tr>
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u> Agrément:</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<label for="basicpill-firstname-input" class="TXT">{{ninea.ninAgrement}}</label>
-
-																		</td>
-																	</tr>
-
-															{% elseif ninea.formeJuridique.id == 50  or ninea.formeJuridique.id == 51 or ninea.formeJuridique.id == 52
-																		or ninea.formeJuridique.id == 54 or ninea.formeJuridique.id == 55 or ninea.formeJuridique.id == 59 %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																			</td>
-																			<td style="width: 70%;">
-																				<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Récépissé:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<label for="basicpill-firstname-input" class="TXT">{{ninea.ninRecepisse}}</label>
-
-																			</td>
-																		</tr>
-
-																{% elseif ninea.formeJuridique.id == 32  or ninea.formeJuridique.id == 40 or ninea.formeJuridique.id == 41
-																	or ninea.formeJuridique.id == 42 or ninea.formeJuridique.id == 43 or ninea.formeJuridique.id == 45 or ninea.formeJuridique.id == 46 
-																	or ninea.formeJuridique.id == 47 or ninea.formeJuridique.id == 56 or ninea.formeJuridique.id == 97 or ninea.formeJuridique.id == 95 %}
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																				</td>
-																				<td style="width: 70%;">
-																					<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																				</td>
-																			</tr>
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for=""> <b><u> Arrêté ou decret ou loi:</u></b> </label>
-																				</td>
-																				<td style="width: 70%;">
-																					<label for="basicpill-firstname-input" class="TXT">{{ninea.ninArrete }}</label>
-
-																				</td>
-																			</tr>
-
-																	{% else %}
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																				</td>
-																				<td style="width: 70%;">
-																					<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
-																				</td>
-																			</tr>
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for=""> <b><u>Régistre de commerce :</u></b> </label>
-																				</td>
-																				<td style="width: 70%;">
-																					<label for="" class="TXT">{{ninea.ninRegcom}}</label>
-
-																				</td>
-																			</tr>
-																				<tr>
-																					<td style="width: 30%;">
-																						<label for=""> <b><u>Date de régistre :</u></b> </label>
-																					</td>
-																					<td style="width: 70%;">
-																						<label for=""  class="TXT">{{ninea.ninDatreg|date('d/m/Y')}}</label>
-
-																					</td>
-																				</tr>
-																				
-																	{% endif %}
-
-															<tr>
-																<td>
-																	<label for=""> <b><u>Administration :</u></b>	</label>
-																</td>
-																<td>
-																	<label for=""  class="TXT">{{ ninea.createdBy.niAdministration.admlibelle}}</label>
-																</td>
-															</tr>
-						
-															<tr>
-																<td>
-																	<label for=""> <b><u>Agent demandeur :</u></b>	</label>
-																</td>
-																<td>
-																	<label for=""  class="TXT">{{ ninea.createdBy.prenom}} {{ ninea.createdBy.nom}}</label>
-																</td>
-															</tr>
+													</td>
+													<td style="width: 70%;">
+														<label for="" class="TXT">	{{ninea.ninNinea}}</label>	
+													</td>
+												</tr>
+												<tr>
+													<td style="width: 30%;">
+														<label for="" class="TXT" ><b><u> Nom commercial : </u> </b> </label>	
+															
+													</td>
+													<td style="width: 70%;">
+														<label for="" class="TXT">	{{ninea.nomCommercial}}</label>	
+													</td>
+												</tr>
+												<tr>
+													<td style="width: 30%;">
+														<label for="" ><b><u>Forme unité :</u> </b> </label>	
+															
+													</td>
+													<td style="width: 70%;">
+														<label for="" class="TXT">	{{ninea.formeJuridique.niFormeunite.libelle}}</label>	
+													</td>
+												</tr>
+			
+												<tr>
+													<td style="width: 30%;">
+														<label  for="basicpill-firstname-input"><b><u>Régime juridique :</u></b> 
+															
+														</label>
+													</td>
+													<td style="width: 70%;">
+														<label class="TXT" ></label>{{ninea.formeJuridique.fojLibelle}}</label>
 														
-														</table>
-													</div>
-												</div>
-											</fieldset>
-											<br>
+													</td>
+												</tr>
+												
+											{#	<tr>
+													<td style="width: 50%;">
+														<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
+														</label>
+													</td>
+													<td style="width: 50%;">
+														<label for="basicpill-firstname-input" class="TXT">	{{ninea.ninStatut.statLibelle}}</label>
+			
+													</td>
+												</tr> #}
+										
+											</table>
+										</div>
+			
+										<div class="col-lg-6">
+											<table style="width: 100%;">
+											<tr>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+												</td>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
+												</td>
+											</tr>
+	
+											<tr>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input"> <b><u>Type document : </u></b></label>
+												</td>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input" class="TXT">{{ninea.niTypedocument != null ? ninea.niTypedocument.libelle :"" }}</label>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input"> <b><u>Numéro du document : </u></b></label>
+												</td>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input" class="TXT">{{ninea.ninNumeroDocument}}</label>
+												</td>
+											</tr>
+	
+											<tr>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input"> <b><u>Date du document : </u></b></label>
+												</td>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input" class="TXT">{{ninea.ninDateDocument !="" ? ninea.ninDateDocument|date('d/m/Y')}}</label>
+												</td>
+											</tr>
+											{% if ninea.observationsrccm != "" %}
+											<tr>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input"> <b><u>Observation  : </u></b></label>
+												</td>
+												<td style="width: 50%;">
+													<label for="basicpill-firstname-input" class="TXT">{{ninea.observationsrccm }}</label>
+												</td>
+											</tr>
+											{% endif %}
+	
+											
+											</table>
 										</div>
 									</div>
-								</div>
-
-								
-								</div>
+								</fieldset>
 							</div>
 						</div>
 					</div>
-					
+								
 				</div>
-				<!-- end accordion -->
+					
 			</div>
-		</div>
-		<!-- end col -->
-
+			
+			<div class="box-footer">
+			</div>
+			
 	</div>
 
 	
@@ -595,8 +363,7 @@ a:focus{
 							{% if ninea.niPersonne is not null %} 
 								<fieldset class=" fieldcolor p-2">
 									
-									
-
+								
 
 										<form action="{{path('ninea_editPersonne',{id:ninea.niPersonne.id})}}" method="post" >
 											
@@ -1030,12 +797,14 @@ a:focus{
 																</td>
 																<td style="width: 50%;">
 																	<select class="form-control select2 form-control-sm mt-2 " name="region" required id="region_coordonnees" style="width: 100%;">
+																			{% if lastcoordoonnee.qvh is not null %}
 																				{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD %}
 																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}</option>
 																				{% else %}
 																					<option value="" > Selectionner...</option>
-																				{% endif %}
-
+																				{% endif %}	
+																		
+																			{% endif %}
 																		</select>
 																		<span style="color: red;" id="ninregion"></span>
 																	
@@ -1048,10 +817,12 @@ a:focus{
 																</td>
 																<td style="width: 40%;">
 																	<select class="form-control form-control-sm   select2 mt-2" name="departement" required id="departement_coordonnees" style="width: 100%;">
-																		{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
-																			<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
-																		{% else %}
-																				<option value="" >Sélectionner ...</option>
+																		{% if lastcoordoonnee.qvh is not null %}
+																			{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																				<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																			{% else %}
+																					<option value="" >Sélectionner ...</option>
+																			{% endif %}
 																		{% endif %}
 																	</select>
 																	<span style="color: red;" id="nindepartement"></span>
@@ -1064,10 +835,12 @@ a:focus{
 																</td>
 																<td style="width: 40%;">
 																	<select class="form-control form-control-sm   select2 mt-2" name="cav" required id="cav_coordonnees" style="width: 100%;">
-																		{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
-																			<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
-																		{% else %}
-																			<option value="" ></option>
+																		{% if lastcoordoonnee.qvh is not null %}
+																			{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
+																				<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																			{% else %}
+																				<option value="" ></option>
+																			{% endif %}		
 																		{% endif %}												
 																	</select>
 																	<span style="color: red;" id="nincav"></span>
@@ -1081,11 +854,14 @@ a:focus{
 																</td>
 																<td>
 																	<select class="form-control form-control-sm   select2 mt-2" name="cacr" id="cacr_coordonnees" required style="width: 100%;">
-																		{% if lastcoordoonnee.qvh.qvhCACRID %}
+																		{% if lastcoordoonnee.qvh is not null %}
+
+																			{% if lastcoordoonnee.qvh.qvhCACRID %}
 																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.libelle}}</option>
 																				{% else %}
 																						<option value="" ></option>
 																				{% endif %}
+																		{% endif %}
 																	</select>
 																	<span style="color: red;" id="nincacr"></span>
 																</td>
@@ -1098,11 +874,13 @@ a:focus{
 																</td>
 																<td style="width: 70%;">
 																	<select class="form-control form-control-sm  select2 mt-2" name="qvh" id="qvh_coordonnees" required style="width: 100%;">
-																		{% if lastcoordoonnee.qvh %}
+																		{% if lastcoordoonnee.qvh is not null %}
+																			{% if lastcoordoonnee.qvh %}
 																				<option value="{{ lastcoordoonnee.qvh.id }}" selected> {{ lastcoordoonnee.qvh.libelle}}</option>
 																			{% else %}
 																				<option value="" ></option>
 																			{% endif %}
+																		{% endif %}
 																	</select>
 																	<span style="color: red;" id="ninqvh"></span>
 																</td>
@@ -1228,8 +1006,9 @@ a:focus{
 													<label for="" > <b><u> Libellé de l'ativité</u></b> </label>
 											   </td>
 											   <td width="80%">
-													<textarea name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
-												required style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
+													<textarea name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" 
+														class="form-control form-control-sm classselect" readonly
+													 style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
 												<span id="ninLibelleact" style="color: red;"></span>
 											   </td>
 											</tr>
@@ -1297,8 +1076,7 @@ a:focus{
 			                          </td>
 			                           <td style="width: 40%;">				                      
 									     <select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
-											<option value="" selected>
-												Sélectionner...</option>
+											<option value="" selected>												Sélectionner...</option>
 											{% for tag in naemas %}
 												<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
 											{% endfor %}
@@ -1387,21 +1165,6 @@ a:focus{
 													<input readonly="true" type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm mt-2">
 												</td>
 											</tr>
-										</table>
-									
-									</div>
-
-									<div class="col-lg-6">
-									<table style="width: 100%;">
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT mt-2"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input readonly="true" type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm mt-2">
-												</td>
-											</tr>
-
 											<tr>
 												<td style="width: 50%;">
 													<label for="" class="TXT mt-2"> <b><u>Effectif temporaire : </u></b>   </label>	
@@ -1417,6 +1180,71 @@ a:focus{
 												</td>
 												<td style="width: 50%;">
 													<input readonly="true" type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+										</table>
+									
+									</div>
+
+									<div class="col-lg-6">
+									<table style="width: 100%;">
+											<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+											
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Source de financement : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+															{% if lastactiviteEco.ninOcc is not null %}
+																<option value="{{ ninea.ninActivitesEconomiques[0].ninOcc.id }}" selected> {{ ninea.ninActivitesEconomiques[0].ninOcc.libelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+										
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Nature d'exploitation : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+															{% if lastactiviteEco.ninNature is not null %}
+																<option value="{{ ninea.ninActivitesEconomiques[0].ninNature.id }}" selected> {{ ninea.ninActivitesEconomiques[0].ninNature.nleLibelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Modalité  : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+															{% if lastactiviteEco.ninMode is not null %}
+																<option value="{{ ninea.ninActivitesEconomiques[0].ninMode.id }}" selected> {{ ninea.ninActivitesEconomiques[0].ninMode.libelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
 												</td>
 											</tr>
 
@@ -1471,343 +1299,331 @@ a:focus{
 			<div class="col-lg-12 justify-content-center"> 
 				<fieldset class=" p-2 fieldcolor ">
 			
-					<form name="formDirigeant" action="{{path('ajouterDirigeantsHisto',{id:app.request.attributes.get('id')})}}" method="post" autocomplete="off">
-						<div class="row" id="idPageAjoutDirigeants">
-							<div class="col-lg-6" id="idPageAjoutDirigeants1">
-								<fieldset class="border p-2">						
-									<table style="width: 100%;">
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 60%;">
-												<select class="form-control form-control-sm"  name="nationalite"  id="idnationalite_dirigeant">
-													{% if Odirigeant and Odirigeant.ninNationalite %}
-														<option value="{{Odirigeant.ninNationalite.id}}"  selected }> {{ Odirigeant.ninNationalite.libelle}}</option>
-													{% else %}
-														<option value="" >Selectionner...</option>
-													{% endif %}
-												</select>
-												<span style="color: red;" id="ninationalite"></span>
-											</td>
-										</tr>
-									</table>
-
-									<div id="tableCni_dirigeant">
-										<table  style="width: 100%;">
-											<tr id="trcni">
+						<form name="formDirigeant" action="{{path('ajouterDirigeantsHisto',{id:app.request.attributes.get('id')})}}" method="post" autocomplete="off">
+							<div class="row" id="idPageAjoutDirigeants">
+								<div class="col-lg-6" id="idPageAjoutDirigeants1">
+									<fieldset class="border p-2">						
+										<table style="width: 100%;">
+											<tr>
 												<td style="width: 40%;">
-													<label for="" class="TXT mt-2"><b><u>CNI</u></b></label>
-													<span style="color: red;">*</span>
-												</td>
-												<td style="width: 60%;" >
-													<input readonly="true" type="text" name="cni" id="idcni" value="{{Odirigeant ? Odirigeant.ninCni : ""}}" 
-														maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm mt-2">
-													<span style="color: red;" id="nincni"></span>
-												</td>
-											</tr>
-				
-											<tr id="trcni">
-												<td style="width: 40%;">
-													<label for="" class="TXT mt-2"><b><u>Date de délivrance CNI : </u></b></label>
-													<span style="color: red;">*</span>
-												</td>
-												<td style="width: 60%;" >
-													<input readonly="true" type="date" name="datecni" id="idDatcni" value="{{Odirigeant ? Odirigeant.ninDateCni | date("Y-m-d")  : ""}}"
-													class="form-control form-control-sm mt-2" >
-													<span style="color: red;" id="nincni"></span>
-												</td>
-											</tr>
-										</table>
-									</div>
-									
-									<div id="tablePassport_dirigeant">
-										<table style="width: 100%;" >
-											<tr id="trPassport">
-												<td style="width: 40%;">
-													<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+													<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
 													<span style="color: red;">*</span>
 												</td>
 												<td style="width: 60%;">
-													<input readonly="true" type="text" name="passport" id="idPassport"  value="{{Odirigeant ? Odirigeant.ninCni : ""}}"  class="form-control form-control-sm">
-													<span style="color: red;" id="ninpassport"></span>
-												</td>
-											</tr>
-				
-											<tr id="trDatePassport">
-												<td style="width: 40%;">
-													<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
-												</td>
-												<td style="width: 60%;">
-													<input readonly="true" type="date" name="datepassport" id="idDatepassport" value="{{Odirigeant and Odirigeant.ninDateCni ? Odirigeant.ninDateCni | date("d/m/Y")  : ""}}" class="form-control form-control-sm">
-													<span style="color: red;" id="nindatepassport"></span>
-												</td>
-											</tr>
-										</table>
-									</div>
-									
-									<table style="width: 100%;">
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Civilite : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 30%;">
-												<select class="form-control form-control-sm" name="civilite" id="idcivilite">
-													{% if Odirigeant %}
-														{% if Odirigeant.ninCivilite %}
-															<option value="{{ Odirigeant.ninCivilite.id}}" selected>		{{ Odirigeant.ninCivilite.civlibelle}}</option>
+													<select class="form-control form-control-sm"  name="nationalite"  id="idnationalite_dirigeant">
+														{% if Odirigeant and Odirigeant.ninNationalite %}
+															<option value="{{Odirigeant.ninNationalite.id}}"  selected }> {{ Odirigeant.ninNationalite.libelle}}</option>
 														{% else %}
-															<option value=""> Selectionner...</option>
-														{% endif %} 
-													{% else %}
-														<option value="">Selectionner...</option>
-													{% endif %}
-												</select>
-												<span style="color: red;" id="nincivil"></span>
-											</td>
-										</tr>
+															<option value="" >Selectionner...</option>
+														{% endif %}
+													</select>
+													<span style="color: red;" id="ninationalite"></span>
+												</td>
+											</tr>
+										</table>
 
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Prénom : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 60%;">
-												<input readonly="true" type="text" name="prenom"  id="prenom" value="{{Odirigeant ? Odirigeant.ninPrenom : ""}}" class="form-control form-control-sm">	
-												<span style="color: red;" id="ninprenom"></span>
-												<input type="hidden" name="idDirigeantAM"  id="idDirigeantAM" value="{{Odirigeant ? Odirigeant.id : ""}}" class="form-control form-control-sm">	
-											</td>
-										</tr>
-
-										<tr>
-											<td style="width: 40%;">
-												<label for=""><b><u>Nom : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 60%;">
-												<input readonly="true" type="text" name="nom" id="idnom" value="{{Odirigeant ? Odirigeant.ninNom : ""}}" class="form-control form-control-sm">
-												<span style="color: red;" id="ninnom"></span>
-											</td>
-										</tr>
-
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Sexe : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 60%;">
-											<input readonly="true" type="text" readonly name="sexe" id="idSexe" value="" class="form-control form-control-sm">
-											<span style="color: red;" id="ninsexe"></span>
-
-											</td>
-										</tr>
-
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 60%;">
-												<input readonly="true" type="date" name="datenais"  value="{{Odirigeant and Odirigeant.ninDatenais ? Odirigeant.ninDatenais | date("Y-m-d")  : ""}}" id="idDatenais" class="form-control form-control-sm">
-												<span style="color: red;" id="nindatenais"></span>
-											</td>
-										</tr>
-
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Lieu de naissance</u></b></label>
-												<span style="color: red;">*</span>
-
-											</td>
-											<td style="width: 60%;">
-												<input readonly="true" type="text" name="lieunais" id="idlieunais" value="{{Odirigeant ? Odirigeant.ninLieunais : ""}}" class="form-control form-control-sm">
-												<span style="color: red;" id="ninlieunais"></span>
-											</td>
-										</tr>
-
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Qualification : </u></b></label>
-												<span style="color: red;">*</span>
-											</td>
-											<td style="width: 60%;">
-												<select class="form-control form-control-sm" name="qualification" id="idqualification">
+										<div id="tableCni_dirigeant">
+											<table  style="width: 100%;">
+												<tr id="trcni">
+													<td style="width: 40%;">
+														<label for="" class="TXT mt-2"><b><u>CNI</u></b></label>
+														<span style="color: red;">*</span>
+													</td>
+													<td style="width: 60%;" >
+														<input readonly="true" type="text" name="cni" id="idcni" value="{{Odirigeant ? Odirigeant.ninCni : ""}}" 
+															maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm mt-2">
+														<span style="color: red;" id="nincni"></span>
+													</td>
+												</tr>
+					
+												<tr id="trcni">
+													<td style="width: 40%;">
+														<label for="" class="TXT mt-2"><b><u>Date de délivrance CNI : </u></b></label>
+														<span style="color: red;">*</span>
+													</td>
+													<td style="width: 60%;" >
+														<input readonly="true" type="date" name="datecni" id="idDatcni" value="{{Odirigeant ? Odirigeant.ninDateCni | date("Y-m-d")  : ""}}"
+														class="form-control form-control-sm mt-2" >
+														<span style="color: red;" id="nincni"></span>
+													</td>
+												</tr>
+											</table>
+										</div>
+										
+										<div id="tablePassport_dirigeant">
+											<table style="width: 100%;" >
+												<tr id="trPassport">
+													<td style="width: 40%;">
+														<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+														<span style="color: red;">*</span>
+													</td>
+													<td style="width: 60%;">
+														<input readonly="true" type="text" name="passport" id="idPassport"  value="{{Odirigeant ? Odirigeant.ninCni : ""}}"  class="form-control form-control-sm">
+														<span style="color: red;" id="ninpassport"></span>
+													</td>
+												</tr>
+					
+												<tr id="trDatePassport">
+													<td style="width: 40%;">
+														<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
+													</td>
+													<td style="width: 60%;">
+														<input readonly="true" type="date" name="datepassport" id="idDatepassport" value="{{Odirigeant and Odirigeant.ninDateCni ? Odirigeant.ninDateCni | date("d/m/Y")  : ""}}" class="form-control form-control-sm">
+														<span style="color: red;" id="nindatepassport"></span>
+													</td>
+												</tr>
+											</table>
+										</div>
+										
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Civilite : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 30%;">
+													<select class="form-control form-control-sm" name="civilite" id="idcivilite">
 														{% if Odirigeant %}
-														{% if Odirigeant.ninPosition  %}
-															<option value="{{ Odirigeant.ninPosition.id}}" selected>		{{ Odirigeant.ninPosition.libelle}}</option>
-														{% else %}
-															<option value="">Selectionner...</option>
+															{% if Odirigeant.ninCivilite %}
+																<option value="{{ Odirigeant.ninCivilite.id}}" selected>		{{ Odirigeant.ninCivilite.civlibelle}}</option>
+															{% else %}
+																<option value=""> Selectionner...</option>
 															{% endif %} 
 														{% else %}
 															<option value="">Selectionner...</option>
 														{% endif %}
-												</select>
-												<span style="color: red;" id="ninqualications"></span>
-											</td>
-										</tr>
-									</table>
+													</select>
+													<span style="color: red;" id="nincivil"></span>
+												</td>
+											</tr>
 
-								</fieldset>
-							</div>
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="prenom"  id="prenom" value="{{Odirigeant ? Odirigeant.ninPrenom : ""}}" class="form-control form-control-sm">	
+													<span style="color: red;" id="ninprenom"></span>
+													<input type="hidden" name="idDirigeantAM"  id="idDirigeantAM" value="{{Odirigeant ? Odirigeant.id : ""}}" class="form-control form-control-sm">	
+												</td>
+											</tr>
 
-							<div class="col-lg-6" id="idPageAjoutDirigeants2">
-								<fieldset class="border p-2">
-									<table style="width: 100%;">
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+											<tr>
+												<td style="width: 40%;">
+													<label for=""><b><u>Nom : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="nom" id="idnom" value="{{Odirigeant ? Odirigeant.ninNom : ""}}" class="form-control form-control-sm">
+													<span style="color: red;" id="ninnom"></span>
+												</td>
+											</tr>
 
-											</td>
-											<td style="width: 60%;">
-												<input readonly="true" type="text" name="telephone" id="idtelpersonne_dirig1"  value="{{Odirigeant ? Odirigeant.ninTelephone1 : ""}}" class="form-control form-control-sm">
-												<span style="color: red;" id="nintelpersonne"></span>
-											</td>
-										</tr>
-										<tr>
-											<td style="width: 40%;">
-												<label for="" class="TXT"><b><u>Email : </u></b></label>
-											</td>
-											<td style="width: 60%;">
-												<input readonly="true" type="text" name="email" id="idemail_dirig" value="{{Odirigeant ? Odirigeant.ninEmail : ""}}"   class="form-control form-control-sm">
-												<span style="color: red;" id="ninemail_dirig"></span>
-											</td>
-										</tr>
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+												<input readonly="true" type="text" readonly name="sexe" id="idSexe" value="" class="form-control form-control-sm">
+												<span style="color: red;" id="ninsexe"></span>
 
-										<tr>
-											<td>
-												<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
-											</td>
-											<td>
-												<select class="form-control form-control-sm select2 "  name="region" id="region_dirigeant" style="width: 100%;">
-													{% if Odirigeant %}
-														{% if Odirigeant.ninQvh %}
-																	<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}</option>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="date" name="datenais"  value="{{Odirigeant and Odirigeant.ninDatenais ? Odirigeant.ninDatenais | date("Y-m-d")  : ""}}" id="idDatenais" class="form-control form-control-sm">
+													<span style="color: red;" id="nindatenais"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Lieu de naissance</u></b></label>
+													<span style="color: red;">*</span>
+
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="lieunais" id="idlieunais" value="{{Odirigeant ? Odirigeant.ninLieunais : ""}}" class="form-control form-control-sm">
+													<span style="color: red;" id="ninlieunais"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Qualification : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<select class="form-control form-control-sm" name="qualification" id="idqualification">
+															{% if Odirigeant %}
+															{% if Odirigeant.ninPosition  %}
+																<option value="{{ Odirigeant.ninPosition.id}}" selected>		{{ Odirigeant.ninPosition.libelle}}</option>
+															{% else %}
+																<option value="">Selectionner...</option>
+																{% endif %} 
+															{% else %}
+																<option value="">Selectionner...</option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="ninqualications"></span>
+												</td>
+											</tr>
+										</table>
+
+									</fieldset>
+								</div>
+
+								<div class="col-lg-6" id="idPageAjoutDirigeants2">
+									<fieldset class="border p-2">
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="telephone" id="idtelpersonne_dirig1"  value="{{Odirigeant ? Odirigeant.ninTelephone1 : ""}}" class="form-control form-control-sm">
+													<span style="color: red;" id="nintelpersonne"></span>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Email : </u></b></label>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="email" id="idemail_dirig" value="{{Odirigeant ? Odirigeant.ninEmail : ""}}"   class="form-control form-control-sm">
+													<span style="color: red;" id="ninemail_dirig"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 "  name="region" id="region_dirigeant" style="width: 100%;">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninQvh %}
+																		<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}</option>
+																{% else %}
+																		<option value="" ></option>
+																{% endif %}
+
+														{% else %}
+																<option value=""></option>
+														{% endif %}
+
+														</select>
+														<span style="color: red;" id="ninregion"></span>
+													</td>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 " name="departement" id="departement_dirigeant" style="width: 100%;">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
 															{% else %}
 																	<option value="" ></option>
 															{% endif %}
-
-													{% else %}
-															<option value=""></option>
-													{% endif %}
-
+														{% else %}
+															<option value="" ></option>
+														{% endif %}
 													</select>
-													<span style="color: red;" id="ninregion"></span>
+													<span style="color: red;" id="nindepartement"></span>
 												</td>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
-											</td>
-											<td>
-												<select class="form-control form-control-sm select2 " name="departement" id="departement_dirigeant" style="width: 100%;">
-													{% if Odirigeant %}
-														{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
-															<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+											</tr>
+											<tr>
+												<td>
+													<label for="numvoie" class="TXT"><b><u>CAV :</u></b></label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2" name="cav" id="cav_dirigeant" style="width: 100%;">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID %}
+																<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
 														{% else %}
-																<option value="" ></option>
-														{% endif %}
-													{% else %}
-														<option value="" ></option>
-													{% endif %}
-												</select>
-												<span style="color: red;" id="nindepartement"></span>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label for="numvoie" class="TXT"><b><u>CAV :</u></b></label>
-											</td>
-											<td>
-												<select class="form-control form-control-sm select2" name="cav" id="cav_dirigeant" style="width: 100%;">
-													{% if Odirigeant %}
-														{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID %}
-															<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
-														{% else %}
-																<option value="" ></option>
-														{% endif %}
-													{% else %}
-														<option value="" ></option>
-													{% endif %}
-												</select>
-												<span style="color: red;" id="nincav"></span>
-											</td>
-										</tr>
-
-										<tr>
-											<td>
-												<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>	</label>
-											</td>
-											<td>
-												<select class="form-control form-control-sm select2" name="cacr" id="cacr_dirigeant" style="width: 100%;">
-												{% if Odirigeant %}	
-													{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID %}
-														<option value="{{ Odirigeant.ninQvh.qvhCACRID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.libelle}}</option>
-													{% else %}
 															<option value="" ></option>
-													{% endif %}
-												{% else %}
-															<option value="" ></option>
-												{% endif %}
-												</select>
-												<span style="color: red;" id="nincacr"></span>
-											</td>
-										</tr>
-										<tr>
+														{% endif %}
+													</select>
+													<span style="color: red;" id="nincav"></span>
+												</td>
+											</tr>
 
-											<td style="width: 30%;">
-												<label for="basicpill-firstname-input" class="TXT">
-													<b><u>Quartier/Village/Hameau: : </u></b></label>
-											</td>
-											<td style="width: 70%;">
-												<select class="form-control form-control-sm select2" name="qvh" id="qvh_dirigeant" style="width: 100%;">
-													<option value=""></option>
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>	</label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2" name="cacr" id="cacr_dirigeant" style="width: 100%;">
 													{% if Odirigeant %}	
-														{% if Odirigeant.ninQvh %}
-															<option value="{{ Odirigeant.ninQvh.id }}" selected> {{ Odirigeant.ninQvh.libelle}}</option>
+														{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID %}
+															<option value="{{ Odirigeant.ninQvh.qvhCACRID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.libelle}}</option>
+														{% else %}
+																<option value="" ></option>
+														{% endif %}
 													{% else %}
-															<option value="" ></option>
+																<option value="" ></option>
 													{% endif %}
-												{% else %}
-															<option value="" ></option>
-												{% endif %}
-												</select>
-												<span style="color: red;" id="ninqvh"></span>
-											</td>
-										</tr>
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+											<tr>
 
-									</table>
+												<td style="width: 30%;">
+													<label for="basicpill-firstname-input" class="TXT">
+														<b><u>Quartier/Village/Hameau: : </u></b></label>
+												</td>
+												<td style="width: 70%;">
+													<select class="form-control form-control-sm select2" name="qvh" id="qvh_dirigeant" style="width: 100%;">
+														<option value=""></option>
+														{% if Odirigeant %}	
+															{% if Odirigeant.ninQvh %}
+																<option value="{{ Odirigeant.ninQvh.id }}" selected> {{ Odirigeant.ninQvh.libelle}}</option>
+														{% else %}
+																<option value="" ></option>
+														{% endif %}
+													{% else %}
+																<option value="" ></option>
+													{% endif %}
+													</select>
+													<span style="color: red;" id="ninqvh"></span>
+												</td>
+											</tr>
 
-								</fieldset>
+										</table>
 
-							</div>
-						</div>
-					
+									</fieldset>
 
-						<div class="row" id="idGroupeBtnAjoutDirigeants">
-						<div class="col-lg-12">
-							<div class="mb-3 row">
-								<label class="col-md-6" for="basicpill-firstname-input"></label>
-								
-								<div class="col-md-1" align="right">
-									<input type="button"  value="Annuler" id="idBtnAnnulerAjoutDirigeant" name="annuler"  class="btn btn-primary waves-effect waves-light btn-sm">
 								</div>
 							</div>
-							</div>
-						</div>
+						
 
-						<div class="row ">
+							<div class="row" id="idGroupeBtnAjoutDirigeants">
 							<div class="col-lg-12">
 								<div class="mb-3 row">
-									<label class="col-md-6" for="basicpill-firstname-input">LISTE DES DIRIGEANTS</label>
+									<label class="col-md-6" for="basicpill-firstname-input"></label>
 									
 								</div>
+								</div>
 							</div>
-						</div>
 
-							<div class="row">
+							<div class="row ">
 								<div class="col-lg-12">
 										<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
 											<thead class="tr_entete" >
@@ -1817,7 +1633,7 @@ a:focus{
 													<th>Qualification</th>
 													<th>CNI</th>
 													<th>Nationalité</th>
-													<th>Actions</th>
+												
 												</tr>
 											</thead>
 											<tbody>
@@ -1826,21 +1642,17 @@ a:focus{
 													<td >{{tag.ninPrenom}}</td>
 													<td >{{tag.ninNom}}	</td>
 													<td > 
-														{% if tag.ninPosition %}
+														{% if tag.ninPosition is not null %}
 															{{tag.ninPosition.libelle}} 
 														{% endif %}
 													</td>
 													<td >{{tag.ninCni}}</td>
-													<td >{{ tag.ninNationalite.libelle}}</td>
-													<td>
-														<a href="">
-															
-														</a>
-														<input  id="idBtnModifDirigeant"  name="valider" type="submit" value="Modifier" onclick="modifierDirigeants('{{ tag.id}}');" >
-														<input  id="idBtnSupprimeDirigeant"  type="submit" value="Supprimer" onclick="supprimerDirigeants('{{ tag.id}}');" >
-
+													<td >
+													 	{% if tag.ninNationalite is not null %}
+															{{ tag.ninNationalite.libelle}}
+													   {% endif %}
 													</td>
-												
+													
 												</tr>
 												{% endfor %}
 											</tbody>
@@ -1850,22 +1662,195 @@ a:focus{
 
 							</div>
 
-					
-						<div class="row">
-							<div class="col-lg-12">
-								<div class="mb-3 row">
-									<div align="right">
-										<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentDirigeant" class="boutonsm">
+							
+								{% for tag in ninea.ninDirigeant %}
+									<div class="accordion mb-3" id="accordionExample{{tag.id}}" >
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="headingOne{{tag.id}}">
+												<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{tag.id}}" aria-expanded="true" aria-controls="collapseOne{{tag.id}}">
+													<div class=" row p-0">
+													     {# <div for="staticEmail" class="col-lg-2 "> <b><u>  Prénom :</u> </b> </div>
+														<div for="staticEmail" class="col-lg-3 "> {{tag.ninPrenom}}</div>
+														<div for="staticEmail" class="col-lg-2 "> <b><u>  Nom :</u> </b> </div>
+														<div for="staticEmail" class="col-lg-3 ">{{tag.ninNom}}</div>
+														<div for="staticEmail" class="col-lg-2"></div #} 
+														<table style="width:100% ;">
+															<tr>
+																<td style="margin-right:10% ;"><b><u>  {{tag.ninPrenom}} </u> </b></td>
+																<td><b><u>  {{tag.ninNom}} </u> </b>  ({% if tag.ninPosition is not null %}	{{tag.ninPosition.libelle}}	  {% endif %}) </td>
+															</tr>
+														</table>
+														
+													</button>
+									
+												</h2>
+												<div id="collapseOne{{tag.id}}" class="accordion-collapse collapse " aria-labelledby="headingOn{{tag.id}}" data-bs-parent="#accordionExample{{tag.id}}">
+													<div class="accordion-body">
+														<div class="text-muted">
+															<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+															<div class="row mb-0">
+																<div class="col-lg-12">
+																	<fieldset class=" p-2 fieldcolor ">
+																		<div class="row">
+													
+																			<div class="col-lg-6">
+																				<table style="width: 100%;">
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="" class="TXT" ><b><u> Prénom : </u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="" class="TXT">	{{tag.ninPrenom}}</label>	
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="" ><b><u>Nom :</u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="" class="TXT">	{{tag.ninNom}}</label>	
+																						</td>
+																					</tr>
+												
+																					<tr>
+																						<td style="width: 40%;">
+																							<label  for="basicpill-firstname-input"><b><u>Sexe :</u></b> 
+																								
+																							</label>
+																						</td>
+																						<td style="width: 60%;">
+																							<label class="TXT" for="basicpill-firstname-input">{{tag.ninSexe.libelle}}</label>
+																							
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="" class="TXT" ><b><u> Date de naissance : </u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="" class="TXT">	{{tag.ninDatenais | date("d-m-Y") }}</label>	
+																						</td>
+																					</tr>
+																					
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="basicpill-firstname-input" ><b><u>Nationalite :</u></b>
+																							</label>
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="basicpill-firstname-input" class="TXT">	{{tag.ninNationalite.libelle}}</label>
+												
+																						</td>
+																					</tr> 
+																					<tr>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" ><b><u>CNI/PASSPORT :</u></b>
+																							</label>
+																						</td>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" class="TXT">	{{tag.ninCni}}</label>
+												
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" ><b><u>Date de délivrance CNI/PASSPORT :</u></b>
+																							</label>
+																						</td>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" class="TXT">	{{tag.ninDateCni | date("d-m-Y") }}</label>
+												
+																						</td>
+																					</tr>
+																				</table>
+																			</div>
+
+																			<div class="col-lg-6">
+																			<table style="width: 100%;">
+																				
+																				<tr>
+																					<td style="width: 30%;">
+																						<label for="" ><b><u>Qualification :</u> </b> </label>	
+																							
+																					</td>
+																					<td style="width: 70%;">
+																						<label for="" class="TXT">
+																						  {% if tag.ninPosition is not null %}
+																							{{tag.ninPosition.libelle}}
+																						 {% endif %}
+																						</label>	
+																					</td>
+																				</tr>
+											
+																				<tr>
+																					<td style="width: 30%;">
+																						<label  for="basicpill-firstname-input"><b><u>Téléphone :</u></b> 																							
+																					</td>
+																					<td style="width: 60%;">
+																						<label for="" class="TXT">	{{tag.ninTelephone1}}</label>	
+																					</td>
+																				</tr>
+																					
+																				<tr>
+																					<td style="width: 30%;">
+																						<label  for="basicpill-firstname-input"><b><u>Adresse :</u></b> 			</label>
+																					</td>
+																					<td style="width: 70%;">
+																						<label class="TXT" for="basicpill-firstname-input">{{tag.ninAddresse}}</label>
+																						
+																					</td>
+																				</tr>
+																					<tr>
+																						<td style="width: 30%;">
+																							<label  for="basicpill-firstname-input"><b><u>Email :</u></b> 
+																								
+																							</label>
+																						</td>
+																						<td style="width: 70%;">
+																							<label class="TXT" for="basicpill-firstname-input">{{tag.ninEmail}}</label>
+																							
+																						</td>
+																					</tr>
+																					
+																			
+																				</table>
+																			</div>
+												
+																		</div>
+																	</fieldset>
+																	<br>
+																</div>
+															</div>
+														</div>
+
+														
+														</div>
+													</div>
+												</div>
+											</div>
+							
+										</div>
+									{% endfor %}
+					<!-- end accordion -->
+							
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="mb-3 row">
+										<div align="right">
+											<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentDirigeant" class="boutonsm">
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
-					</form>
-						
+						</form>
+							
 
 					
-			</fieldset>
+				</fieldset>
 			</div>
 
 		</div>
@@ -2090,14 +2075,47 @@ a:focus{
 				 else {
 					 if (document.getElementById("idcivilite_dirig").value == "1") {
 		
-		                 document.getElementById("idSexe_dirig").value="M";
+		                 document.getElementById("idSexe_dirig").value="Masculin";
 		
-		             } else if (document.getElementById("idcivilite_dirig").value == "3" || document.getElementById("idcivilite_dirig").value == "4") {
-		                document.getElementById("idSexe_dirig").value= "F";
+		             } else if (document.getElementById("idcivilite_dirig").value == "2") {
+		                document.getElementById("idSexe_dirig").value= "Féminin";
 	
 		            }
 				 }
 	
+
+
+				 if($.trim($('#idninAffaire').val()).length> 2 )
+				 {
+					
+					 let nStr = $("#idninAffaire").val();
+					 nStr += '';
+					 x = nStr.split('.');
+					 x1 = x[0];
+					 x2 = x.length > 1 ? '.' + x[1] : '';
+					 var rgx = /(\d+)(\d{3})/;
+					 while (rgx.test(x1)) {
+					 x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+					 }
+					 $("#idninAffaire").val(x1 + x2) ;
+ 
+				 }
+
+				 if($.trim($('#idninCapital').val()).length> 2 )
+				 {
+					 
+					 let nStr = $("#idninCapital").val();
+					 nStr += '';
+					 x = nStr.split('.');
+					 x1 = x[0];
+					 x2 = x.length > 1 ? '.' + x[1] : '';
+					 var rgx = /(\d+)(\d{3})/;
+					 while (rgx.test(x1)) {
+					 x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+					 }
+					 $("#idninCapital").val(x1 + x2) ;
+ 
+				 }
 
 			});	
 
@@ -3310,7 +3328,7 @@ $('#idCivilite').change(function () {
 		opt.innerHTML = "Masculin";
 		opt.value = 1;
 		sexe.add(opt);
-	} else if (document.getElementById("idCivilite").value == "2" || document.getElementById("idCivilite").value == "3") {
+	} else if (document.getElementById("idCivilite").value == "2") {
 		var sexe = document.getElementById("idsexe");
 		sexe.innerHTML = "";
 		var opt = document.createElement('option');
@@ -3336,10 +3354,10 @@ $('#idCivilite').change(function () {
 	$('#idcivilite_dirig').change(function () {
 		if (document.getElementById("idcivilite_dirig").value == "1") {
 		
-		document.getElementById("idSexe_dirig").value="M";
+			document.getElementById("idSexe_dirig").value="Masculin";
 		
-		} else if (document.getElementById("idcivilite_dirig").value == "3" || document.getElementById("idcivilite_dirig").value == "4") {
-		 document.getElementById("idSexe_dirig").value= "F";
+		} else if (document.getElementById("idcivilite_dirig").value == "2") {
+		 document.getElementById("idSexe_dirig").value= "Féminin";
 	
 		}
 		

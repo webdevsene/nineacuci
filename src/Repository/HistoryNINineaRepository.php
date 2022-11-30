@@ -39,6 +39,61 @@ class HistoryNINineaRepository extends ServiceEntityRepository
         }
     }
 
+    public function distinctHistoryNINinea(){
+        return $this->createQueryBuilder('cc')
+        ->select('cc.ninNinea')
+        ->distinct('cc.ninNinea')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    
+    public function distinctGroupTempNINinea($id, $dateDebut, $dateFin){
+        
+        $query = $this->createQueryBuilder('tn');
+
+        if($id){
+            $query = $query
+                ->andWhere('tn.ninNinea  LIKE :numero')
+                ->setParameter('numero', $id.'%');
+        }
+
+        if ($dateDebut) {
+            $dateDebut = new \DateTime($dateDebut);
+            // $var = $var->format('Y-m-d');
+            $query = $query->andWhere('tn.createdAt >= :var')
+                        ->setParameter('var',$dateDebut);
+        }
+        if ($dateFin) {
+            $dateFin = new \DateTime($dateFin);
+           //  $var2 = $var2->format('Y-m-d');
+
+            $query = $query->andWhere('tn.createdAt <= :var2')
+                        ->setParameter('var2',$dateFin);
+        }
+
+        return $query
+            ->orderBy("tn.createdAt", "DESC")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    
+    public function distinctGroupTempNINineaNoFilter(){
+        
+        $query = $this->createQueryBuilder('hn');
+
+        return $query
+            ->groupBy("hn.ninNinea")
+            ->orderBy("hn.createdAt", "DESC")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    
 //    /**
 //     * @return HistoryNINinea[] Returns an array of HistoryNINinea objects
 //     */

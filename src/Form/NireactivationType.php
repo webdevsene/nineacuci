@@ -25,10 +25,11 @@ class NireactivationType extends AbstractType
         $builder
             ->add('dateReactivation', DateType::class, ['label'=>'Date de réactivation',
             'attr'=>array('class'=>'form-control form-control-sm'),
-            'required'=>false,
-          
-          'widget' => 'single_text'])
-            
+            'required'=>false,          
+            'widget' => 'single_text'])
+            ->add('remarque', TextareaType::class, ['label'=>'Remarque ou Commentaire',
+            'attr'=>array('class'=>'form-control form-control-sm'),
+            'required'=>false,])            
            
         ;
     }

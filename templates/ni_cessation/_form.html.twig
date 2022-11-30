@@ -2,69 +2,139 @@
     <div  style="border: 1px solid #ccc;">
             <div >
                 <div class="panel panel-default">
-                    <div class="panel-body">
+                    <div class="panel-body p-2">
                             <br>
-                            <div class="item row">
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
-                                </label>
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.motif) }} </b> 
-                                </label>
-                            
-                                <div class="col-md-4 col-sm-4 ">
-                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.motif)}}</span>
-                                    {{form_widget(form.motif)}}
+
+                            <div class="row">
+
+                                <div class="col-lg-7 ">
+                                    <fieldset class="border P-3">
+                                        <legend class="w-auto float-none p-2"></legend>
+
+                                            <div class="item row ">
+                                                <label class="col-form-label col-sm-4 " for="first-name"><b> NINEA: </b> 
+                                                </label>
+                                                <div class="col-sm-6 ">
+                                                    <div class=" input-group">
+                                                        {% if ni_cessation is  defined  and ni_cessation.ninea is not null %}
+                                                        
+                                                            <input type="text" value="{{ni_cessation.ninea.ninNinea}}" id="inputmere"  readonly name="nineamere" required class="form-control form-control-sm ">
+                                                        {% else %}
+                                                            <input type="text" value="" id="inputmere"  readonly name="nineamere" required class="form-control form-control-sm ">
+                                                        {% endif %}
+                                                        <div class="input-group-btn">
+                                                            <button type="button" style="height: 100%;" class="bx bx-search-alt" id="btnRechercheNINEA"></button> <span style="color: red;" id="nin_nineamere"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="item row ">
+                                                <label class="col-form-label col-sm-4 " for="first-name"><b> {{ form_label(form.motif) }} </b> 
+                                                </label>
+                                            
+                                                <div class=" col-sm-6 ">
+                                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.motif)}}</span>
+                                                    {{form_widget(form.motif)}}
+                                                </div>
+                                            </div>
+                                            <div class="item row ">
+                                                <label class="col-form-label  col-sm-4 " for="first-name"><b> {{ form_label(form.description) }} </b> 
+                                                </label>
+                                            
+                                                <div class=" col-sm-6 ">
+                                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.description)}}</span>
+                                                    {{form_widget(form.description)}}
+                                                </div>
+                                            </div>
+                                            <div class="item row  mt-2 dateCessation">
+                                                <label class="col-form-label col-sm-4 " for="first-name"><b> {{ form_label(form.dateCessation) }} </b> 
+                                                </label>
+                                                <div class=" col-sm-6 ">
+                                                <span style="color: red;" id="idDateCessationError"> {{form_errors(form.dateCessation)}}</span>
+                                                    {{form_widget(form.dateCessation, { 'id': 'idDateCessation'})}}
+                                                </div>
+                                            </div>
+
+                                            <div class="item row  idConsequence">
+                                                <label class="col-form-label  col-sm-4 " for="first-name"><b> {{ form_label(form.consequences) }} </b> 
+                                                </label>
+                                                <div class=" col-sm-6 ">
+                                                <span style="color: red;" id="idConsequenceError"> {{form_errors(form.consequences)}}</span>
+                                                    {{form_widget(form.consequences, { 'id': 'idConsequence'})}}
+                                                </div>
+                                            </div>
+
+
+                                                                        
+                                            <div class="item row ">
+                                                <label class="col-form-label col-sm-4 " id="idPrecision" for="first-name"><b> A Préciser</b> 
+                                                </label>                        
+                                                <div class=" col-sm-6 ">
+                                                    <span style="color: red;" id=""> </span>
+                                                    <textarea type="textarea"
+                                                        class="form-control" name="AutrePreciser" id="idAutrePreciser" aria-describedby="helpId" placeholder=""></textarea>
+                                                </div>
+                                            </div>
+                                        
+                                    </fieldset>	                            
                                 </div>
-                            </div>
-                            <div class="item row mt-2">
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
-                                </label>
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.description) }} </b> 
-                                </label>
-                            
-                                <div class="col-md-4 col-sm-4 ">
-                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.description)}}</span>
-                                    {{form_widget(form.description)}}
+                                    
+                                <div class="col-lg-5">
+
+                                    <fieldset class="border p-2">
+                                        <legend class="w-auto float-none p-2 font-size-10">Bénéficiaire</legend>
+
+                                        <div class="item row ">
+                                            <label class="col-form-label  col-sm-4 " for="first-name"><b> {{ form_label(form.denominationBeneficiaire) }} </b> 
+                                            </label>
+                                            <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                            </label>
+                                            <div class="col-sm-6 ">
+                                                <span style="color: red;" id="idPrenom"> {{form_errors(form.denominationBeneficiaire)}}</span>
+                                                {{form_widget(form.denominationBeneficiaire)}}
+                                            </div>
+                                        </div>
+
+                                        <div class="item row ">
+                                            <label class="col-form-label  col-sm-4 " for="first-name"><b> {{ form_label(form.adresseBeneficiaire) }} </b> 
+                                            </label>
+                                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                                </label>
+                                            <div class="col-sm-6 ">
+                                                <span style="color: red;" id="idadresseBeneficiaire"> {{form_errors(form.adresseBeneficiaire)}}</span>
+                                                {{form_widget(form.adresseBeneficiaire)}}
+                                            </div>
+                                        </div>
+
+                                        <div class="item row ">
+                                            <label class="col-form-label col-sm-4 " for="first-name"><b> {{ form_label(form.rccmBeneficiaire) }} </b> 
+                                            </label>
+                                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                                </label>
+                                            <div class="col-sm-6  ">
+                                                <span style="color: red;" id="idrccmBeneficiaire"> {{form_errors(form.rccmBeneficiaire)}}</span>
+                                                {{form_widget(form.rccmBeneficiaire)}}
+                                            </div>
+                                        </div>
+                                        
+                                    
+                                    </fieldset>
+                                        
+                                    
+                                
                                 </div>
-                            </div>
-                            <div class="item row mt-2">
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
-                                </label>
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.dateCessation) }} </b> 
-                                </label>
-                                <div class="col-md-4 col-sm-4 ">
-                                <span style="color: red;" id="idPrenom"> {{form_errors(form.dateCessation)}}</span>
-                                    {{form_widget(form.dateCessation)}}
-                                </div>
+
                             </div>
 
-                             <div class="item row mt-2">
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
-                                </label>
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> NINEA: </b> 
-                                </label>
-                                <div class="col-md-4 col-sm-4 ">
-                                    <div class=" input-group">
-                                        {% if ni_cessation is  defined  and ni_cessation.ninea is not null %}
-                                           
-                                            <input type="text" value="{{ni_cessation.ninea.ninNinea}}" id="inputmere"  readonly name="nineamere" required class="form-control form-control-sm ">
-                                        {% else %}
-                                            <input type="text" value="" id="inputmere"  readonly name="nineamere" required class="form-control form-control-sm ">
-                                        {% endif %}
-                                        <div class="input-group-btn">
-                                            <button type="button" style="height: 100%;" class="bx bx-search-alt" id="btnRechercheNINEA"></button> <span style="color: red;" id="nin_nineamere"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
 
                             <div class="item row mt-4">
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                <label class="col-form-label  col-sm-3 " for="first-name"><b></b> 
                                 </label>
-                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> </b> 
+                                <label class="col-form-label col-sm-3 " for="first-name"><b> </b> 
                                 </label>
-                                <div class="col-md-4 col-sm-4 ">
-                                <button class="btn btn-secondary">Soumettre</button>
+                                <div class=" col-sm-6 ">
+                                <button id="submit-cessation" class="btn btn-secondary btn-sm">Soumettre</button>
                                 </div>
                             </div>
                     </div> 

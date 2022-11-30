@@ -17,6 +17,7 @@ use Knp\Snappy\Pdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/ni/cessation")
@@ -25,12 +26,52 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class NiCessationController extends AbstractController
 {
     /**
+     * Methode pour lister uniquement les cessation à valider 
      * @Route("/", name="app_ni_cessation_index", methods={"GET"})
      */
-    public function index(NiCessationRepository $niCessationRepository): Response
+    public function index(NiCessationRepository $niCessationRepository, AuthorizationCheckerInterface $autorization, EntityManagerInterface $entityManager): Response
     {
+
+        
+        $demande_de_cessation = "";
+
+        if ($autorization->isGranted('ROLE_DEMANDE_NINEA')) {
+            $demande_de_cessation = $entityManager->getRepository(NiCessation::class)->findBy(["createdBy"=>$this->getUser()]);
+        }
+        
+        if ($autorization->isGranted('ROLE_NINEA_ADMIN') || $autorization->isGranted('ROLE_VALIDER_DEMANDE_NINEA')) {
+            // separer la visualisation de l historique selon profile agent repertoire / agent etat financier
+            // la liste des demande de reactivation en attente de validation seulement pour le profile Validateur
+            $demande_de_cessation = $entityManager->getRepository(NiCessation::class)->findBy(["etat"=> array("a", "c")]);
+        }        
+
         return $this->render('ni_cessation/index.html.twig', [
-            'ni_cessations' => $niCessationRepository->findAll(),
+            'ni_cessations' => $demande_de_cessation,
+        ]);
+    }
+
+
+    /**
+     * pour les utilisateurs agent de saisie cette methode fournie la liste des demandes de 
+     * cessation pour tous les etats c,t,r,v
+     * @Route("/suiviCessation", name="app_suivi_cessation", methods={"GET"})
+     */
+    public function suiviCessation(NiCessationRepository $niCessationRepository, AuthorizationCheckerInterface $autorization, EntityManagerInterface $entityManager): Response
+    {
+
+        $demande_de_cessation = "";
+
+        if ($autorization->isGranted('ROLE_DEMANDE_NINEA')) {
+            $demande_de_cessation = $entityManager->getRepository(NiCessation::class)->findBy(["createdBy"=>$this->getUser()]);
+        }
+        
+        if ($autorization->isGranted('ROLE_NINEA_ADMIN') || $autorization->isGranted('ROLE_VALIDER_DEMANDE_NINEA')) {
+            // separer la visualisation de l historique selon profile agent repertoire / agent etat financier
+            // la liste des demande de reactivation en attente de validation seulement pour le profile Validateur
+            $demande_de_cessation = $entityManager->getRepository(NiCessation::class)->findAll();
+        }
+        return $this->render('ni_cessation/index.html.twig', [
+            'ni_cessations' => $demande_de_cessation,
         ]);
     }
 
@@ -59,15 +100,46 @@ class NiCessationController extends AbstractController
             $form = $this->createForm(NiRadiationType::class, $niCessation);
 
         $form->handleRequest($request);
-
+        
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            $niCessation->setEtat("a");
+
             $ninea = $request->get("nineamere");
+            
+            $inputDateCessation = $form["dateCessation"]->getData()->format("Y-m-d");
+            $dateMedian = new \DateTime();
+            $dateMedian = $dateMedian->format("Y-m-d");
+            
+            $ninea = $entityManager->getRepository(NINinea::class)->findOneBy(['ninNinea' => $ninea]);
+
+            $data = "";
+            
+            if ($ninea) {
+                $data = null!= $ninea->getCreatedAt() ? $ninea->getCreatedAt()->format("Y-m-d") : new \DateTime();
+            }
+
+            if ($inputDateCessation < $data || $inputDateCessation > $dateMedian) {
+                // retourner un flashbag message errorDateCessation and reload page 
+                $this->addFlash(
+                    'errorDateCessation',
+                    'Demande non envoyee, la date de cessation ne doit etre ni anterieure à la date de creation de l\'unite ni posterieure à la date d\'aujourd\'hui'
+                );
+                return $this->redirectToRoute("app_ni_cessation_new", ["ind"=>$ind], Response::HTTP_SEE_OTHER);
+            }
+                
+            $niCessation->setEtat("a");
+            $autrePreciser = $request->get("AutrePreciser");
+
+            if ($autrePreciser != "") {
+
+                $niCessation->setConsequences($autrePreciser);
+            }
+    
             $niCessation->setCreatedBy($this->getUser());
             $niCessation->setUpdatedBy($this->getUser());
             if ($ninea)
-             $niCessation->setNinea($entityManager->getRepository(NINinea::class)->findOneBy(['ninNinea' => $ninea]));
-             else{
+             $niCessation->setNinea($ninea);
+            else{
                 $request->getSession()->getFlashBag()->add('message',"NINEA ne doit pas être vide.");
                 return $this->redirectToRoute('app_ni_cessation_new', ["ind"=>$ind], Response::HTTP_SEE_OTHER);
             }
@@ -86,10 +158,47 @@ class NiCessationController extends AbstractController
     }
 
     /**
+     * une api permettant de retourner la date de creation de l'unite 
+     * @Route("/new/dateCreationUnite/{idNinea}", name="app_date_create_unite", methods={"POST", "GET"})
+     */
+    public function createdAtUnite($idNinea= "", EntityManagerInterface $entityManager): Response
+    {
+        if ($idNinea == "") {
+
+            return $this->json(0,200, []);
+
+        }
+
+        $data= new \DateTime();
+        $ninea = $entityManager->getRepository(NINinea::class)->findOneBy(['ninNinea' => $idNinea]);
+
+        if ($ninea) {
+            $data = null!= $ninea->getCreatedAt() ? $ninea->getCreatedAt()->format("Y-m-d") : new \DateTime();
+        }
+
+        return $this->json($data, 200, []);
+    }
+
+    /**
      * @Route("/{id}", name="app_ni_cessation_show", methods={"GET"})
      */
-    public function show(NiCessation $niCessation): Response
+    public function show(NiCessation $niCessation, AuthorizationCheckerInterface $autorization, EntityManagerInterface $entityManager): Response
     {
+
+     
+        //si l'utilisateur connecté est agent validateur
+        if($niCessation->getEtat() == "c" ||  $niCessation->getEtat() == "t" || $niCessation->getEtat() == "a")
+        {
+          if ($autorization->isGranted("ROLE_VALIDER_DEMANDE_NINEA" ) or $autorization->isGranted("ROLE_ADMIN" )) {
+              
+              $niCessation->setNinlock(true);
+              $niCessation->setUpdatedBy($this->getUser());
+  
+              $entityManager->flush();
+  
+          }
+        }
+
         return $this->render('ni_cessation/show.html.twig', [
             'ni_cessation' => $niCessation,
             'ninea'=>$niCessation->getNinea()
@@ -138,6 +247,7 @@ class NiCessationController extends AbstractController
     public function valider(Request $request, NiCessation $niCessation, EntityManagerInterface $entityManager): Response
     {
         $niCessation->setEtat("v");
+        $niCessation->setNinlock(0);
         $ninea=$niCessation->getNinea();
         $ninea->setNinEtat("0");
         $niCessation->setUpdatedBy($this->getUser());
@@ -154,10 +264,11 @@ class NiCessationController extends AbstractController
     public function rejeter(Request $request, EntityManagerInterface $entityManager, NiCessation $niCessation): Response
 
       {
-       // $niNineaproposition->setNinlock(false);
+        // $niNineaproposition->setNinlock(false);
 
-        $niCessation->setRemarque($request->get("remarque"));
-        $niCessation->setEtat("r")     ;
+            $niCessation->setRemarque($request->get("remarque"));
+            $niCessation->setEtat("r")     ;        
+            $niCessation->setNinlock(0);
 
             $entityManager->flush();
                   
@@ -179,11 +290,12 @@ class NiCessationController extends AbstractController
      public function retourner(Request $request, EntityManagerInterface $entityManager, NiCessation $niCessation): Response
 
      {
+    
+        $niCessation->setRemarque($request->get("remarque"));
+        $niCessation->setEtat("t")     ;        
+        $niCessation->setNinlock(0);
  
-       $niCessation->setRemarque($request->get("remarque"));
-       $niCessation->setEtat("t")     ;
- 
-           $entityManager->flush();
+        $entityManager->flush();
            
         return $this->redirectToRoute('app_ni_cessation_index', [], Response::HTTP_SEE_OTHER);
          

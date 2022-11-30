@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 /**
  * @Route("/ni/formejuridique")
@@ -48,6 +50,21 @@ class NiFormejuridiqueController extends AbstractController
             'ni_formejuridique' => $niFormejuridique,
             'form' => $form,
         ]);
+    }
+    
+
+     /**
+     * @Route("/findTypedocument/{id}", name="findTypedocument",  methods={"GET","POST"})
+     */
+    public function findTypedocument( $id="")
+    {
+        $tab=[];
+        $niFormejuridique=$this->getDoctrine()->getRepository(NiFormejuridique::class)->find($id);
+        foreach ($niFormejuridique->getTypeDocument() as $key ) {
+         array_push($tab,[$key->getId(),$key->getLibelle()]);
+                
+        }
+        return  new JsonResponse($tab);
     }
 
     /**

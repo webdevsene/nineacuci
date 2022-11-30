@@ -818,6 +818,8 @@ class UpdatedDataMigrationsController extends AbstractController
             $selTab4 = $request->get('customCheckcolor4'); 
             $selTab5 = $request->get('customCheckcolor5'); 
 
+            dd($selTab5);
+
             $selAnneeError = $request->get('_erreno');
             $selAnneeCorrect = $request->get('_anneecorrect');
             $selCuci = $request->get('_cuciconcerne');
@@ -1085,7 +1087,7 @@ class UpdatedDataMigrationsController extends AbstractController
                     
                     foreach ($_search_req as $key => $obj) {
                         
-                        $_sql = "UPDATE cuci_etats_des_tresoreries SET cuci_etats_des_tresoreries.annee_financiere='".$selAnneeCorrect."' FORM cuci_etats_des_tresoreries INNER JOIN cuci_repertoire r on cuci_etats_des_tresoreries.cuci_rep_code_id=r.id WHERE r.code_cuci='".$selCuci."' AND cuci_etats_des_tresoreries.annee_financiere='".$selAnneeError."' AND cuci_etats_des_tresoreries.ref_code='".$obj['ref_code']."';";
+                        $_sql = "UPDATE cuci_etats_des_tresoreries SET cuci_etats_des_tresoreries.annee_financiere='".$selAnneeCorrect."' FROM cuci_etats_des_tresoreries INNER JOIN cuci_repertoire r on cuci_etats_des_tresoreries.cuci_rep_code_id=r.id WHERE r.code_cuci='".$selCuci."' AND cuci_etats_des_tresoreries.annee_financiere='".$selAnneeError."' AND cuci_etats_des_tresoreries.ref_code='".$obj['ref_code']."';";
                         // $_sql = "UPDATE cuci_etats_des_tresoreries INNER JOIN cuci_repertoire AS r on cuci_etats_des_tresoreries.cuci_rep_code_id=r.id SET cuci_etats_des_tresoreries.annee_financiere='".$selAnneeCorrect."' WHERE r.code_cuci='".$selCuci."' AND cuci_etats_des_tresoreries.annee_financiere='".$selAnneeError."' AND cuci_etats_des_tresoreries.ref_code='".$obj['ref_code']."';";
                         $_sql = $conn->prepare($_sql);
                         $_sql=$_sql->executeQuery();

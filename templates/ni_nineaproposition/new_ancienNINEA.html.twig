@@ -1,5 +1,5 @@
 {% extends 'ninea.html.twig' %}
-{% block title %}New NiNineaproposition
+{% block title %}Demande ancien ninea
 {% endblock %}
 {% block stylesheets %}
 
@@ -15,14 +15,17 @@
 	<link
 	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
 
+    <link href="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery-ui.theme.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
 	<!-- Bootstrap Css -->
-	
+	<link
+	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
 	<!-- Icons Css -->
-	<link	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
 	<!-- App Css-->
-    <link href="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery-ui.theme.min.css')}}"  rel="stylesheet" type="text/css"/>
 	<link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
 
+	
 
 	<style type="text/css">
 		.has_error {
@@ -43,7 +46,7 @@
 			font-size: 12px;
 		}
 
-		
+
 		.ui-autocomplete {
 			position: absolute;
 			top: 100%;
@@ -101,137 +104,237 @@
 
 {% endblock %}
 {% block body %}
-
-
-<div class="box mt-4">
-	<div class="box-header">
-		<ul class="nav nav-tabs nav-tabs-left">
-			<li class="active">
-				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
-					Saisie ancien NINEA
-				</a>
-			</li>
-
-		</ul>
-	</div>
-
-	<div class="box-content padded">
-
-		<div class="tab-content">            
-			{{ form_start(form, {'attr': {'autocomplete': 'off'}} )}}
-
-			<div class="card " style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
-				<div class="card-body">
-					<div class="row">
-						<div class="col-lg-12">
+			{% set dateJour = 'now'|date("d-m-Y") %}
+			<div class="box mt-4">
+					<div class="box-header">
+						<ul class="nav nav-tabs nav-tabs-left">
+							<li class="active">
+								<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+									Saisie demande de NINEA
+								</a>
+							</li>
+				
+						</ul>
+			</div>
+				
+			<div class="box-content padded">
+						<div class="tab-content">
 							{% for message in app.session.flashbag.get('message')%}
 								<div class="alert alert-danger alert-dismissible fade show" role="alert">
 									{{message}}
 									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 								</div>
 							{% endfor %}
-		
-							<fieldset class=" p-2 fieldcolor mb-3">
-								<div class="row">
-									<div class="col-lg-5">
-										<table style="width: 100%;">
-											<tr>
-												<td style="width: 35%;">
-													<label   for="basicpill-firstname-input" class=" TXT"> {{form_label(form.ninNinea,"NINEA : " ,{ 'label_attr': {'style': 'font-weight:bold;text-decoration:underline;'}})}} <span style="color:red;">*</span>
-													</label>
-												</td>
-												<td style="width: 65%;">
-													{{ form_widget(form.ninNinea)}}  
-													<span style="color: red;" id="nineavalide"></span>                                         
-												</td>
-											</tr>
-											<tr>
-												<td style="width: 35%;">
-													<label for="" class="TXT"> <b><u> Forme unité : </u></b>   </label>	
-													<span style="color:red;">*</span>	
-												</td>
-												<td style="width: 65%;">
-													<select name="formeunite" required class="form-control form-control-sm classselect" id="idformeunite">
-														<option value="" selected>Sélectionner ...</option>
-														{% for tag in formeunites %}										
-																<option  value="{{ tag.id}}">			{{ tag.libelle}}</option>
-														{% endfor %}
-													</select>
-													<span style="color: red;" id="ninpersonne"></span>
-												</td>
-											</tr>
-										</table>
-		
-										<table style="width: 100%;">
-											<tr>
-												<td style="width: 35%;">
-													<label class="TXT" for="basicpill-firstname-input"> <b><u> Régime juridique : </u></b>
-														<span style="color:red;">*</span>
-													</label>
-												</td>
-												<td style="width: 65%;">
-													<select name="formejuridique" required id="idFormejuridique" class="form-control form-control-sm classselect">
-																								
-														<option value="">Sélectionner ...</option>
-														
-													</select>
-													<span style="color: red;" id="ninformejuridique"></span>
-												</td>
-											</tr>
-												<tr>
-												<td style="width: 35%;">
-													<label for="basicpill-firstname-input" class="TXT"> {{form_label(form.ninStatut,"Statut : " ,{ 'label_attr': {'style': 'font-weight:bold;text-decoration:underline;'}})}} <span style="color:red;">*</span>
-													</label>
-												</td>
-												<td style="width: 65%;">
-													{{form_widget(form.ninStatut)}}
-													<span style="color: red;" id="ninstatut"></span>
-												</td>
-											</tr>
-											</table>
-											<table style="width: 100%;" id="idtablenineamere">
-																					
-											</table>
-									</div>
-		
-									<div class="col-lg-7">
-		
-										<table style="width: 100%;" id="tbdocuments">
+
+							{{ form_start(form)}}
+							
+							<div class="card "  style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+								<div class="card-body">
+									<div class="row">
+										<div class="col-lg-12">
+											{% for message in app.session.flashbag.get('message')%}
+												<div class="alert alert-danger alert-dismissible fade show" role="alert">
+													{{message}}
+													<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+												</div>
+											{% endfor %}
+
+											<input type="hidden" name="id_hidden" id="id_hidden">
+
+												<fieldset class=" p-2 fieldcolor mb-3">
+													<div class="row">
+														<div class="col-lg-5">
+															<table style="width: 100%;">
+															   <tr>
+																	<td style="width: 35%;">
+																		<label   for="basicpill-firstname-input" class=" TXT"> {{form_label(form.ninNinea,"NINEA : " ,{ 'label_attr': {'style': 'font-weight:bold;text-decoration:underline;'}})}} <span style="color:red;">*</span>
+																		</label>
+																	</td>
+																	<td style="width: 65%;">
+																		{{ form_widget(form.ninNinea)}}  
+																		<span style="color: red;" id="nineavalide"></span>                                         
+																	</td>
+																</tr>
+															    <tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Nom commercial  </u></b>   </label>	
+																	</td>
+																	<td style="width: 60%;">
+																		<input name="commercial" type="text" id="idcommercial"  class="form-control form-control-sm">
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Forme unité : </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<select name="formeunite" required class="form-control form-control-sm classselect" id="idformeunite">
+																			<option  value=""> Sélectionner ...</option>
+																				{% for tag in formeunites %}
+																					{% if (ni_nineaproposition.ninFormejuridique is not null) %}
+																						{% if tag.id == ni_nineaproposition.ninFormejuridique.niFormeunite.id %}
+																							<option  value="{{tag.id}}" selected>	{{  tag.libelle}}</option>
+																						{% else %}
+																							<option value="{{ tag.id }}" > {{ tag.libelle}}</option>
+																						{% endif %}
+																					{% else %}
+																						<option  value="{{tag.id}}" >	{{  tag.libelle}}</option>
+																					{% endif %}
+																				{% endfor %}
 																			
-										</table>
-										<table style="width: 100%;" id="tb_documents">
-										
-										</table>
-		
+
+																			{# {% if ni_nineaproposition.niPersonne.ninTypevoie is not null %}
+																						{% if tagv.id == ni_nineaproposition.niPersonne.ninTypevoie.id %}
+																							<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
+																						{% else %}
+																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																						{% endif %}
+																					{% else %}
+																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																						{% endif %}
+																				#}
+																		</select>
+																		<span style="color: red;" id="ninpersonne"></span>
+																	</td>
+																</tr>
+															</table>
+							
+															<table style="width: 100%;">
+																<tr>
+																	<td style="width: 40%;">
+																		<label class="TXT mt-2" for="basicpill-firstname-input"> <b><u> Régime juridique : </u></b>
+																			<span style="color:red;">*</span>
+																		</label>
+																	</td>
+																	<td style="width: 60%;">
+																		<select name="formejuridique" required id="idFormejuridique" class="form-control form-control-sm mt-2 classselect">
+																				{% if (ni_nineaproposition.ninFormejuridique is not null) %}
+																					<option  value="{{ ninFormeJuridique.id}}">			{{ ninFormeJuridique.fojLibelle}}</option>
+																				{% else %}									
+																					<option value="">Sélectionner ...</option>
+																				{% endif %}	
+																			
+																		</select>
+																		<span style="color: red;" id="ninformejuridique"></span>
+																	</td>
+																</tr>
+																	<tr>
+																	<td style="width: 40%;">
+																		<label for="basicpill-firstname-input" class="TXT "> {{form_label(form.ninStatut,"Statut : " ,{ 'label_attr': {'style': 'font-weight:bold;text-decoration:underline;'}})}} <span style="color:red;">*</span>
+																		</label>
+																	</td>
+																	<td style="width: 60%;">
+																		{{form_widget(form.ninStatut)}}
+																		<span style="color: red;" id="ninstatut"></span>
+																	</td>
+																</tr>
+																
+															</table>
+															<table style="width: 100%;" id="tablabelmere" class="ui-widget">
+																														
+															</table>
+														</div>
+							
+														<div class="col-lg-7">
+															<table style="width: 100%;" id="tbdocuments">
+															    <tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Enseigne </u></b>   </label>	
+																			
+																	</td>
+																	<td style="width: 60%;">
+																		<input name="enseigne" type="text" id="idenseigne"  class="form-control form-control-sm">
+																	</td>
+																</tr>
+																
+																				
+															</table>
+															<table style="width: 100%;" id="tb_documents">
+															   <tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Type document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<select name="typdocument" required class="form-control form-control-sm classselect" id="idtypdocument">
+																			
+																			
+
+																		</select>
+																		
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Numéro du document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<input name="document" type="text" id="iddocument"  class="form-control form-control-sm">
+																		<span style="color: red;" id="ninreg"></span>
+																		
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u>Date du document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<input name="datedocument" type="date" id="iddatedocument"  class="form-control form-control-sm ">
+																		
+																		
+																	</td>
+																</tr>
+																
+															</table>
+															<table style="width: 100%;" id="idtabobservation" >
+																<tr>
+																	<td style="width: 55%;">
+																		<label for="" class="TXT"> <b><u> Observation </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 40%;">
+																		<textarea name="observation" required class="form-control form-control-sm classselect" id="observation"></textarea>
+																		
+																	</td>
+																</tr>											
+															</table>
+														</div>
+													</div>
+												</fieldset>
+						
+											<br>
+										</div>
+						
+											<div class="col-lg-12">
+												<center>
+													<div id="cover-spin"></div>
+													<input type="button"  value="Suivant" name="sauvegarder" id="id_sauvegarder" class="bouton">
+											
+												</center>
+											</div>
+										</div>
 									</div>
-								</div>
-							</fieldset>
-							<br>
-						</div>
-		
-							<div class="col-lg-12">
-								<center>
-									<input type="button" value="Sauvegarder" name="sauvegarder" id="idSauvegarder" class="bouton">
-								</center>
 							</div>
+						
+							<!-- end card -->
+							{{ form_end(form) }}
+							
 						</div>
-					</div>
-			</div>
+											
+												
+						</div>
+							
+				</div>
 		
-			
-			</div>
-			<!-- end card -->
-			{{ form_end(form) }}
-								
-		</div>
-			
-</div>
-	
+
 
 {% endblock %}
 {% block javascript %}
 	
-	<script src="{{ asset( 'admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}} "></script><!-- Sweet alert init js-->
+<script src="{{ asset( 'admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}} "></script><!-- Sweet alert init js-->
 <script src="{{ asset( 'admin/dist/assets/js/pages/sweet-alerts.init.js')}} "></script><!-- init js -->{#
 <script src="assets/js/pages/ecommerce-select2.init.js "></script> #}
 <!-- form advanced init -->
@@ -241,750 +344,399 @@
 
 <!-- form mask init -->
 <script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+<script>
+	function formatJuridiction(juridiction) {
+		var match = juridiction.match(/^(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR)$/)
+		if (match) {
+			return 1;
+		}
+			return 0;
+	}
 
-<script src="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery-ui.min.js')}}"></script>
-	    <!-- App js -->
+	function formatRCCM(texte) {
+		var match = texte.match(/^(SN)(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR)(\d{4})(A|B|C|E{1})(\d{1,5})$/)
+		if (match) {
+			return 1;
+		}
+		return 0;
+	}
 
-<script src="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery.ui.autocomplete.scroll.min.js')}}"></script>
+	function controlRCCM(rccm,formejuridique,statut)
+	{
 
+		var registre = rccm;
+		var registrenormal1 = registre.replace(/ /g, "");
+		var registrenormal2 = registrenormal1.split('_').join('').trim();
+		let juridiction = registrenormal2.substr(2,3);
 
-	<script>
+		let datereg = registrenormal2.substr(5,4);
+		let datecours = new Date();
+		let anneecours = datecours.getFullYear();
+		var message="";
 
-		$(document).ready(function () {
+		if (registrenormal2.length < 11)
+		{
+			message='Numéro de registre incomplet.';
+			
+		}							
+		else
+		{
+			if(statut==1){
+				if (formejuridique == 10) 
+					var rccmnormalsociete = registrenormal2.indexOf("A", 9);
+				else if(formejuridique == 27 || formejuridique == 30 )
+					var rccmnormalsociete = registrenormal2.indexOf("C", 9);
+				else if(formejuridique == 49 ){
+						if (registrenormal2.indexOf("C", 9) != -1 || registrenormal2.indexOf("B", 9) != -1 )
+							rccmnormalsociete = 9;
+						else
+							rccmnormalsociete = -1;
 
-			function formatJuridiction(juridiction) {
-				//var cleaned = ('' + rccm).replace(/\D/g, '')
-				var match = juridiction.match(/^(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR[A-Z]{3})$/)
-				if (match) {
-		
-				return 1;
 				}
-				return 0;
-			}
-	
-			function formatRCCM(texte) {
-				//var im=new Inputmask('SN AAA 9999 A 99999');
+				else if (formejuridique == 93 )
+					var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+				else
+					var rccmnormalsociete = registrenormal2.indexOf("B", 9);
+            }else
+			  var rccmnormalsociete = registrenormal2.indexOf("E", 9);
 
-				var match = texte.match(/^SN(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR[A-Z]{3})(\d{4})(A|B|C|E|[A-Z]{1})(\d{1,5})$/)
-				if (match) {
+								
+			if (rccmnormalsociete == -1 ) {
+				message='Le format du RCCM saisi n\'est pas valide.';
+				
+			}
+			//juridiction
+			else if (formatJuridiction(juridiction) == 0)
+			{
+				message='Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.';
+
+			}
+			else if (datereg > anneecours)
+			{
+				message="L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
+					
+			}
+
+			else {
+				message="";
+			}
+													
+		}
+	    return message;
 		
-				return 1;
-				}
-				return 0;
-			}
+	}
 
-				//SNDKR2000A22222
-				function formatRCCM2(texte) {
-					//var im=new Inputmask('SN AAA 9999 A 99999');
-	
-					var pays = texte.substr(0,2);
-					console.log(pays);
-					var juridiction = texte.substr(2,3);
-					console.log(juridiction);
-					var annee = texte.substr(5,4);
-					console.log(annee);
-					var lettreCle = texte.substr(9,1);
-					console.log(lettreCle);
-					var sequence = texte.substr(10,5);
-					console.log(sequence);
-	
-					var pattern_annee = /(\d{4})/g;
-					var pattern_lettrecle =/(A|B|C|E|[A-Z]{1})$/g;
-					let pattern_sequence = /(\d{1,5})/g;
-					//let pattern_annee = /\d{4}/g;
-	
-					if (pays == "SN" || (formatJuridiction(juridiction) == 1) || ( pattern_annee.test(annee) == true)
-						|| ( pattern_lettrecle.test(lettreCle) == true) ||(pattern_sequence.test(sequence) == true ))
+	function controlDateRCCM(date,datedoc){
+
+		var datedocument = new Date(date);
+		var dateDuJour = new Date();
+		let anneeDatereg = datedocument.getFullYear();
+		var message="";
+		
+		
+		if (datedocument > dateDuJour) 
+		{
+			//document.getElementById("inputdatereg").value = new Date("");
+			message='La date du registre de commerce ne doit pas être postérieure à la date du jour.';
+			
+		}
+		else
+		{
+			
+			if (anneeDatereg < "1900")
+			{
+				//document.getElementById("inputdatereg").value = new Date("");
+				message="La date du registre de commerce ne doit pas être antérieure à l'année 1900.";
+		
+			}
+			else 
+			{
+					let regcom = datedoc;
+					var registrenormal = regcom.replace(/ /g, "");
+					let dateregcom = registrenormal.substr(5,4);
+				
+					
+
+					if (anneeDatereg < dateregcom)
 					{
-						return 1;
+						
+						//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
+						message= "La date du registre de commerce ne doit pas être antérieure à la date de création du registre.";
+						
+						
+					}
+					
+					else
+					{
+						
+						message="";
+						
+					}
+				
+				
+			}
+			
+		} 
+		return message;
+
+	}
+
+</script>
+
+<script >
+	$(document).ready(function () {
+
+		document.getElementById("idtabobservation").style.display = "none";
+
+		$("#idformeunite").change(function () {
+
+			let formejuridique = document.getElementById("idFormejuridique");
+			formejuridique.innerHTML = "";
+
+			 $("#iddocument").val('');
+			 document.getElementById("idtypdocument").innerHTML = "";
+			 $("#iddatedocument").val('');
+			 $("#iddocument").inputmask('');
+
+		
+			
+			let opt = document.createElement('option');
+			opt.innerHTML = "Sélectionner ...";
+			opt.value = '';
+			formejuridique.add(opt);
+
+			{% for tag in formejuridiques %}
+				if ($("#idformeunite").val() == '{{ tag.niFormeunite.id }}') 
+				{
+					let opt = document.createElement('option');
+					opt.value = "{{ tag.id }}";
+					opt.innerHTML = "{{ tag.fojLibelle }}";
+					formejuridique.add(opt);
+				}
+
+			{% endfor %}
+		});
+
+
+
+
+		
+		$('#ni_nineaproposition_ancien_ninea_ninNinea').change(function() 
+		{
+			let ninea =  $('#ni_nineaproposition_ancien_ninea_ninNinea').val();
+			var valide="";
+			var s1,	s2,
+					tab = $.trim($('#ni_nineaproposition_ancien_ninea_ninNinea').val()).split("");
+
+			if (ninea.length == 9)
+			{
+					
+					s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
+					s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
+
+					var rest = 10 - (s1 + 2 * s2) % 10;
+					if(rest==10)
+						rest=0;
+
+					if (parseInt(tab[8]) != rest) 
+					{
+							typeNINEA = 5;
+							valide="error";
+							repertoireninea = 'Le NINEA n\'est pas valide .';
+							document.getElementById('nineavalide').innerHTML = "Le NINEA n'est pas valide .";
+							document.getElementById('id_sauvegarder').setAttribute("disabled", true);				
+							Swal.fire(repertoireninea);
+									
+					} else{
+						valide="";
+
+					}
+
+			}
+			else if (ninea.length == 13)
+			{
+					s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]) + parseInt(tab[8]) + parseInt(tab[10]);
+					s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]) + parseInt(tab[9]) + parseInt(tab[11]);
+					var rest = 10 - (s1 + (2 * s2)) % 10;
+					
+					if(rest==10)
+    					rest=0;
+
+					if (parseInt(tab[12]) != rest) 
+					{
+						Swal.fire('Le NINET n\'est pas valide .');
+						valide="error";
+
+					
+					}else{
+						valide="";
+
 					}
 						
-						return 0;
-				}
+			}
+			else{
 
-				
-				$("#idSauvegarder").click(function() {
-					if ($("#ni_nineaproposition_ninStatut").val() != "")	{
-		
-						if ($("#idFormejuridique").val() == 10 ) 
-						{
-							if ($("#inputregcom").val() == "" )
-							{
-								$("#inputregcom").focus();
-								Swal.fire("le registre de commerce ne peut pas être vide.");
-								
-							}
-							else if ( !document.getElementById("inputdatereg").value  )
-							{
-								$("#inputdatereg").focus();
-								Swal.fire("La date du registre de commerce ne peut pas être vide.");							
-								
-							}
-							else if ($('#ni_nineaproposition_ancien_ninea_ninNinea').val() != "")
-							{
-								var s1,
-								s2,
-								tab = $.trim($('#ni_nineaproposition_ancien_ninea_ninNinea').val()).split("");
-								
-								s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
-								s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
-								var rest = 10 - (s1 + 2 * s2) % 10;
-								
-								if (parseInt(tab[8]) != rest) 
-								{
-									typeNINEA = 5;
-									repertoireninea = 'Le NINEA n\'est pas valide .';
-									document.getElementById('nineavalide').innerHTML = "Le NINEA n'est pas valide .";
-									Swal.fire(repertoireninea);
-											   
-								} 
-								else
-								{
-									let ninea =  $('#ni_nineaproposition_ancien_ninea_ninNinea').val();
-									let route = "{{ path('nininea_rechercheNINEA') }}" + "/" + ninea;
-										$.ajax({
-											type: 'GET',
-											url: route,
-											success: function (data) {
-												if (data == 1) {
-													$('#ni_nineaproposition_ancien_ninea_ninNinea').addClass('has_error');
-													document.getElementById('nineavalide').innerHTML = "Ce ninea existe déjà dans la  la base.";
-													Swal.fire("Ce ninea existe déjà dans la  la base.")
-				
-				
-												}
-												else {
-													$('#ni_nineaproposition_ancien_ninea_ninNinea').removeClass('has_error');
-													document.getElementById('nineavalide').innerHTML = "";
-				
-												}
-				
-											},
-											error: function (error) {
-				
-												console.log(error);
-											}
-										});
-				
-				
-									document.getElementById('idSauvegarder').removeAttribute("disabled");				
-				
-								}
-							}
-							else
-							{
-								var registre = $("#inputregcom").val();
-								var registrenormal1 = registre.replace(/ /g, "");
-								let registrenormal2 = registrenormal1.split('_').join('').trim();
-								let juridiction = registrenormal2.substr(2,3);
-								let datereg = registrenormal2.substr(5,4);
-								let datecours = new Date();
-								let anneecours = datecours.getFullYear();
-		
-									if (registrenormal2.length < 11)
-									{
-										Swal.fire('Numéro de registre incomplet.');
-										
-									}							
-									else
-									{
-										
-										var rccmnormalphys = registrenormal2.indexOf("A", 9);
-										if (rccmnormalphys == -1 ) {
-											Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-											$('#inputregcom').addClass('has_error');
-		
-										}
-										//juridiction
-										else if (formatJuridiction(juridiction) == 0)
-										{
-											$('#inputregcom').addClass('has_error');
-											$('#inputregcom').focus();
-											Swal.fire('Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.');
-											document.getElementById("ninreg").innerHTML = "Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.";
-										}
-										else if (datereg > anneecours)
-										{
-											Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-										}
-		
-										else 
-										{
-											 ///////////
-		
-											var dateCNI = new Date($('#inputdatereg').val());
-											var dateDuJour = new Date();
-											let anneeDatereg = dateCNI.getFullYear();
-											let datereg = $('#inputdatereg').val();
-											let datregannee = datereg.substr(0, 4);
-										
-											if (dateCNI > dateDuJour) 
-											{
-												document.getElementById("inputdatereg").value = new Date("");
-												Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
-												
-											}
-											else
-											{
-												
-												if (anneeDatereg < "1900")
-												{
-													document.getElementById("inputdatereg").value = new Date("");
-													Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-											
-												}
-												else 
-												{
-													let regcom = $("#inputregcom").val();
-													var registrenormal = regcom.replace(/ /g, "");
-													let dateregcom = registrenormal.substr(5,4);
-													
-													
-														if (anneeDatereg < dateregcom)
-														{
-															
-															//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
-															$("#nindatreg").hasClass("has_error");
-															document.getElementById("nindatreg").innerHTML = "La date du registre de commerce ne doit pas être inférieure à la date de création du registre.";
-															Swal.fire("La date du registre de commerce ne doit pas être inférieure à la date de création sur le registre.");
-															
-														}
-														else
-														{
-															
-															if (anneeDatereg >= dateregcom)
-															{
-																$(this).closest("form").submit();
-																	
-															}													
-														}
-													
-												}
-												
-											}
-											 ////////////
-											
-										}
-											
-									}
-											
-							}
+				Swal.fire('Le NINEA/NINET n\'est pas valide .');
+				valide="error";
+
+			}
 			
-						} 
-						else if ( $("#idFormejuridique").val() == 92) 
-						{
-							 
-							if ($("#inputbordereau").val() == "")
-								{
-									Swal.fire("Le bordereau ne doit pas être vide.");
-									$("#inputbordereau").focus();
-									$("#ninbordereau").innerHTML = "Le bordereau ne doit pas être vide.";
-								}
-								else if (formatRCCM($("#inputbordereau").val()) == 1)
-									{
-										$("#inputbordereau").focus();
-										$("#ninbordereau").innerHTML = "Le format du bordereau n'est pas valide.";
-										Swal.fire("Le format du bordereau n'est pas valide.");
-									}
-								else
-								{
-									
-									$(this).closest("form").submit();
-								}
 			
-						}  
-						else if ($("#idFormejuridique").val() == 91 || $("#idFormejuridique").val() == 29) 
+			if(valide =="")
+			{
+				let route = "{{ path('nininea_rechercheNINEA') }}" + "/" + ninea;
+					$.ajax({
+						type: 'GET',
+						url: route,
+						success: function (data) 
 						{
-		
-							if ($("#inputbordereau").val() != "")
+							if (data == 1) {
+								$('#ni_nineaproposition_ancien_ninea_ninNinea').addClass('has_error');
+								document.getElementById('nineavalide').innerHTML = "Ce ninea existe déjà dans la  base.";
+								document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+								Swal.fire("Ce ninea existe déjà dans la   base.")
+
+							}
+							else 
 							{
-		
-								var registre = $("#inputregcom").val();
-								var registrenormal1 = registre.replace(/ /g, "");
-								let registrenormal2 = registrenormal1.split('_').join('').trim();
-								let juridiction = registrenormal2.substr(2,3);
-								let datereg = registrenormal2.substr(5,4);
-								let datecours = new Date();
-								let anneecours = datecours.getFullYear();
-		
-								   if (registrenormal2.length < 11)
-									{
-										Swal.fire('Numéro de registre incomplet.');
-										
-									}							
-								   else
-									{
-		
-										var rccmnormalphys = registrenormal2.indexOf("B", 9);
-										if (rccmnormalphys == -1 ) {
-											Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-											$('#inputregcom').addClass('has_error');
-		
-										}
-										//juridiction
-										else if (formatJuridiction(juridiction) == 0)
+								document.getElementById('id_sauvegarder').removeAttribute("disabled");
+								$('#ni_nineaproposition_ancien_ninea_ninNinea').removeClass('has_error');
+								document.getElementById('nineavalide').innerHTML = "";
+
+
+								let route2 = "{{ path('controleNINEASup') }}" + "/" + ninea;
+								$.ajax
+								({
+									type: 'GET',
+									url: route2,
+									success: function (data) {
+										if (data == 0) 
 										{
-											$('#inputregcom').addClass('has_error');
-											$('#inputregcom').focus();
-											Swal.fire('Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.');
-											document.getElementById("ninreg").innerHTML = "Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.";
+											$('#ni_nineaproposition_ancien_ninea_ninNinea').addClass('has_error');
+											document.getElementById('nineavalide').innerHTML = "Ce ninea/ninet est invalide.";
+											document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+											Swal.fire("Ce ninea/ninet n'est pas valide.")
+											
 										}
-										else if (datereg > anneecours)
-										{
-											Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
+										else {
+																						
+											document.getElementById('id_sauvegarder').removeAttribute("disabled");
+											$('#ni_nineaproposition_ancien_ninea_ninNinea').removeClass('has_error');
+											document.getElementById('nineavalide').innerHTML = "";
+
 										}
-		
-										else 
-										{
-											 ///////////
-		
-											var dateCNI = new Date($('#inputdatereg').val());
-											var dateDuJour = new Date();
-											let anneeDatereg = dateCNI.getFullYear();
-											let datereg = $('#inputdatereg').val();
-											let datregannee = datereg.substr(0, 4);
-										   
-											if (dateCNI > dateDuJour) 
-											{
-												document.getElementById("inputdatereg").value = new Date("");
-												Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
-												
-											}
-											else
-											{
-												
-												if (anneeDatereg < "1900")
-												{
-													document.getElementById("inputdatereg").value = new Date("");
-													Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-											
-												}
-												else 
-												{
-													let regcom = $("#inputregcom").val();
-													var registrenormal = regcom.replace(/ /g, "");
-													let dateregcom = registrenormal.substr(5,4);
-   
-												   if (anneeDatereg < dateregcom)
-													   {
-														   
-														   //document.getElementById("id_sauvegarder").setAttribute("disabled", true);
-														   $("#nindatreg").hasClass("has_error");
-														   document.getElementById("nindatreg").innerHTML = "La date du registre de commerce ne doit pas être inférieure à la date de création du registre.";
-														   Swal.fire("La date du registre de commerce ne doit pas être inférieure à la date de création du registre.");
-														   
-													   }
-													   else
-													   {
-														   
-															if (anneeDatereg >= dateregcom)
-															{
-																$(this).closest("form").submit();
-																	
-															}												   
-													   }
-													
-												}
-												
-											  }
-											 ////////////
-											
-									   }
-											
+
+									},
+									error: function (error) {
+
+										console.log(error);
 									}
-		
-							}else
-							{
-		
-								if ($("#inputregcom").val() != "" && document.getElementById("inputdatereg").value  )
-								 {
-								   
-									$(this).closest("form").submit();
-		
-								 }else if ($("#inputbordereau").val() == "" && $("#inputregcom").val() == "" && !document.getElementById("inputdatereg").value )
-								 {
-									$("#inputbordereau").focus();
-									Swal.fire("Veuillez remplir un des champs suivants: Bordereau , Registre de commerce, la date du registre");
-									
-								 }else if ($("#inputbordereau").val() == "" ){
-									$("#inputbordereau").focus();
-									Swal.fire("Les champs suivants ne doivent pas etre vides:  Registre de commerce, la date du registre");
-								 }
-		
+								});
+
 							}
-		
-						} 
-						else if ($("#idFormejuridique").val()== 26 
-						  || $("#idFormejuridique").val() == 96 || $("#idFormejuridique").val() == 99) 
-						  {
-							if ($("#inputtitrefoncier").val() == "" && $("#inputbail").val() == ""  && $("#inputpermisoccuper").val() == "" )
-							{
-								$(this).closest("form").submit();														
-							}
-							else if ($("#inputtitrefoncier").val() != ""  && formatRCCM($("#inputtitrefoncier").val()) == 1)
-								{
-									$("#inputtitrefoncier").focus();
-									$("#inputtitrefoncier").innerHTML = "Le format du titre foncier n'est pas valide.";
-									Swal.fire("Le format du titre foncier n'est pas valide.");
-								}
-							else if ($("#inputbail").val() != ""  && formatRCCM($("#inputbail").val()) == 1)
-							{
-								$("#inputbail").focus();
-								$("#inputbail").innerHTML = "Le format du bail n'est pas valide.";
-								Swal.fire("Le format du bail n'est pas valide.");
-							}
-							else if ($("#inputpermisoccuper").val() != ""  && formatRCCM($("#inputpermisoccuper").val()) == 1)
-							{
-								$("#inputpermisoccuper").focus();
-								$("#inputpermisoccuper").innerHTML = "Le format du permis d'occuper n'est pas valide.";
-								Swal.fire("Le format du permis d'occuper n'est pas valide.");
-							}
-							else
-							{
-								$(this).closest("form").submit();
-							}
-						} 
-						 else if ($("#idFormejuridique").val() == 90) {
-							  
-							if ($("#inputaccord").val() == "")
-								{
-									$("#inputaccord").focus();
-									$("#inputaccord").hasClass("has_error");
-									Swal.fire("Le champ Accord ne doit pas être vide.");
-									
-								}
-								else
-								{
-									$("#inputaccord").removeClass("has_error");
-									$(this).closest("form").submit();
-								}
-						} 
-						else if ($("#idFormejuridique").val() == 44 || $("#idFormejuridique").val() == 48) 
-						{
-							
-							if ($("#inputagrement").val() == "")
-								{
-									$("#inputagrement").focus();
-									$("#inputagrement").hasClass("has_error");
-									Swal.fire("Le champ Agrément ne doit pas être vide.");
-									
-								}
-								else
-								{
-									$("#inputagrement").removeClass("has_error");
-									$(this).closest("form").submit();
-								}
-						} 
-						else if ($("#idFormejuridique").val() == 27) 
-						{
-							if ($("#inputagrement").val() != "")
-							{
-		
-								$(this).closest("form").submit();
-		
-							}else
-							{
-		
-								if ($("#inputregcom").val() != "" && document.getElementById("inputdatereg").value  )
-								 {
-								   
-									var registre = $("#inputregcom").val();
-								var registrenormal1 = registre.replace(/ /g, "");
-								let registrenormal2 = registrenormal1.split('_').join('').trim();
-								let juridiction = registrenormal2.substr(2,3);
-								let datereg = registrenormal2.substr(5,4);
-								let datecours = new Date();
-								let anneecours = datecours.getFullYear();
-		
-									if (registrenormal2.length < 11)
-									{
-										Swal.fire('Numéro de registre incomplet.');
-										
-									}							
-									else
-									{
-										
-										var rccmnormalphys = registrenormal2.indexOf("A", 9);
-										if (rccmnormalphys == -1 ) {
-											Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-											$('#inputregcom').addClass('has_error');
-		
-										}
-										//juridiction
-										else if (formatJuridiction(juridiction) == 0)
-										{
-											$('#inputregcom').addClass('has_error');
-											$('#inputregcom').focus();
-											Swal.fire('Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.');
-											document.getElementById("ninreg").innerHTML = "Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.";
-										}
-										else if (datereg > anneecours)
-										{
-											Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-										}
-		
-										else 
-										{
-											 ///////////
-		
-											var dateCNI = new Date($('#inputdatereg').val());
-											var dateDuJour = new Date();
-											let anneeDatereg = dateCNI.getFullYear();
-											let datereg = $('#inputdatereg').val();
-											let datregannee = datereg.substr(0, 4);
-										
-											if (dateCNI > dateDuJour) 
-											{
-												document.getElementById("inputdatereg").value = new Date("");
-												Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
-												
-											}
-											else
-											{
-												
-												if (anneeDatereg < "1900")
-												{
-													document.getElementById("inputdatereg").value = new Date("");
-													Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-											
-												}
-												else 
-												{
-													let regcom = $("#inputregcom").val();
-													var registrenormal = regcom.replace(/ /g, "");
-													let dateregcom = registrenormal.substr(5,4);
-													
-													
-														if (anneeDatereg < dateregcom)
-														{
-															
-															//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
-															$("#nindatreg").hasClass("has_error");
-															document.getElementById("nindatreg").innerHTML = "La date du registre de commerce ne doit pas être inférieure à la date de création du registre.";
-															Swal.fire("La date du registre de commerce ne doit pas être inférieure à la date de création sur le registre.");
-															
-														}
-														else
-														{
-															if (anneeDatereg >= dateregcom)
-															{
-																$(this).closest("form").submit();
-																	
-															}														
-														}
-													
-												}
-												
-											}
-											 ////////////
-											
-										}
-											
-									}
-		
-								 }else if ($("#inputagrement").val() == "" && $("#inputregcom").val() == "" && !document.getElementById("inputdatereg").value )
-								 {
-									$("#inputagrement").focus();
-									Swal.fire("Veuillez remplir un des champs suivants: Agrément , Registre de commerce, la date du registre");
-									
-								 }else if ($("#inputagrement").val() == "" ){
-									$("#inputregcom").focus();
-									Swal.fire("Les champs suivants ne doivent pas etre vides:  Registre de commerce, la date du registre");
-								 }
-		
-							}
-						 
-						} 
-						else if ($("#idFormejuridique").val() == 50 || $("#idFormejuridique").val() == 51  
-							|| $("#idFormejuridique").val() == 52 || $("#idFormejuridique").val() == 54  ||  $("#idFormejuridique").val()== 55
-							 || $("#idFormejuridique").val() == 59) 
-						{
-							if ($("#inputrecepisse").val() == "")
-								{
-									$("#inputrecepisse").focus();
-									$("#inputrecepisse").hasClass("has_error");
-									Swal.fire("Le champ Récépissé ne doit pas être vide.");
-									
-								}
-								else
-								{
-									$("#inputrecepisse").removeClass("has_error");
-									$(this).closest("form").submit();
-								}
-		
-						} 
-						else if ($("#idFormejuridique").val() == 32 || $("#idFormejuridique").val() == 40  || $("#idFormejuridique").val() == 41  || $("#idFormejuridique").val() == 45 
-						   || $("#idFormejuridique").val() == 42  || $("#idFormejuridique").val() == 43  || $("#idFormejuridique").val() == 46  || $("#idFormejuridique").val()== 47 || $("#idFormejuridique").val() == 56
-						   || $("#idFormejuridique").val() == 97 || $("#idFormejuridique").val() == 95) 
-						{
-							if ($("#inputarrete").val() == "")
-							{
-								$("#inputarrete").focus();
-								$("#inputarrete").hasClass("has_error");
-								Swal.fire("Le champ Arrété ne doit pas être vide.");
-								
-							}
-							else
-							{
-								$("#inputarrete").removeClass("has_error");
-								$(this).closest("form").submit();
-							}
-						} 
-		
-						  else if ($("#idFormejuridique").val() == 94  || $("#idFormejuridique").val() == 98)
-						{
-							$(this).closest("form").submit();
+
 						}
-						else
-						{
-							if ( $("#inputregcom").val() == "" || !document.getElementById("inputdatereg").value  )
-							{
+
+					});
+
+
+				document.getElementById('id_sauvegarder').removeAttribute("disabled");				
+
+			}
+
+
+		});
+
+
+
+
+		$('#ni_nineaproposition_ancien_ninea_ninStatut').change(function () { 
+			var statut = document.getElementById("ni_nineaproposition_ancien_ninea_ninStatut").value;
+			let tabmere = document.getElementById("tablabelmere");
+				tabmere.innerHTML="";
+			
+			
+			if (statut == 2)
+			{
+
+				let tr_titrefoncier = document.createElement("tr");
+				let td_labeltitrefoncier = document.createElement("td");
+					td_labeltitrefoncier.setAttribute('style', "width: 40%;")
+				    td_labeltitrefoncier.innerHTML = '<label for="" class="TXT mt-2" id="labelmere"> <b><u>Ninea mère : <span style="color: red;">*</span> </u> </b> </label>';
+				let td_inputitrefoncier = document.createElement("td");
+					td_inputitrefoncier.setAttribute('style', "width: 60%;")
+					td_inputitrefoncier.setAttribute("class", "input-group")
+					td_inputitrefoncier.innerHTML = '<input type="text" id="inputmere" readonly name="nineamere" required class="form-control form-control-sm mt-2" style="width:70%" > <div class="input-group-btn mt-2"> <button style="height:100%" type="button" class="bx bx-search-alt" id="btnRechercheNINEA" ></button> <span style="color: red;" id="nin_nineamere"></span></div>' ;
+				
+				
+				tr_titrefoncier.appendChild(td_labeltitrefoncier);
+				tr_titrefoncier.appendChild(td_inputitrefoncier);
+
+				tabmere.appendChild(tr_titrefoncier);
+
+				let typeNINEA = 0;
+				var nineamere = "";
+
+
+				$("#inputmere").change(function() 
+				{
+										
+						var route = "{{ path('controleNINEA') }}" + "/" + $('#inputmere').val();
+						$.ajax({
+						type: 'GET',
+						url: route,
+						async: false,
+						dataType: "json",
+						success: function (data) {
 								
-								Swal.fire("Ces champs ne peuvent pas etre vides: le registre de commerce et la date du registre de commerce.");
-								$("#inputregcom").focus();
-								//document.getElementById("inputdatereg").setAttribute("required", true);	
-							} 
-							if ($("#inputregcom").val() == "" )
-							{
-								Swal.fire("le registre de commerce ne peut pas être vide.");
-								$("#inputregcom").focus();
-							}
-							else if ( !document.getElementById("inputdatereg").value  )
-							{
-								Swal.fire("La date du registre de commerce ne peut pas être vide.");							
-								$("#inputdatereg").focus();
-							}
-												
-							else
-							{
-								var registre = $("#inputregcom").val();
-								var registrenormal1 = registre.replace(/ /g, "");
-								let registrenormal2 = registrenormal1.split('_').join('').trim();
-								let juridiction = registrenormal2.substr(2,3);
-								let datereg = registrenormal2.substr(5,4);
-								let datecours = new Date();
-								let anneecours = datecours.getFullYear();
-		
-									if (registrenormal2.length < 11)
-									{
-										Swal.fire('Numéro de registre incomplet.');
+								if (data == 1) {
+																		   
+										document.getElementById("nin_nineamere").innerHTML="";
+										$('#inputmere').removeClass('has_error');
+
+
+									} else {
 										
-									}							
-									else
-									{
-										
-										var rccmnormalphys = registrenormal2.indexOf("A", 9);
-										if (rccmnormalphys == -1 ) {
-											Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-											$('#inputregcom').addClass('has_error');
-		
-										}
-										//juridiction
-										else if (formatJuridiction(juridiction) == 0)
-										{
-											$('#inputregcom').addClass('has_error');
-											$('#inputregcom').focus();
-											Swal.fire('Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.');
-											document.getElementById("ninreg").innerHTML = "Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.";
-										}
-										else if (datereg > anneecours)
-										{
-											Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-										}
-		
-										else 
-										{
-											 ///////////
-		
-											var dateCNI = new Date($('#inputdatereg').val());
-											var dateDuJour = new Date();
-											let anneeDatereg = dateCNI.getFullYear();
-											let datereg = $('#inputdatereg').val();
-											let datregannee = datereg.substr(0, 4);
-										
-											if (dateCNI > dateDuJour) 
-											{
-												document.getElementById("inputdatereg").value = new Date("");
-												Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
-												
-											}
-											else
-											{
-												
-												if (anneeDatereg < "1900")
-												{
-													document.getElementById("inputdatereg").value = new Date("");
-													Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-											
-												}
-												else 
-												{
-													let regcom = $("#inputregcom").val();
-													var registrenormal = regcom.replace(/ /g, "");
-													let dateregcom = registrenormal.substr(5,4);
-													
-													
-														if (anneeDatereg < dateregcom)
-														{
-															
-															//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
-															$("#nindatreg").hasClass("has_error");
-															document.getElementById("nindatreg").innerHTML = "La date du registre de commerce ne doit pas être inférieure à la date de création du registre.";
-															Swal.fire("La date du registre de commerce ne doit pas être inférieure à la date de création sur le registre.");
-															
-														}
-														else
-														{
-															if (anneeDatereg >= dateregcom)
-															{
-																$(this).closest("form").submit();
-																	
-															}													
-														}
-													
-												}
-												
-											}
-											 ////////////
-											
-										}
-											
+										document.getElementById("nin_nineamere").innerHTML="Ce NINEA n'existe pas.";
+										$('#inputmere').addClass('has_error');
 									}
-							}
+						},
+						error: function(error){
+							console.log(error);	
 						}
-		
-							
+						});
+					
+				});	
+				
+
+				$("#btnRechercheNINEA").click(function() {
+					var left = (screen.width/2)-(800/2);
+					var top = (screen.height/2)-(500/2);
+					if($('#idFormejuridique').val()==10 || $('#idFormejuridique').val()==99)
+					  return window.open("{{path('recherche_NINEA',{id:10})}}", "nom_popup", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=500, top='+top+', left='+left);
+					else
+					if($('#idformeunite').val()==21){
+					  return window.open("{{path('recherche_NINEA',{id:21})}}", "nom_popup", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=500, top='+top+', left='+left);
+                       
 					}else
-					Swal.fire("Le statut ne doit pas être vide.");
-		
-				})
-		
-				
-			});
-
-
-		function formatPhoneNumber(phoneNumberString) {
-			var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
-			var match = cleaned.match(/^(\(33|77|78|72|75|76|36|32|70)[0-9]{7}$/)
-			if (match) {
-
-
-			return 1;
-			}
-			return 0;
-			}
-
+					 if($('#idformeunite').val()==22){
+					  return window.open("{{path('recherche_NINEA',{id:22})}}", "nom_popup", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=500, top='+top+', left='+left);
+                       
+					}
+					
+					
+				});
 
 			
+		
 				//AUTOCOMPLETION NINEA
 				$( function() 
 				{
 						// Single Select
-					$("#ni_nineaproposition_ancien_ninea_ninNinea").autocomplete({
-						maxShowItems: 10,
+					$("#inputmere").autocomplete({
 						source: function( request, response ) 
 						{
-							var route = "{{ path('listeNINEAs') }}" + "/" + $('#ni_nineaproposition_ancien_ninea_ninNinea').val();
+							var route = "{{ path('listeNINEAs') }}" + "/" + $('#inputmere').val();
 
 							// Fetch data
 							$.ajax
@@ -1012,1567 +764,522 @@
 					});
 				});
 
-
-
-            $('#ni_nineaproposition_ancien_ninea_ninNinea').change(function() 
-			{
-
-                var s1,
-                s2,
-                tab = $.trim($('#ni_nineaproposition_ancien_ninea_ninNinea').val()).split("");
-                
-                s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
-                s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
-                var rest = 10 - (s1 + 2 * s2) % 10;
-                
-                if (parseInt(tab[8]) != rest) 
-				{
-					typeNINEA = 5;
-					repertoireninea = 'Le NINEA n\'est pas valide .';
-					document.getElementById('nineavalide').innerHTML = "Le NINEA n'est pas valide .";
-					document.getElementById('idSauvegarder').setAttribute("disabled", true);				
-					Swal.fire(repertoireninea);
-                               
-                } 
-				else
-				{
-					let ninea =  $('#ni_nineaproposition_ancien_ninea_ninNinea').val();
-					let route = "{{ path('nininea_rechercheNINEA') }}" + "/" + ninea;
-						$.ajax({
-							type: 'GET',
-							url: route,
-							success: function (data) {
-								if (data == 1) {
-									$('#ni_nineaproposition_ancien_ninea_ninNinea').addClass('has_error');
-									document.getElementById('nineavalide').innerHTML = "Ce ninea existe déjà dans la  la base.";
-									document.getElementById('idSauvegarder').setAttribute("disabled", true);
-									Swal.fire("Ce ninea existe déjà dans la  la base.")
-
-
-								}
-								else {
-								   	document.getElementById('idSauvegarder').removeAttribute("disabled");
-									$('#ni_nineaproposition_ancien_ninea_ninNinea').removeClass('has_error');
-									document.getElementById('nineavalide').innerHTML = "";
-
-								}
-
-							},
-							error: function (error) {
-
-								console.log(error);
-							}
-						});
-
-
-					document.getElementById('idSauvegarder').removeAttribute("disabled");				
-
-				}
-
-
-            });
-
-
-		// contole date cni et date passpport
-		$('#ni_nineaproposition_ancien_ninea_ninDatreg').change(function () {
-			var dateReg = new Date($('#ni_nineaproposition_ancien_ninea_ninDatreg').val());
-			var dateDuJour = new Date();
-			if (dateReg > dateDuJour) {
-			Swal.fire('La date du registre  ne doit pas être postérieure  à la date du jour.');
-			$('#ni_nineaproposition_ancien_ninea_ninDatreg').val("");
-			$('#ni_nineaproposition_ancien_ninea_ninDatreg').addClass('has_error');
-			//document.getElementById("ni_nineaproposition_ninDatreg").value = new Date("");
-			}
-			else
-			{
-				$('#ni_nineaproposition_ancien_ninea_ninDatreg').removeClass('has_error');
-			}
-			});
-
-		
-			//controle sur les regex
-			function formatRCCM(rccm)
-			{
-				var match = rccm.match(/[^ABCDEFGHIJKLMOPQRTUVWXYZ]{2}[A-Z]{3}\d{4}[A-Z]{1}\d{5}$/);
-				//recuperer value
-
-				if (match)
-				{
-					return 1 ;
-				} else
-				{
-					return 0;
-				}
-			}
-
-				//CONTROLE SUR LE REGISTRE DE COMMERCE
-			$("#ni_nineaproposition_ancien_ninea_ninRegcom").change(function() {
-			
-				var registre = $("#ni_nineaproposition_ancien_ninea_ninRegcom").val();
-				var registrenormal = registre.replace(/ /g,"");
-				console.log(registrenormal);
-
-				//controle sur la date 
-				var chaineDateRccm = $("#ni_nineaproposition_ancien_ninea_ninDatreg").val();
-				var datereg = new Date(chaineDateRccm);
-				var date = datereg.getFullYear();
-				var anneerccmnormal = registrenormal.indexOf(date, 5);
-			
-			//controle sur le type de regime 
-
-			//controle pour les entreprises individuelles
-			if ($("#idFormejuridique").val() == 10)
-			{
-				var rccmnormalphys = registrenormal.indexOf("A", 9);				
-				if (rccmnormalphys == -1 || formatRCCM(registrenormal)== 0 )
-				{
-					Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-					$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-					$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-					document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-				}
-				else if (anneerccmnormal == -1 )
-					{
-						Swal.fire('Le format du RCCM saisi n\'est pas valide.Vérifier la date sur le format.');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-						document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-		
-					} 
-				else
-					{
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').removeClass('has_error');
-						document.getElementById('idSauvegarder').removeAttribute("disabled");
-					}
-			} else if ($("#idFormejuridique").val() != 93)
-			{
-
-				//controle pour les GIE
-				if ($("#idFormejuridique").val() == 30)
-				{
-					var rccmnormalgie = registrenormal.indexOf("C", 9);
-					if (rccmnormalgie == -1 || formatRCCM(registrenormal)== 0)
-					{
-						Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-						document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-					}
-					else if (anneerccmnormal == -1 )
-					{
-						Swal.fire('Le format du RCCM saisi n\'est pas valide.Vérifier la date sur le format.');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-						document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-		
-					} 
-					else 
-						{
-							$('#ni_nineaproposition_ancien_ninea_ninRegcom').removeClass('has_error');
-							document.getElementById('idSauvegarder').removeAttribute("disabled");
-						}
-				}
-				else {
-						//controle pour les societes et GIE
-					var rccmnormalSoGie = registrenormal.indexOf("B", 9);
-					if (rccmnormalSoGie == -1 || formatRCCM(registrenormal)== 0)
-					{
-						Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-						document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-					}
-					else if (anneerccmnormal == -1 )
-					{
-						Swal.fire('Le format du RCCM saisi n\'est pas valide.Vérifier la date sur le format.');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-						document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-		
-					} 
-					else 
-						{
-							$('#ni_nineaproposition_ancien_ninea_ninRegcom').removeClass('has_error');
-							document.getElementById('idSauvegarder').removeAttribute("disabled");
-						}
-				}
-				
 			} 
 			else
 			{
-				//controle pour les succursales
-				var rccmnormalsuc = registrenormal.indexOf("E", 9);
-				if (rccmnormalsuc == -1 || formatRCCM(registrenormal)== 0)
-				{
-					Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-						$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-						document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-					
-				} else if (anneerccmnormal == -1 )
-				{
-					Swal.fire('Le format du RCCM saisi n\'est pas valide.Vérifier la date sur le format.');
-					$('#ni_nineaproposition_ancien_ninea_ninRegcom').addClass('has_error');
-					$('#ni_nineaproposition_ancien_ninea_ninRegcom').focus();
-					document.getElementById('idSauvegarder').setAttribute("disabled",true);				
-	
-				} 
-				else {
-					$('#ni_nineaproposition_ancien_ninea_ninRegcom').removeClass('has_error');
-					document.getElementById('idSauvegarder').removeAttribute("disabled");
-				} 
-				
+				//document.getElementById("id_sauvegarder").disabled = false;
 			}
-			
-			
-		});
-
-
-
-		$("#idformeunite").change(function () {
-
-			let formejuridique = document.getElementById("idFormejuridique");
-			formejuridique.innerHTML = "";
-
-			let opt = document.createElement('option');
-			opt.innerHTML = "Sélectionner ...";
-			opt.value = '';
-			formejuridique.add(opt);
-
-			{% for tag in formejuridiques %}
-				if ($("#idformeunite").val() == '{{ tag.niFormeunite.id }}') {
-				let opt = document.createElement('option');
-				opt.value = "{{ tag.id }}";
-				opt.innerHTML = "{{ tag.fojLibelle }}";
-				formejuridique.add(opt);
-		    }
-
-			{% endfor %}
 
 		});
 
-		
+		$("#idtypdocument").change(function(){
+			if($("#idtypdocument").val()==1)
+				$("#iddocument").inputmask('SN AAA 9999 A 99999');
+			else
+			  $("#iddocument").inputmask('');
 
-	    $('#ni_nineaproposition_ancien_ninea_ninStatut').change(function () { // alert("statut");
-			var statut = document.getElementById("ni_nineaproposition_ancien_ninea_ninStatut").value;
+			 $("#iddatedocument").val('');
+			 $("#iddocument").val('');
+
 			
-			let tabmere = document.getElementById("idtablenineamere");
-			tabmere.innerHTML="";
-		
-										
-			if (statut == 2) 
+		});
+
+		$("#iddocument").change(function()
+		{
+			if( $("#idtypdocument").val()==1)
 			{
-				
-				let tr_titrefoncier = document.createElement("tr");
-				let td_labeltitrefoncier = document.createElement("td");
-					td_labeltitrefoncier.setAttribute('style', "width: 35%;")
-				    td_labeltitrefoncier.innerHTML = '<label for="" class="TXT mt-2" id="labelmere"> <b><u></u> Ninea mère : <span style="color: red;">*</span> </b> </label>';
-				let td_inputitrefoncier = document.createElement("td");
-					td_inputitrefoncier.setAttribute('style', "width: 65%;")
-					td_inputitrefoncier.innerHTML = '<input type="text" id="inputmere" name="nineamere" readonly required class="form-control form-control-sm mt-2" > <button type="button" class="bx bx-search-alt" id="btnRechercheNINEA"></button> <span style="color: red;" id="nin_nineamere"></span>';
-				
-				tr_titrefoncier.appendChild(td_labeltitrefoncier);
-				tr_titrefoncier.appendChild(td_inputitrefoncier);
-				tabmere.appendChild(tr_titrefoncier);
+				var registre = $("#iddocument").val();
+				var registrenormal1 = registre.replace(/ /g, "");
+				var registrenormal2 = registrenormal1.split('_').join('').trim();
+				let juridiction = registrenormal2.substr(2,3);
+				let route = "{{ path('controleRCCM') }}" + "/" + registrenormal2;
 
 
+                 if($('#iddatedocument').val()!=""){
+					var datedocument = new Date($('#iddatedocument').val());
+					let anneeDatereg = datedocument.getFullYear();
+                    let regcom = $("#iddocument").val();
+					var registrenormal = regcom.replace(/ /g, "");
+					let dateregcom = registrenormal.substr(5,4);
 				
-				tr_titrefoncier.appendChild(td_labeltitrefoncier);
-				tr_titrefoncier.appendChild(td_inputitrefoncier);
-				tabmere.appendChild(tr_titrefoncier);
+					if(anneeDatereg > dateregcom)
+					{
+						document.getElementById("idtabobservation").style.display = "block";
+					}
 
-				$("#inputmere").change(function() 
-				{
-						var route = "{{ path('controleNINEA') }}" + "/" + $('#inputmere').val();
-						$.ajax({
+					else
+					{
+						document.getElementById("idtabobservation").style.display = "none";
+					}
+
+
+				 }
+
+
+				$.ajax
+				({
+					type: 'GET',
+					url: route,
+					success: function (data) 
+					{
+						if (data == 1) {
+							document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+							document.getElementById('ninreg').innerHTML = "Ce numéro de registe existe déjà.";
+							Swal.fire('Ce numéro de registe existe déjà.');
+							$('#iddocument').addClass('has_error');
+							$("#iddocument").focus();
+
+						}
+						else 
+						{
+							let datereg = registrenormal2.substr(5,4);
+							let datecours = new Date();
+							let anneecours = datecours.getFullYear();
+
+							if (registrenormal2.length < 11)
+							{
+								Swal.fire('Numéro de registre incomplet.');
+								$('#iddocument').addClass('has_error');
+								$("#iddocument").focus();
+							}							
+							else
+							{
+								$('#iddocument').removeClass('has_error');
+								document.getElementById('id_sauvegarder').removeAttribute("disabled");
+								if($("#ni_nineaproposition_ancien_ninea_ninStatut").val()==1){
+									if ($("#idFormejuridique").val() == 10) 
+										var rccmnormalsociete = registrenormal2.indexOf("A", 9);
+									else if($("#idFormejuridique").val() == 27 || $("#idFormejuridique").val() == 30 )
+										var rccmnormalsociete = registrenormal2.indexOf("C", 9);
+									else if($("#idFormejuridique").val() == 49 ){
+										if (registrenormal2.indexOf("C", 9) != -1 || registrenormal2.indexOf("B", 9) != -1 )
+											rccmnormalsociete = 9;
+										else
+										  rccmnormalsociete =-1;
+
+									}
+									else if($("#idFormejuridique").val() == 93 )
+										var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+									else
+									var rccmnormalsociete = registrenormal2.indexOf("B", 9);
+								}else
+									var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+								  							
+									
+								if (rccmnormalsociete == -1 ) {
+									Swal.fire('Le format du RCCM saisi n\'est pas valide.');
+									$('#iddocument').addClass('has_error');
+									$('#iddocument').focus();
+									document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+								}
+								//juridiction
+								else if (formatJuridiction(juridiction) == 0)
+								{
+									$('#iddocument').addClass('has_error');
+									$('#iddocument').focus();
+									Swal.fire('Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.');
+									document.getElementById("ninreg").innerHTML = "Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.";
+									document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+
+								}
+								else if (datereg > anneecours)
+										{
+											Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
+											$('#iddocument').addClass('has_error');
+											$('#iddocument').focus();
+										}
+
+								else {
+									$('#iddocument').removeClass('has_error');
+									document.getElementById('ninreg').innerHTML = "";
+									document.getElementById('id_sauvegarder').removeAttribute("disabled");
+								}
+																		
+							}
+							
+						}
+
+					},
+					error: function (error) 
+					{
+						console.log(error);
+					}
+				});
+			}else{
+                var iddocument = $("#iddocument").val();
+			    if(formatRCCM(iddocument.replaceAll(' ',''))==0){
+					
+					let route = "{{ path('controleRCCM') }}" + "/" + iddocument;
+					$.ajax
+					({
 						type: 'GET',
 						url: route,
-						async: false,
-						dataType: "json",
-						success: function (data) {
+						success: function (data) 
+						{
+							if (data == 1) {
+								document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+								document.getElementById('ninreg').innerHTML = "Ce numéro du document de création existe déjà.";
+								Swal.fire('Ce numéro du document de création existe déjà.');
+								$('#iddocument').addClass('has_error');
+								$("#iddocument").focus();
+
+							}
+							else 
+							{
+								$('#iddocument').removeClass('has_error');
+								document.getElementById('ninreg').innerHTML = "";
+								document.getElementById('id_sauvegarder').removeAttribute("disabled");
 								
-								if (data == 1) {
-									
-									    document.getElementById("idSauvegarder").disabled = false;
-										document.getElementById("nin_nineamere").innerHTML="";
-										$('#inputmere').removeClass('has_error');
+							}
 
-
-									} else {
-										document.getElementById("idSauvegarder").disabled = true;
-										document.getElementById("nin_nineamere").innerHTML="Ce NINEA n'existe pas.";
-										$('#inputmere').addClass('has_error');
-									}
 						},
-						error: function(error){
-							console.log(error);	
+						error: function (error) 
+						{
+							console.log(error);
 						}
-						});
-					
-				});	
+					});
+                }else{
+                   
+				    //document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+					document.getElementById('ninreg').innerHTML = "Le format est invalide.";
+					Swal.fire('Le format est invalide.');
+					$('#iddocument').addClass('has_error');
+					$("#iddocument").focus();
 
-				$("#btnRechercheNINEA").click(function() {
-					var left = (screen.width/2)-(800/2);
-					var top = (screen.height/2)-(500/2);
-					return window.open("{{path('recherche_NINEA')}}", "nom_popup", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=500, top='+top+', left='+left);
-					
-					
-				});
-
-				
-				
-
-			} else if (statut == "1") {
-				document.getElementById("idSauvegarder").disabled = false;
+				}
 
 			}
-
-
-								
 		});
 
-		/*$('#inputmere').change( function() {
-			let route = "{{ path('nininea_rechercheNINEA') }}" + "/" +document.getElementById("inputmere").value;
-						
+
+		//affichage variables suivant le régime juridique
+		$("#idFormejuridique").change(function() {
+			
+			document.getElementById("idtypdocument").innerHTML = "";
+			 $("#iddatedocument").val('');
+			 $("#iddocument").val('');
+			 $("#iddocument").inputmask('');
+
+		    let route = "{{ path('findTypedocument') }}" + "/" + $("#idFormejuridique").val();
 			$.ajax
 			({
 				type: 'GET',
 				url: route,
-				success: function (data) {
+				success: function (data) 
+				{
+					let tbdocuments = document.getElementById("idtypdocument");
+					tbdocuments.innerHTML = "";
 
-					if (data == 1)
-					{ 
+					if(data.length==0){
+
+						document.getElementById("iddatedocument").setAttribute("disabled", true);
+						document.getElementById("iddocument").setAttribute("disabled", true);
+						document.getElementById("idtypdocument").setAttribute("disabled", true);
+						document.getElementById("idenseigne").setAttribute("disabled", true);
+			            $("#id_hidden").val(1);
+
 						
-					}else
-					{
-						swal.fire("Le NINEA n'existe pas.")
+						
+					}else{
+						document.getElementById("iddatedocument").removeAttribute("disabled");
+						document.getElementById("iddocument").removeAttribute("disabled");
+						document.getElementById("idtypdocument").removeAttribute("disabled");
+						document.getElementById("idenseigne").removeAttribute("disabled");
+			            $("#id_hidden").val(0);
+
 					}
+
+					if(data.length>1){
+						let opt = document.createElement('option');
+							opt.innerHTML = "Sélectionner ...";
+							opt.value = '';
+							tbdocuments.add(opt);
+					}else{
+						if(data[0][0]==1){
+							$("#iddocument").inputmask('SN AAA 9999 A 99999');
+						}
+					}
+
+					for(var i=0;i<data.length;i++){
+							let opt = document.createElement('option');
+							opt.value = data[i][0];
+							opt.innerHTML =data[i][1];
+							tbdocuments.add(opt);
+					}
+
 					
+				},
+				error: function (error) 
+				{
+
+					console.log(error);
 				}
 			});
-
-		}) */
-
-
-			$("#idFormejuridique").change(function() {
-			
-			let tabdoc = document.getElementById("tb_documents");
-			tabdoc.innerHTML = "";
-			let tbdocuments = document.getElementById("tbdocuments");
-			tbdocuments.innerHTML = "";
-			
-			//entreprise individuelle
-			if ($("#idFormejuridique").val() == 10) 
-			{
-				
-				let tr_enseigne = document.createElement("tr");
-				let td_labelenseigne = document.createElement("td");
-					td_labelenseigne.setAttribute('style', "width: 20%;")
-					td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-				let td_inputenseigne = document.createElement("td");
-					td_inputenseigne.setAttribute('style', "width: 80%;")
-					td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-				
-
-				let tr_regcom = document.createElement("tr");
-				let td_labelregcom = document.createElement("td");
-					td_labelregcom.setAttribute('style', "width: 40%;")
-					td_labelregcom.innerHTML = '<label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label>';
-				let td_inputitregcom = document.createElement("td");
-					td_inputitregcom.setAttribute('style', "width: 60%;")
-					td_inputitregcom.innerHTML = '<input type="text" id="inputregcom" value="12" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span>';
-					
-				let tr_datereg = document.createElement("tr");
-				let td_labeldatreg = document.createElement("td");
-					td_labeldatreg.setAttribute('style', "width: 40%;")
-					td_labeldatreg.innerHTML = '<label for="" class="TXT mt-2" id="labeldatregcom"> <b><u> Date du registre de commerce :</u>  <span style="color: red;">*</span> </b> </label>';
-				let td_inputdatreg = document.createElement("td");
-					td_inputdatreg.setAttribute('style', "width: 60%;")
-					td_inputdatreg.innerHTML = '<input type="date" id="inputdatereg" name="dateregcom" required min="1900-12-31" class="form-control  form-control-sm mt-2 dateregcom" > <span style="color: red;" id="nindatreg"></span>';
-					
-					tr_regcom.appendChild(td_labelregcom);
-					tr_regcom.appendChild(td_inputitregcom);
-				
-					tr_datereg.appendChild(td_labeldatreg);
-					tr_datereg.appendChild(td_inputdatreg);
-
-					tabdoc.appendChild(tr_regcom);
-					tabdoc.appendChild(tr_datereg);
-					tbdocuments.appendChild(tr_enseigne);
-
-					var im=new Inputmask('SN AAA 9999 A 99999');
-					im.mask(td_inputitregcom.querySelectorAll("input"));
-
-					$("#tb_documents").on("change","#inputregcom",function(){
-						//console.log($("#inputregcom").val());
-						if( $("#inputregcom").val())
-						{
-							let route = "{{ path('controleRCCM') }}" + "/" + $("#inputregcom").val();
-							$.ajax
-							({
-								type: 'GET',
-								url: route,
-								success: function (data) 
-								{
-									if (data == 1) {
-										Swal.fire('Ce numéro de registe existe déjà.');
-										document.getElementById('idSauvegarder').setAttribute("disabled", true);
-										document.getElementById('ninreg').innerHTML = "Ce numéro de registe existe déjà.";
-										$('#inputregcom').addClass('has_error');
-										$("#inputregcom").focus();
-										
-			
-									}
-									else 
-									{
-										
-										
-										var registre = $("#inputregcom").val();
-										var registrenormal1 = registre.replace(/ /g, "");
-										let registrenormal2 = registrenormal1.split('_').join('').trim();
-										let datereg = registrenormal2.substr(5,4);
-										let datecours = new Date();
-										let anneecours = datecours.getFullYear();
-
-											if (registrenormal2.length < 11)
-											{
-												Swal.fire('Numéro de registre incomplet.');
-												document.getElementById('idSauvegarder').setAttribute("disabled", true);
-												$('#inputregcom').addClass('has_error');
-												$("#inputregcom").focus();
-												document.getElementById('ninreg').innerHTML ="Numéro de registre incomplet.";
-												
-											}							
-											else
-											{
-												document.getElementById('ninreg').innerHTML ='';
-												$('#inputregcom').removeClass('has_error');
-												document.getElementById('idSauvegarder').removeAttribute("disabled");
-												var rccmnormalphys = registrenormal2.indexOf("A", 9);
-												if (rccmnormalphys == -1 ) {
-													Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-													document.getElementById('idSauvegarder').setAttribute("disabled", true);
-													$('#inputregcom').addClass('has_error');
-													$('#inputregcom').focus();
-													document.getElementById('ninreg').innerHTML ="Le format du RCCM saisi n\'est pas valide.";
-
-													
-													
-												}
-												else if (datereg > anneecours)
-												{
-													Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-													document.getElementById('idSauvegarder').setAttribute("disabled", true);
-													$('#inputregcom').addClass('has_error');
-													$('#inputregcom').focus();
-													document.getElementById('ninreg').innerHTML ="L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-													
-													
-												}
-
-												else {
-													$('#inputregcom').removeClass('has_error');
-													document.getElementById('ninreg').innerHTML = "";
-													document.getElementById('idSauvegarder').removeAttribute("disabled");
-												}
-										
-											}
-													
-			
-											
-									}
-			
-								},
-								error: function (error) 
-								{
-			
-									console.log(error);
-								}
-							});
-						}
-
-
-						
-					});
-
-			}
-
-			//accord de siege
-			if ($("#idFormejuridique").val() == 90) 
-			{
-				let tr_enseigne = document.createElement("tr");
-				let td_labelenseigne = document.createElement("td");
-					td_labelenseigne.setAttribute('style', "width: 20%;")
-					td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-				let td_inputenseigne = document.createElement("td");
-					td_inputenseigne.setAttribute('style', "width: 80%;")
-					td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-
-				let tr_accord = document.createElement("tr");
-				let td_labelaccord = document.createElement("td");
-					td_labelaccord.setAttribute('style', "width: 30%;")
-					td_labelaccord.innerHTML = '<label for="" class="TXT mt-2" id="labelaccord"> <b><u> Accord de siège: </u> </b> <span style="color: red;">*</span></label>';
-				let td_inputaccord = document.createElement("td");
-					td_inputaccord.setAttribute('style', "width: 70%;")
-					td_inputaccord.innerHTML = '<input type="text" id="inputaccord" name="inputaccord" required class="form-control form-control-sm mt-2"  >';
-
-					tr_accord.appendChild(td_labelaccord);
-					tr_accord.appendChild(td_inputaccord);
-
-				tbdocuments.appendChild(tr_enseigne);
-				tabdoc.appendChild(tr_accord);
-				
-			}
-
-			//titrefoncier ou bail
-			if ( $("#idFormejuridique").val() == 99 ||  $("#idFormejuridique").val() == 26 || $("#idFormejuridique").val() == 96)
-			{
-
-				let table_doc = document.getElementById("tb_documents");
-				if( $("#idFormejuridique").val() != 99)
-				{
-					let tr_enseigne = document.createElement("tr");
-					let td_labelenseigne = document.createElement("td");
-						td_labelenseigne.setAttribute('style', "width: 20%;")
-						td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-					let td_inputenseigne = document.createElement("td");
-						td_inputenseigne.setAttribute('style', "width: 80%;")
-						td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-					
-						tr_enseigne.appendChild(td_labelenseigne);
-						tr_enseigne.appendChild(td_inputenseigne);
-						tbdocuments.appendChild(tr_enseigne);
-
-				}
-				else {
-					let tr_permisoccuper = document.createElement("tr");
-					let td_labelpermisoccuper = document.createElement("td");
-						td_labelpermisoccuper.setAttribute('style', "width: 22%;")
-						td_labelpermisoccuper.innerHTML = '<label for="" class="TXT mt-2" id="labelpermisoccuper"> <b><u> Permis d\'occuper :</u>  </b> </label>';
-					let td_inputpermisoccuper = document.createElement("td");
-						td_inputpermisoccuper.setAttribute('style', "width: 78%;")
-						td_inputpermisoccuper.innerHTML = '<input type="text" id="inputpermisoccuper" name="inputpermisoccuper"  class="form-control  form-control-sm mt-2 " > ';
-					
-						tr_permisoccuper.appendChild(td_labelpermisoccuper);
-						tr_permisoccuper.appendChild(td_inputpermisoccuper);
-					tbdocuments.appendChild(tr_permisoccuper);
-
-				}
-				let tr_titrefoncier = document.createElement("tr");
-				let td_labeltitrefoncier = document.createElement("td");
-					td_labeltitrefoncier.setAttribute('style', "width: 20%;")
-				    td_labeltitrefoncier.innerHTML = '<label for="" class="TXT mt-2" id="labeltitrefoncier"> <b><u> Titre foncier : </u> </b> </label>';
-				let td_inputitrefoncier = document.createElement("td");
-					td_inputitrefoncier.setAttribute('style', "width: 80%;")
-					td_inputitrefoncier.innerHTML = '<input type="text" id="inputtitrefoncier" name="titrefoncier"  class="form-control form-control-sm mt-2"  >';
-				
-				let tr_bail = document.createElement("tr");
-				let td_labelbail = document.createElement("td");
-					td_labelbail.setAttribute('style', "width: 20%;")
-					td_labelbail.innerHTML = '<label for="" class="TXT mt-2" id="labelbail"> <b><u> Bail :</u>  </b> </label>';
-				let td_inputbail = document.createElement("td");
-					td_inputbail.setAttribute('style', "width: 80%;")
-					td_inputbail.innerHTML = '<input type="text" id="inputbail" name="inputbail"  class="form-control form-control-sm mt-2"  >';
-
-					tr_bail.appendChild(td_labelbail);
-					tr_bail.appendChild(td_inputbail);
-
-				tr_titrefoncier.appendChild(td_labeltitrefoncier);
-				tr_titrefoncier.appendChild(td_inputitrefoncier);
-
-				table_doc.appendChild(tr_titrefoncier);
-				table_doc.appendChild(tr_bail);
-
-				$("#tb_documents").on("change", "#inputtitrefoncier", function() {
-					if ($("#inputtitrefoncier").val() != "")
-					{
-						document.getElementById("inputbail").setAttribute("disabled", true);
-						document.getElementById("inputpermisoccuper").setAttribute("disabled", true);
-					}
-					else
-					{
-						document.getElementById("inputbail").removeAttribute("disabled");
-						document.getElementById("inputpermisoccuper").removeAttribute("disabled");
-					}
-				});
-
-				$("#tb_documents").on("change", "#inputbail", function() {
-					if ($("#inputbail").val() != "")
-					{
-						document.getElementById("inputtitrefoncier").setAttribute("disabled", true);
-						document.getElementById("inputpermisoccuper").setAttribute("disabled", true);
-					}
-					else
-					{
-						document.getElementById("inputtitrefoncier").removeAttribute("disabled");
-						document.getElementById("inputpermisoccuper").removeAttribute("disabled");
-
-					}
-				});
-
-				$("#tbdocuments").on("change", "#inputpermisoccuper", function() {
-					if ($("#inputpermisoccuper").val() != "")
-					{
-						document.getElementById("inputtitrefoncier").setAttribute("disabled", true);
-						document.getElementById("inputbail").setAttribute("disabled", true);
-					}
-					else
-					{
-						document.getElementById("inputtitrefoncier").removeAttribute("disabled");
-						document.getElementById("inputbail").removeAttribute("disabled");
-					}
-				});
-
-			}
-			
-
-			
-
-			// regime juridique = bordereau
-			if ($("#idFormejuridique").val() == 92)
-			{
-				let table_doc = document.getElementById("tb_documents");
-					
-				let tr_enseigne = document.createElement("tr");
-				let td_labelenseigne = document.createElement("td");
-					td_labelenseigne.setAttribute('style', "width: 20%;")
-					td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-				let td_inputenseigne = document.createElement("td");
-					td_inputenseigne.setAttribute('style', "width: 80%;")
-					td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-
-				let tr_bordereau = document.createElement("tr");
-				let td_labelbordereau = document.createElement("td");
-					td_labelbordereau.setAttribute('style', "width: 20%;")
-					td_labelbordereau.innerHTML = '<label for="" class="TXT mt-2" id="labelbordereau"> <b><u></u> Bordereau : <span style="color: red;">*</span> </b> </label>';
-				let td_inputbordereau = document.createElement("td");
-					td_inputbordereau.setAttribute('style', "width: 80%;")
-					td_inputbordereau.innerHTML = '<input type="text" id="inputbordereau" name="inputbordereau"  class="form-control form-control-sm mt-2 "  >';
-
-					tr_bordereau.appendChild(td_labelbordereau);
-					tr_bordereau.appendChild(td_inputbordereau);
-
-				table_doc.appendChild(tr_bordereau);
-				tbdocuments.appendChild(tr_enseigne);
-
-			}
-
-			// regime juridique = bordereau ou registreCommerce
-			if ($("#idFormejuridique").val() == 29 || $("#idFormejuridique").val() == 91) 
-			{
-				
-				let table_doc = document.getElementById("tb_documents");
-
-				let tr_enseigne = document.createElement("tr");
-				let td_labelenseigne = document.createElement("td");
-					td_labelenseigne.setAttribute('style', "width: 20%;")
-					td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-				let td_inputenseigne = document.createElement("td");
-					td_inputenseigne.setAttribute('style', "width: 80%;")
-					td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-				tbdocuments.appendChild(tr_enseigne);
-
-				let tr_regcom = document.createElement("tr");
-				let td_labelregcom = document.createElement("td");
-					td_labelregcom.setAttribute('style', "width: 40%;")
-					td_labelregcom.innerHTML = '<label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>   </b>  <span style="color: red;">*</span></label>';
-				let td_inputitregcom = document.createElement("td");
-					td_inputitregcom.setAttribute('style', "width: 60%;")
-					td_inputitregcom.innerHTML = '<input type="text" id="inputregcom" value="12" maxlength="19"	 minlength="15"   name="registreCommerce"  class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span>';
-				
-				let tr_datereg = document.createElement("tr");
-				let td_labeldatreg = document.createElement("td");
-					td_labeldatreg.setAttribute('style', "width: 40%;")
-					td_labeldatreg.innerHTML = '<label for="" class="TXT mt-2" id="labeldatregcom"> <b><u> Date du registre de commerce :</u>  </b>  <span style="color: red;">*</span></label>';
-				let td_inputdatreg = document.createElement("td");
-					td_inputdatreg.setAttribute('style', "width: 60%;")
-					td_inputdatreg.innerHTML = '<input type="date" id="inputdatereg" name="dateregcom"  min="1900-12-31" class="form-control  form-control-sm mt-2 dateregcom" > <span style="color: red;" id="nindatreg"></span>';
-					
-				let tr_bordereau = document.createElement("tr");
-				let td_labelbordereau = document.createElement("td");
-					td_labelbordereau.setAttribute('style', "width: 40%;")
-					td_labelbordereau.innerHTML = '<label for="" class="TXT mt-2" id="labelbordereau"> <b><u>Bordereau : </u> </b>  <span style="color: red;">*</span> </label>';
-				let td_inputbordereau = document.createElement("td");
-					td_inputbordereau.setAttribute('style', "width: 60%;")
-					td_inputbordereau.innerHTML = '<input type="text" id="inputbordereau" name="inputbordereau"  class="form-control form-control-sm mt-2" > <span style="color: red;" id="ninbordereau"></span>';
-				
-					tr_regcom.appendChild(td_labelregcom);
-					tr_regcom.appendChild(td_inputitregcom);
-				
-					tr_datereg.appendChild(td_labeldatreg);
-					tr_datereg.appendChild(td_inputdatreg);
-
-					tr_bordereau.appendChild(td_labelbordereau);
-					tr_bordereau.appendChild(td_inputbordereau);
-
-				table_doc.appendChild(tr_bordereau);
-				table_doc.appendChild(tr_regcom);
-				table_doc.appendChild(tr_datereg);
-
-				var im=new Inputmask('SN AAA 9999 A 99999');
-				im.mask(td_inputitregcom.querySelectorAll("input"));
-
-				$("#tb_documents").on("change", "#inputbordereau", function() {
-					if ($("#inputbordereau").val() != "")
-					{
-						document.getElementById("inputregcom").setAttribute("disabled", true);
-						document.getElementById("inputdatereg").setAttribute("disabled", true);
-
-					}
-					else
-					{
-						document.getElementById("inputregcom").removeAttribute("disabled");
-						document.getElementById("inputdatereg").removeAttribute("disabled");
-
-					}
-				});
-
-
-				$("#tb_documents").on("change", "#inputregcom", function() {
-					if ($("#inputregcom").val() != "")
-					{
-						document.getElementById("inputbordereau").setAttribute("disabled", true);
-					}
-					else
-					{
-						document.getElementById("inputbordereau").removeAttribute("disabled");
-					}
-				});
-
-				$("#tb_documents").on("change","#inputregcom",function(){
-					if( $("#inputregcom").val())
-					{
-						let route = "{{ path('controleRCCM') }}" + "/" + $("#inputregcom").val();
-						$.ajax
-						({
-						type: 'GET',
-						url: route,
-						success: function (data) 
-						{
-							if (data == 1) {
-								document.getElementById('idSauvegarder').setAttribute("disabled", true);
-								//document.getElementById('ninregcom').innerHTML = "Ce numéro de registe existe déjà.";
-								document.getElementById('ninreg').innerHTML = "Ce numéro de registe existe déjà.";
-								Swal.fire('Ce numéro de registe existe déjà.');
-								$('#inputregcom').addClass('has_error');
-								$("#inputregcom").focus();
-	
-							}
-							else 
-							{
-								
-								var registre = $("#inputregcom").val();
-								var registrenormal1 = registre.replace(/ /g, "");
-								let registrenormal2 = registrenormal1.split('_').join('').trim();
-								console.log("regitre 2:" +registrenormal2);
-								let datereg = registrenormal2.substr(5,4);
-								let datecours = new Date();
-								let anneecours = datecours.getFullYear();
-
-									if (registrenormal2.length < 11)
-									{
-										document.getElementById('ninreg').innerHTML = "Numéro de registre incomplet.";
-										Swal.fire('Numéro de registre incomplet.');
-										document.getElementById('idSauvegarder').setAttribute("disabled", true);
-										$('#inputregcom').addClass('has_error');
-										$("#inputregcom").focus();
-									}							
-									else
-									{
-										$('#inputregcom').removeClass('has_error');
-										document.getElementById('idSauvegarder').removeAttribute("disabled");
-									
-										
-											//controle pour les entreprises individuelles
-											if ($("#idFormejuridique").val() == 10) 
-											{
-												var rccmnormalphys = registrenormal2.indexOf("A", 9);
-													if (rccmnormalphys == -1 ) {
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-													}
-													else if (datereg > anneecours)
-															{
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-											} 
-											else if ($("#idFormejuridique").val() != 93) 
-											{
-						
-												//controle pour les GIE
-												if ($("#idFormejuridique").val() == 30) {
-													var rccmnormalgie = registrenormal2.indexOf("C", 9);
-													if (rccmnormalgie == -1 ) {
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-													}
-													else if (datereg > anneecours)
-															{
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-												}
-												else {
-													//controle pour les societes et GIE
-													var rccmnormalSoGie = registrenormal2.indexOf("B", 9);
-													if (rccmnormalSoGie == -1 ) {
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-													}
-													else if (datereg > anneecours)
-															{
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-												}
-											}
-											else 
-											{
-													//controle pour les succursales
-													var rccmnormalsuc = registrenormal2.indexOf("E", 9);
-													if (rccmnormalsuc == -1 ) {
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-									
-													} 
-													else if (datereg > anneecours)
-															{
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-									
-											}
-									}
-											
-	
-									
-							}
-	
-						},
-						error: function (error) 
-						{
-	
-							console.log(error);
-						}
-					});
-					}
-				});
-
-			}
-			
-
-			//agrement
-			if ( ($("#idFormejuridique").val() == 44 ) || ($("#idFormejuridique").val() == 48) ) 
-			{
-				let tr_enseigne = document.createElement("tr");
-				let td_labelenseigne = document.createElement("td");
-					td_labelenseigne.setAttribute('style', "width: 20%;")
-					td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-				let td_inputenseigne = document.createElement("td");
-					td_inputenseigne.setAttribute('style', "width: 80%;")
-					td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-				
-
-				let table_doc = document.getElementById("tb_documents");
-				let tr_agrement = document.createElement("tr");
-				let td_labelagrement = document.createElement("td");
-					td_labelagrement.setAttribute('style', "width: 20%;")
-					td_labelagrement.innerHTML = '<label for="" class="TXT mt-2" id="labelagrement"> <b><u>Agrément : </u> </b> <span style="color: red;">*</span></label>';
-				let td_inputagrement = document.createElement("td");
-					td_inputagrement.setAttribute('style', "width: 80%;")
-					td_inputagrement.innerHTML = '<input type="text" id="inputagrement" name="inputagrement"  class="form-control form-control-sm mt-2"  >';
-
-					tr_agrement.appendChild(td_labelagrement);
-					tr_agrement.appendChild(td_inputagrement);
-				
-				tbdocuments.appendChild(tr_enseigne);
-				table_doc.appendChild(tr_agrement);
-
-				}
-			
-			
-				//reg ou agrement
-			if ($("#idFormejuridique").val() == 27 )
-			{
-				let tr_enseigne = document.createElement("tr");
-				let td_labelenseigne = document.createElement("td");
-					td_labelenseigne.setAttribute('style', "width: 20%;")
-					td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-				let td_inputenseigne = document.createElement("td");
-					td_inputenseigne.setAttribute('style', "width: 80%;")
-					td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-				tbdocuments.appendChild(tr_enseigne);
-
-				let table_doc = document.getElementById("tb_documents");
-
-				let tr_regcom = document.createElement("tr");
-				let td_labelregcom = document.createElement("td");
-					td_labelregcom.setAttribute('style', "width: 40%;")
-					td_labelregcom.innerHTML = '<label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>   </b><span style="color: red;">*</span> </label>';
-				let td_inputitregcom = document.createElement("td");
-					td_inputitregcom.setAttribute('style', "width: 60%;")
-					td_inputitregcom.innerHTML = '<input type="text" id="inputregcom" value="12" maxlength="19"	 minlength="15"   name="registreCommerce"  class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span>';
-				
-				let tr_datereg = document.createElement("tr");
-				let td_labeldatreg = document.createElement("td");
-					td_labeldatreg.setAttribute('style', "width: 40%;")
-					td_labeldatreg.innerHTML = '<label for="" class="TXT mt-2" id="labeldatregcom"> <b><u> Date du registre de commerce :</u>  </b> <span style="color: red;">*</span></label>';
-				let td_inputdatreg = document.createElement("td");
-					td_inputdatreg.setAttribute('style', "width: 60%;")
-					td_inputdatreg.innerHTML = '<input type="date" id="inputdatereg" name="dateregcom" min="1900-12-31" class="form-control  form-control-sm mt-2 dateregcom" > <span style="color: red;" id="nindatreg"></span>';
-					
-
-				let tr_agrement = document.createElement("tr");
-				let td_labelagrement = document.createElement("td");
-					td_labelagrement.setAttribute('style', "width: 40%;")
-					td_labelagrement.innerHTML = '<label for="" class="TXT mt-2" id="labelagrement"> <b><u>Agrément : </u> </b><span style="color: red;">*</span> </label>';
-				let td_inputagrement = document.createElement("td");
-					td_inputagrement.setAttribute('style', "width: 60%;")
-					td_inputagrement.innerHTML = '<input type="text" id="inputagrement" name="inputagrement"  class="form-control form-control-sm mt-2"  >';
-
-					tr_regcom.appendChild(td_labelregcom);
-					tr_regcom.appendChild(td_inputitregcom);
-				
-					tr_datereg.appendChild(td_labeldatreg);
-					tr_datereg.appendChild(td_inputdatreg);
-
-					tr_agrement.appendChild(td_labelagrement);
-					tr_agrement.appendChild(td_inputagrement);
-
-				table_doc.appendChild(tr_agrement);
-				table_doc.appendChild(tr_regcom);
-				table_doc.appendChild(tr_datereg);
-
-				var im=new Inputmask('SN AAA 9999 A 99999');
-				im.mask(td_inputitregcom.querySelectorAll("input"));
-
-				$("#tb_documents").on("change","#inputregcom",function(){
-					console.log("registre de commerce saisi : "+$("#inputregcom").val());
-					
-					if( $("#inputregcom").val())
-					{
-						let route = "{{ path('controleRCCM') }}" + "/" + $("#inputregcom").val();
-						$.ajax
-						({
-						type: 'GET',
-						url: route,
-						success: function (data) 
-						{
-							if (data == 1) {
-								document.getElementById('idSauvegarder').setAttribute("disabled", true);
-								document.getElementById('ninreg').innerHTML = "Ce numéro de registe existe déjà.";
-								Swal.fire('Ce numéro de registe existe déjà.');
-								$('#inputregcom').addClass('has_error');
-								$("#inputregcom").focus();
-	
-							}
-							else 
-							{
-								
-								var registre = $("#inputregcom").val();
-								var registrenormal1 = registre.replace(/ /g, "");
-								let registrenormal2 = registrenormal1.split('_').join('').trim();
-								console.log("regitre 2:" +registrenormal2);
-								let datereg = registrenormal2.substr(5,4);
-								let datecours = new Date();
-								let anneecours = datecours.getFullYear();
-
-									if (registrenormal2.length < 11)
-									{
-										Swal.fire('Numéro de registre incomplet.');
-										document.getElementById('ninreg').innerHTML = "Numéro de registre incomplet.";
-										document.getElementById('idSauvegarder').setAttribute("disabled", true);
-										$('#inputregcom').addClass('has_error');
-										$("#inputregcom").focus();
-									}	
-									else if (datereg > anneecours)
-									{
-										document.getElementById('idSauvegarder').setAttribute("disabled", true);
-										document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-										Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-										$('#inputregcom').addClass('has_error');
-										$('#inputregcom').focus();
-									}
-
-									else
-									{
-										$('#inputregcom').removeClass('has_error');
-										document.getElementById('idSauvegarder').removeAttribute("disabled");
-																			
-											//controle pour les entreprises individuelles
-											if ($("#idFormejuridique").val() == 10) 
-											{
-												var rccmnormalphys = registrenormal2.indexOf("A", 9);
-													if (rccmnormalphys == -1 ) {
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-													}
-													else if (datereg > anneecours)
-													{
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-														Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-													}
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-											} 
-											else if ($("#idFormejuridique").val() != 93) 
-											{
-						
-												//controle pour les GIE
-												if ($("#idFormejuridique").val() == 30) {
-													var rccmnormalgie = registrenormal2.indexOf("C", 9);
-													if (rccmnormalgie == -1 ) {
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-													}
-													else if (datereg > anneecours)
-													{
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-														Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-													}
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-												}
-												else {
-													//controle pour les societes et GIE
-													var rccmnormalSoGie = registrenormal2.indexOf("B", 9);
-													if (rccmnormalSoGie == -1 ) {
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-													}
-													else if (datereg > anneecours)
-													{
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-														Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-													}
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-												}
-											}
-											else 
-											{
-													//controle pour les succursales
-													var rccmnormalsuc = registrenormal2.indexOf("E", 9);
-													if (rccmnormalsuc == -1 ) {
-														document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-														Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-									
-													} 
-													else if (datereg > anneecours)
-													{
-														document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-														document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-														$('#inputregcom').addClass('has_error');
-														$('#inputregcom').focus();
-													}
-													else {
-														$('#inputregcom').removeClass('has_error');
-														document.getElementById('ninreg').innerHTML = "";
-														document.getElementById('idSauvegarder').removeAttribute("disabled");
-													}
-											}
-									}
-									
-							}
-	
-						},
-						error: function (error) 
-						{
-	
-							console.log(error);
-						}
-					});
-				
-					}
-				
-				});
-
-			}
-
-			//recepisse
-			if (($("#idFormejuridique").val() == 50) || ($("#idFormejuridique").val() == 51) || ($("#idFormejuridique").val() == 52)
-				|| ($("#idFormejuridique").val() == 54) || ($("#idFormejuridique").val() == 55) || ($("#idFormejuridique").val() == 59)) 
-				{
-					let table_doc = document.getElementById("tb_documents");
-
-					let tr_enseigne = document.createElement("tr");
-					let td_labelenseigne = document.createElement("td");
-						td_labelenseigne.setAttribute('style', "width: 20%;")
-						td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-					let td_inputenseigne = document.createElement("td");
-						td_inputenseigne.setAttribute('style', "width: 80%;")
-						td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-					tr_enseigne.appendChild(td_labelenseigne);
-					tr_enseigne.appendChild(td_inputenseigne);
-				
-					let tr_recepisse = document.createElement("tr");
-					let td_labelrecepisse = document.createElement("td");
-						td_labelrecepisse.setAttribute('style', "width: 20%;")
-						td_labelrecepisse.innerHTML = '<label for="" class="TXT mt-2" id="labelrecepisse"> <b><u> Récépissé :</u>  </b> <span style="color: red;">*</span></label>';
-					let td_inputrecepisse = document.createElement("td");
-						td_inputrecepisse.setAttribute('style', "width: 80%;")
-						td_inputrecepisse.innerHTML = '<input type="text" id="inputrecepisse" required name="inputrecepisse"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninrecepisse"></span>';
-					
-						tr_recepisse.appendChild(td_labelrecepisse);
-						tr_recepisse.appendChild(td_inputrecepisse);
-
-					tbdocuments.appendChild(tr_enseigne);
-					tabdoc.appendChild(tr_recepisse);
-				}
-			
-
-				//arrete ou decret de loi
-			if (($("#idFormejuridique").val() == 32) || ($("#idFormejuridique").val() == 40) || ($("#idFormejuridique").val() == 41)
-				|| ($("#idFormejuridique").val() == 42) || ($("#idFormejuridique").val() == 43) || ($("#idFormejuridique").val() == 45) || ($("#idFormejuridique").val() == 46)
-				|| ($("#idFormejuridique").val() == 47) || ($("#idFormejuridique").val() == 56) || ($("#idFormejuridique").val() == 97) || ($("#idFormejuridique").val() == 95)) 
-				{
-					let table_doc = document.getElementById("tb_documents");
-
-					let tr_enseigne = document.createElement("tr");
-					let td_labelenseigne = document.createElement("td");
-						td_labelenseigne.setAttribute('style', "width: 20%;")
-						td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-					let td_inputenseigne = document.createElement("td");
-						td_inputenseigne.setAttribute('style', "width: 80%;")
-						td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-					
-						tr_enseigne.appendChild(td_labelenseigne);
-						tr_enseigne.appendChild(td_inputenseigne);
-					tbdocuments.appendChild(tr_enseigne);
-
-					let tr_arrete = document.createElement("tr");
-					let td_labelarrete = document.createElement("td");
-						td_labelarrete.setAttribute('style', "width: 40%;")
-						td_labelarrete.innerHTML = '<label for="" class="TXT mt-2" id="labelarrete"> <b><u> Arrete ou decret de loi :</u>   </b> <span style="color: red;">*</span></label>';
-					let td_inputarrete = document.createElement("td");
-						td_inputarrete.setAttribute('style', "width: 60%;")
-						td_inputarrete.innerHTML = '<input type="text" id="inputarrete"   name="inputarrete"  class="form-control form-control-sm mt-2 " > <span style="color: red;" id="ninreg"></span>';
-				
-				
-						tr_arrete.appendChild(td_labelarrete);
-						tr_arrete.appendChild(td_inputarrete);
-
-					table_doc.appendChild(tr_arrete);
-				
-				}
-			
-
-				//registre de commerce
-			if (   ($("#idFormejuridique").val() == 11)   || ($("#idFormejuridique").val() == 12) || ($("#idFormejuridique").val() == 13) || ($("#idFormejuridique").val() == 14) || ($("#idFormejuridique").val() == 20)
-				|| ($("#idFormejuridique").val() == 21)   || ($("#idFormejuridique").val() == 22) || ($("#idFormejuridique").val() == 23) || ($("#idFormejuridique").val() == 24) || ($("#idFormejuridique").val() == 25)  ||  ($("#idFormejuridique").val() == 28)
-				||  ($("#idFormejuridique").val() == 30) || ($("#idFormejuridique").val() == 31) || ($("#idFormejuridique").val() == 49) || ($("#idFormejuridique").val() == 53) || ($("#idFormejuridique").val() == 93)) 
-				{
-					let table_doc = document.getElementById("tb_documents");
-
-					let tr_enseigne = document.createElement("tr");
-					let td_labelenseigne = document.createElement("td");
-						td_labelenseigne.setAttribute('style', "width: 40%;")
-						td_labelenseigne.innerHTML = '<label for="" class="TXT mt-2" id="labelenseigne"> <b><u> Enseigne :</u>  </b> </label>';
-					let td_inputenseigne = document.createElement("td");
-						td_inputenseigne.setAttribute('style', "width: 60%;")
-						td_inputenseigne.innerHTML = '<input type="text" id="inputenseigne" name="inputenseigne"  class="form-control  form-control-sm mt-2 " > <span style="color: red;" id="ninenseigne"></span>';
-				
-						tr_enseigne.appendChild(td_labelenseigne);
-						tr_enseigne.appendChild(td_inputenseigne);
-				
-					let tr_regcom = document.createElement("tr");
-					let td_labelregcom = document.createElement("td");
-						td_labelregcom.setAttribute('style', "width: 40%;")
-						td_labelregcom.innerHTML = '<label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>   </b> <span style="color: red;">*</span></label>';
-					let td_inputitregcom = document.createElement("td");
-						td_inputitregcom.setAttribute('style', "width: 60%;")
-						td_inputitregcom.innerHTML = '<input type="text" id="inputregcom" value="12" maxlength="19"	 minlength="15"   name="registreCommerce"  class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span>';
-					
-					let tr_datereg = document.createElement("tr");
-					let td_labeldatreg = document.createElement("td");
-						td_labeldatreg.setAttribute('style', "width: 40%;")
-						td_labeldatreg.innerHTML = '<label for="" class="TXT mt-2" id="labeldatregcom"> <b><u> Date du registre de commerce :</u>  </b> <span style="color: red;">*</span></label>';
-					let td_inputdatreg = document.createElement("td");
-						td_inputdatreg.setAttribute('style', "width: 60%;")
-						td_inputdatreg.innerHTML = '<input type="date" id="inputdatereg" required name="dateregcom" min="1900-12-31" class="form-control  form-control-sm mt-2 dateregcom" > <span style="color: red;" id="nindatreg"></span>';
-						
-					
-						tr_regcom.appendChild(td_labelregcom);
-						tr_regcom.appendChild(td_inputitregcom);
-					
-						tr_datereg.appendChild(td_labeldatreg);
-						tr_datereg.appendChild(td_inputdatreg);
-	
-					table_doc.appendChild(tr_regcom);
-					table_doc.appendChild(tr_datereg);
-					tbdocuments.appendChild(tr_enseigne);
-
-					var im=new Inputmask('SN AAA 9999 A 99999');
-					im.mask(td_inputitregcom.querySelectorAll("input"));
-
-					$("#tb_documents").on("change","#inputregcom",function(){
-						console.log($("#inputregcom").val());
-						let route = "{{ path('controleRCCM') }}" + "/" + $("#inputregcom").val();
-						$.ajax
-						({
-							type: 'GET',
-							url: route,
-							success: function (data) 
-							{
-								if (data == 1) {
-									document.getElementById('idSauvegarder').setAttribute("disabled", true);
-									document.getElementById('ninreg').innerHTML = "Ce numéro de registe existe déjà.";
-									Swal.fire('Ce numéro de registe existe déjà.');
-									$('#inputregcom').addClass('has_error');
-									$("#inputregcom").focus();
 		
+		});
+
+
+		$("#iddatedocument").blur(function()
+		{
+						let table_doc = document.getElementById("tb_documents");
+	
+						var datedocument = new Date($('#iddatedocument').val());
+						var dateDuJour = new Date();
+						let anneeDatereg = datedocument.getFullYear();
+						let datereg = $('#iddatedocument').val();
+						let datregannee = datereg.substr(0, 4);
+						
+							if (datedocument > dateDuJour) 
+							{
+								//document.getElementById("inputdatereg").value = new Date("");
+								Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
+								
+							}
+							else
+							{
+								
+								if (anneeDatereg < "1900")
+								{
+									//document.getElementById("inputdatereg").value = new Date("");
+									Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
+							
 								}
 								else 
 								{
-									
-									var registre = $("#inputregcom").val();
-									var registrenormal1 = registre.replace(/ /g, "");
-									let registrenormal2 = registrenormal1.split('_').join('').trim();
-									console.log("regitre 2:" +registrenormal2);
-									let datereg = registrenormal2.substr(5,4);
-									let datecours = new Date();
-									let anneecours = datecours.getFullYear();
 
-										if (registrenormal2.length < 11)
+									if($("#idtypdocument").val()==1){
+									  let regcom = $("#iddocument").val();
+									  var registrenormal = regcom.replace(/ /g, "");
+									  let dateregcom = registrenormal.substr(5,4);
+									
+									   if(anneeDatereg > dateregcom)
 										{
-											document.getElementById('ninreg').innerHTML = "Numéro de registre incomplet.";
-											Swal.fire('Numéro de registre incomplet.');
-											document.getElementById('idSauvegarder').setAttribute("disabled", true);
-											$('#inputregcom').addClass('has_error');
-											$("#inputregcom").focus();
-										}							
+											document.getElementById("idtabobservation").style.display = "block";
+										}
+	
 										else
 										{
-											$('#inputregcom').removeClass('has_error');
-											document.getElementById('idSauvegarder').removeAttribute("disabled");
-										
-												
-												//controle pour les entreprises individuelles
-												if ($("#idFormejuridique").val() == 10) 
-												{
-													var rccmnormalphys = registrenormal2.indexOf("A", 9);
-														if (rccmnormalphys == -1 ) {
-															
-															document.getElementById('idSauvegarder').setAttribute("disabled", true);
-															document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-															Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-															$('#inputregcom').addClass('has_error');
-															$('#inputregcom').focus();
-														}
-														else if (datereg > anneecours)
-														{
-															document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-															document.getElementById('idSauvegarder').setAttribute("disabled", true);
-															Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-															$('#inputregcom').addClass('has_error');
-															$('#inputregcom').focus();
-														}
-														else {
-															$('#inputregcom').removeClass('has_error');
-															document.getElementById('ninreg').innerHTML = "";
-															document.getElementById('idSauvegarder').removeAttribute("disabled");
-														}
-												} 
-												else if ($("#idFormejuridique").val() != 93) 
-												{
-							
-													//controle pour les GIE
-													if ($("#idFormejuridique").val() == 30) {
-														var rccmnormalgie = registrenormal2.indexOf("C", 9);
-														if (rccmnormalgie == -1 ) {
-															document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-															Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-															$('#inputregcom').addClass('has_error');
-															$('#inputregcom').focus();
-															document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														}
-														else if (datereg > anneecours)
-															{
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-														else {
-															$('#inputregcom').removeClass('has_error');
-															document.getElementById('ninreg').innerHTML = "";
-															document.getElementById('idSauvegarder').removeAttribute("disabled");
-														}
-													}
-													else {
-														//controle pour les societes et GIE
-														var rccmnormalSoGie = registrenormal2.indexOf("B", 9);
-														if (rccmnormalSoGie == -1 ) {
-															document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-															Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-															$('#inputregcom').addClass('has_error');
-															$('#inputregcom').focus();
-															document.getElementById('idSauvegarder').setAttribute("disabled", true);
-														}
-														else if (datereg > anneecours)
-															{
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-														else {
-															$('#inputregcom').removeClass('has_error');
-															document.getElementById('ninreg').innerHTML = "";
-															document.getElementById('idSauvegarder').removeAttribute("disabled");
-														}
-													}
-												}
-												else 
-												{
-														//controle pour les succursales
-														var rccmnormalsuc = registrenormal2.indexOf("E", 9);
-														if (rccmnormalsuc == -1 ) {
-															document.getElementById('ninreg').innerHTML = "Le format du RCCM saisi n\'est pas valide.";
-															Swal.fire('Le format du RCCM saisi n\'est pas valide.');
-															$('#inputregcom').addClass('has_error');
-															$('#inputregcom').focus();
-															document.getElementById('idSauvegarder').setAttribute("disabled", true);
-										
-														} 
-														else if (datereg > anneecours)
-															{
-																document.getElementById('idSauvegarder').setAttribute("disabled", true);
-																document.getElementById('ninreg').innerHTML = "L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
-																Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
-																$('#inputregcom').addClass('has_error');
-																$('#inputregcom').focus();
-															}
-														else {
-															$('#inputregcom').removeClass('has_error');
-															document.getElementById('ninreg').innerHTML = "";
-															document.getElementById('idSauvegarder').removeAttribute("disabled");
-														}
-										
-												}
+											document.getElementById("idtabobservation").style.display = "none";
 										}
-												
+	
+										if (anneeDatereg < dateregcom)
+										{
+											
+											//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
+											$("#iddatedocument").addClass("has_error");
+											document.getElementById("iddatedocument").innerHTML = "La date du registre de commerce ne doit pas être antérieure à la date de création du registre.";
+											Swal.fire("La date du registre de commerce ne doit pas être antérieure à la date de création du registre.");
+											
+										}
 										
+										else
+										{
+											//document.getElementById("id_sauvegarder").removeAttribute("disabled");
+											$("#iddatedocument").removeClass("has_error");
+											document.getElementById("iddatedocument").innerHTML = "";
+											
+										}
+									}else{
+											document.getElementById("idtabobservation").style.display = "none";
+											//document.getElementById("id_sauvegarder").removeAttribute("disabled");
+											$("#iddatedocument").removeClass("has_error");
+											document.getElementById("iddatedocument").innerHTML = "";
+											
+									}
+									
+									
 								}
+								
+							} 
+						
+		});
+
 		
-							},
-							error: function (error) 
+
+		$("#id_sauvegarder").click(function() {
+
+			if ($("#ni_nineaproposition_ancien_ninea_ninNinea").val() != "")
+			{
+				if ($("#ni_nineaproposition_ancien_ninea_ninStatut").val() != "")
+				{
+	
+					   if($("#id_hidden").val()==0)  {  ;
+
+					       	
+							if ($("#idtypdocument").val() != "")
 							{
+								if ($("#iddocument").val() != "")
+								{
+	
+									if ($("#iddatedocument").val() != "")
+										{
+											if( $("#idtypdocument").val()==1){
+	
+												if(controlRCCM($("#iddocument").val(),$("#idFormejuridique").val(),$("#ni_nineaproposition_ancien_ninea_ninStatut").val())==""){
+													
+													if(controlDateRCCM($("#iddatedocument").val(),$("#iddocument").val())=="")
+													
+														if ($("#ni_nineaproposition_ancien_ninea_ninStatut").val() == 1)
+														{
+																var datedocument = new Date($("#iddatedocument").val());
+																let anneeDatereg = datedocument.getFullYear();
+																let regcom = $("#iddocument").val();
+																var registrenormal = regcom.replace(/ /g, "");
+																let dateregcom = registrenormal.substr(5,4);
+																if(anneeDatereg != dateregcom)
+																	{
+																		if ($("#observation").val() != "")
+																			{
+																				if (document.getElementById("ni_nineaproposition_ancien_ninea_ninNinea").value.length == 13)
+																				{
+																					Swal.fire("Champs NINET et le satut non valides.")
+																				}
+																				else 
+																				{
+																					$('#cover-spin').show(0);
+																					$(this).closest("form").submit();
+																				}
+																				
+																			}
+																			
+																			
+																		else{
+																			Swal.fire("Le champ Observation ne peut pas être vide.")
+																		}
+																			
+																	}else
+
+																	{
+																			
+																			let ninea =  $('#ni_nineaproposition_ancien_ninea_ninNinea').val();
+																			var valide="";
+																			var s1,	s2,
+																			tab = $.trim($('#ni_nineaproposition_ancien_ninea_ninNinea').val()).split("");
+																			
+																			if (ninea.length == 9)
+																			{
+																				s1 = parseInt(tab[0]) + parseInt(tab[2]) + parseInt(tab[4]) + parseInt(tab[6]);
+																				s2 = parseInt(tab[1]) + parseInt(tab[3]) + parseInt(tab[5]) + parseInt(tab[7]);
+																				var rest = 10 - (s1 + 2 * s2) % 10;
+																				
+																				if (parseInt(tab[8]) != rest) 
+																				{
+																					typeNINEA = 5;
+																					repertoireninea = 'Le NINEA n\'est pas valide .';
+																					document.getElementById('nineavalide').innerHTML = "Le NINEA n'est pas valide .";
+																					Swal.fire(repertoireninea);
+																							
+																				} 
+																				else{
+
+																					$('#cover-spin').show(0);
+																				    $(this).closest("form").submit();
+															
+																				}
+																			}
+																			
+																			
+																			else
+																			{
+																				
+																					Swal.fire("Champ Ninea et le statut non conformes.");
+																				
+																			}
+																
+																
+																	}
+																	
 		
-								console.log(error);
+														}
+														else
+														{
+															
+																if ($("#inputmere").val() != "")
+																	{
+																		if (document.getElementById("ni_nineaproposition_ancien_ninea_ninNinea").value.length == 9)
+																		{
+																			Swal.fire("Champ Ninea et le statut non conformes.");
+																		}
+																		else 
+																		{
+																			var ninet = document.getElementById("ni_nineaproposition_ancien_ninea_ninNinea").value.substring(0,9);
+																			if (ninet == $("#inputmere").val())
+																			{
+																				$('#cover-spin').show(0);
+																				$(this).closest("form").submit();
+																			}
+																			else
+																			{
+																				Swal.fire("Ce NINET ne correspond pas au NINEA mere.");
+																			}
+																			
+																		}
+																		
+																	}
+																	
+																else{
+																	Swal.fire("Le champ  ninea mére  ne peut pas être vide.")
+																}
+		
+														}
+		
+													else 
+														Swal.fire(controlDateRCCM($("#iddatedocument").val(),$("#iddocument").val()));
+													
+	
+												}else{
+	
+													Swal.fire(controlRCCM($("#iddocument").val(),$("#idFormejuridique").val(),$("#ni_nineaproposition_ancien_ninea_ninStatut").val()));
+	
+												}
+	
+											}else{
+												var iddocument = $("#iddocument").val();
+												if(formatRCCM(iddocument.replaceAll(' ','')) == 0)
+												{
+													$('#cover-spin').show(0);
+													$(this).closest("form").submit();
+												}
+												else
+												  Swal.fire("Le format n'est pas valide.")
+	
+											}
+	
+										}else{
+											Swal.fire("La date du document ne peut pas être vide.")
+										}
+	
+	
+								}else{
+									Swal.fire("Le document ne peut pas être vide.")
+								}
+							}else{
+								Swal.fire("Le type de document ne peut pas être vide.")
 							}
-						});
-						});
+	
+					  } else
+					  	{
+							$('#cover-spin').show(0);
+							$(this).closest("form").submit();
+						}
+					
+				}else{
+					Swal.fire("Le statut ne peut pas être vide.");
 				}
+			}
+			else
+			{
+				Swal.fire("Le champ NINEA ne peut pas etre vide.");
+			}
+
 			
-
-				$("#tb_documents").on("blur","#inputdatereg",function(){
-					//console.log("ok!"+$('#inputdatereg').val());
-					var dateCNI = new Date($('#inputdatereg').val());
-					var dateDuJour = new Date();
-					let anneeDatereg = dateCNI.getFullYear();
-					let datereg = $('#inputdatereg').val();
-					let datregannee = datereg.substr(0, 4);
-					
-						if (dateCNI > dateDuJour) 
-						{
-							document.getElementById("inputdatereg").value = new Date("");
-							Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
-							
-						}
-						else
-						{
-							if (anneeDatereg < "1900")
-							{
-								document.getElementById("inputdatereg").value = new Date("");
-								Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-						
-							}
-							else 
-							{
-								let regcom = $("#inputregcom").val();
-								var registrenormal = regcom.replace(/ /g, "");
-								let dateregcom = registrenormal.substr(5,4);
-								
-							
-									if (anneeDatereg <= dateregcom)
-									{
-										
-										document.getElementById("idSauvegarder").setAttribute("disabled", true);
-										$("#nindatreg").hasClass("has_error");
-										document.getElementById("nindatreg").innerHTML = "La date du registre de commerce ne doit pas être antérieure à la date de création du registre.";
-										Swal.fire("La date du registre de commerce ne doit pas être antérieure à la date de création du registre.");
-										
-									}
-									else
-									{
-										document.getElementById("idSauvegarder").removeAttribute("disabled");
-										$("#nindatreg").removeClass("has_error");
-										document.getElementById("nindatreg").innerHTML = "";
-										
-									}
-								
-								
-							}
-							
-						}
-					
-					
-				/*	var dateCNI = new Date($('#inputdatereg').val());
-
-						var dateDuJour = new Date();
-						let anneeDatereg = dateCNI.getFullYear();
-						if (dateCNI > dateDuJour) 
-						{
-							document.getElementById("inputdatereg").value = new Date("");
-							Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
-							
-						}
-						else
-						{
-							if (anneeDatereg < "1900")
-							{
-								document.getElementById("inputdatereg").value = new Date("");
-								Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-						
-							}
-						}*/
-				});
 
 
 		});
+
+
 		
+    });
+</script>
 
-		function controleRCCM (rccm) {
-		    let route = "{{ path('controleRCCM') }}" + "/" +rccm;	   
-			$.ajax({
-			type: 'GET',
-			url: route,
-			success: function (data) {
-				if (data == 1)
-				{
-					document.getElementById('btnSauvegarder').setAttribute("disabled",true);
-					document.getElementById('ninregcom').innerHTML = "Ce numéro de registe existe déjà.";
-					$('#ni_nineaproposition_ninRegcom').addClass('has_error');
-					$("#ni_nineaproposition_ninRegcom").focus();
-
-				}
-				else 
-				{
-					$('#ni_nineaproposition_ninRegcom').removeClass('has_error');
-					document.getElementById('ninregcom').innerHTML = "";
-					document.getElementById('btnSauvegarder').removeAttribute("disabled");
-				}
-			
-			},
-		    error: function (error) {
-			
-		
-		    }
-		});
-	}
-
-
-	</script>
 {% endblock %}

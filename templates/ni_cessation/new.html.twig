@@ -2,6 +2,11 @@
 
 {% block title %}cessation{% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
 {% block body %}
 
 <div class="box mt-lg-5">
@@ -45,6 +50,14 @@
             
                             {% endfor %}
 
+                            {% for message in app.session.flashbag.get('errorDateCessation')%}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{message}}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+            
+                            {% endfor %}
+
                             {{ include('ni_cessation/_form.html.twig') }}
 
                        
@@ -68,9 +81,112 @@
 {% endblock %}
 
 {% block javascript %}
+    <script src="{{ asset( 'admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}} "></script><!-- Sweet alert init js-->
+    <script src="{{ asset( 'admin/dist/assets/js/pages/sweet-alerts.init.js')}} "></script>
 <script>
 
+
+
     $(document).ready(function () {
+
+        document.getElementById("idAutrePreciser").style.display = "none";
+        document.getElementById("idPrecision").style.display = "none";
+
+
+        // function permettant de surveiller l'intervalel date de cessation qui ne doit pas etre antérieure à la date de creation de l'unité 
+        // ni posterieure  à la date d'aujourd,hui 
+        
+        $(".dateCessation").on("change, blur", "#idDateCessation", function(event){
+
+            var rte = "{{ path('app_date_create_unite') }}" + "/" + $('#inputmere').val();
+
+            $.ajax({
+                type: 'GET',
+                url: rte,
+                async: false,
+                dataType: "json",
+                success: function (data) {
+
+                    // definir la date du jour day 
+                    var $dayToday = new Date();
+
+                    var localdate= $dayToday.getFullYear() + '-' + ($dayToday.getMonth()+1) + '-' + $dayToday.getDate();
+
+                    var meridianDate =  document.getElementById("idDateCessation").value;
+
+                    console.log(localdate);
+                        
+                        if(new Date(meridianDate) < new Date(data)){
+
+                            Swal.fire('oups date de cessation ne doit etre anterieure à la date de creation de l\'unité');
+                            document.getElementById("idDateCessationError").innerHTML="Error : date de cessation ne doit etre anterieure à la date de creation de l\'unité";
+                            $('#idDateCessationError').addClass('has_error');
+
+                        }else{
+                            document.getElementById("idDateCessationError").innerHTML="";
+                            $('#idDateCessationError').removeClass('has_error');
+
+                        }
+                        if (new Date(meridianDate) > new Date(localdate)){
+                                                                   
+                            Swal.fire('oups date de cessation ne doit etre postérieure à la date du jour');
+                            document.getElementById("idDateCessationError").innerHTML="Error : date de cessation ne doit etre postérieure à la date du jour";
+                            $('#idDateCessationError').addClass('has_error');
+
+
+                        }else{
+
+                        }
+                },
+                error: function(error){
+                    console.log(error);	
+                }
+            });            
+            
+        });
+
+        // tratement du select option autre à preciser 
+
+        $("#idConsequence").change(function() 
+        {
+            var $conseqValue = document.getElementById("idConsequence").value;
+            console.log($conseqValue);
+
+            if($conseqValue != "Autre à préciser"){
+                document.getElementById("idAutrePreciser").style.display = "none";
+                document.getElementById("idPrecision").style.display = "none";
+            }else{
+
+                // creer en js un input text pour preciser champ 
+                document.getElementById("idAutrePreciser").style.display = "block";
+                document.getElementById("idPrecision").style.display = "block";
+
+            }
+        });	
+
+
+        /*$("#idAutrePreciser").change(function() 
+        {
+            var $autrePrecision = document.getElementById("idAutrePreciser").value;
+
+
+            //document.getElementsByTagName("ni_cessation[consequences]").value = $autrePrecision;
+            document.getElementById("idConsequence").value = $autrePrecision;
+
+            var opt = document.createElement('option');
+            opt.value = $autrePrecision ;
+            opt.setAttribute('selected', true);
+            opt.innerHTML = $autrePrecision;
+
+            document.getElementById("idConsequence").add(opt);
+            //alert(document.getElementsByTagName("ni_cessation[consequences]").value);
+
+            console.log(document.getElementById("idConsequence").value);
+
+        });	*/
+
+
+
 
         $("#inputmere").change(function() 
         {

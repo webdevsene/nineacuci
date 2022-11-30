@@ -1,0 +1,2256 @@
+{% extends 'ninea.html.twig' %}
+{% block title %}New NiNineaproposition
+{% endblock %}
+{% block stylesheets %}
+
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<!-- DataTables -->
+	<link href="{{ asset('admin/dist/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
+	
+	<link
+	href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}" rel="stylesheet">
+	<!-- App favicon -->
+	<link
+	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
+
+	<!-- Bootstrap Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+	<!-- Icons Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+
+		.fieldcolor {
+			border: 2px solid #eeeeee;
+
+		}
+
+		.toast{
+			position: absolute; 
+			top: 10px; 
+			right: 10px;
+		}
+
+		legend {
+			color: black;
+			font-size: 12px;
+		}
+
+
+
+
+		a:hover,
+a:focus{
+    text-decoration: none;
+    outline: none;
+}
+.tab{ font-family: 'Nunito', sans-serif; }
+.tab .nav-tabs{ border: none; }
+.tab .nav-tabs li a{
+    color:#0d3174;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 20px 8px;
+    margin: 0 5px 10px 0;
+    border: 5px solid #fff;
+    border-radius: 0;
+    box-shadow: 0 0 7px rgba(0,0,0,0.1), 0 0 5px rgba(0,0,0,0.15) inset;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease 0s;
+}
+.tab .nav-tabs li.active a,
+.tab .nav-tabs li a:hover ,
+.tab .nav-tabs li.active a:hover{
+    color: #fff;
+    background-color: #fff;
+    border: 5px solid #fff;
+	
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    background-color: #0d3174;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: rotate(20deg);
+    position: absolute;
+    top: 150%;
+    left: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease 0s,transform 0.3s ease 0.13s, top 0.5s ease 0s;
+}
+.tab .nav-tabs li.active a:before,
+.tab .nav-tabs li a:hover:before{
+    opacity: 1;
+    transform: rotate(0);
+    top: 0;
+}
+.tab .tab-content{
+    color:#fff;
+    font-size: 12px;
+    padding: 20px;
+    border: 10px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15), 0 0 10px rgba(0,0,0,0.15) inset;
+    position: relative;
+}
+@media only screen and (max-width: 479px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin: 0 0 5px;
+    }
+}
+
+	</style>
+
+{% endblock %}
+{% block body %}
+
+
+	<div class="row mt-4" >
+
+		<div class="col-lg-2" align="left">
+		  <input type="button" value="Retourner" onclick="history.back()">
+		</div>
+
+		{#<!--div class="col-lg-2" align="left">
+			{% if  nineamere is not null %}
+				<a href="{{ path('nininea_show', {'id': nineamere.id})}}" class="btn btn-outline-secondary btn-sm mb-1"> NINEA mère</a>
+			{% endif %}
+		  </div-->#}
+	</div>
+
+
+	
+
+	<div class="row">
+
+		<div class="col-xl-12">
+		
+			<div>
+				<div class="accordion mb-0" id="accordionExample">
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne">
+							<button class="accordion-button fw-medium show" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								<h5 class="font-size-14">CONSULTATION HISTORIQUE NINEA : {{ ninea.ninNinea }} </h5>
+							</button>
+							
+						</h2>
+						<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+							<div class="">
+								<div class="text-muted">
+									<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+									<div class="row mb-0">
+										<div class="col-lg-12">
+											<fieldset class=" p-2 fieldcolor ">
+												<div class="row">
+													<div class="col-lg-6">
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" class="TXT" ><b><u> NINEA : </u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ninea.ninNinea}}</label>	
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" class="TXT" ><b><u> Nom commercial : </u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ninea.nomCommercial}}</label>	
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 30%;">
+																	<label for="" ><b><u>Forme unité :</u> </b> </label>	
+																		
+																</td>
+																<td style="width: 70%;">
+																	<label for="" class="TXT">	{{ninea.formeJuridique.niFormeunite.libelle}}</label>	
+																</td>
+															</tr>
+						
+															<tr>
+																<td style="width: 30%;">
+																	<label  for="basicpill-firstname-input"><b><u>Régime juridique :</u></b> 
+																		
+																	</label>
+																</td>
+																<td style="width: 70%;">
+																	<label class="TXT" ></label>{{ninea.formeJuridique.fojLibelle}}</label>
+																	
+																</td>
+															</tr>
+															
+														{#	<tr>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
+																	</label>
+																</td>
+																<td style="width: 50%;">
+																	<label for="basicpill-firstname-input" class="TXT">	{{ninea.ninStatut.statLibelle}}</label>
+						
+																</td>
+															</tr> #}
+													
+														</table>
+													</div>
+						
+													<div class="col-lg-6">
+														<table style="width: 100%;">
+														  <tr>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+															</td>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input" class="TXT">{{ninea.ninEnseigne}}</label>
+															</td>
+														  </tr>
+
+														   <tr>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input"> <b><u>Type document : </u></b></label>
+															</td>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input" class="TXT">{{ninea.niTypedocument != null ? ninea.niTypedocument.libelle :"" }}</label>
+															</td>
+														  </tr>
+														   <tr>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input"> <b><u>Numéro du document : </u></b></label>
+															</td>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input" class="TXT">
+																
+																	{% if ninea.ninRegcomModif is not null  %}
+																		{{ninea.ninRegcomModif}}
+																	{% else %}
+																		{{ninea.ninRegcomReprise is not null ? ninea.ninRegcomReprise : ninea.ninNumeroDocument}}
+																	{% endif %}																	
+																</label>
+															</td>
+														  </tr>
+
+														  <tr>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input"> <b><u>Date du document : </u></b></label>
+															</td>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input" class="TXT">
+																	{% if ninea.ninDatregModif is not null  %}
+																		{{ninea.ninDatregModif| date('d/m/Y')}}
+																	{% else %}
+																		{{ninea.ninDatregReprise is not null ? ninea.ninDatregReprise|date('d/m/Y') : ninea.ninDateDocument|date("d/m/Y")}}
+																	{% endif %}
+																</label>
+															</td>
+														  </tr>
+                                                         {% if ninea.observationsrccm != "" %}
+														   <tr>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input"> <b><u>Observation  : </u></b></label>
+															</td>
+															<td style="width: 50%;">
+																<label for="basicpill-firstname-input" class="TXT">{{ninea.observationsrccm }}</label>
+															</td>
+														  </tr>
+														{% endif %}
+
+														
+														</table>
+													</div>
+												</div>
+											</fieldset>
+											<br>
+
+	<div class="row mt-1" >
+
+		<div class="col-12" align="">
+
+
+			<div class="box">
+
+				<div class="box-header">
+					<ul class="nav nav-tabs nav-tabs-left">
+						<li class="active">
+							<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+								Consultation historique des modifications NINEA/NINET
+							</a>
+						</li>
+
+					</ul>
+				</div>
+
+				<div class="box-content padded">
+
+					<div class="tab-content">            
+
+						<div class="card">
+							<div class="card-body ">
+								<div class="tab-pane box active table-responsive-lg" id="list">
+
+										<table cellpadding="0" cellspacing="0" border="0" id="IDHistoryninea" class="table table-striped table-bordered dt-responsive table-striped table-hover " style="width: 100%;">
+										<thead class="tr_entete" >
+											<tr>
+												<th>Modifié par</th>
+												<th>Validé par</th>
+												<th>SRSD</th>
+												<th class="text-center">Période</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+
+										<tbody>
+
+											{% set eleme = tabEditedAts|length - 1 %}
+
+
+											{% for datemodif in tabEditedAts %}
+
+												{% set datePrecedent = 0 %}
+
+												{% if eleme - 1  >= 0 %}
+													{% set elemePrecedant = tabEditedAts[eleme-- -1] %}
+													{% set datePrecedent = elemePrecedant.updatedAt %}
+													
+												{% else %}
+													{% set datePrecedent = datemodif.createdAt %}
+												{% endif %}
+
+													<tr>
+														<td>
+															<label for="" class="TXT">	{{datemodif.modifiedBy ? datemodif.modifiedBy.prenom : "" }} {{datemodif.modifiedBy ? datemodif.modifiedBy.nom : "" }}    </label>
+														</td>	
+														<td>
+															<label for="" class="TXT">	{{datemodif.createdBy ? datemodif.createdBy.prenom : "" }} {{datemodif.createdBy ? datemodif.createdBy.nom : "" }}    </label>
+														</td>	
+														<td>
+															<label for="" class="TXT">	
+																{{datemodif.modifiedBy is not null ? datemodif.modifiedBy.niAdministration is not null ? datemodif.modifiedBy.niAdministration.admlibelle : "" : ""}}
+															</label>
+														</td>	
+														<td>
+															<label for="" class="TXT"   >
+																{{ datemodif != tabEditedAts|first ? datePrecedent|date("d/m/Y") : "now"|date("d/m/Y") }} - {{ datemodif.updatedAt|date("d/m/Y") }}
+															</label>
+															<input type="hidden"
+																name="inputDateModification" value="rrrrrrrrrr">
+														</td>
+														<td>
+															<a href="{{ path('app_history_ninea_list', {"id": datemodif.id}) }}" type="submit" class="btn btn-outline-info btn-sm" name="historiqueFiltre" id="idhistoriqueFiltre"
+															>Détails</a>
+														</td>
+													</tr>
+													
+
+													
+											{% else %}
+												<tr>
+													<td colspan="108">Pas de données trouvées</td>
+												</tr>
+											{% endfor %}
+
+											
+												<tr>
+													<td>
+														<label for="" class="TXT">	{{objHistoryCorr.createdBy ? objHistoryCorr.createdBy.prenom : "" }} {{objHistoryCorr.createdBy ? objHistoryCorr.createdBy.nom : "" }}    </label>
+													</td>	
+													<td>
+														<label for="" class="TXT">	{{objHistoryCorr.modifiedBy ? objHistoryCorr.modifiedBy.prenom : "" }} {{objHistoryCorr.modifiedBy ? objHistoryCorr.modifiedBy.nom : "" }}    </label>
+													</td>	
+													<td>
+														<label for="" class="TXT">	
+															{{objHistoryCorr.createdBy is not null ? objHistoryCorr.createdBy.niAdministration is not null ? objHistoryCorr.createdBy.niAdministration.admlibelle : "" : ""}}
+														</label>
+													</td>	
+													<td>
+														<label for="" class="TXT"   >
+															{{ objHistoryCorr.updatedAt|date("d/m/Y") }} - {{ objHistoryCorr.createdAt|date("d/m/Y") }}
+														</label>
+														<input type="hidden"
+															name="inputDateModification" value="rrrrrrrrrr">
+													</td>
+													<td>
+														<a href="{{ path('app_history_ninea_first_list', {"id": objHistoryCorr.id}) }}" type="submit" class="btn btn-outline-info btn-sm" name="historiqueFiltre" id="idhistoriqueFiltre"
+														>Détails</a>
+													</td>
+												</tr>
+																						
+										</tbody>
+									</table>
+
+									
+								</div>
+
+						
+
+							</div>
+
+						</div>
+
+					</div>
+
+						
+
+				</div>
+			</div>
+   
+    <!-- end col -->		
+		</div>
+	</div>
+										</div>
+									</div>
+								</div>
+
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- end accordion -->
+			</div>
+		</div>
+		<!-- end col -->
+
+	</div>
+
+	
+	<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+		
+			<div class="col-lg-12">
+				<div class="tab " role="tabpanel">
+					<ul class="nav nav-tabs nav-fill " role="tablist" >
+
+						<li class="nav-item ">
+							<a class="nav-link active  " id="idpersonne" data-bs-toggle="tab"  href="#personne" role="tab" id="idpersonne" >
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">
+									{% if ninea.formeJuridique.niFormeunite.id == 11 %} Personne physique 
+									{% else %}
+										{% if ninea.formeJuridique.niFormeunite.id == 21 %}
+											Personne morale
+										{% else %}
+											{% if ninea.formeJuridique.niFormeunite.id == 12 %}
+												Autres personnes physiques imposables
+											{% else %}
+												{% if ninea.formeJuridique.niFormeunite.id == 22 %}
+													Autres personnes morales
+												{% endif %}	
+											{% endif %}
+										{% endif %}
+									{% endif %}
+
+								</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link " id="idcoordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" id="idcoordonnee">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Coordonnées de l'entreprise
+								</span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link " id="idactivite" data-bs-toggle="tab" href="#activites" role="tab">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Activités et produits</span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link " id="idactiviteEconomique" data-bs-toggle="tab" href="#activiteEconomiques" role="tab">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Activité économique
+								</span>
+							</a>
+						</li>
+
+						{% if ninea.formeJuridique.niFormeunite.id == 21  or ninea.formeJuridique.niFormeunite.id == 22%} 
+
+							<li class="nav-item">
+								<a class="nav-link " id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-home"></i>
+									</span>
+									<span class="d-none d-sm-block">Dirigeants et associés</span>
+								</a>
+							</li>
+						{% endif %}
+
+					
+					</ul>
+
+					<div class="tab-content p-3 text-muted tabs" style="border: 3px solid #eeeeee;">
+						
+						<div	class="tab-pane active" id="personne" role="tabpanel">
+
+							{% if personne is not null %} 
+								<fieldset class=" fieldcolor p-2">
+									
+								
+
+										<form action="" method="post" >
+											
+											{% if (ninea.formeJuridique.niFormeunite.id == 11) or (ninea.formeJuridique.niFormeunite.id == 12) %}
+												<div id="idPPhysique">
+													<div class="row">
+														<div class="col-lg-6">
+															<fieldset class="border p-2">
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT mt-2"><b><u>Civilité : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 50%;">
+																			<select class="form-control form-control-sm mt-2" name="civilite" id="idCivilite">
+																					{% if personne.civilite %}
+																							<option value="{{ personne.civilite.id}}" selected>	{{ personne.civilite.civlibelle}}</option>
+																						{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincivil"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT mt-2"><b><u>Prénom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 50%;">
+																			<input readonly="true" type="text" name="prenom"  id="prenom" required value="{{personne.ninPrenom}}" class="form-control form-control-sm mt-2">
+																			<span style="color: red;" id="ninprenom"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Nom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input readonly type="text" name="nom" id="idnom" class="form-control form-control-sm mt-2" value="{{personne.ninNom}}">
+																			<span style="color: red;" id="ninnom"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Sexe : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input readonly type="text" name="sexe" id="idsexe" class="form-control form-control-sm mt-2" value="{{personne.ninSexe != null ? personne.ninSexe.libelle : ""}}">
+																		
+																			<span style="color: red;" id="ninsexe"></span>
+										
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Date de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input readonly="true" type="date" name="datenais" id="idDatenais" value="{{personne.ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm mt-2">
+																			<span style="color: red;" id="nindatenais"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Lieu de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 60%;">
+																			<input readonly="true" type="text" name="lieunais" id="idlieunais"   value="{{personne.ninLieuNaissance}}"class="form-control form-control-sm mt-2" required>
+																			<span style="color: red;" id="ninlieunais"></span>
+																		</td>
+																	</tr>
+
+																	<table style="width: 100%;">
+																		<tr>
+																			<td style="width: 50%;">
+																				<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 50%;">
+																				<select class="form-control form-control-sm" name="nationalite"   id="idnationalite_personne" required>
+																					{% if personne.nationalite %}
+																						<option value="{{personne.nationalite.id}}"  selected > {{ personne.nationalite.libelle}}</option>
+																					{% else %}
+																						<option value=""></option>
+																					{% endif %}
+																					
+																				</select>
+																				<span style="color: red;" id="ninationalite"></span>
+																			</td>
+																		</tr>
+																	</table>
+
+																	<div id="tableCni_personne">
+																		<table  style="width: 100%;">
+																			<tr id="trcni">
+																				<td style="width: 50%;">
+																					<label for="" class="TXT mt-2" > <b><u>CNI : </u></b></label>
+																					<span style="color: red;">*</span>
+																				</td>
+																				<td style="width: 50%;" >
+																					<input readonly="true" type="text" name="cni" id="idcni"  value="{{personne.ninCNI}}" maxlength = '14' pattern ="[A-z0-9]{13,14}" 
+																						class="form-control form-control-sm mt-2">
+																					<span style="color: red;" id="nincni"></span>
+																				</td>
+																			</tr>
+												
+																			<tr id="trcni">
+																				<td style="width: 50%;">
+																					<label for="" class="TXT mt-2"><b><u>Date de délivrance  : </u></b></label>
+																					<span style="color: red;">*</span>
+																				</td>
+																				<td style="width: 50%;" >
+																					<input readonly="true" type="date" name="datecni" id="idDatecni"  class="form-control form-control-sm mt-2" value="{{personne.ninDateCNI|date("Y-m-d") }}" class="form-control form-control-sm">
+																					<span style="color: red;" id="nincni"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																	
+																	<div  id="tablePassport_personne">
+																		<table style="width: 100%;">
+																			<tr id="trPassport">
+																				<td style="width: 50%;">
+																					<label for="" class="TXT mt-2">	<b><u>Passport : </u></b></label>
+																					<span style="color: red;">*</span>
+																				</td>
+																				<td style="width: 50%;">
+																					<input readonly="true" type="text" name="passport" class="form-control form-control-sm mt-2" id="idDatepassport"  value="{{personne.ninCNI}}" class="form-control form-control-sm">
+																					<span style="color: red;" id="ninpassport"></span>
+																				</td>
+																			</tr>
+												
+																			<tr id="trDatePassport">
+																				<td style="width: 50%;">
+																					<label for="" class="TXT mt-2"><b><u>Date du passport  : </u></b></label>
+																				</td>
+																				<td style="width: 50%;">
+																					<input readonly="true" type="date" name="datepassport"class="form-control form-control-sm mt-2" id="idDatepassport"  value="{{personne.ninDateCNI|date("Y-m-d") }}" class="form-control form-control-sm">
+																					<span style="color: red;" id="nindatepassport"></span>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+
+																</table>	
+
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Téléphone : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 40%;">
+																			<input readonly="true" type="text" name="telephone" id="idtelpersonne"  value="{{personne.ninTelephone}}" class="form-control form-control-sm mt-2" >
+																			<span style="color: red;" id="nintelpersonne"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Email : </u></b></label>
+																		</td>
+																		<td style="width: 40%;">
+																			<input readonly="true" type="email" name="email" id="idemailpersonne"  value="{{personne.ninEmailPersonnel}}" class="form-control form-control-sm mt-2">
+																			<span style="color: red;" id="ninemail_personne"></span>
+																		</td>
+																	</tr>
+																</table>
+																																	
+															</fieldset>
+															
+														</div>
+										
+														<div class="col-lg-6">
+															<fieldset class="border p-2">										
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT mt-2"> <b><u>Type Voie : </u></b> </label>
+																		</td>
+										
+																		<td style="width: 50%;">
+																			<select class="form-control form-control-sm mt-2 classselect" name="typevoie" value="" id="idtypevoie" required>
+																					{% if  personne.ninTypevoie %}
+																						<option value="{{ personne.ninTypevoie.id }}" selected> {{ personne.ninTypevoie.tyvlibelle}}</option>
+																					{% else %}
+																						<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nintypevoie"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT mt-2"><b><u>Voie : </u></b>  </label>
+
+																		</td>
+																		<td style="width: 50%;">
+																			<input readonly="true" type="text" name="voie" id="idvoie" value="{{ personne.ninVoie}}" class="form-control form-control-sm mt-2">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT mt-2"> <b><u>Numero de la voie : </u></b> </label>
+																		</td>
+																		<td style="width: 50%;">
+																			<input readonly="true" type="text" name="numvoie" id="idNumvoie" value="{{ personne.numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" 
+																			class="form-control form-control-sm mt-2" >
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT mt-2"><b><u>Région : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 mt-2" name="region" id="region" style="width: 100%;">
+																					{% if personne.ninQvh %}
+																						<option value="{{ personne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id }}" selected> {{ personne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}</option>
+																					{% else %}
+																						<option value="" ></option>
+																					{% endif %}
+
+																				</select>
+																				<span style="color: red;" id="ninregion"></span>
+																			</td>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT mt-2"><b><u>Département : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 mt-2" name="departement" id="departement" style="width: 100%;">
+																				{% if personne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ personne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ personne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																				{% else %}
+																						<option value="" ></option>
+																				{% endif %}
+																			</select>
+																			<span style="color: red;" id="nindepartement"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT mt-2"><b><u>Commune/Ville/Arrondissement : </u></b>:</label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 mt-2" name="cav" id="cav" style="width: 100%;">
+																					{% if personne.ninQvh.qvhCACRID.cacrCAVID %}
+																						<option value="{{ personne.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ personne.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincav"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td>
+																			<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Commune d'arr/Comm rurale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+																					{% if personne.ninQvh.qvhCACRID %}
+																						<option value="{{ personne.ninQvh.qvhCACRID.id }}" selected> {{ personne.ninQvh.qvhCACRID.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincacr"></span>
+																		</td>
+																	</tr>
+																	<tr>
+										
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input" class="TXT mt-2">
+																				<b><u>Quartier/Village/Hameau : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<select class="form-control form-control-sm select2 mt-2"  required="true" name="qvh" id="qvh" style="width: 100%;">
+																					{% if personne.ninQvh %}
+																						<option value="{{ personne.ninQvh.id }}" selected> {{ personne.ninQvh.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="ninqvh"></span>
+																		</td>
+																	</tr>	
+																	<tr>				
+																		<td style="width: 30%;">
+																			<label for="basicpill-firsAdresse complète:tname-input" class="TXT mt-2">
+																				<b><u>Adresse domicile : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<input readonly="true" type="text" name="adresse" id="idadresse" value="{{ personne.adresse}}"class="form-control form-control-sm mt-2">
+																			<span style="color: red;" id="ninadresse"></span>
+																		</td>
+																	</tr>
+
+																</table>	
+															</fieldset>
+										
+														</div>
+													</div>
+
+												</div>
+											{% else %}
+												{% if (ninea.formeJuridique.niFormeunite.id == 21) or (ninea.formeJuridique.niFormeunite.id == 22) %}
+													<div id="idMorale"  class="col-lg-6 " >
+														<fieldset class="border p-2" >
+														<center>	
+															<table style="width: 100%;">
+																<tr >
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 55%;" >
+																		<textarea name="raison" readonly="true" id="idraison" cols="30" rows="5" class="form-control form-control-sm"> {{personne.ninRaison}} </textarea>
+																		{# <input readonly="true" type="text" name="raison" id="idraison" value=""  class="form-control form-control-sm"> #}
+																		<span style="color: red;" id="ninraison"></span>
+																	</td>
+																</tr>
+
+																<tr >
+																	<td style="width: 40%;">
+																		<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
+																	</td>
+																	<td style="width: 55%;" >
+																		<input readonly="true" type="text" name="sigle" id="idSigle" class="form-control form-control-sm mt-2" value="{{personne.ninSigle}}">
+																		<span style="color: red;" id="ninsigle"></span>
+																	</td>
+																</tr>
+															</table>
+														</center>
+														</fieldset>
+													</div>
+												{% endif %}
+											{% endif %}
+
+
+											<div class="row mt-3">
+												<div class="col-lg-8">		</div>
+												<div class="col-lg-4" align="right">
+													<input type="button" value="Suivant" name="edit"  id="btnSuivant" class="boutonsm">
+												</div>
+											</div>
+
+										</form>
+								
+
+								</fieldset>
+								
+							{% endif %}
+							
+						</div>
+
+
+						
+						<div class="tab-pane " id="coordonnees" role="tabpanel">
+							<div class="col-lg-12">					
+								<fieldset class=" p-2 fieldcolor ">
+									<div class="row">
+									{% if lastcoordoonnee is not null %}
+										<form name="formCoordonnes" action="{{path('ninea_editCoordonnees',{id:lastcoordoonnee.id})}}" method="post" autocomplete="off">
+											<div class="row">
+												<div class="col-lg-6">
+								
+													<fieldset class="border p-2">													
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																</td>
+								
+																<td style="width: 50%;">
+																	<select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie">
+																		{% if lastcoordoonnee.ninTypevoie %}
+																			<option value="{{ lastcoordoonnee.ninTypevoie.id }}" selected> {{ lastcoordoonnee.ninTypevoie.tyvlibelle}}</option>
+																		{% else %}
+																			<option value="" > Selectionner...</option>
+																		{% endif %}
+																	</select>
+																	<span style="color: red;" id="nintypevoie"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT mt-2"><b><u>Voie : </u></b>  </label>
+
+																</td>
+																<td style="width: 50%;">
+																	<input readonly="true" type="text" name="voie" id="idvoie" value="{{ lastcoordoonnee.ninVoie}}" class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="numvoie" class="TXT mt-2"> <b><u>Numero de la voie : </u></b> </label>
+								
+																</td>
+																<td style="width: 50%;">
+																	<input readonly="true" type="text" name="numvoie" id="idNumvoie" value="{{lastcoordoonnee.ninnumVoie}}" class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="numvoie" class="TXT mt-2"> <b><u>Région : </u></b> </label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 50%;">
+																	<select class="form-control select2 form-control-sm mt-2 " name="region" required id="region_coordonnees" style="width: 100%;">
+																				{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD %}
+																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}</option>
+																				{% else %}
+																					<option value="" > Selectionner...</option>
+																				{% endif %}
+
+																		</select>
+																		<span style="color: red;" id="ninregion"></span>
+																	
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="numvoie" class="TXT mt-2"> <b><u> Département : </u></b> </label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 40%;">
+																	<select class="form-control form-control-sm   select2 mt-2" name="departement" required id="departement_coordonnees" style="width: 100%;">
+																		{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																			<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																		{% else %}
+																				<option value="" >Sélectionner ...</option>
+																		{% endif %}
+																	</select>
+																	<span style="color: red;" id="nindepartement"></span>
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="numvoie" class="TXT mt-2"><b><u>Comm/Arrond/Ville : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 40%;">
+																	<select class="form-control form-control-sm   select2 mt-2" name="cav" required id="cav_coordonnees" style="width: 100%;">
+																		{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
+																			<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																		{% else %}
+																			<option value="" ></option>
+																		{% endif %}												
+																	</select>
+																	<span style="color: red;" id="nincav"></span>
+																</td>
+															</tr>
+								
+															<tr>
+																<td>
+																	<label for="basicpill-firstname-input" class="TXT mt-2"><b><u>Comm d'arr/Comm rurale : </u></b>           </label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td>
+																	<select class="form-control form-control-sm   select2 mt-2" name="cacr" id="cacr_coordonnees" required style="width: 100%;">
+																		{% if lastcoordoonnee.qvh.qvhCACRID %}
+																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.libelle}}</option>
+																				{% else %}
+																						<option value="" ></option>
+																				{% endif %}
+																	</select>
+																	<span style="color: red;" id="nincacr"></span>
+																</td>
+															</tr>
+															<tr>
+								
+																<td style="width: 30%;">
+																	<label for="basicpill-firstname-input" class="TXT mt-2"><b><u>Quartier/Village/Hameau : </u></b></label>
+																	<span style="color: red;">*</span>
+																</td>
+																<td style="width: 70%;">
+																	<select class="form-control form-control-sm  select2 mt-2" name="qvh" id="qvh_coordonnees" required style="width: 100%;">
+																		{% if lastcoordoonnee.qvh %}
+																				<option value="{{ lastcoordoonnee.qvh.id }}" selected> {{ lastcoordoonnee.qvh.libelle}}</option>
+																			{% else %}
+																				<option value="" ></option>
+																			{% endif %}
+																	</select>
+																	<span style="color: red;" id="ninqvh"></span>
+																</td>
+															</tr>
+								
+														</table>
+								
+													</fieldset>
+												</div>
+								
+												<div class="col-lg-6">
+													<fieldset class="border p-2">													
+														<table style="width: 100%;">
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT mt-2"><b><u>Adresse de l'établissement : </u></b></label>
+																	<span style="color: red;">*</span>
+								
+																</td>
+																<td style="width: 50%;">
+																	<input readonly="true" type="text" name="adresse1" id="idadresse1" value="{{lastcoordoonnee.ninadresse1}}	" required class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+															
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT mt-2"><b><u>Téléphone portable : </u></b></label>
+																	<span style="color: red;">*</span>
+								
+																</td>
+																<td style="width: 50%;">
+																	<input readonly="true" type="text" name="telephone1" id="idtelephone1" value="{{lastcoordoonnee.ninTelephon1}}" required class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT mt-2"><b><u>Téléphone fixe : </u></b></label>
+																</td>
+																<td style="width: 50%;">
+																	<input readonly="true" type="text" name="telephone2" id="idtelephone2" value="{{lastcoordoonnee.nintelephon2}}" 
+																	oninput="this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT mt-2"><b><u>Email : </u></b></label>
+																</td>
+																<td style="width: 50%;">
+																	<input readonly="true" type="text" name="email" id="idemail" value="{{lastcoordoonnee.ninEmail}}" class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+								
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT mt-2"><b><u>Boite postale : </u></b></label>
+																</td>
+																<td style="width: 40%;">
+																	<input readonly="true" type="text" name="bp" id="idbp" value="{{lastcoordoonnee.ninBP}}" class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+															<tr>
+																<td style="width: 30%;">
+																	<label readonly="true" for="" class="TXT mt-2"><b><u>Site web : </u></b></label>
+																</td>
+																<td style="width: 70%;">
+																	<input readonly="true" type="text" name="url" id="idurl" value="{{lastcoordoonnee.ninUrl}}" class="form-control form-control-sm mt-2">
+																</td>
+															</tr>
+														</table>
+								
+													</fieldset>
+												</div>
+					
+
+													<div class="row">
+														<div class="col-lg-12">
+															</br>
+														</div>
+													</div>
+
+														<div class="row">
+															<div class="col-lg-12">
+																<div class="mb-3 row">
+																	<label class="col-md-5" for="basicpill-firstname-input"></label>
+																	<div class="col-md-5" align="right">
+																		<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentCoordonnees" class="boutonsm">
+																	</div>
+																	<div class="col-md-1" align="right">
+																		<input type="button"  value="Suivant" name="editer" id="idBtnSuivantCoordonnees" class="boutonsm">
+																	</div>
+																</div>
+															</div>
+														</div>
+											</div>
+								
+										</form>
+									{% endif %}
+										
+									</div>
+								</fieldset>				
+							</div>
+
+						</div>
+
+
+
+				   <div class="tab-pane" id="activites" role="tabpanel">	
+
+			     <h4 class="col-md-6" for="basicpill-firstname-input" style="color: #062d76 ;"> <b><u>  Les activités et les produits </u></b></h4>
+                        <div class="w-100">
+                           <div class="col-lg-12 justify-content-center"> 
+
+                           <form name="formActivites" action="" method="post" autocomplete="off">
+
+                             <fieldset class="fieldcolor p-2 mb-3 mt-4">
+
+
+								<div class="row justify-content-center mb-3">
+									<div class="col-lg-10">
+										<table width="100%" >
+											<tr>
+											   <td width="20%">
+													<label for="" > <b><u> Libellé de l'ativité</u></b> </label>
+											   </td>
+											   <td width="80%">
+													<textarea name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
+												required style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
+												<span id="ninLibelleact" style="color: red;"></span>
+											   </td>
+											</tr>
+										</table>
+										
+									</div>
+								</div>
+
+
+
+                              <div class="row">
+                              <div class="col-lg-12">
+							  <table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                               <thead class="tr_entete" >
+                             
+                                  <tr>
+                                     <th>Libelle</th>
+                                     <th>NAEMA</th>
+                                     <th>Produits</th>
+									  <th>Debut</th>
+                                     <th>Fin</th>
+                                  </tr>
+                               </thead>
+                               <tbody id="idActivities"></tbody>
+							   {% set nb=0 %}
+                                
+                               {% for tagact in ninactivites %}
+							      {% set nb=nb+1 %}
+                                  <tr>
+				                      <td style="width: 20%;">
+					                     <input type="text" {% if tagact.statActivprincipale==1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+										 {% if nb==1 %}
+										     <input type="hidden" name="nbActivites" id="idnbActivites">
+										 {% endif %}
+			                          </td>
+			                    	  <td style="width: 40%;">				                      
+									     <select readonly class="form-control form-control-sm   select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
+											{% for tagN in naemas %}
+											    {% if tagN.id == tagact.refnaema.id %}
+												    <option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+											    {% endif %}
+											{% endfor %}
+									    </select>
+									  </td>
+                                      <td style="width: 40%;">
+                                         <select class="select2 form-control select2-multiple selectproduit" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
+												multiple="multiple" data-placeholder="Selectionner...">
+											{% for tagP in ninproduits %}
+											    {% if tagP.refproduits.naema.id == tagact.refnaema.id %}
+												    <option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+											    {% endif %}
+											{% endfor %}
+
+										  </select>
+                                      </td>
+										<td>{{  tagact.createdat ? tagact.createdat | date("d/m/Y") : "" }}</td>
+										<td>{{ tagact.DateDeCloture ? tagact.DateDeCloture | date("d/m/Y") : "" }}</td>
+								   </tr>
+								  {% endfor %}
+								  {% if nb==0 %}
+                                     <tr>
+				                      <td style="width: 20%;">
+					                     <input type="text" name="ninAutact1" id="idninAutact1" class="form-control form-control-sm " required>
+										<input type="hidden" name="nbActivites" id="idnbActivites">
+			                          </td>
+			                           <td style="width: 40%;">				                      
+									     <select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
+											<option value="" selected>
+												Sélectionner...</option>
+											{% for tag in naemas %}
+												<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
+											{% endfor %}
+									    </select>
+									  </td>
+                                      <td style="width: 40%;">
+                                         <select class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
+												multiple="multiple" data-placeholder="Selectionner...">
+										  </select>
+                                      </td>
+                                    
+								   </tr>
+								  {% endif %}
+                               </tbody>
+                              </table>
+                         </div>
+                     </div>
+   
+                     <div class="row">
+                       <div class="col-lg-12">
+                         <div class="mb-3 row">
+                            <label class="col-md-5" for="basicpill-firstname-input"></label>
+                         <div class="col-md-5" align="right">
+                             <input type="button" value="Precedent" name="precedent" id="idBtnPrecedentActivites" class="boutonsm">
+                         </div>
+                        <div class="col-md-1" align="right">
+                            <input type="button"  value="Suivant" id="idBtnSuivantActivites" name="ajouter" class="boutonsm">
+                        </div>
+                     </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            </form>
+          </div>
+        </div>
+
+     </div>
+
+
+
+	<div class="tab-pane" id="activiteEconomiques" role="tabpanel"> 
+					
+                <div class="col-lg-12"> 
+                    <fieldset class=" p-2 fieldcolor ">
+                        <div class="row">
+                            <form name="formActEconomique" action="" method="post" autocomplete="off">
+                           {% if lastactiviteEco is not null %}
+                              	<div class="row">
+									<div class="col-lg-6">
+								
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninAffaire" id="idninAffaire" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
+												</td>
+											</tr>
+
+												<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u> Capital : </u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninCapital" id="idninCapital" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+												<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u>Effectif permanent : </u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninEffectif" id="idninEffectif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+												<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u>Effectif permanent féminin:</u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u>Effectif temporaire : </u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+												<input readonly="true" type="text" name="ninEffect1" id="idninEffect1" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+										</table>
+									
+									</div>
+
+									<div class="col-lg-6">
+									<table style="width: 100%;">
+											<tr>
+												<td style="width: 50%;">
+													<label for="" class="TXT mt-2"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+												</td>
+												<td style="width: 50%;">
+													<input readonly="true" type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm mt-2">
+												</td>
+											</tr>
+
+
+
+											
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Source de financement : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+															{% if lastactiviteEco.ninOcc is not null %}
+																<option value="{{ ninea.historyNiActiviteEconomiques[0].ninOcc.id }}" selected> {{ ninea.historyNiActiviteEconomiques[0].ninOcc.libelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+										
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Nature d'exploitation : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+															{% if lastactiviteEco.ninNature is not null %}
+																<option value="{{ ninea.historyNiActiviteEconomiques[0].ninNature.id }}" selected> {{ ninea.historyNiActiviteEconomiques[0].ninNature.nleLibelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT mt-2">	<b><u>Modalité  : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 mt-2" name="cacr" id="cacr" style="width: 100%;">
+															{% if lastactiviteEco.ninMode is not null %}
+																<option value="{{ ninea.historyNiActiviteEconomiques[0].ninMode.id }}" selected> {{ ninea.historyNiActiviteEconomiques[0].ninMode.libelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+
+
+										</table>
+									</div>
+								
+								</div> 
+
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        </br>
+                                    </div>
+                                </div>
+
+                                
+
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="mb-3 row">
+										
+										{% if ninea.formeJuridique.niFormeunite.id == 21 or ninea.formeJuridique.niFormeunite.id == 22 %}
+										   <label class="col-md-5" for="basicpill-firstname-input"></label>
+											<div class="col-md-5" align="right">
+												<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentActivitesEconomiques" class="boutonsm">
+											</div>
+										   <div class="col-md-2" align="right">
+											  <input type="button"  value="Suivant" name="modifierActivitesEcos" id="idBtnsuivantActivitesEconomiques" class="boutonsm">
+											</div>
+										{% else %}
+                                             <label for="basicpill-firstname-input"></label>
+											<div  align="right">
+												<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentActivitesEconomiques" class="boutonsm">
+											</div>
+										{% endif %}
+									</div>
+									</div>
+								</div>
+                            {% endif %}
+								</form>
+
+							</div>
+							</fieldset>
+            	    </div>
+
+			      </div>
+
+
+
+		<div class="tab-pane" id="dirigeants" role="tabpanel">
+			
+			<div class="col-lg-12 justify-content-center"> 
+				<fieldset class=" p-2 fieldcolor ">
+			
+						<form name="formDirigeant" action="{{path('ajouterDirigeantsHisto',{id:app.request.attributes.get('id')})}}" method="post" autocomplete="off">
+							<div class="row" id="idPageAjoutDirigeants">
+								<div class="col-lg-6" id="idPageAjoutDirigeants1">
+									<fieldset class="border p-2">						
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<select class="form-control form-control-sm"  name="nationalite"  id="idnationalite_dirigeant">
+														{% if Odirigeant and Odirigeant.ninNationalite %}
+															<option value="{{Odirigeant.ninNationalite.id}}"  selected }> {{ Odirigeant.ninNationalite.libelle}}</option>
+														{% else %}
+															<option value="" >Selectionner...</option>
+														{% endif %}
+													</select>
+													<span style="color: red;" id="ninationalite"></span>
+												</td>
+											</tr>
+										</table>
+
+										<div id="tableCni_dirigeant">
+											<table  style="width: 100%;">
+												<tr id="trcni">
+													<td style="width: 40%;">
+														<label for="" class="TXT mt-2"><b><u>CNI</u></b></label>
+														<span style="color: red;">*</span>
+													</td>
+													<td style="width: 60%;" >
+														<input readonly="true" type="text" name="cni" id="idcni" value="{{Odirigeant ? Odirigeant.ninCni : ""}}" 
+															maxlength = '14' pattern ="[A-z0-9]{13,14}" class="form-control form-control-sm mt-2">
+														<span style="color: red;" id="nincni"></span>
+													</td>
+												</tr>
+					
+												<tr id="trcni">
+													<td style="width: 40%;">
+														<label for="" class="TXT mt-2"><b><u>Date de délivrance CNI : </u></b></label>
+														<span style="color: red;">*</span>
+													</td>
+													<td style="width: 60%;" >
+														<input readonly="true" type="date" name="datecni" id="idDatcni" value="{{Odirigeant ? Odirigeant.ninDateCni | date("Y-m-d")  : ""}}"
+														class="form-control form-control-sm mt-2" >
+														<span style="color: red;" id="nincni"></span>
+													</td>
+												</tr>
+											</table>
+										</div>
+										
+										<div id="tablePassport_dirigeant">
+											<table style="width: 100%;" >
+												<tr id="trPassport">
+													<td style="width: 40%;">
+														<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+														<span style="color: red;">*</span>
+													</td>
+													<td style="width: 60%;">
+														<input readonly="true" type="text" name="passport" id="idPassport"  value="{{Odirigeant ? Odirigeant.ninCni : ""}}"  class="form-control form-control-sm">
+														<span style="color: red;" id="ninpassport"></span>
+													</td>
+												</tr>
+					
+												<tr id="trDatePassport">
+													<td style="width: 40%;">
+														<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
+													</td>
+													<td style="width: 60%;">
+														<input readonly="true" type="date" name="datepassport" id="idDatepassport" value="{{Odirigeant and Odirigeant.ninDateCni ? Odirigeant.ninDateCni | date("d/m/Y")  : ""}}" class="form-control form-control-sm">
+														<span style="color: red;" id="nindatepassport"></span>
+													</td>
+												</tr>
+											</table>
+										</div>
+										
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Civilite : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 30%;">
+													<select class="form-control form-control-sm" name="civilite" id="idcivilite">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninCivilite %}
+																<option value="{{ Odirigeant.ninCivilite.id}}" selected>		{{ Odirigeant.ninCivilite.civlibelle}}</option>
+															{% else %}
+																<option value=""> Selectionner...</option>
+															{% endif %} 
+														{% else %}
+															<option value="">Selectionner...</option>
+														{% endif %}
+													</select>
+													<span style="color: red;" id="nincivil"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="prenom"  id="prenom" value="{{Odirigeant ? Odirigeant.ninPrenom : ""}}" class="form-control form-control-sm">	
+													<span style="color: red;" id="ninprenom"></span>
+													<input type="hidden" name="idDirigeantAM"  id="idDirigeantAM" value="{{Odirigeant ? Odirigeant.id : ""}}" class="form-control form-control-sm">	
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for=""><b><u>Nom : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="nom" id="idnom" value="{{Odirigeant ? Odirigeant.ninNom : ""}}" class="form-control form-control-sm">
+													<span style="color: red;" id="ninnom"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+												<input readonly="true" type="text" readonly name="sexe" id="idSexe" value="" class="form-control form-control-sm">
+												<span style="color: red;" id="ninsexe"></span>
+
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="date" name="datenais"  value="{{Odirigeant and Odirigeant.ninDatenais ? Odirigeant.ninDatenais | date("Y-m-d")  : ""}}" id="idDatenais" class="form-control form-control-sm">
+													<span style="color: red;" id="nindatenais"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Lieu de naissance</u></b></label>
+													<span style="color: red;">*</span>
+
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="lieunais" id="idlieunais" value="{{Odirigeant ? Odirigeant.ninLieunais : ""}}" class="form-control form-control-sm">
+													<span style="color: red;" id="ninlieunais"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Qualification : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												<td style="width: 60%;">
+													<select class="form-control form-control-sm" name="qualification" id="idqualification">
+															{% if Odirigeant %}
+															{% if Odirigeant.ninPosition  %}
+																<option value="{{ Odirigeant.ninPosition.id}}" selected>		{{ Odirigeant.ninPosition.libelle}}</option>
+															{% else %}
+																<option value="">Selectionner...</option>
+																{% endif %} 
+															{% else %}
+																<option value="">Selectionner...</option>
+															{% endif %}
+													</select>
+													<span style="color: red;" id="ninqualications"></span>
+												</td>
+											</tr>
+										</table>
+
+									</fieldset>
+								</div>
+
+								<div class="col-lg-6" id="idPageAjoutDirigeants2">
+									<fieldset class="border p-2">
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="telephone" id="idtelpersonne_dirig1"  value="{{Odirigeant ? Odirigeant.ninTelephone1 : ""}}" class="form-control form-control-sm">
+													<span style="color: red;" id="nintelpersonne"></span>
+												</td>
+											</tr>
+											<tr>
+												<td style="width: 40%;">
+													<label for="" class="TXT"><b><u>Email : </u></b></label>
+												</td>
+												<td style="width: 60%;">
+													<input readonly="true" type="text" name="email" id="idemail_dirig" value="{{Odirigeant ? Odirigeant.ninEmail : ""}}"   class="form-control form-control-sm">
+													<span style="color: red;" id="ninemail_dirig"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 "  name="region" id="region_dirigeant" style="width: 100%;">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninQvh %}
+																		<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}</option>
+																{% else %}
+																		<option value="" ></option>
+																{% endif %}
+
+														{% else %}
+																<option value=""></option>
+														{% endif %}
+
+														</select>
+														<span style="color: red;" id="ninregion"></span>
+													</td>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2 " name="departement" id="departement_dirigeant" style="width: 100%;">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+														{% else %}
+															<option value="" ></option>
+														{% endif %}
+													</select>
+													<span style="color: red;" id="nindepartement"></span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for="numvoie" class="TXT"><b><u>CAV :</u></b></label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2" name="cav" id="cav_dirigeant" style="width: 100%;">
+														{% if Odirigeant %}
+															{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID.cacrCAVID %}
+																<option value="{{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+															{% else %}
+																	<option value="" ></option>
+															{% endif %}
+														{% else %}
+															<option value="" ></option>
+														{% endif %}
+													</select>
+													<span style="color: red;" id="nincav"></span>
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>	</label>
+												</td>
+												<td>
+													<select class="form-control form-control-sm select2" name="cacr" id="cacr_dirigeant" style="width: 100%;">
+													{% if Odirigeant %}	
+														{% if Odirigeant.ninQvh and Odirigeant.ninQvh.qvhCACRID %}
+															<option value="{{ Odirigeant.ninQvh.qvhCACRID.id }}" selected> {{ Odirigeant.ninQvh.qvhCACRID.libelle}}</option>
+														{% else %}
+																<option value="" ></option>
+														{% endif %}
+													{% else %}
+																<option value="" ></option>
+													{% endif %}
+													</select>
+													<span style="color: red;" id="nincacr"></span>
+												</td>
+											</tr>
+											<tr>
+
+												<td style="width: 30%;">
+													<label for="basicpill-firstname-input" class="TXT">
+														<b><u>Quartier/Village/Hameau: : </u></b></label>
+												</td>
+												<td style="width: 70%;">
+													<select class="form-control form-control-sm select2" name="qvh" id="qvh_dirigeant" style="width: 100%;">
+														<option value=""></option>
+														{% if Odirigeant %}	
+															{% if Odirigeant.ninQvh %}
+																<option value="{{ Odirigeant.ninQvh.id }}" selected> {{ Odirigeant.ninQvh.libelle}}</option>
+														{% else %}
+																<option value="" ></option>
+														{% endif %}
+													{% else %}
+																<option value="" ></option>
+													{% endif %}
+													</select>
+													<span style="color: red;" id="ninqvh"></span>
+												</td>
+											</tr>
+
+										</table>
+
+									</fieldset>
+
+								</div>
+							</div>
+						
+
+							<div class="row" id="idGroupeBtnAjoutDirigeants">
+							<div class="col-lg-12">
+								<div class="mb-3 row">
+									<label class="col-md-6" for="basicpill-firstname-input"></label>
+									
+								</div>
+								</div>
+							</div>
+
+							<div class="row ">
+								<div class="col-lg-12">
+									<div class="mb-3 row">
+										<label class="col-md-6" for="basicpill-firstname-input">LISTE DES DIRIGEANTS</label>
+										
+									</div>
+								</div>
+							</div>
+
+								<div class="row">
+									<div class="col-lg-12">
+											<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+												<thead class="tr_entete" >
+													<tr>
+														<th>Prénom</th>
+														<th>Nom</th>
+														<th>Qualification</th>
+														<th>CNI</th>
+														<th>Nationalité</th>
+													
+													</tr>
+												</thead>
+												<tbody>
+												{% for tag in ninea.historyNiDirigeants %}
+													<tr>
+														<td >{{tag.ninPrenom}}</td>
+														<td >{{tag.ninNom}}	</td>
+														<td > 
+															{% if tag.ninPosition %}
+																{{tag.ninPosition.libelle}} 
+															{% endif %}
+														</td>
+														<td >{{tag.ninCni}}</td>
+														<td >{{ tag.ninNationalite.libelle}}</td>
+														
+													</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+											
+									</div>
+
+								</div>
+
+								
+									{% for tag in ninea.historyNiDirigeants %}
+										<div class="accordion mb-3" id="accordionExample{{tag.id}}" >
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="headingOne{{tag.id}}">
+													<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{tag.id}}" aria-expanded="true" aria-controls="collapseOne{{tag.id}}">
+														<div class=" row p-0">
+															{# <div for="staticEmail" class="col-lg-2 "> <b><u>  Prénom :</u> </b> </div>
+															<div for="staticEmail" class="col-lg-3 "> {{tag.ninPrenom}}</div>
+															<div for="staticEmail" class="col-lg-2 "> <b><u>  Nom :</u> </b> </div>
+															<div for="staticEmail" class="col-lg-3 ">{{tag.ninNom}}</div>
+															<div for="staticEmail" class="col-lg-2"></div #} 
+															<table style="width:100% ;">
+																<tr>
+																	<td style="margin-right:10% ;"><b><u>  Prénom :</u> </b>{{tag.ninPrenom}}</td>
+																	<td><b><u>  Nom :</u> </b>{{tag.ninNom}}</td>
+																	<td><b><u>  Qualité :</u> </b>{{tag.ninPosition is not null ? tag.ninPosition.libelle : ""}}</td>
+																	<td><b><u>  CNI/PASSPORT :</u> </b>{{tag.ninCni}}</td>
+																</tr>
+															</table>
+															
+														</div>
+														
+													</button>
+									
+												</h2>
+												<div id="collapseOne{{tag.id}}" class="accordion-collapse collapse " aria-labelledby="headingOn{{tag.id}}" data-bs-parent="#accordionExample{{tag.id}}">
+													<div class="accordion-body">
+														<div class="text-muted">
+															<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+															<div class="row mb-0">
+																<div class="col-lg-12">
+																	<fieldset class=" p-2 fieldcolor ">
+																		<div class="row">
+													
+																			<div class="col-lg-6">
+																				<table style="width: 100%;">
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="" class="TXT" ><b><u> Prénom : </u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="" class="TXT">	{{tag.ninPrenom}}</label>	
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="" ><b><u>Nom :</u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="" class="TXT">	{{tag.ninNom}}</label>	
+																						</td>
+																					</tr>
+												
+																					<tr>
+																						<td style="width: 40%;">
+																							<label  for="basicpill-firstname-input"><b><u>Sexe :</u></b> 
+																								
+																							</label>
+																						</td>
+																						<td style="width: 60%;">
+																							<label class="TXT" for="basicpill-firstname-input">{{tag.ninSexe.libelle}}</label>
+																							
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="" class="TXT" ><b><u> Date de naissance : </u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="" class="TXT">	{{tag.ninDatenais | date("d-m-Y") }}</label>	
+																						</td>
+																					</tr>
+																					
+																					<tr>
+																						<td style="width: 40%;">
+																							<label for="basicpill-firstname-input" ><b><u>Nationalite :</u></b>
+																							</label>
+																						</td>
+																						<td style="width: 60%;">
+																							<label for="basicpill-firstname-input" class="TXT">	{{tag.ninNationalite.libelle}}</label>
+												
+																						</td>
+																					</tr> 
+																					<tr>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" ><b><u>CNI/PASSPORT :</u></b>
+																							</label>
+																						</td>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" class="TXT">	{{tag.ninCni}}</label>
+												
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" ><b><u>Date de délivrance CNI/PASSPORT :</u></b>
+																							</label>
+																						</td>
+																						<td style="width: 50%;">
+																							<label for="basicpill-firstname-input" class="TXT">	{{tag.ninDateCni | date("d-m-Y") }}</label>
+												
+																						</td>
+																					</tr>
+																				</table>
+																			</div>
+
+																			<div class="col-lg-6">
+																				<table style="width: 100%;">
+																					
+																					<tr>
+																						<td style="width: 30%;">
+																							<label for="" ><b><u>Qualification :</u> </b> </label>	
+																								
+																						</td>
+																						<td style="width: 70%;">
+																							<label for="" class="TXT">	{{tag.ninPosition is not null ? tag.ninPosition.libelle : ""}}</label>	
+																						</td>
+																					</tr>
+												
+																					<tr>
+																						<td style="width: 30%;">
+																							<label  for="basicpill-firstname-input"><b><u>Téléphone :</u></b> 
+																								
+																							</label>
+																						</td>
+																						<td style="width: 70%;">
+																							<label class="TXT" for="basicpill-firstname-input">{{tag.ninTelephone1}}</label>
+																							
+																						</td>
+																					</tr>
+																					
+																					<tr>
+																						<td style="width: 30%;">
+																							<label  for="basicpill-firstname-input"><b><u>Adresse :</u></b> 
+																								
+																							</label>
+																						</td>
+																						<td style="width: 70%;">
+																							<label class="TXT" for="basicpill-firstname-input">{{tag.ninAddresse}}</label>
+																							
+																						</td>
+																					</tr>
+																					<tr>
+																						<td style="width: 30%;">
+																							<label  for="basicpill-firstname-input"><b><u>Email :</u></b> 
+																								
+																							</label>
+																						</td>
+																						<td style="width: 70%;">
+																							<label class="TXT" for="basicpill-firstname-input">{{tag.ninEmail}}</label>
+																							
+																						</td>
+																					</tr>
+																					
+																			
+																				</table>
+																			</div>
+												
+																		</div>
+																	</fieldset>
+																	<br>
+																</div>
+															</div>
+														</div>
+
+														
+														</div>
+													</div>
+												</div>
+											</div>
+							
+										</div>
+									{% endfor %}
+					<!-- end accordion -->
+							
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="mb-3 row">
+										<div align="right">
+											<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentDirigeant" class="boutonsm">
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</form>
+							
+
+					
+				</fieldset>
+			</div>
+
+		</div>
+
+	</div>
+
+	</div>
+
+
+	{#{% if nineafils %}
+	<div class="row">
+		<div class="col-xl-12">
+			<div>
+				<div class="accordion mb-3" id="accordionExample">
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne">
+							<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								<h5 class="font-size-14 text-center text-bold" >ETABLISSEMENTS SECONDAIRES</h5>
+							</button>
+							
+						</h2>
+						
+						<div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								<div class="text-muted">
+									<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+									<div class="row mb-0">
+										<div class="col-lg-12">
+											<fieldset class=" p-2 fieldcolor ">
+												<div class="row">
+													<div class="col-lg-12">
+														<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+															<thead class="tr_entete" >
+																<tr>
+																	<th>NINEA</th>
+																	<th>Enseigne</th>
+																	<th>Raison</th>
+																	<th>Service</th>
+																	<th>Propriétaire</th>
+																
+																	<th>Date </th>
+																	<th>Actions</th>
+																</tr>
+															</thead>
+										
+															<tbody>
+																{% for tag in nineafils %}
+																	<tr>
+																		<td>{{ tag.ninNinea }}</td>
+																		<td>{{ tag.ninEnseigne }}</td>
+																		<td>
+																			{% if tag.formeJuridique.niFormeunite.id ==  21 or tag.formeJuridique.niFormeunite.id ==  22 %}
+																				{{ tag.niPersonne.ninRaison }}
+																			{% elseif tag.formeJuridique.niFormeunite.id ==  11 or tag.formeJuridique.niFormeunite.id ==  12 %} 
+																					{{ tag.niPersonne.ninNom }} {{ tag.niPersonne.ninPrenom }} 
+																			{% endif %}
+																		</td>
+																	
+																		<td>
+																			{% if tag.ninRegcom is not null %} 
+																			{{tag.createdBy is not null ? tag.createdBy.niAdministration is not null ? tag.createdBy.niAdministration.admlibelle : "" : ""}}
+																			
+																		{% endif %}
+																		</td>
+										
+																		<td> {{tag.createdBy ? tag.createdBy.prenom : "" }} {{tag.createdBy ? tag.createdBy.nom : "" }}    </td>
+																		<td>{{ tag.ninCreation ? tag.ninCreation | date("d/m/Y") : "" }}</td>
+																		<td> 
+																			<a href="{{ path('nininea_show', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-secondary btn-sm edit" id="consultation">
+																				<i class="fas fa-eye"></i>
+																			</a>
+																			<a href="{{ path('n_i_ninea_edit', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-secondary btn-sm edit">
+																			<i class="fas fa-pencil-alt"></i>
+																			</a>
+																		</td>
+																										
+																	</tr>
+										
+																{% else %}
+																<tr>
+																	<td colspan="108">Pas de données trouvées</td>
+																</tr>
+																{% endfor %}
+															</tbody>
+														</table>
+													</div>
+						
+													
+												</div>
+											</fieldset>
+											<br>
+										</div>
+									</div>
+								</div>
+	
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- end accordion -->
+			</div>
+		</div>
+		<!-- end col -->
+	
+	</div>
+	{% endif %}#}
+
+
+	
+</div>
+</div>
+
+
+	{# edit Personne #}
+	<div class="modal fade editPersonne" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+				
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="body">
+					{# templates/base.html.twig #}
+
+					
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	{# edit Coordonnees #}
+	<div class="modal fade editCoordonnees" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+				
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="body">
+					{# templates/base.html.twig #}
+					
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+<!-- end card -->
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/js/pages/sweet-alerts.init.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+<script >
+    $(".dTable").dataTable({
+
+            bJQueryUI: !1,
+
+            bAutoWidth: !1,
+
+            sPaginationType: "full_numbers",
+
+            sDom: '<"table-header"fl>t<"table-footer"ip>'
+
+        })
+      jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+
+
+     $("#IDHistoryninea").DataTable({
+
+       
+        "order": [4, "desc" ],
+        "columnDefs": [
+             { type: 'date-uk', targets: 4 }
+          ],          
+
+
+        "sDom": 'f<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+</script>
+{% endblock %}

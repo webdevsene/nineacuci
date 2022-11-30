@@ -5,7 +5,6 @@
 {% block body %}
 
 
-<a href="{{ path('app_ref_nomenclature_rc_new') }}" class="btn btn-primary btn-sm mt-lg-5">Ajouter nomenclature RC (juridiction RC) </a>
 
 <div class="box ">
 	<div class="box-header">
@@ -16,8 +15,6 @@
                    Liste des juridictions Régistre de commerce
 				</a>
 			</li>
-
-          
 
 		</ul>
 	</div>
@@ -31,8 +28,8 @@
                         <div class="card">
                         <div class="card-body">
                         
-                            <table class="table" id="rcList">
-                                <thead>
+                            <table class="table table-bordered" id="rcList">
+                                <thead class="tr_entete">
                                     <tr>
                                         <th>Id</th>
                                         <th>Libelle</th>
@@ -45,7 +42,7 @@
                                         <td>{{ ref_nomenclature_rc.id }}</td>
                                         <td>{{ ref_nomenclature_rc.libelle }}</td>
                                         <td>
-                                            <a href="{{ path('app_ref_nomenclature_rc_edit', {'id': ref_nomenclature_rc.id}) }}" title="Modifier"  class="btn btn-outline-success btn-sm showjf" id="showjf"><i class="fas fa-pencil-alt"></i></a>
+                                            <a href="{{ path('app_ref_nomenclature_rc_edit', {'id': ref_nomenclature_rc.id}) }}" title="Modifier"  > <i class="fas fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 {% else %}
@@ -65,6 +62,12 @@
 								
 		</div>
 			
+    </div>
+
+
+    <div class="box-footer">
+        <a href="{{ path('app_ref_nomenclature_rc_new') }}" class="btn btn-outline-secondary">Ajouter nomenclature RC (juridiction RC) </a>
+
     </div>
 </div>
 

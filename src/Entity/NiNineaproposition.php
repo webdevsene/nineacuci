@@ -45,6 +45,7 @@ class NiNineaproposition
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *  @Assert\Length(max=250,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned
      */
     private $ninRaison;
 
@@ -52,12 +53,14 @@ class NiNineaproposition
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(max=50,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned
      */
     private $ninRegcom;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Length(max=20,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned
      */
     private $ninNinea;
 
@@ -71,6 +74,7 @@ class NiNineaproposition
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Length(max=20,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned
      */
     private $ninSigle;
 
@@ -142,6 +146,7 @@ class NiNineaproposition
     /**
      * @ORM\Column(type="string", length=200, nullable=true)
      * @Assert\Length(max=200,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned
      */
     private $ninRemarque;
 
@@ -185,6 +190,7 @@ class NiNineaproposition
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Assert\Length(max=20,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned
      */
     private $statut;
 
@@ -222,6 +228,7 @@ class NiNineaproposition
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninlock ;
 
@@ -293,6 +300,27 @@ class NiNineaproposition
      * @ORM\ManyToOne(targetEntity=NinTypedocuments::class, inversedBy="niNineapropositions")
      */
     private $niTypedocument;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Gedmo\Versioned
+     */
+    private $ninObservationsrccm;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $document;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateDocumment;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nomCommerce;
 
 
     public function __construct()
@@ -1069,6 +1097,54 @@ class NiNineaproposition
     public function setNiTypedocument(?NinTypedocuments $niTypedocument): self
     {
         $this->niTypedocument = $niTypedocument;
+
+        return $this;
+    }
+
+    public function getNinObservationsrccm(): ?string
+    {
+        return $this->ninObservationsrccm;
+    }
+
+    public function setNinObservationsrccm(?string $ninObservationsrccm): self
+    {
+        $this->ninObservationsrccm = $ninObservationsrccm;
+
+        return $this;
+    }
+
+    public function getDocument(): ?string
+    {
+        return $this->document;
+    }
+
+    public function setDocument(?string $document): self
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    public function getDateDocumment(): ?\DateTimeInterface
+    {
+        return $this->dateDocumment;
+    }
+
+    public function setDateDocumment(?\DateTimeInterface $dateDocumment): self
+    {
+        $this->dateDocumment = $dateDocumment;
+
+        return $this;
+    }
+
+    public function getNomCommerce(): ?string
+    {
+        return $this->nomCommerce;
+    }
+
+    public function setNomCommerce(?string $nomCommerce): self
+    {
+        $this->nomCommerce = $nomCommerce;
 
         return $this;
     }

@@ -74,7 +74,7 @@
 {% endblock %}
 {% block body %}
 
-	<form name="FormEntete" method="post" action="{{path('app_temp_n_i_ninea_new',{id:ninea.id})}}">
+	<form class=" mt-3" name="FormEntete" method="post" action="{{path('app_temp_n_i_ninea_new',{id:ninea.id})}}">
 	
 		<div class="row">
 			<div class="col-xl-12">
@@ -559,7 +559,7 @@
 						{% if (ninea.formeJuridique.niFormeunite.id == 21 or ninea.formeJuridique.niFormeunite.id == 22) %} 
 
 							<li class="nav-item">
-								<a class="nav-link inactive_tab1" id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
+								<a class="nav-link disabled" id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
 									<span class="d-block d-sm-none">
 										<i class="fas fa-home"></i>
 									</span>
@@ -1327,33 +1327,65 @@
 												</div>
 											{% else %}
 												{% if (ninea.formejuridique.niFormeunite.id == 21) or  (ninea.formejuridique.niFormeunite.id == 22) %}
-													<div id="idMorale"  class="col-lg-8 " >
-														<fieldset class="border p-2" >
-														<center>	
-															<table style="width: 100%;">
-																<tr >
-																	<td style="width: 20%;">
-																		<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
-																		<span style="color: red;">*</span>
-																	</td>
-																	<td style="width: 80%;" >
-																		<textarea name="raison"  id="idraison" cols="10" rows="5" class="form-control form-control-sm" onkeyup="this.value=this.value.toUpperCase()" required value=""  >{{ninea.niPersonne.ninRaison}}  </textarea>
-																		<span style="color: red;" id="ninraison"></span>
-																	</td>
-																</tr>
+												 	<div class="row">
+														<div id="idMorale"  class="col-lg-6 " >
+															<fieldset class="border p-2" >
+															<legend class="w-auto float-none p-2">Anciennes données</legend>
+															<center>	
+																<table style="width: 100%;">
+																	<tr >
+																		<td style="width: 20%;">
+																			<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 80%;" >
+																			<textarea name="raison" disabled  id="idraison" cols="10" rows="5" class="form-control form-control-sm" onkeyup="this.value=this.value.toUpperCase()" required value=""  >{{ninea.niPersonne.ninRaison}}  </textarea>
+																			<span style="color: red;" id="ninraison"></span>
+																		</td>
+																	</tr>
 
-																<tr >
-																	<td style="width: 20%;">
-																		<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
-																	</td>
-																	<td style="width: 80%;" >
-																		<input type="text" style=" width:40%;" name="sigle" id="idSigle"onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm mt-2" value="{{ninea.niPersonne.ninSigle}}">
-																		<span style="color: red;" id="ninsigle"></span>
-																	</td>
-																</tr>
-															</table>
-														</center>
-														</fieldset>
+																	<tr >
+																		<td style="width: 20%;">
+																			<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
+																		</td>
+																		<td style="width: 80%;" >
+																			<input type="text" disabled style=" width:40%;" name="sigle" id="idSigle"onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm mt-2" value="{{ninea.niPersonne.ninSigle}}">
+																			<span style="color: red;" id="ninsigle"></span>
+																		</td>
+																	</tr>
+																</table>
+															</center>
+															</fieldset>
+														</div>
+														<div id="iMorale"  class="col-lg-6 " >
+															<fieldset class="border p-2" >
+															<legend class="w-auto float-none p-2">Nouvelles données</legend>
+															<center>	
+																<table style="width: 100%;">
+																	<tr >
+																		<td style="width: 20%;">
+																			<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 80%;" >
+																			<textarea name="raison_modif"   id="idraison_modif" cols="10" rows="5" class="form-control form-control-sm" onkeyup="this.value=this.value.toUpperCase()" required value=""  >{{ninea.niPersonne.ninRaison}}  </textarea>
+																			<span style="color: red;" id="ninraison_modif"></span>
+																		</td>
+																	</tr>
+
+																	<tr >
+																		<td style="width: 20%;">
+																			<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
+																		</td>
+																		<td style="width: 80%;" >
+																			<input type="text"  style=" width:40%;" name="sigle_modif" id="idSigle_modif"onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm mt-2" value="{{ninea.niPersonne.ninSigle}}">
+																			<span style="color: red;" id="ninsigle_modif"></span>
+																		</td>
+																	</tr>
+																</table>
+															</center>
+															</fieldset>
+														</div>
 													</div>
 												{% endif %}
 											{% endif %}
@@ -1787,6 +1819,8 @@
 									</div>
 							</div>
 						</div>
+
+						
 						<div class="tab-pane" id="activites" role="tabpanel">							
                             <fieldset class="fieldcolor p-2 mb-3">
 							 	<legend class="w-auto float-none p-2">Anciennes données</legend>
@@ -1798,93 +1832,90 @@
 														<label for="" > <b><u> Libellé de l'ativité</u></b> </label>
 													</td>
 													<td width="80%">
-														<textarea name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
+														<textarea disabled name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
 													required style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
 													<span id="ninLibelleact" style="color: red;"></span>
 													</td>
 												</tr>
 											</table>
-											
 										</div>
 								</div>
                                 <div class="row">
                               		<div class="col-lg-12">
 										<table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
-										<thead class="tr_entete" >
-										
-											<tr>
-												<th>Libelle</th>
-												<th>NAEMA</th>
-												<th>Produits</th>
-												<th>Debut</th>
-												<th>Fin</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody id="idActivities"></tbody>
-										{% set nb=0 %}
-											
-										{% for tagact in ninactivites %}
-											{% set nb=nb+1 %}
-											<tr>
-												<td style="width: 20%;">
-													<input type="text" {% if tagact.statActivprincipale==1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
-													{% if nb==1 %}
-														<input type="hidden" name="nbActivites" id="idnbActivites">
-													{% endif %}
-												</td>
-												<td style="width: 40%;">				                      
-													<select readonly class="form-control form-control-sm select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
-														{% for tagN in naemas %}
-															{% if tagN.id == tagact.refnaema.id %}
-																<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
-															{% endif %}
-														{% endfor %}
-													</select>
-												</td>
-												<td style="width: 40%;">
-													<select readonly class="select2 form-control select2-multiple" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
-															multiple="multiple" data-placeholder="Selectionner...">
-														{% for tagP in ninproduits %}
-															{% if tagP.refproduits.naema.id == tagact.refnaema.id %}
-																<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
-															{% endif %}
-														{% endfor %}
-
-
-													</select>
-												</td>
-												<td>
-													{% if tagact.statActivprincipale!=1 %}
-														<input  id="idBtnSupprimerActivite{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHisto('{{tagact.id}}');" value="Supprimer" >
-													{% endif %}
-												</td>
-											</tr>
-											{% endfor %}
-											{% if nb==0 %}
-												<tr>
-												<td style="width: 20%;">
-													<input type="text" name="cvninAutact1t" id="cvt" class="form-control form-control-sm " required>
-													<input type="hidden" name="nbActivites" id="idnbActivites">
-												</td>
-												<td style="width: 40%;">				                      
-													<select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
-														<option value="" selected>
-															Sélectionner...</option>
-														{% for tag in naemas %}
-															<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
-														{% endfor %}
-													</select>
-												</td>
-												<td style="width: 40%;">
-													<select class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
-															multiple="multiple" data-placeholder="Selectionner...">
-													</select>
-												</td>
+												<thead class="tr_entete" >
 												
-											</tr>
-											{% endif %}
-										</tbody>
+													<tr>
+														<th>Libelle</th>
+														<th>NAEMA</th>
+														<th>Produits</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												<tbody id="idActivities"></tbody>
+													{% set nb=0 %}
+														
+													{% for tagact in ninactivites %}
+													{% set nb=nb+1 %}
+													<tr>
+														<td style="width: 20%;">
+															<input type="text" {% if tagact.statActivprincipale == 1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+															{% if nb==1 %}
+																<input type="hidden" name="nbActivites" id="idnbActivites">
+															{% endif %}
+														</td>
+														<td style="width: 40%;">				                      
+															<select readonly class="form-control form-control-sm select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
+																{% for tagN in naemas %}
+																	{% if tagN.id == tagact.refnaema.id %}
+																		<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+																	{% endif %}
+																{% endfor %}
+															</select>
+														</td>
+														<td style="width: 40%;">
+															<select readonly class="select2 form-control select2-multiple" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
+																	multiple="multiple" data-placeholder="Selectionner...">
+																{% for tagP in ninproduits %}
+																	{% if tagP.refproduits.naema.id == tagact.refnaema.id %}
+																		<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+																	{% endif %}
+																{% endfor %}
+
+
+															</select>
+														</td>
+														<td>
+															{% if tagact.statActivprincipale !=1 %}
+																<input  id="idBtnSupprimerActivite{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHisto('{{tagact.id}}');" value="Supprimer" >
+															{% endif %}
+														</td>
+													</tr>
+													{% endfor %}
+													{% if nb==0 %}
+														<tr>
+														<td style="width: 20%;">
+															<input type="text" name="cvninAutact1t" id="cvt" class="form-control form-control-sm " required>
+															<input type="hidden" name="nbActivites" id="idnbActivites">
+														</td>
+														<td style="width: 40%;">				                      
+															<select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
+																<option value="" selected>
+																	Sélectionner...</option>
+																{% for tag in naemas %}
+																	<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
+																{% endfor %}
+															</select>
+														</td>
+														<td style="width: 40%;">
+															<select class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
+																	multiple="multiple" data-placeholder="Selectionner...">
+															</select>
+														</td>
+														
+													</tr>
+													{% endif %}
+												</tbody>
 										</table>
 									</div>
 								</div>
@@ -1915,15 +1946,14 @@
 
                               <div class="row">
 									<div class="col-lg-12">
-											<table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+											<table id="idtab_modif" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
 													<thead class="tr_entete" >
 													
 														<tr>
 															<th>Libelle</th>
 															<th>NAEMA</th>
 															<th>Produits</th>
-															<th>Debut</th>
-															<th>Fin</th>
+															<th></th>
 															<th>Action</th>
 														</tr>
 													</thead>
@@ -1934,35 +1964,37 @@
 															{% set nb=nb+1 %}
 															<tr>
 																<td style="width: 20%;">
-																	<input type="text" {% if tagact.statActivprincipale==1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+																	<input type="text" name="ninAutact_modif{{ nb }}" id="idninAutact_modif{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
 																	{% if nb==1 %}
 																		<input type="hidden" name="nbActivites_modif" id="idnbActivites_modif">
 																	{% endif %}
 																</td>
 																<td style="width: 40%;">				                      
-																	<select readonly class="form-control form-control-sm select2" name="refNaemaModif{{ nb }}"   id="idrefNaemaModif{{ nb }}" required>
+																	<select  class="form-control form-control-sm select2" name="refNaema_modif{{ nb }}"   id="idrefNaema_modif{{ nb }}" required>
 																		{% for tagN in naemas %}
 																			{% if tagN.id == tagact.refnaema.id %}
 																				<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+																			{% else %}
+																			   <option value="{{tagN.id}}" > {{tagN.id}}-{{ tagN.libelle}}</option>
 																			{% endif %}
 																		{% endfor %}
 																	</select>
 																</td>
 																<td style="width: 40%;">
-																	<select readonly class="select2 form-control select2-multiple" name="refProduitModif{{ nb }}[]"   id="idrefProduitModif{{ nb }}"
+																	<select  class="select2 form-control select2-multiple selectproduit" name="refProduit_modif{{ nb }}[]"   id="idrefProduit_modif{{ nb }}"
 																			multiple="multiple" data-placeholder="Selectionner...">
 																		{% for tagP in ninproduits %}
 																			{% if tagP.refproduits.naema.id == tagact.refnaema.id %}
 																				<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+																			{% else %}
+																			   <option value="{{tagP.refproduits.id}}" > {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
 																			{% endif %}
 																		{% endfor %}
-
-
 																	</select>
 																</td>
 																<td>
-																	{% if tagact.statActivprincipale!=1 %}
-																		<input  id="idBtnSupprimerActiviteModif{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHistoModif('{{tagact.id}}');" value="Supprimer" >
+																	{% if tagact.statActivprincipale !=1 %}
+																		<input  id="idBtnSupprimerActivite_modif{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHisto_modif('{{tagact.id}}');" value="Supprimer" >
 																	{% endif %}
 																</td>
 															</tr>
@@ -1970,11 +2002,11 @@
 															{% if nb==0 %}
 																<tr>
 																<td style="width: 20%;">
-																	<input type="text" name="ninAutact1Modif" id="idninAutactModif" class="form-control form-control-sm " required>
-																	<input type="hidden" name="nbActivitesModif" id="idnbActivitesModif">
+																	<input type="text" name="ninAutact1_modif" id="idninAutact_modif" class="form-control form-control-sm " required>
+																	<input type="hidden" name="nbActivites_modif" id="idnbActivites_modif">
 																</td>
 																<td style="width: 40%;">				                      
-																	<select class="form-control form-control-sm select2" name="refNaema1Modif"   id="idrefNaema1Modif" required>
+																	<select multiple="multiple" class="form-control form-control-sm select2-multiple select2" name="refNaema1_modif"   id="idrefNaema1_modif" required>
 																		<option value="" selected>
 																			Sélectionner...</option>
 																		{% for tag in naemas %}
@@ -1983,7 +2015,7 @@
 																	</select>
 																</td>
 																<td style="width: 40%;">
-																	<select class="select2 form-control select2-multiple" name="refProduit1Modif[]"   id="idrefProduit1Modif"
+																	<select class="select2 form-control select2-multiple" name="refProduit1_modif[]"   id="idrefProduit1_modif"
 																			multiple="multiple" data-placeholder="Selectionner...">
 																	</select>
 																</td>
@@ -2013,175 +2045,186 @@
 
 
 						<div class="tab-pane" id="activiteEconomiques" role="tabpanel"> 
-							 <div class="col-lg-12"> 
-                     <fieldset class=" p-2 fieldcolor ">
-                        <div class="row">
-								
-									<div class="col-lg-6">
-									<fieldset class="border p-2">	
-									   <legend class="w-auto float-none p-2">Anciennes données</legend>	
-											<table style="width: 100%;">
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input  disabled type="text" name="ninAffaire" id="idninAffaire" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
-														</td>
-													</tr>
+							<div class="col-lg-12"> 
+								<fieldset class=" p-2 fieldcolor ">
+									<div class="row">
+											
+												<div class="col-lg-6">
+												<fieldset class="border p-2">	
+												<legend class="w-auto float-none p-2">Anciennes données</legend>	
+														<table style="width: 100%;">
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input  disabled type="text" name="ninAffaire" id="idninAffaire" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
 
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input disabled type="text" name="ninCapital" id="idninCapital" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
-														</td>
-													</tr>
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input disabled type="text" name="ninCapital" id="idninCapital" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
 
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input disabled type="text" name="ninEffectif" id="idninEffectif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
-														</td>
-													</tr>
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input disabled type="text" name="ninEffectif" id="idninEffectif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
 
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input disabled type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-											</table>
-											<table style="width: 100%;">
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input disabled type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
-												</td>
-											</tr>
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input disabled type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
+														</table>
+														<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+															</td>
+															<td style="width: 50%;">
+																<input disabled type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
+															</td>
+														</tr>
 
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-												<input disabled type="text" name="ninEffect1" id="idninEffect1" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
-												</td>
-											</tr>
+														<tr>
+															<td style="width: 50%;">
+																<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
+															</td>
+															<td style="width: 50%;">
+															<input disabled type="text" name="ninEffect1" id="idninEffect1" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
+															</td>
+														</tr>
 
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input disabled type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
-												</td>
-											</tr>
+														<tr>
+															<td style="width: 50%;">
+																<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
+															</td>
+															<td style="width: 50%;">
+																<input disabled type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
+															</td>
+														</tr>
 
-										</table>
-										</fieldset>
-						 			</div>
-									<div class="col-lg-6">
-									  <fieldset class="border p-2">	
-									   <legend class="w-auto float-none p-2">Nouvelles données</legend>	
-													<table style="width: 100%;">
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input  type="text" name="ninAffaire_modif" id="idninAffaire_modif" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input type="text" name="ninCapital_modif" id="idninCapital_modif" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input type="text" name="ninEffectif_modif" id="idninEffectif_modif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input type="text" name="ninEffectifFem_modif" id="idninEffectifFem_modif" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-											</table>
-											<table style="width: 100%;">
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input type="text" name="ninAnneeCa_modif" id="idninAnneeCa_modif" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
-												</td>
-											</tr>
-
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-												<input type="text" name="ninEffect1_modif" id="idninEffect1_modif" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
-												</td>
-											</tr>
-
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input type="text" name="ninEffectifFemSAIS_modif" id="idninEffectifFemSAIS_modif" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
-												</td>
-											</tr>
-
-										</table>
-										</fieldset>
-									</div>
-							</div>
-							</fieldset>
-							<div class="row">
-											<div class="col-lg-12">
-												<div class="row">
-													<label class="col-md-8" for="basicpill-firstname-input"></label>
-													<div class="col-md-4 mr-0 mt-4">
-														<input type="button"  value="Précédant" name="editer" id="idBtnPrecedantActiviteEconomique" class="boutonsm">
-														<input type="submit"  value="Sauvegarder" name="sauvegarder" id="id_sauvegarder" class="boutonsm">
-													</div>
-													
+													</table>
+													</fieldset>
 												</div>
-											</div>
+												<div class="col-lg-6">
+												<fieldset class="border p-2">	
+												<legend class="w-auto float-none p-2">Nouvelles données</legend>	
+																<table style="width: 100%;">
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input  type="text" name="ninAffaire_modif" id="idninAffaire_modif" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input type="text" name="ninCapital_modif" id="idninCapital_modif" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input type="text" name="ninEffectif_modif" id="idninEffectif_modif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 50%;">
+																		<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
+																	</td>
+																	<td style="width: 50%;">
+																		<input type="text" name="ninEffectifFem_modif" id="idninEffectifFem_modif" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
+																	</td>
+																</tr>
+														</table>
+														<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+															</td>
+															<td style="width: 50%;">
+																<input type="text" name="ninAnneeCa_modif" id="idninAnneeCa_modif" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
+															</td>
+														</tr>
+
+														<tr>
+															<td style="width: 50%;">
+																<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
+															</td>
+															<td style="width: 50%;">
+															<input type="text" name="ninEffect1_modif" id="idninEffect1_modif" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
+															</td>
+														</tr>
+
+														<tr>
+															<td style="width: 50%;">
+																<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
+															</td>
+															<td style="width: 50%;">
+																<input type="text" name="ninEffectifFemSAIS_modif" id="idninEffectifFemSAIS_modif" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
+															</td>
+														</tr>
+
+													</table>
+													</fieldset>
+												</div>
+										</div>
+										</fieldset>
+										<div class="row">
+														<div class="col-lg-12">
+															<div class="row">
+																<label class="col-md-8" for="basicpill-firstname-input"></label>
+																<div class="col-md-4 mr-0 mt-4">
+																	<input type="button"  value="Précédant" name="editer" id="idBtnPrecedantActiviteEconomique" class="boutonsm">
+																	{% if (ninea.formeJuridique.niFormeunite.id == 11) or  (ninea.formeJuridique.niFormeunite.id == 12) %}
+																		<input type="submit"  value="Sauvegarder" name="sauvegarder" id="id_sauvegarder" class="boutonsm">
+																	{% else %}
+																	<input type="button"  value="Suivant" name="editer" id="idBtnSuivantActiviteEconomique" class="boutonsm">
+																	{% endif %}
+																</div>
+																
+															</div>
+														</div>
+										</div>
 							</div>
-            	    </div>
 
 						</div>
 
-
+              {% if (ninea.formeJuridique.niFormeunite.id == 21 or ninea.formeJuridique.niFormeunite.id == 22) %} 
 						<div class="tab-pane" id="dirigeants" role="tabpanel">
-							
+							<div class="row">
+								<label class="col-md-9" for="basicpill-firstname-input"></label>
+								<div class="col-md-3">
+									<input type="button"  value="Précédant" name="editer" id="idBtnPrecedantDirigeant" class="boutonsm">
+									<input type="submit"  value="Sauvegarder" name="sauvegarder" id="id_sauvegarder" class="boutonsm">
+								</div>
+								
+							</div>
 						</div>
-
+             {% endif %}
 					</div>
 				</div>
 			</div>
@@ -2189,7 +2232,7 @@
 
 			
         </div>
-	 <input type="submit" value="sauve" name="sauve">
+	
 	</form>
 
 <!-- end card -->
@@ -2212,6 +2255,27 @@
 				}else{
 					document.getElementById("tableCni_personne").style.display = "none";
 				}
+			}else{
+
+				$('#idBtnSuivantActiviteEconomique').click(function () {
+					$('#activiteEconomiques').removeClass('active ');
+					$('#idactiviteEconomique').removeClass('active ');
+					$('#iddirigeant').addClass('active ');
+					$('#iddirigeant').removeClass('disabled');
+
+					$('#iddirigeant').attr('href', '#dirigeants');
+					$('#dirigeants').addClass('active');
+			    });
+
+				$('#idBtnPrecedantDirigeant').click(function () {
+					$('#iddirigeant').removeClass('active ');
+					$('#dirigeants').removeClass('active ');
+					$('#activiteEconomiques').addClass('active ');
+					$('#idactiviteEconomique').attr('href', '#activiteEconomiques');
+					$('#idactiviteEconomique').addClass('active');
+			    });
+
+				
 			}
 
 			if (formeunite == 11 || formeunite == 12){
@@ -2563,6 +2627,12 @@
 					$('#idactiviteEconomique').addClass('active');
 			});
 
+
+
+			
+
+			
+
 			$('#idBtnPrecedantActivite').click(function () {
 					$('#activites').removeClass('active ');
 					$('#idactivite').removeClass('active ');
@@ -2578,6 +2648,8 @@
 					$('#idactivite').attr('href', '#activites');
 					$('#idactivite').addClass('active');
 			});
+
+		
 
 		    $('#idCivilite_modif').change(function () {
 					//alert(document.getElementById("idcni").value);
@@ -3018,6 +3090,158 @@
 						}
 				})
 			});
+
+
+			$('#btnAjouterActivities_modif').click(function(){
+					var table = document.getElementById("idtab_modif");
+						//table.setAttribute('style',"width:100% ;")
+					var newRow = table.insertRow(-1);
+					var rowNumber = table.rows.length-1;
+					var tab=[];
+					tab[0]="none";
+					
+					for(let i=1;i<table.rows.length-1;i++){
+						if(document.getElementById("idrefNaema_modif"+i)!=null)
+						tab[i]=document.getElementById("idrefNaema_modif"+i).value;
+						else
+						tab[i]="none";
+						
+					}
+					
+					let selectact = document.getElementById("idrefNaema_modif"+rowNumber);
+					var newCell = newRow.insertCell(0);
+					newCell.innerHTML = '<td  style="width: 20%;"> <input required type="text" name="ninAutact'+rowNumber+'" id="idninAutact_modif'+rowNumber+'" onkeyup="this.value=this.value.toUpperCase()"  class="form-control form-control-sm "> <span id="ninAutact'+rowNumber+'" style="color:red;"></span></td>';
+
+					$("#idninAutact_modif"+rowNumber).change(function() {
+						let idlieunais = document.getElementById("idninAutact_modif"+rowNumber).value;
+							
+							if (idlieunais.match(/^[0-9]+$/)!=null)
+							{
+								
+								//document.getElementById("btnSuivant").setAttribute("disabled", true);
+								document.getElementById("idBtnSuivantActivites_modif").setAttribute("disabled", true);
+								document.getElementById("ninAutact_modif"+rowNumber).innerHTML = "Le libellé ne peut pas contenir que des chiffres.";
+
+							}
+							else
+							{
+								//document.getElementById("btnSuivant").removeAttribute("disabled");
+								document.getElementById("idBtnSuivantActivites_modif").removeAttribute("disabled");
+								document.getElementById("ninAutact_modif"+rowNumber).innerHTML = "";
+							
+							}
+					});
+
+
+						//libellé unique
+
+
+					var newCell2 = newRow.insertCell(1);	
+					var opt="";
+
+
+					{% if ninea.formejuridique.id == 98  %}
+							{% for tag in naemas %}
+								{% if tag.id == "4800" %}
+									if ( !tab.includes('{{tag.id}}'))
+										opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							{% if ninea.formejuridique.id == 99  %}
+
+							{% for tag in naemas %}
+									{% if tag.id == "9803" %}
+										if ( !tab.includes('{{tag.id}}'))
+											opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+									{% endif %}
+							{% endfor %}
+								
+
+							{% else %}
+									{% if ninea.formejuridique.id == 94  %}
+										{% for tag in naemas %}
+											{% if tag.id == "9901" %}
+												if ( !tab.includes('{{tag.id}}'))
+													opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+											{% endif %}
+										{% endfor %}
+
+									{% else %}
+
+									{% for tag in naemas %}
+											{% if tag.id != "9901" and tag.id != "9803" and tag.id != "4800"   %}
+												if ( !tab.includes('{{tag.id}}'))
+													opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+												{% endif %}
+										{% endfor %}
+
+									{% endif %}
+							{% endif %}
+
+
+					{% endif %}
+
+				
+					newCell2.innerHTML = '<td >	<select required style=" background-color :#D6EAF8;"class="form-control form-control-sm select2 classselect" name="refNaema_modif'+rowNumber+'"   id="idrefNaema_modif'+rowNumber+'" required> <option value="" selected> Sélectionner...</option> '+
+						opt+
+						'</select></td>';
+				
+					var newCell3 = newRow.insertCell(2);		    
+					newCell3.innerHTML = '<td style="width: 30%;"> <select required class="select2 form-control select2-multiple selectproduit" name="refProduit_modif'+rowNumber+'[]" required   id="idrefProduit_modif'+rowNumber+'" multiple="multiple" data-placeholder="Selectionner...">  </select> </td>';
+
+					var newCell4 = newRow.insertCell(3);
+					newCell4.innerHTML = ' <td style="width: 10%;"> <label> Secondaire </label></td>';
+				
+					var newCell5 = newRow.insertCell(4);
+					newCell5.innerHTML = ' <td> <input  id="idBtnSupprimerDirigeant_modif' + rowNumber + '"  type="button" value="Supprimer" ></td>';
+					
+					$('.selectproduit').select2();
+					$('#idrefNaema_modif'+rowNumber).select2();
+
+					$('#idrefNaema_modif'+rowNumber).change(function(){
+						
+						document.getElementById("idrefProduit_modif"+rowNumber).innerHTML = "";
+						{% for tag in produits %}
+							
+							if ($('#idrefNaema_modif'+rowNumber).val() == '{{ tag.naema.id }}') {
+							let opt = document.createElement('option');
+							opt.value = "{{ tag.id }}";
+							opt.innerHTML = "{{ tag.id }}"+"-"+"{{ tag.libelle }}";
+							document.getElementById("idrefProduit_modif"+rowNumber).add(opt);
+							}
+
+						{% endfor %}			
+
+					});
+
+
+
+					newRow.querySelector('#idBtnSupprimerDirigeant_modif'+rowNumber).addEventListener("click",()=>{
+						newRow.remove();
+					});
+
+			});
+
+			$('#idrefNaema_modif1').select2();
+			$('.selectproduit').select2();
+
+			$('#idrefNaema_modif1').change(function(){
+				
+				document.getElementById("idrefProduit_modif1").innerHTML = "";
+				{% for tag in produits %}
+					
+					if ($('#idrefNaema_modif1').val() == '{{ tag.naema.id }}') {
+						let opt = document.createElement('option');
+						opt.value = "{{ tag.id }}";
+						opt.innerHTML = "{{ tag.id }}"+"-"+"{{ tag.libelle }}";
+						document.getElementById("idrefProduit_modif1").add(opt);
+					}
+
+				{% endfor %}			
+
+			});
+
 
 
 		});

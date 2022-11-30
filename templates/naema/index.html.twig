@@ -7,7 +7,6 @@
 {% block body %}
 
 
-<a href="{{ path('naema_new') }}"  class="btn btn-primary btn-sm  mt-lg-3">+Ajouter nouvelle activité</a>
 
 <div class="box ">
 	<div class="box-header">
@@ -32,8 +31,8 @@
                     <div class="col-12">
                         <div class="card">
                         <div class="card-body">                                
-                            <table class="table" id="naemaList">
-                                <thead>
+                            <table class="table table table-bordered table-striped" id="naemaList">
+                                <thead class="tr_entete">
                                     <tr>
                                         <th>Code activité</th>
                                         <th>Libelle</th>
@@ -44,10 +43,10 @@
                                 <tbody>
                                 {% for n_a_e_m_a in n_a_e_m_as %}
                                     <tr>
-                                        <td>{{ n_a_e_m_a.id }}</td>
+                                        <td style="width: 15%;">{{ n_a_e_m_a.id }}</td>
                                         <td>{{ n_a_e_m_a.libelle }}</td>
                                         <td>
-                                            <a  href="{{ path('n_a_e_m_a_edit', {'id': n_a_e_m_a.id}) }}"> <i class="fas fa-pen btn btn-outline-primary btn-sm " title="Modifier"></i> </a>
+                                            <a  href="{{ path('n_a_e_m_a_edit', {'id': n_a_e_m_a.id}) }}">   <i class="fas fa-edit"></i></a>
                                         </td>
                                         <td>
                                             <!--<a  href="{{ path('produitByNaemaList', {'id': n_a_e_m_a.id}) }}" id="showProducts" data-id="" data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -75,8 +74,12 @@
 		</div>
 			
     </div>
-</div>
 
+    <div class="box-footer">
+        <a href="{{ path('naema_new') }}"  class="btn btn-outline-secondary">+Ajouter nouvelle activité</a>
+
+    </div>
+</div>
 
                                         
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -103,7 +106,7 @@
                                 <td>{{ ref_produit.libelle }}</td>
                                 <td>
                                     <a href="{{ path('app_ref_produits_show', {'id': ref_produit.id}) }}"></a>
-                                    <a href="{{ path('app_ref_produits_edit', {'id': ref_produit.id}) }}"></a>
+                                    <a href="{{ path('app_ref_produits_edit', {'id': ref_produit.id}) }}">  <i class="fas fa-edit"></i></a>
                                 </td>
                             </tr>
                         {% else %}

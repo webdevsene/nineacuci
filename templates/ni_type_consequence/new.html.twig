@@ -1,0 +1,46 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}New NiTypeConsequence{% endblock %}
+
+{% block body %}
+
+
+<div class="box mt-lg-5">
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                  
+                   Ajouter un type de conséquences
+				</a>
+			</li>
+
+          
+
+		</ul>
+	</div>
+
+	<div class="box-content padded">
+
+		<div class="tab-content">            
+			<div class="example-wrapper ">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                        <div class="card-body">
+                            {{ include('ni_type_consequence/_form.html.twig') }}
+  
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+								
+        <a href="{{ path('app_ni_type_consequence_index') }}">Liste des types de conséquences</a>
+		</div>
+			
+    </div>
+</div>
+
+{% endblock %}

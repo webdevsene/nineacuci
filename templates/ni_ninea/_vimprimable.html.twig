@@ -154,7 +154,17 @@
                                                         <th>REGION</th>
                                                         <td scope="row" colspan="3">
                                                             {% if some.niCoordonnees|length - 1 != -1 %}
-                                                                {{some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}
+                                                                {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh %}
+                                                                    {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID %}
+                                                                        {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+                                                                            {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD %}
+                                                                                {{some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.libelle}}
+                                                                                
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                    
+                                                                {% endif %}
                                                             {% endif %}
                                                         </td>
                                                     </tr>
@@ -162,7 +172,14 @@
                                                         <th>DEPARTEMENT</th>
                                                         <td scope="row" colspan="3">
                                                             {% if some.niCoordonnees|length - 1 != -1 %}
-                                                                {{some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}
+                                                                {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh %}
+                                                                    {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID %}
+                                                                        {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+                                                                            {{some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                    
+                                                                {% endif %}                                                            
                                                             {% endif %}
                                                         </td>
                                                     </tr>
@@ -170,7 +187,13 @@
                                                         <th>COMMUNE/ARRONDISSEMENT/VILLE</th>
                                                         <td scope="row" colspan="3">
                                                             {% if some.niCoordonnees|length - 1 != -1 %}
-                                                                {{some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.libelle}}
+
+                                                                {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh %}
+                                                                    {% if some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID %}
+                                                                          {{some.niCoordonnees[some.niCoordonnees|length - 1].qvh.qvhCACRID.cacrCAVID.libelle}}
+                                                                    {% endif %}
+                                                                    
+                                                                {% endif %}
                                                             {% endif %}
                                                         </td>
                                                     </tr>
@@ -225,7 +248,8 @@
                                                     </tr>
                                                     <tr>
                                                         <th>ACTIVITE EXERCEES</th>
-                                                        <td scope="row" colspan="3">
+                                                        <td scope="row" colspan="3" >
+                                                            {{some.niLibelleactiviteglobale ~" " }}
                                                             {% if some.ninActivite|length - 1 != -1 %}
                                                                 {{some.ninActivite[some.ninActivite|length - 1].ninAutact}}
                                                             {% endif %}
@@ -235,18 +259,21 @@
                                                         <th >{{doc_create_txt | upper}}</th>
                                                         <td scope="row" colspan="3">{{doc_create}}</td>
                                                     </tr>
-                                                    {% if doc_create_txt == "RCCM" %}
-                                                        
+                                                    
+                                                    <tr>
+                                                        <th >{{ some.niTypedocument.id == 1 ? "Date d’immatriculation au RCCM"|upper : "Date de délivrance du document de création"|upper }}</th>
+                                                        <td scope="row" colspan="3">{{date_document is not null ? date_document|date('d/m/Y') : '' }}</td>
+                                                    </tr>
+
+                                                    {% if some.ninRegcomModif is not null %}
                                                         <tr>
-                                                            <th >{{ doc_rccm_txt|upper }}</th>
-                                                            <td scope="row" colspan="3">{{some.ninDatreg ? some.ninDatreg|date('d/m/Y') : '' }}</td>
+                                                            <th >{{ "N° document de modification" |upper }}</th>
+                                                            <td scope="row" colspan="3">{{ some.ninRegcomModif }}</td>
                                                         </tr>
-                                                    {% else %}
-                                                        <!--<tr>
-                                                            <th >DATE DE DELIVRANCE DU DOCUMENT DE CREATION</th>
-                                                            <td scope="row" colspan="3">{{some.updatedAt ? some.updatedAt|date('d/m/Y') : '' }}</td>
+                                                        <tr>
+                                                            <th >{{ "Date du document de modification" |upper }}</th>
+                                                            <td scope="row" colspan="3">{{some.ninDatregModif ? some.ninDatregModif|date('d/m/Y') : '' }}</td>
                                                         </tr>
-                                                        -->
                                                         
                                                     {% endif %}
                                                     <tr>
@@ -343,7 +370,7 @@
                                                 <a href="#" class="font-size-18">
 
                                                     {#Dakar, le {{ some.ninCreation ? some.ninCreation|date('d-m-Y H:i') : 'Unavailable' }}#}
-                                                    Dakar, le {{ "now"|date('d/m/Y') }}
+                                                    JuputerX, le {{ "now"|date('d/m/Y') }}
                                                 </a> 
                                             </div>
                                         </div>

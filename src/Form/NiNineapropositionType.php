@@ -65,7 +65,7 @@ class NiNineapropositionType extends AbstractType
 				'class' => NiStatut::class,
 				'placeholder'=>'Sélectionner ...',
 				'choice_label' => 'statLibelle',
-				'attr'=>array('class'=>'form-control  form-control-sm mt-2 classselect'),
+				'attr'=>array('class'=>'form-control  form-control-sm mt-2 '),
 				'required'=>true,
 				'label'=>'Statut ',
 			])

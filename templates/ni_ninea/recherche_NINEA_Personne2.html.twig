@@ -178,33 +178,36 @@
                                                                         <th>Raison sociale</th>
                                                                         <th>Enseigne</th>
                                                                         <th>Etat</th>
-                                                                    
-                                                                        
+                                                                                                                                            
                                                                     </tr>
                                                                 </thead>
                                                             
                                                                 <tbody>
                                                                         {% for tag in ninineas %}
-                                                                            <tr>
-                                                                                <td>{{ tag.ninNinea|length>9 ? tag.ninNinea:tag.ninNinea ~"0000" }}</td>
-                            
-                                                                                <td> 
-                                                                                  {% if tag.ninEtat == 0 %}
-                                                                                    <input type="radio" name="nineamere" id="idNineamere" value="{{ tag.ninNinea}}">
-                                                                                  {% endif %}
+                                                                            {% if tag.formeJuridique.id == 10 %}
                                                                                 
-                                                                                </td>
-                                                                                <td>{{ tag.ninNinea }}</td>
-                                                                                <td style=" word-break: break-all;">
-                                                                                    {% if tag.formeJuridique.niFormeunite.id ==  21 or tag.formeJuridique.niFormeunite.id ==  22 %}
-                                                                                        {{ tag.niPersonne.ninRaison }}
-                                                                                    {% elseif tag.formeJuridique.niFormeunite.id ==  11 or tag.formeJuridique.niFormeunite.id ==  12 %} 
-                                                                                            {{ tag.niPersonne.ninNom }} {{ tag.niPersonne.ninPrenom }} 
-                                                                                    {% endif %}
-                                                                                </td>
-                                                                                <td style=" word-break: break-all; width: 40%;">{{ tag.ninEnseigne }}</td>
-                                                                                <td>{{tag.ninEtat != 0 ? "Activé":"Suspendue"}}</td>
-                                                                            </tr>
+                                                                                <tr>
+                                                                                    <td>{{ tag.ninNinea|length>9 ? tag.ninNinea:tag.ninNinea ~"0000" }}</td>
+                                
+                                                                                    <td> 
+                                                                                        {% if tag.ninEtat == 1 %}
+                                                                                        <input type="radio" name="nineamere" id="idNineamere" value="{{ tag.ninNinea}}">
+                                                                                        {% endif %}
+                                                                                    
+                                                                                    </td>
+                                                                                    <td>{{ tag.ninNinea }}</td>
+                                                                                    <td style=" word-break: break-all;">
+                                                                                        {% if tag.formeJuridique.niFormeunite.id ==  21 or tag.formeJuridique.niFormeunite.id ==  22 %}
+                                                                                            {{ tag.niPersonne.ninRaison }}
+                                                                                        {% elseif tag.formeJuridique.niFormeunite.id ==  11 or tag.formeJuridique.niFormeunite.id ==  12 %} 
+                                                                                                {{ tag.niPersonne.ninNom }} {{ tag.niPersonne.ninPrenom }} 
+                                                                                        {% endif %}
+                                                                                    </td>
+                                                                                    <td style=" word-break: break-all; width: 40%;">{{ tag.ninEnseigne }}</td>
+                                                                                    <td>{{tag.ninEtat != 0 ? "Activé":"Suspendue"}}</td>
+                                                                                </tr>
+                                                                            {% endif %}
+
                                             
                                                                 
                                                                         {% endfor %}

@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity ;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NiPersonneRepository::class)
+ * @Gedmo\Loggable
  */
 class NiPersonne
 {
@@ -24,33 +26,39 @@ class NiPersonne
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      * @Assert\Length(max=100,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned 
      */
     private $ninNom;
 
     /**
      * @ORM\Column(type="string", length=100 , nullable=true)
      *  @Assert\Length(max=100,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned 
      */
     private $ninPrenom;
 
    
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninDateNaissance;
 
     /**
      * @ORM\Column(type="string",  nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninLieuNaissance;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninCNI;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninDateCNI;
 
@@ -58,6 +66,7 @@ class NiPersonne
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
      *  @Assert\Length(max=100,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned 
      */
     private $ninSigle;
 
@@ -75,17 +84,20 @@ class NiPersonne
 
     /**
      * @ORM\Column(type="text",  nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninRaison;
 
 
     /**
      * @ORM\ManyToOne(targetEntity=NiSexe::class, inversedBy="niPersonnes")
+     * @Gedmo\Versioned 
      */
     private $ninSexe;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $adresse;
 
@@ -112,12 +124,14 @@ class NiPersonne
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninTelephone;
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true)
      *  @Assert\Length(max=200,maxMessage="MaxErrorMessage")
+     * @Gedmo\Versioned 
      */
     private $ninEmailPersonnel;
 

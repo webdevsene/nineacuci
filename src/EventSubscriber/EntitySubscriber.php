@@ -1045,11 +1045,9 @@ class EntitySubscriber implements EventSubscriber
 
     public function convertValueToString($value): string
     {
-        if($value instanceof \DateTime){
-            $value = $value->format(self::DATETIME_FORMAT);
-        }
+      
 
-        return (string) $value;
+        return "";
     }
 
     /**

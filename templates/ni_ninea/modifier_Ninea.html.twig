@@ -1,5 +1,5 @@
 {% extends 'ninea.html.twig' %}
-{% block title %}New NiNineaproposition 
+{% block title %}Modification 
 {% endblock %} 
 {% block stylesheets %} 
 
@@ -74,31 +74,65 @@
 {% endblock %}
 {% block body %}
 
-	<form name="FormEntete" method="post" action="{{path('app_temp_n_i_ninea_new',{id:ninea.id})}}">
+	<div class="row mr-5" >
+
 	
-		<div class="row">
-			<div class="col-xl-12">
-				<div>
-					<div class="accordion mb-3" id="accordionExample">
-						<div class="accordion-item">
-							<h2 class="accordion-header" id="headingOne">
-								<button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-									<h5 class="font-size-14">Demande de modification</h5>
-								</button>
-								
-							</h2>
-							<div id="collapseOne" class="accordion-collapse  " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-								<div class="accordion-body">
-									<div class="text-muted">
-										<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
-										<div class="row mb-0">
-											<div class="col-lg-12">
-												<fieldset class=" p-2 fieldcolor ">
-													<div class="row">
-														<div class="col-lg-5">
-															<table style="width: 100%;">
-															
-																{% if ninea.ninNinea is not null %}
+		<div class="col-lg-12 mt-4" align="right">
+			<a type="button" class="btn btn-outline-secondary btn-sm waves-effect valider abtn" onclick="history.back()">Retourner sur à la liste </a>
+			
+			{% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
+				
+			<a type="button" id="valider" class="btn btn-outline-success btn-sm waves-effect valider abtn">Valider </a>
+			<a type="button" id="retourner" class="btn btn-outline-info btn-sm waves-effect abtn" data-bs-toggle="modal"
+										data-bs-target=".btnretour">Retourner </a>
+			<a type="button" id="rejeter" class="btn btn-outline-danger btn-sm waves-effect abtn " data-bs-toggle="modal"
+										data-bs-target=".btnrejeter">Rejeter </a>				
+			{% endif %}
+
+			
+		</div>
+	</div>
+
+
+		<div class="box mt-4">
+			<form name="FormEntete" method="post" action="{{path('app_temp_n_i_ninea_new',{id:ninea.id})}}">
+				<div class="box-header">
+					<ul class="nav nav-tabs nav-tabs-left">
+			
+						{% if demande_modification.typeDemande !=  "3"%}
+										
+							<h5 class="font-size-14">Demande de modification </h5>
+						{% else %}
+							<h5 class="font-size-14">Demande de réactivation </h5>
+						
+						{% endif %}
+					</ul>
+				</div>
+			
+				<div class="box-content padded">
+			
+					<div class="tab-content">            
+			
+						<div class="card">
+							<div class="card-body">
+				
+								{% for message in app.session.flashbag.get('message')%}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+									{{message}}
+									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>
+				
+								{% endfor %}
+									
+
+									<div class="row mb-0">
+										<div class="col-lg-12">
+											<fieldset class=" p-2 fieldcolor ">
+												<div class="row">
+													<div class="col-lg-5">
+														<table style="width: 100%;">
+														
+															{% if ninea.ninNinea is not null %}
 																		<tr>
 																			<td style="width: 40%;">
 																				<label  id="id_Ninea" for="basicpill-firstname-input" class=" TXT"> <b><u>NINEA:</u></b>  <span style="color:red;">*</span>
@@ -111,392 +145,219 @@
 																		</tr>
 																		
 																{% endif %}
-																<tr>
+															<tr>
 																<td style="width: 40%;">
-																	<label for="" class="TXT"> <b><u> Forme unité : </u></b>   </label>	
-																	<span style="color:red;">*</span>	
-																	</td>
-																<td style="width: 60%;">
-																	<select name="formeunite" disabled required class="form-control form-control-sm classselect" id="idformeunite">
-																			{% for tag in formeunites %}
-																					{% if   ninea.formeJuridique.niFormeunite.id == tag.id  %}										
-																					<option  value="{{ tag.id}}" selected >{{ tag.libelle}}</option>
-																					{% else %}
-																					<option  value="{{ tag.id}}">{{ tag.libelle}}</option>
-																					{% endif %}
-																			{% endfor %}
-																	</select>
-																	<span style="color: red;" id="ninpersonne"></span>
+																	<label for="" class="TXT"> <b><u> Nom commercial  </u></b>   </label>	
 																</td>
-																</tr>
-							
+																<td style="width: 60%;">
+																	<input name="commercial" disabled   value="{{ninea.nomCommercial}}" type="text" id="idcommercial"  class="form-control form-control-sm">
+																</td>
+															</tr>
+															<tr>
+															<td style="width: 40%;">
+																<label for="" class="TXT"> <b><u> Forme unité : </u></b>   </label>	
+																<span style="color:red;">*</span>	
+																</td>
+															<td style="width: 60%;">
+																<select disabled name="formeunite" required class="form-control form-control-sm classselect" id="idformeunite">
+																		{% for tag in formeunites %}
+																				{% if   ninea.formejuridique.niFormeunite.id == tag.id  %}										
+																				<option  value="{{ tag.id}}" selected >{{ tag.libelle}}</option>
+																				{% else %}
+																				<option  value="{{ tag.id}}">{{ tag.libelle}}</option>
+																				{% endif %}
+																		{% endfor %}
+																</select>
+																<span style="color: red;" id="ninpersonne"></span>
+															</td>
+															</tr>
+						
+															<tr>
+																<td style="width: 40%;">
+																<label class="TXT" for="basicpill-firstname-input"> <b><u> Régime juridique : </u></b>
+																<span style="color:red;">*</span>
+																	</label>
+																</td>
+																<td style="width: 60%;">
+																	<select disabled name="formejuridique" required id="idFormejuridique" class="form-control form-control-sm classselect">
+																		{% for tag in ninea.formejuridique.niFormeunite.regimeJuridique %}
+																				{% if   ninea.formejuridique.id == tag.id  %}										
+																				<option  value="{{ tag.id}}" selected>{{ tag.fojLibelle}}</option>
+																				{% else %}
+																				<option  value="{{ tag.id}}">{{ tag.fojLibelle}}</option>
+																				{% endif %}
+																		{% endfor %}											
+																	</select>
+																	<span style="color: red;" id="ninformejuridique"></span>
+																</td>
+
+															</tr>
+															<tr>
+																<td style="width: 40%;">
+																<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
+																	</label>
+																</td>
+															<td style="width: 60%;">
+																<select name="ninStatut" disabled required id="idninStatut" class="form-control form-control-sm classselect">
+																		{% if ninea.ninStatut is not null %}	
+																		{% if ninea.ninStatut.id == 1  %}	
+																			<option  value="1" selected >	{{ninea.ninStatut is not null ? ninea.ninStatut.statLibelle : ""}}</option>	
+																			<option  value="2"  >ETS SECONDAIRE</option>			
+																		{% else %}	
+																				<option  value="2" selected >	{{ninea.ninStatut is not null ? ninea.ninStatut.statLibelle : ""}}</option>	
+																				<option  value="1"  >SIEGE</option>							
+																		{% endif %}	
+																						
+																		{% endif %}								
+																</select>
+															</td>
+
+															</tr>
+															
+															
+						
+														
+														</table>
+													</div>
+						
+													<div class="col-lg-7">
+														<table style="width: 100%;" id="tbdocuments">
 																<tr>
 																	<td style="width: 40%;">
-																	<label class="TXT" for="basicpill-firstname-input"> <b><u> Régime juridique : </u></b>
-																	<span style="color:red;">*</span>
-																		</label>
+																		<label for="" class="TXT"> <b><u> Enseigne </u></b>   </label>	
+																			
 																	</td>
 																	<td style="width: 60%;">
-																		<select name="formejuridique" disabled required id="idFormejuridique" class="form-control form-control-sm classselect">
-																			{% for tag in ninea.formeJuridique.niFormeunite.regimeJuridique %}
-																					{% if   ninea.formeJuridique.id == tag.id  %}										
-																					<option  value="{{ tag.id}}" selected>{{ tag.fojLibelle}}</option>
-																					{% else %}
-																					<option  value="{{ tag.id}}">{{ tag.fojLibelle}}</option>
-																					{% endif %}
-																			{% endfor %}											
-																		</select>
-																		<span style="color: red;" id="ninformejuridique"></span>
+																		<input name="enseigne" disabled type="text" value="{{ninea.ninEnseigne}}" id="idenseigne"  class="form-control form-control-sm">
 																	</td>
-
 																</tr>
 																
+																				
+															</table>
+															<table style="width: 100%;" id="tb_documents">
+															<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Type document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<select name="typdocument" disabled required class="form-control form-control-sm classselect" id="idtypdocument">
+																			<option  value=""  >Séléctionner...</option>			
+																			{% for tag in  ninea.formejuridique.typeDocument %}
+																			
+																			{% if ninea.niTypedocument != null %}
+																				{% if ninea.niTypedocument.id == tag.id %}
+																					<option  value="{{tag.id}}" selected >{{tag.libelle}}</option>
+																				{% else %}	
+																						<option  value="{{tag.id}}"  >{{tag.libelle}}</option>	
+																					{% endif %}		
+																			{% else  %}	
+																				<option  value="{{tag.id}}"  >{{tag.libelle}}</option>	
+																			{% endif %}		
+																			{% endfor %}
+
+																	</select>
+																		
+																	</td>
+																</tr>
 																<tr>
 																	<td style="width: 40%;">
-																	<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
-																		</label>
+																		<label for="" class="TXT"> <b><u> Numéro du document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
 																	</td>
-																<td style="width: 60%;">
-																	<select name="ninStatut" disabled required id="idninStatut" class="form-control form-control-sm classselect">
-																				
-																			{% if ninea.ninStatut == "1"  %}	
-																				<option  value="1" selected >SIEGE</option>	
-																				<option  value="2"  >ETS SECONDAIRE</option>			
-																			{% else %}	
-																					<option  value="2" selected >ETS SECONDAIRE</option>	
-																					<option  value="1"  >SIEGE</option>							
-																			{% endif %}								
-																	</select>
-																</td>
-
-																</tr>
-																
-																{% if ninea.ninStatut and ninea.ninStatut == "2" %}
-																		<tr>
-																			<td style="width: 40%;">
-																				<label  id="labelmere" for="basicpill-firstname-input" class=" TXT"> <b><u>NINEA mère :</u></b>  <span style="color:red;">*</span>
-																				</label>
-																			</td>
-																			<td style="width: 60%;">
-																			<input type="text"id="inputmere" name="nineamere" value="" class="form-control form-control-sm" oninput="this.value = this.value.replace(/[^0-9,]/g, '');">
-																			<span style="color: red;" id="nineamere"></span>
-																			</td>
-																		</tr>
+																	<td style="width: 60%;">
+																	
+																		<input name="document" disabled value="{{ninea.ninNumeroDocument}}"  type="text" id="iddocument"  class="form-control form-control-sm">
+																		<span style="color: red;" id="ninreg"></span>
 																		
-																{% endif %}
-							
-																{% if ninea.statut == "r" %}
+																	</td>
+																</tr>
 																<tr>
-																	<td>
-																		<label for="" > <b><u>Motif rejet :</u></b>	</label>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u>Date du document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
 																	</td>
-																	<td> 
-																		<label for="" class="TXT">{{ninea.ninRemarque}}</label>
+																	<td style="width: 60%;">
+																		<input name="datedocument" disabled value="{{ninea.ninDateDocument|date('Y-m-d')}}" type="date" id="iddatedocument"  class="form-control form-control-sm ">
 																		
 																	</td>
 																</tr>
-															{% endif %}
-															</table>
-														</div>
-							
-														<div class="col-lg-7">
-															<table style="width: 100%;">
-																
-																{# controle sur les formes juridiques #}
-															{% if ninea.formeJuridique.id == 26  or ninea.formeJuridique.id == 96 or ninea.formeJuridique.id == 99 %}
-																{% if ninea.formeJuridique.id != 99 %}
 
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																		</td>
-																		<td style="width: 70%;">
-																			<input type="text"id="idninEnseigne" name="ninEnseigne" onkeyup="this.value=this.value.toUpperCase()" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																		</td>
-																	</tr>
-																{% endif %}
-
-																{% if ninea.ninTitrefoncier != "" %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u> Titre foncier:</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<input type="text" id="idtitrefoncier" name="nintitrefoncier" value=" {{ni_nineaproposition.ninTitrefoncier}}"
-																				class="form-control form-control-sm">
-																		</td>
-																	</tr>
-																
-																{% else %}
-																	{% if  ninea.ninBail != ""  %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Bail:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text" id="idbail" name="ninbail" value=" {{ninea.ninBail}}"
-																					class="form-control form-control-sm">
-																			</td>
-																		</tr>
-																	{% else  %}
-																	{% if  ninea.ninPermisoccuper != ""  %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Permis d'occuper:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text" id="inputpermisoccuper" name="inputpermisoccuper" value=" {{ninea.ninPermisoccuper}}"
-																					class="form-control form-control-sm">
-																			</td>
-																		</tr>
-																	{% endif %}
-																{% endif %}
-															{% endif %}
-																	
-																	
-																	
-																{% elseif ninea.formeJuridique.id == 98 or  ninea.formeJuridique.id == 94 %}
-																
-																{% elseif ninea.formeJuridique.id == "90" %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																		</td>
-																		<td style="width: 70%;">
-																			<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																		</td>
-																	</tr>
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u> Accord:</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<input type="text" id="idaccord" name="accord" value=" {{ninea.ninAccord}}"
-																				class="form-control form-control-sm">
-																		</td>
-																	</tr>
-
-																	{% elseif ninea.formeJuridique.id == 92 %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																			</td>
-																		</tr>
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Bordereau:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text" id="idbordereau" name="bordereau" value=" {{ninea.ninBordereau}}"
-																					class="form-control form-control-sm">
-																			</td>
-																		</tr>
-																	{% elseif ninea.formeJuridique.id == 29  or ninea.formeJuridique.id == 91	 %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ni_nineaproposition.ninEnseigne}}" class="form-control form-control-sm">						
-																			</td>
-																		</tr>	
-																	{% if ninea.ninRegcom != "" %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u>Régistre de commerce :</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text" id="ni_nineaproposition_ninRegcom" name="ni_nineaproposition_ninRegcom"
-																					value="{{ ninea.ninRegcom }}" class="form-control form-control-sm">
-																				<span style="color: red;" id="ninregcom"></span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u>Date de régistre :</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="date" id="idninDatreg" name="ninDatreg" value="  {{ninea.ninDatreg != null ? ninea.ninDatreg | date('Y-m-d') : ""}}"
-																					class="form-control form-control-sm" required>
-																			</td>
-																		</tr>
-																	{% else %}
-																		
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Bordereau:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text" id="idbordereau" name="bordereau" value=" {{ninea.ninBordereau}}"
-																					class="form-control form-control-sm">
-																			</td>
-																		</tr>
-																	{% endif %}
-																		
-																		
-
-																		{% elseif ninea.formeJuridique.id == 27	%}
+																{% if demande_modification.typeDemande =="2" or demande_modification.typeDemande =="3" %}
 																			<tr>
 																				<td style="width: 30%;">
-																					<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
+																					<label class="TXT"> <b><u>RC de modification :</u></b> </label>
 																				</td>
 																				<td style="width: 70%;">
-																					<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																				</td>
-																			</tr>
-
-																		{% if ninea.ninRegcom != "" %}
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for=""> <b><u>Régistre de commerce :</u></b> </label>
-																				</td>
-																				<td style="width: 70%;">
-																					<input type="text" id="ni_nineaproposition_ninRegcom" name="ni_nineaproposition_ninRegcom"
-																						value="{{ ninea.ninRegcom }}" class="form-control form-control-sm">
+																					<input type="text" disabled value="{{ ninea.ninRegcomModif }}" id="ninRegcomModif" name="ninRegcomModif"
+																						value="" maxlength="19"	  minlength="15"   class="form-control form-control-sm mt-2 input-mask inputregcom">
 																					<span style="color: red;" id="ninregcom"></span>
 																				</td>
 																			</tr>
 																			<tr>
 																				<td style="width: 30%;">
-																					<label for=""> <b><u>Date de régistre :</u></b> </label>
+																					<label class="TXT"> <b><u>Date de RC de modification :</u></b> </label>
 																				</td>
 																				<td style="width: 70%;">
-																					<input type="date" id="idninDatreg" name="ninDatreg" value="{{ninea.ninDatreg|date('Y-m-d')}}"
+																					<input type="date" disabled id="ninDatregModif" name="ninDatregModif"  value="{{ninea.ninDatregModif != null ? ninea.ninDatregModif | date('Y-m-d') : ""}}"
 																						class="form-control form-control-sm" required>
 																				</td>
 																			</tr>
-																		{% else %}
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for=""> <b><u> Agrément:</u></b> </label>
-																				</td>
-																				<td style="width: 70%;">
-																					<input type="text" id="idagrement" name="agrement" value=" {{ninea.ninAgrement}}"
-																						class="form-control form-control-sm">
-																				</td>
-																			</tr>
-																		{% endif %}
-																		
-
-																	{% elseif ninea.formeJuridique.id == "44"  or ninea.formeJuridique.id == "48" %}
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																			</td>
-																		</tr>
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u> Agrément:</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="text" id="idagrement" name="agrement" value=" {{ninea.ninAgrement}}"
-																					class="form-control form-control-sm">
-																			</td>
-																		</tr>
-																		
-																		{% elseif ninea.formeJuridique.id == 50  or ninea.formeJuridique.id == 51 or ninea.formeJuridique.id == 52
-																			or ninea.formeJuridique.id == 54 or ninea.formeJuridique.id == 55 or ninea.formeJuridique.id == 59 %}
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																				</td>
-																				<td style="width: 70%;">
-																					<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																				</td>
-																			</tr>
-																			<tr>
-																				<td style="width: 30%;">
-																					<label for=""> <b><u> Récépissé:</u></b> </label>
-																				</td>
-																				<td style="width: 70%;">
-																					<input type="text" id="idrecepisse" name="recepisse" value=" {{ninea.ninRecepisse}}"
-																						class="form-control form-control-sm">
-																				</td>
-																			</tr>
-																		
-																		{% elseif ninea.formeJuridique.id == 32  or ninea.formeJuridique.id == 40 or ninea.formeJuridique.id == 41
-																				or ninea.formeJuridique.id == 42 or ninea.formeJuridique.id == 43 or ninea.formeJuridique.id == 45 or ninea.formeJuridique.id == 46 
-																				or ninea.formeJuridique.id == 47 or ninea.formeJuridique.id == 56 or ninea.formeJuridique.id == 97 or ninea.formeJuridique.id == 95 %}
-																				<tr>
-																					<td style="width: 30%;">
-																						<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																					</td>
-																					<td style="width: 70%;">
-																						<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																					</td>
-																				</tr>
-																				<tr>
-																					<td style="width: 30%;">
-																						<label for=""> <b><u> Arrêté ou decret ou loi:</u></b> </label>
-																					</td>
-																					<td style="width: 70%;">
-																						<input type="text" id="idarrete" name="arrete" value=" {{ ninea.ninArrete }}"
-																							class="form-control form-control-sm">
-																					</td>
-																				</tr>
-
-																{% else %}
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input"> <b><u>Enseigne : </u></b></label>
-																		</td>
-																		<td style="width: 70%;">
-																			<input type="text"id="idninEnseigne" name="ninEnseigne" value="{{ninea.ninEnseigne}}" class="form-control form-control-sm">						
-																		</td>
-																	</tr>
-																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""> <b><u>Régistre de commerce :</u></b> </label>
-																		</td>
-																		<td style="width: 70%;">
-																			<input type="text" id="ni_nineaproposition_ninRegcom" name="ni_nineaproposition_ninRegcom"
-																				value="{{ ninea.ninRegcom }}" class="form-control form-control-sm">
-																			<span style="color: red;" id="ninregcom"></span>
-																		</td>
-																	</tr>
-																		<tr>
-																			<td style="width: 30%;">
-																				<label for=""> <b><u>Date de régistre :</u></b> </label>
-																			</td>
-																			<td style="width: 70%;">
-																				<input type="date" id="idninDatreg" name="ninDatreg" value="{{ninea.ninDatreg|date('Y-m-d')}}"
-																					class="form-control form-control-sm" required>
-																			</td>
-																		</tr>
-																		
 																{% endif %}
-																	
+
+
+
+																{% if demande_modification.typeDemande == "3" %}
+																			<tr>
+																				<td style="width: 30%;">
+																					<label for=""> <b><u>Document de réactivation :</u></b> </label>
+																				</td>
+																				<td style="width: 70%;">
+																					<input type="text" value="{{ ninea.ninRegcomReprise }}" readonly id="ninRegcomReprise" name="ninRegcomReprise"
+																						value="" maxlength="19"	  minlength="15"   class="form-control form-control-sm mt-2 input-mask bg-soft bg-success inputregcom">
+																					<span style="color: red;" id="ninregcom"></span>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="width: 30%;">
+																					<label for=""> <b><u>N° document de réactivation :</u></b> </label>
+																				</td>
+																				<td style="width: 70%;">
+																					<input type="date" readonly id="ninDatregReprise" name="ninDatregReprise"  value="{{ninea.ninDatregReprise != null ? ninea.ninDatregReprise | date('Y-m-d') : ""}}"
+																						class="form-control form-control-sm bg-soft bg-success" required>
+																				</td>
+																			</tr>
+																{% endif %}	
+
+
 
 															</table>
-														</div>
+															
+								
 													</div>
-												</fieldset>
-												<br>
-											</div>
-											
+												</div>
+											</fieldset>
+											<br>
 										</div>
+										
 									</div>
-									
-									</div>
-								</div>
+
 							</div>
 						</div>
-						
+											
 					</div>
-					<!-- end accordion -->
+						
 				</div>
-			</div>
-			<!-- end col -->
-			
+				
+				<div class="box-footer">
+
+				</div>
+				
+			</form>
+		
 		</div>
 
-	
+
 	    <div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
 		
 			<div class="col-lg-12">
@@ -528,7 +389,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link  disabled"  id="idcoordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" >
+							<a class="nav-link  "  id="idcoordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" >
 								<span class="d-block d-sm-none">
 									<i class="fas fa-home"></i>
 								</span>
@@ -538,7 +399,7 @@
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link disabled" id="idactivite" data-bs-toggle="tab" href="#activites" role="tab" >
+							<a class="nav-link " id="idactivite" data-bs-toggle="tab" href="#activites" role="tab" >
 								<span class="d-block d-sm-none">
 									<i class="fas fa-home"></i>
 								</span>
@@ -547,7 +408,7 @@
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link disabled" id="idactiviteEconomique" data-bs-toggle="tab" href="#activiteEconomiques" role="tab">
+							<a class="nav-link " id="idactiviteEconomique" data-bs-toggle="tab" href="#activiteEconomiques" role="tab">
 								<span class="d-block d-sm-none">
 									<i class="fas fa-home"></i>
 								</span>
@@ -559,7 +420,7 @@
 						{% if (ninea.formeJuridique.niFormeunite.id == 21 or ninea.formeJuridique.niFormeunite.id == 22) %} 
 
 							<li class="nav-item">
-								<a class="nav-link inactive_tab1" id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
+								<a class="nav-link " id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
 									<span class="d-block d-sm-none">
 										<i class="fas fa-home"></i>
 									</span>
@@ -575,25 +436,231 @@
 						<div	class="tab-pane active" id="personne" role="tabpanel">
 
 							
-							{% if ninea.niPersonne is not null  %} 
+							{% if ninea.tempNiPersonnes[0] is not null  %} 
 								<fieldset class=" border  p-2 ">
 											{% if (ninea.formeJuridique.niFormeunite.id == 11) or  (ninea.formeJuridique.niFormeunite.id == 12) %}
 												<div id="idPPhysique">
 													<div class="row">
-														<div class="col-lg-6 ">
+													    <div class="col-lg-4 ">
 															<fieldset class="border p-2">
-															<legend class="w-auto float-none p-2">Anciennes données</legend>	
+															<legend class="w-auto float-none p-2"></legend>	
+															<br>
 																<table style="width: 100%;">
 																	<tr>
 																		<td style="width: 50%;">
 																			<label for="" class="TXT mt-2"><b><u>Civilité : </u></b></label>
 																			<span style="color: red;">*</span>
 																		</td>
+																		
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="" class="TXT mt-2"><b><u>Prénom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="" class="TXT mt-2"><b><u>Nom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""  class="TXT mt-2"><b><u>Sexe : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="" class="TXT mt-2"><b><u>Date de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="" class="TXT mt-2"><b><u>Lieu de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		
+																	</tr>
+																	
+																</table>
+																<table style="width: 100%;" class="mt-2">
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+																</table>
+										
+																<div id="tableCni_personne" class="mt-2">
+																	<table  style="width: 100%;">
+																		<tr id="trcni">
+																			<td style="width: 50%;">
+																				<label for="" class="TXT"> <b><u>CNI : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																		
+																		</tr>
+																		
+																		<tr >
+																			<td style="width: 30%;">
+																				<label for="" class="TXT mt-2" id="labelconfirmcni"> <b><u>Confirmation CNI : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			
+																		</tr>
+																		<tr id="trcni" class="mt-2">
+																			<td style="width: 30%;">
+																				<label for="" class="TXT mt-2"><b><u>Date de délivrance  : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			
+																		</tr>
+																	</table>
+																</div>
+																<div  id="tablePassport_personne" class="mt-2"> 
+																	<table style="width: 100%;">
+																		<tr id="trPassport">
+																			<td style="width: 50%;">
+																				<label for="" class="TXT ">	<b><u>Passport : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			
+																		</tr>
+																		<tr >
+																			<td style="width: 30%;">
+																				<label for="" class="TXT mt-2"  id="labelconfirmpassport"> <b><u>Confirmation PP : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			
+																		</tr>
+																		<tr id="trDatePassport">
+																			<td style="width: 30%;">
+																				<label for="" class="TXT mt-2"><b><u>Date du passport  : </u></b></label>
+																			</td>
+																			
+																		</tr>
+																	</table>
+																</div>
+																
+																<table style="width:100% ;" class="mt-2">
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for="" class="TXT mt-2"><b><u>Email : </u></b></label>
+																		</td>
+																		
+																	</tr>
+										
+																</table>
+
+                                                                <hr class="dotted">
+                                                                <table style="width: 100%;">
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																		</td>
+										
+																		
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+
+																		</td>
+																		
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+																		</td>
+																	
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT"><b><u>Commune/Ville/Arrondissement : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+										
+																	<tr>
+																		<td>
+																			<label for="basicpill-firstname-input" class="TXT">	<b><u>Com d'arr/Communauté rurale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+																	<tr>
+										
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input" class="TXT">
+																				<b><u>Quartier/Village/Hameau : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>	
+																	<tr>				
+																		<td style="width: 30%;">
+																			<label for="basicpill-firsAdresse complète:tname-input" class="TXT">
+																				<b><u>Adresse domicile : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
+
+																</table>
+																		
+															</fieldset>
+															
+														</div>
+														<div class="col-lg-4 ">
+															<fieldset class="border p-2">
+															<legend class="w-auto float-none p-2">Anciennes données</legend>	
+																<table style="width: 100%;">
+																	<tr>
+																		
 																		<td style="width: 40%;">
 																			<select disabled class="form-control form-control-sm classselect mt-2" name="civilite" id="idCivilite" required>
 																				<option value=""  selected>Sélectionner ...			</option>
 																				{% for tagciv in civilites %}
-																					{% if tagciv.id == ninea.niPersonne.civilite.id %}
+																					{% if tagciv.id == ninea_anc.niPersonne.civilite.id %}
 																							<option value="{{ tagciv.id}}" selected>	{{ tagciv.civlibelle}}</option>
 																						{% else %}
 																							<option value="{{ tagciv.id}}" >	{{ tagciv.civlibelle}}</option>
@@ -605,37 +672,28 @@
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Prénom : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" disabled name="prenom" maxlength="100" id="prenom" required value="{{ninea.niPersonne.ninPrenom}}" class="form-control form-control-sm classselect mt-2"
+																			<input type="text" disabled name="prenom" maxlength="100" id="prenom" required value="{{ninea_anc.niPersonne.ninPrenom}}" class="form-control form-control-sm classselect mt-2"
 																				onkeyup="this.value=this.value.toUpperCase()">
 																			<span style="color: red;" id="ninprenom"></span>
 																		</td>
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Nom : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" disabled name="nom" id="idnom" maxlength="100" class="form-control form-control-sm mt-2" required value="{{ninea.niPersonne.ninNom}}">
+																			<input type="text" disabled name="nom" id="idnom" maxlength="100" class="form-control form-control-sm mt-2" required value="{{ninea_anc.niPersonne.ninNom}}">
 																			<span style="color: red;" id="ninnom"></span>
 																		</td>
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for=""  class="TXT mt-2"><b><u>Sexe : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
 																			<select  disabled class="form-control  form-control-sm classselect mt-2" name="sexe" id="idsexe" aria-readonly="true">
 																				{% for tags in sexes %}
-																					{% if tags.id == ninea.niPersonne.ninSexe.id %}
+																					{% if tags.id == ninea_anc.niPersonne.ninSexe.id %}
 																						<option value="{{ tags.id }}" selected > {{ tags.libelle}}</option>
 																					{% else %}
 																						<option value="0" > Sélectionner ...</option>
@@ -648,24 +706,17 @@
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Date de naissance : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input  disabled type="date" name="datenais" id="idDatenais"  min="1900-01-01" required value="{{ninea.niPersonne.ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm mt-2">
+																			<input  disabled type="date" name="datenais" id="idDatenais"  min="1900-01-01" required value="{{ninea_anc.niPersonne.ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm mt-2">
 																			<span style="color: red;" id="nindatenais"></span>
 																		</td>
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Lieu de naissance : </u></b></label>
-																			<span style="color: red;">*</span>
-
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" disabled name="lieunais" id="idlieunais" maxlength="100"  value="{{ninea.niPersonne.ninLieuNaissance}}"  class="form-control form-control-sm mt-2" required>
+																			<input type="text" disabled name="lieunais" id="idlieunais" maxlength="100"  value="{{ninea_anc.niPersonne.ninLieuNaissance}}"  class="form-control form-control-sm mt-2" required>
 																			<span style="color: red;" id="ninlieunais"></span>
 																		</td>
 																	</tr>
@@ -673,16 +724,13 @@
 																</table>
 																<table style="width: 100%;" class="mt-2">
 																	<tr>
-																		<td style="width: 50%;">
-																			<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
 																			<select disabled class="form-control form-control-sm select2 classselect" name="nationalite"   id="idnationalite_personne" required>
 																				<option value="" selected>
 																					Sélectionner</option>
 																				{% for tags in nationalites %}
-																				   {% if ninea.niPersonne.nationalite.id == tags.id %}
+																				   {% if ninea_anc.niPersonne.nationalite.id == tags.id %}
 																					<option value="{{tags.id}}"  selected >
 																						{{tags.id}}-{{ tags.libelle}}</option>
 																					{% else %}
@@ -696,15 +744,12 @@
 																	</tr>
 																</table>
 										
-																<div id="tableCni_personne" class="mt-2">
+																<div id="tableCni_personne_2" class="mt-2">
 																	<table  style="width: 100%;">
 																		<tr id="trcni">
-																			<td style="width: 50%;">
-																				<label for="" class="TXT"> <b><u>CNI : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 50%;" >
-																				<input disabled  type="password" readonly onfocus="this.removeAttribute('readonly');" name="cni" id="idcni" value="{{ninea.niPersonne.ninCNI}}" maxlength = '14'  required
+																				<input disabled  type="password" readonly onfocus="this.removeAttribute('readonly');" name="cni" id="idcni" value="{{ninea_anc.niPersonne.ninCNI}}" maxlength = '14'  required
 																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
 																					 class="form-control  form-control-sm">
 																				<span style="color: red;" id="nincni"></span>
@@ -712,50 +757,38 @@
 																		</tr>
 																		
 																		<tr >
-																			<td style="width: 30%;">
-																				<label for="" class="TXT mt-2" id="labelconfirmcni"> <b><u>Confirmation CNI : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 50%;" >
 																				<input disabled type="text" name="confirm_cni" id="idConfirmcni" required class="form-control form-control-sm  mt-2" 
 																					maxlength = '14'  onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
-																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="{{ninea.niPersonne.ninCNI}}" >
+																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="{{ninea_anc.niPersonne.ninCNI}}" >
 																				<span style="color: red;" id="ninconfcni"></span>
 																			</td>
 																		</tr>
 																		<tr id="trcni" class="mt-2">
-																			<td style="width: 30%;">
-																				<label for="" class="TXT mt-2"><b><u>Date de délivrance  : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 70%;" >
-																				<input disabled type="date" name="datecni" id="idDatecni" value="{{ninea.niPersonne.ninDateCNI|date("Y-m-d") }}" min="1901-01-01" class="form-control form-control-sm mt-2">
+																				<input disabled type="date" name="datecni" id="idDatecni" value="{{ninea_anc.niPersonne.ninDateCNI|date("Y-m-d") }}" min="1901-01-01" class="form-control form-control-sm mt-2">
 																				<span style="color: red;" id="ninDatecni"></span>
 																			</td>
 																		</tr>
 																	</table>
 																</div>
-																<div  id="tablePassport_personne" class="mt-2"> 
+																<div  id="tablePassport_personne_2" class="mt-2"> 
 																	<table style="width: 100%;">
 																		<tr id="trPassport">
-																			<td style="width: 50%;">
-																				<label for="" class="TXT ">	<b><u>Passport : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 70%;">
-																				<input type="password" name="passport" id="idpassport" maxlength = '14' oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
+																				<input type="password" value="{{ninea_anc.niPersonne.ninCNI}}" name="passport" id="idpassport" maxlength = '14' oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
 																				class="form-control form-control-sm classselect" onkeyup="this.value=this.value.toUpperCase()"  onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
 																				readonly onfocus="this.removeAttribute('readonly');">
 																				<span style="color: red;" id="ninpassport"></span>
 																			</td>
 																		</tr>
 																		<tr >
-																			<td style="width: 30%;">
-																				<label for="" class="TXT mt-2" id="labelconfirmpassport"> <b><u>Confirmation PP : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 70%;" >
-																				<input type="text" name="confirm_passport" id="idConfirmpassport"  onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																				<input type="text" name="confirm_passport" value="{{ninea_anc.niPersonne.ninCNI }}" id="idConfirmpassport"  onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
 																					class="form-control form-control-sm  mt-2" 
 																					maxlength = '14'  onkeyup="this.value=this.value.toUpperCase()"
 																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="" >
@@ -763,11 +796,9 @@
 																			</td>
 																		</tr>
 																		<tr id="trDatePassport">
-																			<td style="width: 30%;">
-																				<label for="" class="TXT mt-2"><b><u>Date du passport  : </u></b></label>
-																			</td>
+																			
 																			<td style="width: 70%;">
-																				<input type="date"  name="datepassport" id="idDatepassport" min="1901-01-01" class="form-control form-control-sm mt-2 classselect">
+																				<input type="date" value="{{ninea_anc.niPersonne.ninDateCNI|date("Y-m-d") }}"  name="datepassport" id="idDatepassport" min="1901-01-01" class="form-control form-control-sm mt-2 classselect">
 																				<span style="color: red;" id="nindatepassport"></span>
 																			</td>
 																		</tr>
@@ -776,23 +807,17 @@
 																
 																<table style="width:100% ;" class="mt-2">
 																	<tr>
-																		<td style="width: 50%;">
-																			<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
-																			<span style="color: red;">*</span>
-
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" disabled name="telephone" maxlength = '9' id="idtelpersonne"  value="{{ninea.niPersonne.ninTelephone}}" class="form-control form-control-sm mt-2" required
+																			<input type="text" disabled name="telephone" maxlength = '9' id="idtelpersonne"  value="{{ninea_anc.niPersonne.ninTelephone}}" class="form-control form-control-sm mt-2" required
 																			  'oninput="this.value = this.value.replace(/[^0-9,]/g, '');" '>
 																			<span style="color: red;" id="nintelpersonne"></span>
 																		</td>
 																	</tr>
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Email : </u></b></label>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="email" disabled name="email" id="idemailpersonne"  value="{{ninea.niPersonne.ninEmailPersonnel}}" class="form-control form-control-sm">
+																			<input type="email" disabled name="email" id="idemailpersonne"  value="{{ninea_anc.niPersonne.ninEmailPersonnel}}" class="form-control form-control-sm">
 																			<span style="color: red;" id="ninemail_personne"></span>
 																		</td>
 																	</tr>
@@ -802,16 +827,14 @@
                                                                 <hr class="dotted">
                                                                 <table style="width: 100%;">
 																	<tr>
-																		<td style="width: 50%;">
-																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
-																		</td>
+																	
 										
 																		<td style="width: 50%;">
 																			<select disabled class="form-control form-control-sm classselect" name="typevoie" value="" id="idtypevoie" >
-																				<option value="" selected >	Sélectionner</option>
+																				<option value="" selected >	Sélectionner...</option>
 																				{% for tagv in typevoies %}
-																				     {% if ninea.niPersonne.ninTypevoie is not null %}
-																						{% if tagv.id == ninea.niPersonne.ninTypevoie.id %}
+																				     {% if ninea_anc.niPersonne.ninTypevoie is not null %}
+																						{% if tagv.id == ninea_anc.niPersonne.ninTypevoie.id %}
 																							<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
 																						{% else %}
 																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
@@ -827,38 +850,29 @@
 																	</tr>
 										
 																	<tr>
+																		
 																		<td style="width: 50%;">
-																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
-
-																		</td>
-																		<td style="width: 50%;">
-																			<input disabled type="text" name="voie" maxLength="50" id="idvoie" value="{{ ninea.niPersonne.ninVoie}}" 
+																			<input disabled type="text" name="voie" maxLength="50" id="idvoie" value="{{ ninea_anc.niPersonne.ninVoie}}" 
 																			onkeyup="this.value=this.value.toUpperCase()"
 																			class="form-control form-control-sm " >
 																		</td>
 																	</tr>
 																	<tr>
+																		
 																		<td style="width: 50%;">
-																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
-																		</td>
-																		<td style="width: 50%;">
-																			<input disabled type="text" maxLength="5" name="numvoie" id="idNumvoie" value="{{ ninea.niPersonne.numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
+																			<input disabled type="text" maxLength="5" name="numvoie" id="idNumvoie" value="{{ ninea_anc.niPersonne.numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
 																		</td>
 																	</tr>
 																	<tr>
-																		<td style="width: 50%;">
-																			<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 50%;">
 																			<select disabled class="form-control form-control-sm classselect  " name="region" id="region" style="width: 100%;">
 																				<option>Sélectionner ...</option>
 																				{% for tagr in regions %}
-																					{% if tagr.id == ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																					{% if tagr.id == ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
 																						<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
-																					{% else %}
-																						<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
 																					{% endif %}
+																						<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
 
 																				{% endfor %}
 																				</select>
@@ -867,14 +881,11 @@
 																		</td>
 																	</tr>
 																	<tr>
-																		<td>
-																			<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td>
 																			<select disabled class="form-control form-control-sm classselect " name="departement" id="departement" style="width: 100%;">
-																				{% if ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
-																					<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																				{% if ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
 																				{% else %}
 																						<option value="" ></option>
 																				{% endif %}
@@ -883,14 +894,11 @@
 																		</td>
 																	</tr>
 																	<tr>
-																		<td>
-																			<label for="numvoie" class="TXT"><b><u>Commune/Ville/Arrondissement : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td>
 																			<select disabled class="form-control form-control-sm classselect" name="cav" id="cav" style="width: 100%;">
-																					{% if ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID %}
-																						<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																					{% if ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID %}
+																						<option value="{{ ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea_anc.niPersonne.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
 																					{% else %}
 																							<option value="" ></option>
 																					{% endif %}
@@ -900,14 +908,11 @@
 																	</tr>
 										
 																	<tr>
-																		<td>
-																			<label for="basicpill-firstname-input" class="TXT">	<b><u>Com d'arr/Communauté rurale : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td>
 																			<select disabled class="form-control form-control-sm classselect" name="cacr" id="cacr" style="width: 100%;">
-																					{% if ninea.niPersonne.ninQvh.qvhCACRID %}
-																						<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.libelle}}</option>
+																					{% if ninea_anc.niPersonne.ninQvh.qvhCACRID %}
+																						<option value="{{ ninea_anc.niPersonne.ninQvh.qvhCACRID.id }}" selected> {{ ninea_anc.niPersonne.ninQvh.qvhCACRID.libelle}}</option>
 																					{% else %}
 																							<option value="" ></option>
 																					{% endif %}
@@ -917,15 +922,11 @@
 																	</tr>
 																	<tr>
 										
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input" class="TXT">
-																				<b><u>Quartier/Village/Hameau : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
 																			<select disabled class="form-control form-control-sm classselect"  required="true" name="qvh" id="qvh" style="width: 100%;">
-																					{% if ninea.niPersonne.ninQvh %}
-																						<option value="{{ ninea.niPersonne.ninQvh.id }}" selected> {{ ninea.niPersonne.ninQvh.libelle}}</option>
+																					{% if ninea_anc.niPersonne.ninQvh %}
+																						<option value="{{ ninea_anc.niPersonne.ninQvh.id }}" selected> {{ ninea_anc.niPersonne.ninQvh.libelle}}</option>
 																					{% else %}
 																							<option value="" ></option>
 																					{% endif %}
@@ -934,13 +935,9 @@
 																		</td>
 																	</tr>	
 																	<tr>				
-																		<td style="width: 30%;">
-																			<label for="basicpill-firsAdresse complète:tname-input" class="TXT">
-																				<b><u>Adresse domicile : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input disabled type="text" name="adresse" id="idadresse" value="{{ ninea.niPersonne.adresse}}"class="form-control form-control-sm"
+																			<input disabled type="text" name="adresse" id="idadresse" value="{{ ninea_anc.niPersonne.adresse}}"class="form-control form-control-sm"
 																			onkeyup="this.value=this.value.toUpperCase()">
 																			<span style="color: red;" id="ninadresse"></span>
 																		</td>
@@ -952,20 +949,17 @@
 															
 														</div>
 										
-														<div class="col-lg-6">
+														<div class="col-lg-4">
 															<fieldset class="border p-2">	
 															   <legend class="w-auto float-none p-2">Nouvelles données</legend>									
 																<table style="width: 100%;">
 																	<tr>
+																	
 																		<td style="width: 50%;">
-																			<label for="" class="TXT mt-2"><b><u>Civilité : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
-																		<td style="width: 50%;">
-																			<select class="form-control form-control-sm classselect mt-2" name="civilite_modif" id="idCivilite_modif" required>
+																			<select disabled class="form-control form-control-sm classselect mt-2" name="civilite_modif" id="idCivilite_modif" required>
 																				<option value="" selected>Sélectionner ...			</option>
 																				{% for tagciv in civilites %}
-																					{% if tagciv.id == ninea.niPersonne.civilite.id %}
+																					{% if tagciv.id == ninea.tempNiPersonnes[0].civilite.id %}
 																							<option value="{{ tagciv.id}}" selected>	{{ tagciv.civlibelle}}</option>
 																						{% else %}
 																							<option value="{{ tagciv.id}}" >	{{ tagciv.civlibelle}}</option>
@@ -977,37 +971,28 @@
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Prénom : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 50%;">
-																			<input type="text" name="prenom_modif" maxlength="100" id="prenom_modif" required value="{{ninea.niPersonne.ninPrenom}}" class="form-control form-control-sm classselect mt-2"
+																			<input type="text" disabled name="prenom_modif" maxlength="100" id="prenom_modif" required value="{{ninea.tempNiPersonnes[0].ninPrenom}}" class="form-control form-control-sm classselect mt-2"
 																				onkeyup="this.value=this.value.toUpperCase()">
 																			<span style="color: red;" id="ninprenom_modif"></span>
 																		</td>
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Nom : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 50%;">
-																			<input type="text" onkeyup="this.value=this.value.toUpperCase()" name="nom_modif" id="idnom_modif" maxlength="100" class="form-control form-control-sm mt-2" required value="{{ninea.niPersonne.ninNom}}">
+																			<input type="text" disabled onkeyup="this.value=this.value.toUpperCase()" name="nom_modif" id="idnom_modif" maxlength="100" class="form-control form-control-sm mt-2" required value="{{ninea.tempNiPersonnes[0].ninNom}}">
 																			<span style="color: red;" id="ninnom_modif"></span>
 																		</td>
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Sexe : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 50%;">
-																			<select class="form-control form-control-sm classselect mt-2" name="sexe_modif" id="idsexe_modif" aria-readonly="true">
+																			<select disabled class="form-control  form-control-sm classselect mt-2" name="sexe_modif" id="idsexe_modif" aria-readonly="true">
 																				{% for tags in sexes %}
-																					{% if tags.id == ninea.niPersonne.ninSexe.id %}
+																					{% if tags.id == ninea.tempNiPersonnes[0].ninSexe.id %}
 																						<option value="{{ tags.id }}" selected > {{ tags.libelle}}</option>
 																					{% else %}
 																						<option value="0" > Sélectionner ...</option>
@@ -1020,24 +1005,17 @@
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Date de naissance : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 50%;">
-																			<input type="date" name="datenais_modif" id="idDatenais_modif"  min="1900-01-01" required value="{{ninea.niPersonne.ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm mt-2">
+																			<input type="date" disabled name="datenais_modif" id="idDatenais_modif"  min="1900-01-01" required value="{{ninea.tempNiPersonnes[0].ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm mt-2">
 																			<span style="color: red;" id="nindatenais_modif"></span>
 																		</td>
 																	</tr>
 										
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Lieu de naissance : </u></b></label>
-																			<span style="color: red;">*</span>
-
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" name="lieunais_modif" id="idlieunais_modif" maxlength="100"  value="{{ninea.niPersonne.ninLieuNaissance}}"  class="form-control form-control-sm mt-2" required>
+																			<input type="text" disabled name="lieunais_modif" id="idlieunais_modif" maxlength="100"  value="{{ninea.tempNiPersonnes[0].ninLieuNaissance}}"  class="form-control form-control-sm mt-2" required>
 																			<span style="color: red;" id="ninlieunais_modif"></span>
 																		</td>
 																	</tr>
@@ -1045,16 +1023,13 @@
 																</table>
 																<table style="width: 100%;" class="mt-2">
 																	<tr>
-																		<td style="width: 50%;">
-																			<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<select class="form-control form-control-sm select2 classselect" name="nationalite_modif"   id="idnationalite_personne_modif" required>
+																			<select disabled class="form-control form-control-sm " name="nationalite_modif"   id="idnationalite_personne_modif" required>
 																				<option value="" selected>
 																					Sélectionner</option>
 																				{% for tags in nationalites %}
-																				   {% if ninea.niPersonne.nationalite.id == tags.id %}
+																				   {% if ninea.tempNiPersonnes[0].nationalite.id == tags.id %}
 																					<option value="{{tags.id}}"  selected >
 																						{{tags.id}}-{{ tags.libelle}}</option>
 																					{% else %}
@@ -1071,12 +1046,9 @@
 																<div id="tableCni_personne_modif" class="mt-2">
 																	<table  style="width: 100%;">
 																		<tr id="trcni">
-																			<td style="width: 50%;">
-																				<label for="" class="TXT"> <b><u>CNI : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 50%;" >
-																				<input  type="password" readonly onfocus="this.removeAttribute('readonly');" name="cni_modif" id="idcni_modif" value="{{ninea.niPersonne.ninCNI}}" maxlength = '14'  required
+																				<input  type="password" readonly onfocus="this.removeAttribute('readonly');" name="cni_modif" id="idcni_modif" value="{{ninea.tempNiPersonnes[0].ninCNI}}" maxlength = '14'  required
 																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
 																					 class="form-control  form-control-sm">
 																				<span style="color: red;" id="nincni_modif"></span>
@@ -1084,24 +1056,18 @@
 																		</tr>
 																		
 																		<tr >
-																			<td style="width: 30%;">
-																				<label for="" class="TXT mt-2" id="labelconfirmcni"> <b><u>Confirmation CNI : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 50%;" >
-																				<input type="text" name="confirm_cni_modif" id="idConfirmcni_modif" required class="form-control form-control-sm  mt-2" 
+																				<input type="text" disabled name="confirm_cni_modif" id="idConfirmcni_modif" required class="form-control form-control-sm  mt-2" 
 																					maxlength = '14'  onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
-																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="{{ninea.niPersonne.ninCNI}}" >
+																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="{{ninea.tempNiPersonnes[0].ninCNI}}" >
 																				<span style="color: red;" id="ninconfcni"></span>
 																			</td>
 																		</tr>
 																		<tr id="trcni" class="mt-2">
-																			<td style="width: 30%;">
-																				<label for="" class="TXT mt-2"><b><u>Date de délivrance  : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 70%;" >
-																				<input type="date" name="datecni_modif" id="idDatecni_modif" value="{{ninea.niPersonne.ninDateCNI|date("Y-m-d") }}" min="1901-01-01" class="form-control form-control-sm mt-2">
+																				<input type="date" disabled name="datecni_modif" id="idDatecni_modif" value="{{ninea.tempNiPersonnes[0].ninDateCNI|date("Y-m-d") }}" min="1901-01-01" class="form-control form-control-sm mt-2">
 																				<span style="color: red;" id="ninDatecni_modif"></span>
 																			</td>
 																		</tr>
@@ -1110,24 +1076,18 @@
 																<div  id="tablePassport_personne_modif" class="mt-2"> 
 																	<table style="width: 100%;">
 																		<tr id="trPassport">
+																			
 																			<td style="width: 50%;">
-																				<label for="" class="TXT ">	<b><u>Passport : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
-																			<td style="width: 50%;">
-																				<input type="password" name="passport_modif" id="idpassport_modif" maxlength = '14' oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
+																				<input type="password"   value="{{ninea.tempNiPersonnes[0].ninCNI}}" name="passport_modif" id="idpassport_modif" maxlength = '14' oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
 																				class="form-control form-control-sm classselect" onkeyup="this.value=this.value.toUpperCase()"  onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
 																				readonly onfocus="this.removeAttribute('readonly');">
 																				<span style="color: red;" id="ninpassport_modif"></span>
 																			</td>
 																		</tr>
 																		<tr >
-																			<td style="width: 50%;">
-																				<label for="" class="TXT mt-2" id="labelconfirmpassport"> <b><u>Confirmation PP : </u></b></label>
-																				<span style="color: red;">*</span>
-																			</td>
+																			
 																			<td style="width: 50%;" >
-																				<input type="text" name="confirm_passport_modif" id="idConfirmpassport_modif"  onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																				<input type="text" disabled value="{{ninea.tempNiPersonnes[0].ninCNI}}" name="confirm_passport_modif" id="idConfirmpassport_modif"  onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
 																					class="form-control form-control-sm  mt-2" 
 																					maxlength = '14'  onkeyup="this.value=this.value.toUpperCase()"
 																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="" >
@@ -1135,11 +1095,9 @@
 																			</td>
 																		</tr>
 																		<tr id="trDatePassport">
-																			<td style="width: 50%;">
-																				<label for="" class="TXT mt-2"><b><u>Date du passport  : </u></b></label>
-																			</td>
+																			
 																			<td style="width: 70%;">
-																				<input type="date"  name="datepassport_modif" id="idDatepassport_modif" min="1901-01-01" class="form-control form-control-sm mt-2 classselect">
+																				<input type="date" value="{{ninea.tempNiPersonnes[0].ninDateCNI|date("Y-m-d") }}"  name="datepassport_modif" id="idDatepassport_modif" min="1901-01-01" class="form-control form-control-sm mt-2 classselect">
 																				<span style="color: red;" id="nindatepassport_modif"></span>
 																			</td>
 																		</tr>
@@ -1148,23 +1106,17 @@
 																
 																<table style="width:100% ;" class="mt-2">
 																	<tr>
-																		<td style="width: 50%;">
-																			<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
-																			<span style="color: red;">*</span>
-
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" name="telephone_modif" maxlength = '9' id="idtelpersonne_modif"  value="{{ninea.niPersonne.ninTelephone}}" class="form-control form-control-sm mt-2" required
+																			<input type="text" disabled name="telephone_modif" maxlength = '9' id="idtelpersonne_modif"  value="{{ninea.tempNiPersonnes[0].ninTelephone}}" class="form-control form-control-sm mt-2" required
 																			  'oninput="this.value = this.value.replace(/[^0-9,]/g, '');" '>
 																			<span style="color: red;" id="nintelpersonne_modif"></span>
 																		</td>
 																	</tr>
 																	<tr>
-																		<td style="width: 30%;">
-																			<label for="" class="TXT mt-2"><b><u>Email : </u></b></label>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="email" name="email" id="idemailpersonne_modif"  value="{{ninea.niPersonne.ninEmailPersonnel}}" class="form-control form-control-sm">
+																			<input type="email" disabled name="email" id="idemailpersonne_modif"  value="{{ninea.tempNiPersonnes[0].ninEmailPersonnel}}" class="form-control form-control-sm">
 																			<span style="color: red;" id="ninemail_personne_modif"></span>
 																		</td>
 																	</tr>
@@ -1174,16 +1126,14 @@
                                                                 <hr class="dotted">
                                                                 <table style="width: 100%;">
 																	  <tr>
-																		<td style="width: 50%;">
-																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
-																		</td>
+																		
 										
 																		<td style="width: 50%;">
-																			<select class="form-control form-control-sm classselect" name="typevoie_modif" value="" id="idtypevoie_modif" >
+																			<select disabled class="form-control form-control-sm classselect" name="typevoie_modif" value="" id="idtypevoie_modif" >
 																				<option value="" selected >	Sélectionner</option>
 																				{% for tagv in typevoies %}
-																				     {% if ninea.niPersonne.ninTypevoie is not null %}
-																						{% if tagv.id == ninea.niPersonne.ninTypevoie.id %}
+																				     {% if ninea.tempNiPersonnes[0].ninTypevoie is not null %}
+																						{% if tagv.id == ninea.tempNiPersonnes[0].ninTypevoie.id %}
 																							<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
 																						{% else %}
 																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
@@ -1199,34 +1149,26 @@
 																	</tr>
 										
 																	<tr>
+																		
 																		<td style="width: 50%;">
-																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
-
-																		</td>
-																		<td style="width: 50%;">
-																			<input type="text" name="voie_modif" maxLength="50" id="idvoie_modif" value="{{ ninea.niPersonne.ninVoie}}" 
+																			<input type="text" disabled name="voie_modif" maxLength="50" id="idvoie_modif" value="{{ ninea.tempNiPersonnes[0].ninVoie}}" 
 																			onkeyup="this.value=this.value.toUpperCase()"
 																			class="form-control form-control-sm " >
 																		</td>
 																	</tr>
 																	<tr>
+																		
 																		<td style="width: 50%;">
-																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
-																		</td>
-																		<td style="width: 50%;">
-																			<input type="text" maxLength="5" name="numvoie_modif" id="idNumvoie_modif" value="{{ ninea.niPersonne.numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
+																			<input type="text" maxLength="5" name="numvoie_modif" id="idNumvoie_modif" disabled value="{{ ninea.tempNiPersonnes[0].numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
 																		</td>
 																	</tr>
 																	<tr>
+																		
 																		<td style="width: 50%;">
-																			<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
-																		<td style="width: 50%;">
-																			<select class="form-control form-control-sm classselect  " name="region_modif" id="region_modif" style="width: 100%;">
+																			<select disabled class="form-control form-control-sm classselect  " name="region_modif" id="region_modif" style="width: 100%;">
 																				<option>Sélectionner ...</option>
 																				{% for tagr in regions %}
-																					{% if tagr.id == ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																					{% if tagr.id == ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
 																						<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
 																					{% else %}
 																						<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
@@ -1239,30 +1181,23 @@
 																		</td>
 																	</tr>
 																	<tr>
+																		
 																		<td>
-																			<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
-																		<td>
-																			<select class="form-control form-control-sm classselect " name="departement_modif" id="departement_modif" style="width: 100%;">
-																				{% if ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
-																					<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
-																				{% else %}
-																						<option value="" ></option>
+																			<select disabled class="form-control form-control-sm classselect " name="departement_modif" id="departement_modif" style="width: 100%;">
+																				{% if ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
 																				{% endif %}
+																					<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
 																			</select>
 																			<span style="color: red;" id="nindepartement_modif"></span>
 																		</td>
 																	</tr>
 																	<tr>
+																		
 																		<td>
-																			<label for="numvoie" class="TXT"><b><u>Commune/Ville/Arrondissement : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
-																		<td>
-																			<select class="form-control form-control-sm classselect" name="cav_modif" id="cav_modif" style="width: 100%;">
-																					{% if ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID %}
-																						<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																			<select disabled class="form-control form-control-sm classselect" name="cav_modif" id="cav_modif" style="width: 100%;">
+																					{% if ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID %}
+																						<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
 																					{% else %}
 																							<option value="" ></option>
 																					{% endif %}
@@ -1272,14 +1207,11 @@
 																	</tr>
 										
 																	<tr>
+																		
 																		<td>
-																			<label for="basicpill-firstname-input" class="TXT">	<b><u>Com d'arr/Communauté rurale : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
-																		<td>
-																			<select class="form-control form-control-sm classselect" name="cacr_modif" id="cacr_modif" style="width: 100%;">
-																					{% if ninea.niPersonne.ninQvh.qvhCACRID %}
-																						<option value="{{ ninea.niPersonne.ninQvh.qvhCACRID.id }}" selected> {{ ninea.niPersonne.ninQvh.qvhCACRID.libelle}}</option>
+																			<select disabled class="form-control form-control-sm classselect" name="cacr_modif" id="cacr_modif" style="width: 100%;">
+																					{% if ninea.tempNiPersonnes[0].ninQvh.qvhCACRID %}
+																						<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.libelle}}</option>
 																					{% else %}
 																							<option value="" ></option>
 																					{% endif %}
@@ -1289,15 +1221,11 @@
 																	</tr>
 																	<tr>
 										
-																		<td style="width: 30%;">
-																			<label for="basicpill-firstname-input" class="TXT">
-																				<b><u>Quartier/Village/Hameau : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<select class="form-control form-control-sm classselect"  required="true" name="qvh_modif" id="qvh_modif" style="width: 100%;">
-																					{% if ninea.niPersonne.ninQvh %}
-																						<option value="{{ ninea.niPersonne.ninQvh.id }}" selected> {{ ninea.niPersonne.ninQvh.libelle}}</option>
+																			<select disabled class="form-control form-control-sm classselect"  required="true" name="qvh_modif" id="qvh_modif" style="width: 100%;">
+																					{% if ninea.tempNiPersonnes[0].ninQvh %}
+																						<option value="{{ ninea.tempNiPersonnes[0].ninQvh.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.libelle}}</option>
 																					{% else %}
 																							<option value="" ></option>
 																					{% endif %}
@@ -1306,13 +1234,9 @@
 																		</td>
 																	</tr>	
 																	<tr>				
-																		<td style="width: 30%;">
-																			<label for="basicpill-firsAdresse complète:tname-input" class="TXT">
-																				<b><u>Adresse domicile : </u></b></label>
-																			<span style="color: red;">*</span>
-																		</td>
+																		
 																		<td style="width: 70%;">
-																			<input type="text" name="adresse_modif" id="idadresse_modif" value="{{ ninea.niPersonne.adresse}}"class="form-control form-control-sm"
+																			<input type="text" disabled name="adresse_modif" id="idadresse_modif" value="{{ ninea.tempNiPersonnes[0].adresse}}"class="form-control form-control-sm"
 																			onkeyup="this.value=this.value.toUpperCase()">
 																			<span style="color: red;" id="ninadresse_modif"></span>
 																		</td>
@@ -1326,36 +1250,86 @@
 
 												</div>
 											{% else %}
-												{% if (ninea.formejuridique.niFormeunite.id == 21) or  (ninea.formejuridique.niFormeunite.id == 22) %}
-													<div id="idMorale"  class="col-lg-8 " >
-														<fieldset class="border p-2" >
-														<center>	
-															<table style="width: 100%;">
-																<tr >
-																	<td style="width: 20%;">
-																		<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
-																		<span style="color: red;">*</span>
-																	</td>
-																	<td style="width: 80%;" >
-																		<textarea name="raison"  id="idraison" cols="10" rows="5" class="form-control form-control-sm" onkeyup="this.value=this.value.toUpperCase()" required value=""  >{{ninea.niPersonne.ninRaison}}  </textarea>
-																		<span style="color: red;" id="ninraison"></span>
-																	</td>
-																</tr>
+												
+												 	<div class="row">
+													   <div id="idMorale"  class="col-lg-4 " >
+															<fieldset class="border p-2" >
+															<legend class="w-auto float-none p-2">Libelle</legend>
+															<center>
+															 <br>	
+															 <br>	
+															 <br>	
+															 <br>	
+																<table style="width: 100%;">
+																	<tr >
+																		<td style="width: 20%;">
+																			<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		
+																	</tr>
 
-																<tr >
-																	<td style="width: 20%;">
-																		<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
-																	</td>
-																	<td style="width: 80%;" >
-																		<input type="text" style=" width:40%;" name="sigle" id="idSigle"onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm mt-2" value="{{ninea.niPersonne.ninSigle}}">
-																		<span style="color: red;" id="ninsigle"></span>
-																	</td>
-																</tr>
-															</table>
-														</center>
-														</fieldset>
+
+																	<tr >
+																		<td style="width: 20%;">
+																			<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
+																		</td>
+																		
+																	</tr>
+																</table>
+															</center>
+															</fieldset>
+														</div>
+														<div id="idMorale"  class="col-lg-4 " >
+															<fieldset class="border p-2" >
+															<legend class="w-auto float-none p-2">Anciennes données</legend>
+															<center>	
+																<table style="width: 100%;">
+																	<tr >
+																		
+																		<td style="width: 80%;" >
+																			<textarea name="raison" disabled  id="idraison" cols="10" rows="5" class="form-control form-control-sm" onkeyup="this.value=this.value.toUpperCase()" required value=""  >{{ninea_anc.niPersonne.ninRaison}}  </textarea>
+																			<span style="color: red;" id="ninraison"></span>
+																		</td>
+																	</tr>
+
+																	<tr >
+																		
+																		<td style="width: 80%;" >
+																			<input type="text" disabled style=" width:40%;" name="sigle" id="idSigle"onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm mt-2" value="{{ninea_anc.niPersonne.ninSigle}}">
+																			<span style="color: red;" id="ninsigle"></span>
+																		</td>
+																	</tr>
+																</table>
+															</center>
+															</fieldset>
+														</div>
+														<div id="iMrale"  class="col-lg-4 " >
+															<fieldset class="border p-2" >
+															<legend class="w-auto float-none p-2">Nouvelles données</legend>
+															<center>	
+																<table style="width: 100%;">
+																	<tr >
+																		
+																		<td style="width: 80%;" >
+																			<textarea name="raison_modif" disabled   id="idraison_modif" cols="10" rows="5" class="form-control form-control-sm" onkeyup="this.value=this.value.toUpperCase()" required value=""  >{{ninea.tempNiPersonnes[0].ninRaison}}  </textarea>
+																			<span style="color: red;" id="ninraison_modif"></span>
+																		</td>
+																	</tr>
+
+																	<tr >
+																		
+																		<td style="width: 80%;" >
+																			<input type="text" disabled  style=" width:40%;" name="sigle_modif" id="idSigle_modif"onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm mt-2" value="{{ninea.tempNiPersonnes[0].ninSigle}}">
+																			<span style="color: red;" id="ninsigle_modif"></span>
+																		</td>
+																	</tr>
+																</table>
+															</center>
+															</fieldset>
+														</div>
 													</div>
-												{% endif %}
+												
 											{% endif %}
 
 											<div class="row mt-3">
@@ -1375,10 +1349,11 @@
 						<div class="tab-pane " id="coordonnees" role="tabpanel">
 			
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 				
 									<fieldset class="border p-2">	
-									   <legend class="w-auto float-none p-2">Anciennes données</legend>												
+									   <legend class="w-auto float-none p-2"></legend>	
+									   <br>											
 										<table style="width: 100%;">
 											<tr>
 												<td style="width: 60%;">
@@ -1386,13 +1361,127 @@
 													<span style="color: red;">*</span>
 												</td>
 				
+											
+											</tr>
+				
+											<tr>
+												<td style="width: 60%;">
+													<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+													<span style="color: red;">*</span>
+
+												</td>
+												
+											</tr>
+											<tr>
+												<td style="width: 60%;">
+													<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+				
+												</td>
+												
+											</tr>
+											<tr>
+												<td style="width: 50%;">
+													<label for="numvoie" class="TXT"> <b><u>Région : </u></b> </label>
+													<span style="color: red;">*</span>
+												</td>
+												
+											</tr>
+											<tr>
+												<td style="width: 50%;">
+													<label for="numvoie" class="TXT"> <b><u> Département : </u></b> </label>
+													<span style="color: red;">*</span>
+												</td>
+												
+											</tr>
+											<tr>
+												<td style="width: 50%;">
+													<label for="numvoie" class="TXT"><b><u>CAV : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												
+											</tr>
+				
+											<tr>
+												<td>
+													<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>           </label>
+													<span style="color: red;">*</span>
+												</td>
+												
+											</tr>
+											<tr>
+				
+												<td style="width: 30%;">
+													<label for="basicpill-firstname-input" class="TXT"><b><u>Quartier/Village/Hameau : </u></b></label>
+													<span style="color: red;">*</span>
+												</td>
+												
+											</tr>
+				
+										</table>
+										<table style="width: 100%;">
+											<tr>
+												<td style="width: 60%;">
+													<label for=""><b><u>Adresse de l'établissement : </u></b></label>
+													<span style="color: red;">*</span>
+				
+												</td>
+												
+											</tr>
+											
+											<tr>
+												<td style="width: 60%;">
+													<label for=""><b><u>Téléphone portable : </u></b></label>
+													<span style="color: red;">*</span>
+				
+												</td>
+											
+											</tr>
+											<tr>
+												<td style="width: 60%;">
+													<label for=""><b><u>Téléphone fixe : </u></b></label>
+												</td>
+												
+											</tr>
+											<tr>
+												<td style="width: 50%;">
+													<label for=""><b><u>Email : </u></b></label>
+												</td>
+												
+											</tr>
+				
+											<tr>
+												<td style="width: 50%;">
+													<label for=""><b><u>Boite postale : </u></b></label>
+												</td>
+												
+											</tr>
+											<tr>
+												<td style="width: 30%;">
+													<label for=""><b><u>URL : </u></b></label>
+												</td>
+												
+											</tr>
+										</table>
+				
+									</fieldset>
+								</div>
+
+								<div class="col-lg-4">
+				
+									<fieldset class="border p-2">	
+									   <legend class="w-auto float-none p-2">Anciennes données</legend>	
+									   {% if ninea_anc.niCoordonnees | length >= 1 %}											
+										<table style="width: 100%;">
+											<tr>
+											
+				
 												<td style="width: 40%;">
 													<select disabled class="form-control form-control-sm" name="typevoie_coordonnees" value="" id="idtypevoie_coordonnees" required>
 														<option value="" selected >	Sélectionner</option>
 														
 															{% for tagv in typevoies %}
-																{% if lastcoordoonnee.ninTypevoie is not null %}
-																	{% if tagv.id == lastcoordoonnee.ninTypevoie.id %}
+																{% if ninea_anc.niCoordonnees[0].ninTypevoie is not null %}
+																	{% if tagv.id == ninea_anc.niCoordonnees[0].ninTypevoie.id %}
 																		<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
 																	{% else %}
 																		<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
@@ -1407,38 +1496,33 @@
 											</tr>
 				
 											<tr>
-												<td style="width: 60%;">
-													<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
-													<span style="color: red;">*</span>
-
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="voiecoordonnees" id="idvoiecoordonnees" value="{{ lastcoordoonnee.ninVoie}}" class="form-control form-control-sm">
+													<input disabled type="text" name="voiecoordonnees" id="idvoiecoordonnees" value="{{ ninea_anc.niCoordonnees[0].ninVoie}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 60%;">
-													<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
-				
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="numvoiecoordonnees" id="idNumvoiecoordonnees" value="{{lastcoordoonnee.ninnumVoie}}" class="form-control form-control-sm">
+													<input disabled type="text" name="numvoiecoordonnees" id="idNumvoiecoordonnees" value="{{ninea_anc.niCoordonnees[0].ninnumVoie}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 50%;">
-													<label for="numvoie" class="TXT"> <b><u>Région : </u></b> </label>
-													<span style="color: red;">*</span>
-												</td>
+												
 												<td style="width: 40%;">
 													<select disabled class="form-control select2 form-control-sm  " name="regioncoordonnees" required id="regioncoordonnees" style="width: 100%;">
 														<option>Sélectionner ...</option>
 															{% for tagr in regions %}
-																{% if tagr.id == lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
-																	<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
-																{% else %}
-																	<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
-																{% endif %}
+															 
+															    {% if   ninea_anc.niCoordonnees[0].qvh is not null  %}
+																		{% if tagr.id == ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																			<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+																		{% else %}
+																			<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+																		{% endif %}
+															  {% else %}
+																 <option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+															  {% endif %}
 
 															{% endfor %}
 														</select>
@@ -1447,31 +1531,33 @@
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 50%;">
-													<label for="numvoie" class="TXT"> <b><u> Département : </u></b> </label>
-													<span style="color: red;">*</span>
-												</td>
+												
 												<td style="width: 40%;">
 													<select disabled class="form-control form-control-sm   select2" name="departementcoordonnees" required id="departementcoordonnees" style="width: 100%;">
-														{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
-															<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+													  {% if   ninea_anc.niCoordonnees[0].qvh is not null  %}
+														{% if ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+															<option value="{{ ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
 														{% else %}
 																<option value="" >Sélectionner ...</option>
 														{% endif %}
+													{% else %}
+																<option value="" >Sélectionner ...</option>
+													{% endif %}
 													</select>
 													<span style="color: red;" id="nindepartementcoordonnees"></span>
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 50%;">
-													<label for="numvoie" class="TXT"><b><u>CAV : </u></b></label>
-													<span style="color: red;">*</span>
-												</td>
+												
 												<td style="width: 40%;">
 													<select disabled class="form-control form-control-sm   select2" name="cavcoordonnees" required id="cavcoordonnees" style="width: 100%;">
-														{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
-															<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
+														  {% if   ninea_anc.niCoordonnees[0].qvh is not null  %}
+														{% if ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID %}
+															<option value="{{ ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea_anc.niCoordonnees[0].qvh.qvhCACRID.cacrCAVID.libelle}}</option>
 														{% else %}
+															<option value="" ></option>
+														{% endif %}	
+													 {% else %}
 															<option value="" ></option>
 														{% endif %}												
 													</select>
@@ -1480,15 +1566,16 @@
 											</tr>
 				
 											<tr>
-												<td>
-													<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>           </label>
-													<span style="color: red;">*</span>
-												</td>
+												
 												<td>
 													<select disabled class="form-control form-control-sm   select2" name="cacrcoordonnees" id="cacr_coordonneescoordonnees" required style="width: 100%;">
-														{% if lastcoordoonnee.qvh.qvhCACRID %}
-																	<option value="{{ lastcoordoonnee.qvh.qvhCACRID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.libelle}}</option>
+														{% if   ninea_anc.niCoordonnees[0].qvh is not null  %}
+														{% if ninea_anc.niCoordonnees[0].qvh.qvhCACRID %}
+																	<option value="{{ ninea_anc.niCoordonnees[0].qvh.qvhCACRID.id }}" selected> {{ ninea_anc.niCoordonnees[0].qvh.qvhCACRID.libelle}}</option>
 																{% else %}
+																		<option value="" ></option>
+																{% endif %}
+														{% else %}
 																		<option value="" ></option>
 																{% endif %}
 													</select>
@@ -1497,15 +1584,16 @@
 											</tr>
 											<tr>
 				
-												<td style="width: 30%;">
-													<label for="basicpill-firstname-input" class="TXT"><b><u>Quartier/Village/Hameau : </u></b></label>
-													<span style="color: red;">*</span>
-												</td>
+												
 												<td style="width: 70%;">
 													<select disabled class="form-control form-control-sm  select2" name="qvhcoordonnees" id="qvhcoordonnees" required style="width: 100%;">
-														{% if lastcoordoonnee.qvh %}
-																<option value="{{ lastcoordoonnee.qvh.id }}" selected> {{ lastcoordoonnee.qvh.libelle}}</option>
+													  {% if   ninea_anc.niCoordonnees[0].qvh is not null  %}
+														{% if ninea_anc.niCoordonnees[0].qvh %}
+																<option value="{{ ninea_anc.niCoordonnees[0].qvh.id }}" selected> {{ ninea_anc.niCoordonnees[0].qvh.libelle}}</option>
 															{% else %}
+																<option value="" ></option>
+															{% endif %}
+													 {% else %}
 																<option value="" ></option>
 															{% endif %}
 													</select>
@@ -1516,81 +1604,63 @@
 										</table>
 										<table style="width: 100%;">
 											<tr>
-												<td style="width: 60%;">
-													<label for=""><b><u>Adresse de l'établissement : </u></b></label>
-													<span style="color: red;">*</span>
-				
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="adresse1coordonnees" id="idadresse1coordonnees" value="{{lastcoordoonnee.ninadresse1}}	" required class="form-control form-control-sm">
+													<input disabled type="text" name="adresse1coordonnees" id="idadresse1coordonnees" value="{{ninea_anc.niCoordonnees[0].ninadresse1}}	" required class="form-control form-control-sm">
 												</td>
 											</tr>
 											
 											<tr>
-												<td style="width: 60%;">
-													<label for=""><b><u>Téléphone portable : </u></b></label>
-													<span style="color: red;">*</span>
-				
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="telephone1coordonnees" id="idtelephone1coordonnees" value="{{lastcoordoonnee.ninTelephon1}}" required class="form-control form-control-sm">
+													<input disabled type="text" name="telephone1coordonnees" id="idtelephone1coordonnees" value="{{ninea_anc.niCoordonnees[0].ninTelephon1}}" required class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 60%;">
-													<label for=""><b><u>Téléphone fixe : </u></b></label>
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="telephone2coordonnees" id="idtelephone2coordonnees" value="{{lastcoordoonnee.nintelephon2}}" 
+													<input disabled type="text" name="telephone2coordonnees" id="idtelephone2coordonnees" value="{{ninea_anc.niCoordonnees[0].nintelephon2}}" 
 													oninput="this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 50%;">
-													<label for=""><b><u>Email : </u></b></label>
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="emailcoordonnees" id="idemailcoordonnees" value="{{lastcoordoonnee.ninEmail}}" class="form-control form-control-sm">
+													<input disabled type="text" name="emailcoordonnees" id="idemailcoordonnees" value="{{ninea_anc.niCoordonnees[0].ninEmail}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 				
 											<tr>
-												<td style="width: 50%;">
-													<label for=""><b><u>Boite postale : </u></b></label>
-												</td>
+												
 												<td style="width: 40%;">
-													<input disabled type="text" name="bpcoordonnees" id="idbpcoordonnees" value="{{lastcoordoonnee.ninBP}}" class="form-control form-control-sm">
+													<input disabled type="text" name="bpcoordonnees" id="idbpcoordonnees" value="{{ninea_anc.niCoordonnees[0].ninBP}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 30%;">
-													<label for=""><b><u>URL : </u></b></label>
-												</td>
+												
 												<td style="width: 70%;">
-													<input disabled type="text" name="urlcoordonnees" id="idurlcoordonnees" value="{{lastcoordoonnee.ninUrl}}" class="form-control form-control-sm">
+													<input disabled type="text" name="urlcoordonnees" id="idurlcoordonnees" value="{{ninea_anc.niCoordonnees[0].ninUrl}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 										</table>
+										{% endif %}
 				
 									</fieldset>
 								</div>
 				
-								<div class="col-lg-6">
+								<div class="col-lg-4">
 									<fieldset class="border p-2">
 									   <legend class="w-auto float-none p-2">Nouvelles données</legend>													
 										<table style="width: 100%;">
 											<tr>
-												<td style="width: 40%;">
-													<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
-													<span style="color: red;"></span>
-												</td>
+												
 				
 												<td style="width: 40%;">
-													<select class="form-control form-control-sm" name="typevoie_coordonnees_modif"  id="idtypevoie_coordonnees_modif" >
+													<select disabled class="form-control form-control-sm" name="typevoie_coordonnees_modif"  id="idtypevoie_coordonnees_modif" >
 														<option value="" selected >	Sélectionner</option>
 														
 															{% for tagv in typevoies %}
-																{% if lastcoordoonnee.ninTypevoie is not null %}
+																{% if ninea_anc.niCoordonnees[0].ninTypevoie is not null %}
 																	{% if tagv.id == lastcoordoonnee.ninTypevoie.id %}
 																		<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
 																	{% else %}
@@ -1606,36 +1676,30 @@
 											</tr>
 				
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
-													<span style="color: red;"></span>
-
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="voie_coordonnees_modif" id="idvoie_coordonnees_modif" value="{{ lastcoordoonnee.ninVoie}}" class="form-control form-control-sm">
+													<input type="text" disabled name="voie_coordonnees_modif" id="idvoie_coordonnees_modif" value="{{ lastcoordoonnee.ninVoie}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
-				
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="numvoie_coordonnees_modif" id="idNumvoie_coordonnees_modif" value="{{lastcoordoonnee.ninnumVoie}}" class="form-control form-control-sm">
+													<input type="text" disabled name="numvoie_coordonnees_modif" id="idNumvoie_coordonnees_modif" value="{{lastcoordoonnee.ninnumVoie}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for="numvoie" class="TXT"> <b><u>Région : </u></b> </label>
-													<span style="color: red;">*</span>
-												</td>
-												<td style="width: 40%;">
-													<select class="form-control select2 form-control-sm  " name="region_coordonnees_modif" required id="region_coordonnees_modif" style="width: 100%;">
+													<select disabled class="form-control select2 form-control-sm  " name="region_coordonnees_modif" required id="region_coordonnees_modif" style="width: 100%;">
 														<option>Sélectionner ...</option>
 															{% for tagr in regions %}
-																{% if tagr.id == lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
-																	<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
-																{% else %}
+																{% if lastcoordoonnee.qvh is not null %}
+																		{% if tagr.id == lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																			<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+																		{% else %}
+																			<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+																		{% endif %}
+															   {% else %}
 																	<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
 																{% endif %}
 
@@ -1646,13 +1710,11 @@
 												</td>
 											</tr>
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for="numvoie" class="TXT"> <b><u> Département : </u></b> </label>
-													<span style="color: red;">*</span>
-												</td>
-												<td style="width: 40%;">
-													<select class="form-control form-control-sm   select2" name="departement_coordonnees_modif" required id="departement_coordonnees_modif" style="width: 100%;">
-														{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+													<select disabled class="form-control form-control-sm   select2" name="departement_coordonnees_modif" required id="departement_coordonnees_modif" style="width: 100%;">
+													
+														{% if  lastcoordoonnee.qvh is not null and lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
 															<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
 														{% else %}
 																<option value="" >Sélectionner ...</option>
@@ -1662,13 +1724,10 @@
 												</td>
 											</tr>
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for="numvoie" class="TXT"><b><u>CAV : </u></b></label>
-													<span style="color: red;">*</span>
-												</td>
-												<td style="width: 40%;">
-													<select class="form-control form-control-sm   select2" name="cav_coordonnees_modif" required id="cav_coordonnees_modif" style="width: 100%;">
-														{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
+													<select disabled class="form-control form-control-sm   select2" name="cav_coordonnees_modif" required id="cav_coordonnees_modif" style="width: 100%;">
+														{% if  lastcoordoonnee.qvh is not null and lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
 															<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
 														{% else %}
 															<option value="" ></option>
@@ -1679,13 +1738,10 @@
 											</tr>
 				
 											<tr>
+												
 												<td>
-													<label for="basicpill-firstname-input" class="TXT"><b><u>CACR : </u></b>           </label>
-													<span style="color: red;">*</span>
-												</td>
-												<td>
-													<select class="form-control form-control-sm   select2" name="cacr_coordonnees_modif" id="cacr_coordonnees_modif" required style="width: 100%;">
-														{% if lastcoordoonnee.qvh.qvhCACRID %}
+													<select disabled class="form-control form-control-sm   select2" name="cacr_coordonnees_modif" id="cacr_coordonnees_modif" required style="width: 100%;">
+														{% if  lastcoordoonnee.qvh is not null and lastcoordoonnee.qvh.qvhCACRID %}
 																	<option value="{{ lastcoordoonnee.qvh.qvhCACRID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.libelle}}</option>
 																{% else %}
 																		<option value="" ></option>
@@ -1696,12 +1752,9 @@
 											</tr>
 											<tr>
 				
+												
 												<td style="width: 40%;">
-													<label for="basicpill-firstname-input" class="TXT"><b><u>Quartier/Village/Hameau : </u></b></label>
-													<span style="color: red;">*</span>
-												</td>
-												<td style="width: 40%;">
-													<select class="form-control form-control-sm  select2" name="qvh_coordonnees_modif" id="qvh_coordonnees_modif" required style="width: 100%;">
+													<select disabled class="form-control form-control-sm  select2" name="qvh_coordonnees_modif" id="qvh_coordonnees_modif" required style="width: 100%;">
 														{% if lastcoordoonnee.qvh %}
 																<option value="{{ lastcoordoonnee.qvh.id }}" selected> {{ lastcoordoonnee.qvh.libelle}}</option>
 															{% else %}
@@ -1715,58 +1768,42 @@
 										</table>
 										<table style="width: 100%;">
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for=""><b><u>Adresse de l'établissement : </u></b></label>
-													<span style="color: red;">*</span>
-				
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="adresse1_coordonnees_modif" id="idadresse1_coordonnees_modif" value="{{lastcoordoonnee.ninadresse1}}	" required class="form-control form-control-sm">
+													<input disabled type="text" name="adresse1_coordonnees_modif" id="idadresse1_coordonnees_modif" value="{{lastcoordoonnee.ninadresse1}}	" required class="form-control form-control-sm">
 												</td>
 											</tr>
 											
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for=""><b><u>Téléphone portable : </u></b></label>
-													<span style="color: red;">*</span>
-				
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="telephone1_coordonnees_modif" id="idtelephone1_coordonnees_modif" value="{{lastcoordoonnee.ninTelephon1}}" required class="form-control form-control-sm">
+													<input type="text" disabled name="telephone1_coordonnees_modif" id="idtelephone1_coordonnees_modif" value="{{lastcoordoonnee.ninTelephon1}}" required class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for=""><b><u>Téléphone fixe : </u></b></label>
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="telephone2_coordonnees_modif" id="idtelephone2_coordonnees_modif" value="{{lastcoordoonnee.nintelephon2}}" 
+													<input type="text" disabled name="telephone2_coordonnees_modif" id="idtelephone2_coordonnees_modif" value="{{lastcoordoonnee.nintelephon2}}" 
 													oninput="this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for=""><b><u>Email : </u></b></label>
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="email_coordonnees_modif" id="idemail_coordonnees_modif" value="{{lastcoordoonnee.ninEmail}}" class="form-control form-control-sm">
+													<input type="text" disabled name="email_coordonnees_modif" id="idemail_coordonnees_modif" value="{{lastcoordoonnee.ninEmail}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 				
 											<tr>
+												
 												<td style="width: 40%;">
-													<label for=""><b><u>Boite postale : </u></b></label>
-												</td>
-												<td style="width: 40%;">
-													<input type="text" name="bp_coordonnees_modif" id="idbp_coordonnees_modif" value="{{lastcoordoonnee.ninBP}}" class="form-control form-control-sm">
+													<input type="text" disabled name="bp_coordonnees_modif" id="idbp_coordonnees_modif" value="{{lastcoordoonnee.ninBP}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 											<tr>
-												<td style="width: 40%;">
-													<label for=""><b><u>URL : </u></b></label>
-												</td>
+												
 												<td style="width: 0%;">
-													<input type="text" name="url_coordonnees_modif" id="idurl_coordonnees_modif" value="{{lastcoordoonnee.ninUrl}}" class="form-control form-control-sm">
+													<input type="text" disabled name="url_coordonnees_modif" id="idurl_coordonnees_modif" value="{{lastcoordoonnee.ninUrl}}" class="form-control form-control-sm">
 												</td>
 											</tr>
 										</table>
@@ -1787,8 +1824,10 @@
 									</div>
 							</div>
 						</div>
+
+						
 						<div class="tab-pane" id="activites" role="tabpanel">							
-                            <fieldset class="fieldcolor p-2 mb-3">
+                            <!--fieldset class="fieldcolor p-2 mb-3">
 							 	<legend class="w-auto float-none p-2">Anciennes données</legend>
 								<div class="row justify-content-center">
 										<div class="col-lg-10">
@@ -1798,109 +1837,108 @@
 														<label for="" > <b><u> Libellé de l'ativité</u></b> </label>
 													</td>
 													<td width="80%">
-														<textarea name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
-													required style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
+														<textarea disabled name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
+													required style="font-weight: bold; padding: 0;">{{ activiteglobale_anc  }}</textarea>
 													<span id="ninLibelleact" style="color: red;"></span>
 													</td>
 												</tr>
 											</table>
-											
 										</div>
 								</div>
                                 <div class="row">
                               		<div class="col-lg-12">
 										<table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
-										<thead class="tr_entete" >
-										
-											<tr>
-												<th>Libelle</th>
-												<th>NAEMA</th>
-												<th>Produits</th>
-												<th>Debut</th>
-												<th>Fin</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody id="idActivities"></tbody>
-										{% set nb=0 %}
-											
-										{% for tagact in ninactivites %}
-											{% set nb=nb+1 %}
-											<tr>
-												<td style="width: 20%;">
-													<input type="text" {% if tagact.statActivprincipale==1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
-													{% if nb==1 %}
-														<input type="hidden" name="nbActivites" id="idnbActivites">
-													{% endif %}
-												</td>
-												<td style="width: 40%;">				                      
-													<select readonly class="form-control form-control-sm select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
-														{% for tagN in naemas %}
-															{% if tagN.id == tagact.refnaema.id %}
-																<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
-															{% endif %}
-														{% endfor %}
-													</select>
-												</td>
-												<td style="width: 40%;">
-													<select readonly class="select2 form-control select2-multiple" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
-															multiple="multiple" data-placeholder="Selectionner...">
-														{% for tagP in ninproduits %}
-															{% if tagP.refproduits.naema.id == tagact.refnaema.id %}
-																<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
-															{% endif %}
-														{% endfor %}
-
-
-													</select>
-												</td>
-												<td>
-													{% if tagact.statActivprincipale!=1 %}
-														<input  id="idBtnSupprimerActivite{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHisto('{{tagact.id}}');" value="Supprimer" >
-													{% endif %}
-												</td>
-											</tr>
-											{% endfor %}
-											{% if nb==0 %}
-												<tr>
-												<td style="width: 20%;">
-													<input type="text" name="cvninAutact1t" id="cvt" class="form-control form-control-sm " required>
-													<input type="hidden" name="nbActivites" id="idnbActivites">
-												</td>
-												<td style="width: 40%;">				                      
-													<select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
-														<option value="" selected>
-															Sélectionner...</option>
-														{% for tag in naemas %}
-															<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
-														{% endfor %}
-													</select>
-												</td>
-												<td style="width: 40%;">
-													<select class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
-															multiple="multiple" data-placeholder="Selectionner...">
-													</select>
-												</td>
+												<thead class="tr_entete" >
 												
-											</tr>
-											{% endif %}
-										</tbody>
+													<tr>
+														<th>Libelle</th>
+														<th>NAEMA</th>
+														<th>Produits</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												<tbody id="idActivities"></tbody>
+													{% set nb=0 %}
+														
+													{% for tagact in ninactivites_anc %}
+													{% set nb=nb+1 %}
+													<tr>
+														<td style="width: 20%;">
+															<input type="text" {% if tagact.statActivprincipale == 1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+															{% if nb==1 %}
+																<input type="hidden" name="nbActivites" id="idnbActivites">
+															{% endif %}
+														</td>
+														<td style="width: 40%;">				                      
+															<select readonly class="form-control form-control-sm select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
+																{% for tagN in naemas %}
+																	{% if tagN.id == tagact.refnaema.id %}
+																		<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+																	{% endif %}
+																{% endfor %}
+															</select>
+														</td>
+														<td style="width: 40%;">
+															<select readonly class="select2 form-control select2-multiple" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
+																	multiple="multiple" data-placeholder="Selectionner...">
+																{% for tagP in ninproduits %}
+																	{% if tagP.refproduits.naema.id == tagact.refnaema.id %}
+																		<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+																	{% endif %}
+																{% endfor %}
+
+
+															</select>
+														</td>
+														
+													</tr>
+													{% endfor %}
+													{% if nb==0 %}
+														<tr>
+														<td style="width: 20%;">
+															<input type="text" name="cvninAutact1t" id="cvt" class="form-control form-control-sm " required>
+															<input type="hidden" name="nbActivites" id="idnbActivites">
+														</td>
+														<td style="width: 40%;">				                      
+															<select class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
+																<option value="" selected>
+																	Sélectionner...</option>
+																{% for tag in naemas %}
+																	<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
+																{% endfor %}
+															</select>
+														</td>
+														<td style="width: 40%;">
+															<select class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
+																	multiple="multiple" data-placeholder="Selectionner...">
+															</select>
+														</td>
+														
+													</tr>
+													{% endif %}
+												</tbody>
 										</table>
 									</div>
 								</div>
-                            </fieldset>
+                            </fieldset-->
 
 							<fieldset class="fieldcolor p-2 mb-3">
-							 	<legend class="w-auto float-none p-2">Nouvelle données</legend>
+							 	<legend class="w-auto float-none p-2">Liste des activités et produits</legend>
 								<div class="row justify-content-center">
 									<div class="col-lg-10">
 										<table width="100%" >
 											<tr>
-												<td width="20%">
-													<label for="" > <b><u> Libellé de l'ativité</u></b> </label>
+												<td width="40%">
+													<textarea disabled name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
+														required style="font-weight: bold; padding: 0;">{{ activiteglobale_anc  }}
+													</textarea>
+													<span id="ninLibelleact" style="color: red;"></span>
 												</td>
-												<td width="80%">
-													<textarea name="libelleactiviteglobale_modif" id="txtLibelleact_modif" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
+												<td width="20%">
+													<label for="" class="p-3"> <b><u> Libellé de l'ativité</u></b> </label>
+												</td>
+												<td width="40%">
+													<textarea disabled name="libelleactiviteglobale_modif" id="txtLibelleact_modif" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
 												required style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
 												<span id="ninLibelleact" style="color: red;"></span>
 												</td>
@@ -1908,23 +1946,21 @@
 										</table>
 									</div>
 								</div>
-								<label for="basicpill-address-input">
-									<button type="button" id="btnAjouterActivities_modif"  class="btn btn-primary waves-effect waves-light btn-sm"><i class="fas fa-plus-circle"></i> Ajouter
-									</button>
+								<label for="basicpill-address-input" id="btnAjouterActivities_modif">
+									
 								</label>
 
                               <div class="row">
 									<div class="col-lg-12">
-											<table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+											<table id="idtab_modif" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
 													<thead class="tr_entete" >
 													
 														<tr>
 															<th>Libelle</th>
 															<th>NAEMA</th>
 															<th>Produits</th>
-															<th>Debut</th>
-															<th>Fin</th>
-															<th>Action</th>
+															<th>Etat</th>
+															
 														</tr>
 													</thead>
 												<tbody id="idActivities_modif">
@@ -1934,47 +1970,119 @@
 															{% set nb=nb+1 %}
 															<tr>
 																<td style="width: 20%;">
-																	<input type="text" {% if tagact.statActivprincipale==1 %} readonly {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+																	<input disabled type="text" name="ninAutact_modif{{ nb }}" id="idninAutact_modif{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
 																	{% if nb==1 %}
 																		<input type="hidden" name="nbActivites_modif" id="idnbActivites_modif">
 																	{% endif %}
 																</td>
 																<td style="width: 40%;">				                      
-																	<select readonly class="form-control form-control-sm select2" name="refNaemaModif{{ nb }}"   id="idrefNaemaModif{{ nb }}" required>
+																	<select disabled  class="form-control form-control-sm " name="refNaema_modif{{ nb }}"   id="idrefNaema_modif{{ nb }}" required>
 																		{% for tagN in naemas %}
 																			{% if tagN.id == tagact.refnaema.id %}
 																				<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+																			{% else %}
+																			   <option value="{{tagN.id}}" > {{tagN.id}}-{{ tagN.libelle}}</option>
 																			{% endif %}
 																		{% endfor %}
 																	</select>
 																</td>
 																<td style="width: 40%;">
-																	<select readonly class="select2 form-control select2-multiple" name="refProduitModif{{ nb }}[]"   id="idrefProduitModif{{ nb }}"
+																	<select disabled  class="select2 form-control select2-multiple selectproduit" name="refProduit_modif{{ nb }}[]"   id="idrefProduit_modif{{ nb }}"
 																			multiple="multiple" data-placeholder="Selectionner...">
 																		{% for tagP in ninproduits %}
 																			{% if tagP.refproduits.naema.id == tagact.refnaema.id %}
 																				<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+																			{% else %}
+																			   <option value="{{tagP.refproduits.id}}" > {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
 																			{% endif %}
 																		{% endfor %}
-
-
 																	</select>
 																</td>
 																<td>
-																	{% if tagact.statActivprincipale!=1 %}
-																		<input  id="idBtnSupprimerActiviteModif{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHistoModif('{{tagact.id}}');" value="Supprimer" >
-																	{% endif %}
-																</td>
+																	{% set actualise = false %}
+																		{% for tagactAnc in ninactivites_anc %}
+
+																			{% if tagact.refnaema.id == tagactAnc.refnaema.id %}
+																				{% set actualise = true %}
+
+																			{% endif %}
+																			
+																		{% endfor %}
+																		{% if actualise == false %}
+
+																			<span class="badge  w-35 rounded-pill badge-soft-warning" >
+																				Ajouté
+																			</span>
+																			
+																		{% else %}
+																			<span class="badge  w-35 rounded-pill badge-soft-primary" >
+																					Actualisé
+																			</span>
+																		{% endif %}
+																</td>																
 															</tr>
 															{% endfor %}
+
+															
+														{% for tagact_anc in ninactivites_anc %}
+															{% set supprime = true %}
+																{% for tagact in ninactivites %}
+
+																	{% if tagact_anc.refnaema.id == tagact.refnaema.id %}
+																		{% set supprime = false %}
+
+																	{% endif %}
+																	
+																{% endfor %}
+																{% if supprime == true %}	
+																{% set nb=nb+1 %}
+																	<tr>
+																		<td style="width: 20%;">
+																			<input disabled type="text" name="ninAutact_modif{{ nb }}" id="idninAutact_modif{{ nb }}" value="{{tagact_anc.ninAutact}}" class="form-control form-control-sm " required>
+																		</td>
+																		<td style="width: 40%;">				                      
+																			<select disabled  class="form-control form-control-sm " name="refNaema_modif{{ nb }}"   id="idrefNaema_modif{{ nb }}" required>
+																				{% for tagN in naemas %}
+																					{% if tagN.id == tagact_anc.refnaema.id %}
+																						<option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+																					{% else %}
+																					<option value="{{tagN.id}}" > {{tagN.id}}-{{ tagN.libelle}}</option>
+																					{% endif %}
+																				{% endfor %}
+																			</select>
+																		</td>
+																		<td style="width: 40%;">
+																			<select disabled  class="select2 form-control select2-multiple selectproduit" name="refProduit_modif{{ nb }}[]"   id="idrefProduit_modif{{ nb }}"
+																					multiple="multiple" data-placeholder="Selectionner...">
+																				{% for tagP in ninproduits %}
+																					{% if tagP.refproduits.naema.id == tagact_anc.refnaema.id %}
+																						<option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+																					{% else %}
+																					<option value="{{tagP.refproduits.id}}" > {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+																					{% endif %}
+																				{% endfor %}
+																			</select>
+																		</td>
+																		<td>
+																			<span class="badge  w-35 rounded-pill badge-soft-danger" >
+																				supprimé
+																			</span>
+																		</td>																
+																	</tr>
+																
+																{% endif %}
+
+															{% endfor %}
+
+
 															{% if nb==0 %}
 																<tr>
 																<td style="width: 20%;">
-																	<input type="text" name="ninAutact1Modif" id="idninAutactModif" class="form-control form-control-sm " required>
-																	<input type="hidden" name="nbActivitesModif" id="idnbActivitesModif">
+																	<input type="text" disabled name="ninAutact1_modif" id="idninAutact_modif" class="form-control form-control-sm " required>
+																	<input type="hidden" name="nbActivites_modif" id="idnbActivites_modif">
 																</td>
 																<td style="width: 40%;">				                      
-																	<select class="form-control form-control-sm select2" name="refNaema1Modif"   id="idrefNaema1Modif" required>
+																	<select multiple="multiple" class="form-control form-control-sm select2-multiple select2" name="refNaema1_modif"   id="idrefNaema1_modif" required>
 																		<option value="" selected>
 																			Sélectionner...</option>
 																		{% for tag in naemas %}
@@ -1983,7 +2091,7 @@
 																	</select>
 																</td>
 																<td style="width: 40%;">
-																	<select class="select2 form-control select2-multiple" name="refProduit1Modif[]"   id="idrefProduit1Modif"
+																	<select class="select2 form-control select2-multiple" name="refProduit1_modif[]"   id="idrefProduit1_modif"
 																			multiple="multiple" data-placeholder="Selectionner...">
 																	</select>
 																</td>
@@ -2013,175 +2121,383 @@
 
 
 						<div class="tab-pane" id="activiteEconomiques" role="tabpanel"> 
-							 <div class="col-lg-12"> 
-                     <fieldset class=" p-2 fieldcolor ">
-                        <div class="row">
-								
-									<div class="col-lg-6">
-									<fieldset class="border p-2">	
-									   <legend class="w-auto float-none p-2">Anciennes données</legend>	
-											<table style="width: 100%;">
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input  disabled type="text" name="ninAffaire" id="idninAffaire" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
-														</td>
-													</tr>
+							<div class="col-lg-12"> 
+								<fieldset class=" p-2 fieldcolor ">
+									<div class="row">
+											<div class="col-lg-4">
+													<fieldset class="border p-2">	
+													<legend class="w-auto float-none p-2"></legend>	
+																	<br>
+																	<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
+																		</td>
+																		
+																	</tr>
 
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input disabled type="text" name="ninCapital" id="idninCapital" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
-														</td>
-													</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
+																		</td>
+																		
+																	</tr>
 
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input disabled type="text" name="ninEffectif" id="idninEffectif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
-														</td>
-													</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
+																		</td>
+																		
+																	</tr>
 
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input disabled type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-											</table>
-											<table style="width: 100%;">
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input disabled type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
-												</td>
-											</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
+																		</td>
+																		
+																	</tr>
+															</table>
+															<table style="width: 100%;">
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+																</td>
+																
+															</tr>
 
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-												<input disabled type="text" name="ninEffect1" id="idninEffect1" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
-												</td>
-											</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
+																</td>
+																
+															</tr>
 
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input disabled type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
-												</td>
-											</tr>
+															<tr>
+																<td style="width: 50%;">
+																	<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
+																</td>
+																
+															</tr>
+															<tr>
+										<td style="width: 40%;">
+											<label for="numvoie" class="TXT mt-2"><b><u>Source de financement : </u></b></label>
+										</td>
+										
+									</tr>
+									<tr>
+										<td style="width: 40%;">
+											<label for="numvoie" class="TXT mt-2"><b><u>Nature : </u></b></label>
+										</td>
+										
+									</tr>	
+									<tr>
+										<td style="width: 40%;">
+											<label for="numvoie" class="TXT mt-2"><b><u>Modalité d'exploitation : </u></b></label>
+										</td>
+										
+									</tr>
 
-										</table>
-										</fieldset>
-						 			</div>
-									<div class="col-lg-6">
-									  <fieldset class="border p-2">	
-									   <legend class="w-auto float-none p-2">Nouvelles données</legend>	
-													<table style="width: 100%;">
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input  type="text" name="ninAffaire_modif" id="idninAffaire_modif" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input type="text" name="ninCapital_modif" id="idninCapital_modif" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input type="text" name="ninEffectif_modif" id="idninEffectif_modif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-
-													<tr>
-														<td style="width: 50%;">
-															<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
-														</td>
-														<td style="width: 50%;">
-															<input type="text" name="ninEffectifFem_modif" id="idninEffectifFem_modif" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
-														</td>
-													</tr>
-											</table>
-											<table style="width: 100%;">
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input type="text" name="ninAnneeCa_modif" id="idninAnneeCa_modif" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
-												</td>
-											</tr>
-
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-												<input type="text" name="ninEffect1_modif" id="idninEffect1_modif" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
-												</td>
-											</tr>
-
-											<tr>
-												<td style="width: 50%;">
-													<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
-												</td>
-												<td style="width: 50%;">
-													<input type="text" name="ninEffectifFemSAIS_modif" id="idninEffectifFemSAIS_modif" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
-												</td>
-											</tr>
-
-										</table>
-										</fieldset>
-									</div>
-							</div>
-							</fieldset>
-							<div class="row">
-											<div class="col-lg-12">
-												<div class="row">
-													<label class="col-md-8" for="basicpill-firstname-input"></label>
-													<div class="col-md-4 mr-0 mt-4">
-														<input type="button"  value="Précédant" name="editer" id="idBtnPrecedantActiviteEconomique" class="boutonsm">
-														<input type="submit"  value="Sauvegarder" name="sauvegarder" id="id_sauvegarder" class="boutonsm">
-													</div>
-													
+														</table>
+														</fieldset>
 												</div>
-											</div>
+												<div class="col-lg-4">
+													<fieldset class="border p-2">	
+													        <legend class="w-auto float-none p-2">Anciennes données</legend>	
+															<table style="width: 100%;">
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input  disabled type="text" name="ninAffaire" id="idninAffaire" value="{{ninea_anc.ninActivitesEconomiques[0].ninAffaire}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled type="text" name="ninCapital" id="idninCapital" value="{{ninea_anc.ninActivitesEconomiques[0].ninCapital}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled type="text" name="ninEffectif" id="idninEffectif" value="{{ninea_anc.ninActivitesEconomiques[0].ninEffectif}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled type="text" name="ninEffectifFem" id="idninEffectifFem" value="{{ninea_anc.ninActivitesEconomiques[0].ninEffectifFem}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+															</table>
+															<table style="width: 100%;">
+															<tr>
+																
+																<td style="width: 50%;">
+																	<input disabled type="text" name="ninAnneeCa" id="idninAnneeCa" value="{{ninea_anc.ninActivitesEconomiques[0].ninAnneeCa}}" class="form-control form-control-sm">
+																</td>
+															</tr>
+
+															<tr>
+																
+																<td style="width: 50%;">
+																<input disabled type="text" name="ninEffect1" id="idninEffect1" value="{{ninea_anc.ninActivitesEconomiques[0].ninEffect1}}" class="form-control form-control-sm">
+																</td>
+															</tr>
+
+															<tr>
+																
+																<td style="width: 50%;">
+																	<input disabled type="text" name="ninEffectifFemSAIS" id="idninEffectifFemSAIS" value="{{ninea_anc.ninActivitesEconomiques[0].ninEffectifFemSAIS}}" class="form-control form-control-sm">
+																</td>
+															</tr>
+
+									 <tr>
+										
+										<td style="width: 50%;">
+											<select  disabled class="form-control form-control-sm  " name="ninOcc" id="ni_activite_economique_ninOcc" style="width: 100%;">
+												   {% if  ninea_anc.ninActivitesEconomiques[0].ninOcc is not null %}
+															<option value="{{ ninea_anc.ninActivitesEconomiques[0].ninOcc.id }}" selected> {{ ninea_anc.ninActivitesEconomiques[0].ninOcc.libelle}}</option>
+												   {% endif %}
+											</select>
+												<span style="color: red;" id="ninocc"></span>
+										</td>
+									</tr>
+									<tr>
+										
+										<td style="width: 50%;">
+											<select disabled class="form-control form-control-sm  " name="ninNature" id="ni_activite_economique_ninNature" style="width: 100%;">
+												
+													{% if ninea_anc.ninActivitesEconomiques[0].ninNature is not null %}
+														
+															<option value="{{ ninea_anc.ninActivitesEconomiques[0].ninNature.id }}" selected> {{ ninea_anc.ninActivitesEconomiques[0].ninNature.nleLibelle}}</option>
+														
+													{% endif %}
+													
+												</select>
+												<span style="color: red;" id="ninnature"></span>
+										</td>
+									</tr>	
+									<tr>
+										<td style="width: 50%;">
+											<select disabled class="form-control form-control-sm  " name="ninMode" id="ni_activite_economique_ninMode" style="width: 100%;">
+													{% if ninea_anc.ninActivitesEconomiques[0].ninMode is not null %}
+														
+															<option value="{{ ninea_anc.ninActivitesEconomiques[0].ninMode.id }}" selected> {{ ninea_anc.ninActivitesEconomiques[0].ninMode.libelle}}</option>
+														
+													{% endif %}
+												
+											</select>
+												<span style="color: red;" id="ninmode"></span>
+										</td>
+									</tr>
+
+														</table>
+													</fieldset>
+												</div>
+												<div class="col-lg-4">
+													<fieldset class="border p-2">	
+													               <legend class="w-auto float-none p-2">Nouvelles données</legend>	
+																	<table style="width: 100%;">
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled  type="text" name="ninAffaire_modif" id="idninAffaire_modif" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled type="text" name="ninCapital_modif" id="idninCapital_modif" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled type="text" name="ninEffectif_modif" id="idninEffectif_modif" value="{{lastactiviteEco.ninEffectif}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+
+																	<tr>
+																		
+																		<td style="width: 50%;">
+																			<input disabled type="text" name="ninEffectifFem_modif" id="idninEffectifFem_modif" value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+															</table>
+															<table style="width: 100%;">
+															<tr>
+																
+																<td style="width: 50%;">
+																	<input disabled type="text" name="ninAnneeCa_modif" id="idninAnneeCa_modif" value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm">
+																</td>
+															</tr>
+
+															<tr>
+																
+																<td style="width: 50%;">
+																   <input disabled type="text" name="ninEffect1_modif" id="idninEffect1_modif" value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
+																</td>
+															</tr>
+
+															<tr>
+																
+																<td style="width: 50%;">
+																	<input disabled type="text" name="ninEffectifFemSAIS_modif" id="idninEffectifFemSAIS_modif" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
+																</td>
+															</tr>
+
+															<tr>
+										
+										<td style="width: 50%;">
+											<select  disabled class="form-control form-control-sm  " name="ninOcc" id="ni_activite_economique_ninOcc" style="width: 100%;">
+												   {% if  lastactiviteEco.ninOcc is not null %}
+															<option value="{{ lastactiviteEco.ninOcc.id }}" selected> {{ lastactiviteEco.ninOcc.libelle}}</option>
+												   {% endif %}
+											</select>
+												<span style="color: red;" id="ninocc"></span>
+										</td>
+									</tr>
+									<tr>
+										
+										<td style="width: 50%;">
+											<select disabled class="form-control form-control-sm  " name="ninNature" id="ni_activite_economique_ninNature" style="width: 100%;">
+												
+													{% if lastactiviteEco.ninNature is not null %}
+														
+															<option value="{{ lastactiviteEco.ninNature.id }}" selected> {{ lastactiviteEco.ninNature.nleLibelle}}</option>
+														
+													{% endif %}
+													
+												</select>
+												<span style="color: red;" id="ninnature"></span>
+										</td>
+									</tr>	
+									<tr>
+										<td style="width: 50%;">
+											<select disabled class="form-control form-control-sm  " name="ninMode" id="ni_activite_economique_ninMode" style="width: 100%;">
+													{% if lastactiviteEco.ninMode is not null %}
+														
+															<option value="{{ lastactiviteEco.ninMode.id }}" selected> {{ lastactiviteEco.ninMode.libelle}}</option>
+														
+													{% endif %}
+												
+											</select>
+												<span style="color: red;" id="ninmode"></span>
+										</td>
+									</tr>
+
+														</table>
+														</fieldset>
+												</div>
+										</div>
+										</fieldset>
+										<div class="row">
+														<div class="col-lg-12">
+															<div class="row">
+																<label class="col-md-8" for="basicpill-firstname-input"></label>
+																<div class="col-md-4 mr-0 mt-4">
+																	<input type="button"  value="Précédant" name="editer" id="idBtnPrecedantActiviteEconomique" class="boutonsm">
+																	{% if (ninea.formeJuridique.niFormeunite.id == 11) or  (ninea.formeJuridique.niFormeunite.id == 12) %}
+																	{% else %}
+																	<input type="button"  value="Suivant" name="editer" id="idBtnSuivantActiviteEconomique" class="boutonsm">
+																	{% endif %}
+																</div>
+																
+															</div>
+														</div>
+										</div>
 							</div>
-            	    </div>
 
 						</div>
 
-
+              {% if (ninea.formeJuridique.niFormeunite.id == 21 or ninea.formeJuridique.niFormeunite.id == 22) %} 
 						<div class="tab-pane" id="dirigeants" role="tabpanel">
-							
+							<div class="row">
+							    <div class="row">
+								           <div class="col-lg-12">
+										     	<fieldset class="fieldcolor p-2 mb-3">
+							 			         <legend class="w-auto float-none p-2">Anciennes données</legend>
+													<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+														<thead class="tr_entete" >
+															<tr>
+																<th>Prénom</th>
+																<th>Nom</th>
+																<th>Qualification</th>
+																<th>CNI</th>
+																<th>Nationalité</th>
+															
+															</tr>
+														</thead>
+														<tbody>
+														{% for tag in ninea_anc.ninDirigeant %}
+															<tr>
+																<td >{{tag.ninPrenom}}</td>
+																<td >{{tag.ninNom}}	</td>
+																<td > 
+																	{% if tag.ninPosition %}
+																		{{tag.ninPosition.libelle}} 
+																	{% endif %}
+																</td>
+																<td >{{tag.ninCni}}</td>
+																<td >{{ tag.ninNationalite.libelle}}</td>
+																
+															
+															</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+											     </fieldset>		
+											</div>
+								   
+											<div class="col-lg-12 mt-4">
+										     	<fieldset class="fieldcolor p-2 mb-3">
+							 			         <legend class="w-auto float-none p-2">Nouvelle données</legend>
+													<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+														<thead class="tr_entete" >
+															<tr>
+																<th>Prénom</th>
+																<th>Nom</th>
+																<th>Qualification</th>
+																<th>CNI</th>
+																<th>Nationalité</th>
+															
+															</tr>
+														</thead>
+														<tbody>
+														{% for tag in ninea.tempNiDirigeants %}
+															<tr>
+																<td >{{tag.ninPrenom}}</td>
+																<td >{{tag.ninNom}}	</td>
+																<td > 
+																	{% if tag.ninPosition %}
+																		{{tag.ninPosition.libelle}} 
+																	{% endif %}
+																</td>
+																<td >{{tag.ninCni}}</td>
+																<td >{{ tag.ninNationalite.libelle}}</td>
+																
+															
+															</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+											     </fieldset>		
+											</div>
+										
+								</div>
+								<label class="col-md-10" for="basicpill-firstname-input"></label>
+								<div class="col-md-2">
+									<input type="button"  value="Précédant" name="editer" id="idBtnPrecedantDirigeant" class="boutonsm">
+								</div>
+								
+							</div>
 						</div>
-
+             {% endif %}
 					</div>
 				</div>
 			</div>
@@ -2189,8 +2505,71 @@
 
 			
         </div>
-	 <input type="submit" value="sauve" name="sauve">
+	
 	</form>
+
+
+	<div class="modal fade btnrejeter" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h6 class="modal-title" id="mySmallModalLabel">Motifs du rejet de la demande </h6>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							
+							<div id="sidebar">
+								<form    action="{{ path('rejeterDemandeModification',{id:demande_modification.id}) }}" method="post">
+									<div class="row justify-content-center">
+										<div class="col-lg-12">	
+											<center>							
+												<textarea name="remarque"  cols="20" rows="5" required></textarea>
+											</center>	
+										</div>
+										<div class="col-lg-12">
+											<center><br>
+												<input type="submit" class=" boutonsm" value="Rejeter" width="200px">
+											</center>
+											
+										</div>
+									</div>
+								</form>	
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
+
+
+			<div class="modal fade btnretour" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h6 class="modal-title" id="mySmallModalLabel">Motifs du retour de la demande </h6>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>						
+						<div class="modal-body">							
+							<div id="sidebar">
+								<form    action="{{ path('retournerDemandeModification',{id:demande_modification.id}) }}" method="post">
+									<div class="row justify-content-center">
+										<div class="col-lg-12">	
+											<center>							
+												<textarea name="remarque"  cols="20" rows="5" required></textarea>
+											</center>	
+										</div>
+										<div class="col-lg-12">
+											<center><br>
+												<input type="submit" class="boutonsm" value="Retourner" width="200px">
+											</center>
+											
+										</div>
+									</div>
+								</form>	
+							</div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
 
 <!-- end card -->
 {% endblock %}
@@ -2204,14 +2583,62 @@
 	<script src="{{ asset('admin/dist/assets/js/multiselect.min.js')}}"></script>
     <script>
         $(document).ready(function() {
-			$("#idnationalite_personne_modif").select2();
+
+
+			 $(".valider").click(function(e) {
+                            e.preventDefault();
+                            var a=$(this);
+                            Swal.fire({
+                            title:"Confirmation",
+                            text:"Êtes-vous sûr de vouloir valider la demande  ?",
+                            icon:"warning",
+                            showCancelButton:true,
+                            confirmButtonText:"Oui",
+                            cancelButtonText:"Non",
+                            confirmButtonClass:"btn btn-success mt-2",
+                            cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                            buttonsStyling:!1}).then(function(t)
+                            {
+                            if (t.value) {
+                                
+                                window.location.href="{{ path('validerDemandeModification', {'id': demande_modification.id } )}}";
+                            }else
+                                e.preventDefault();
+
+                            })
+
+                });
+			
 			var formeunite = "{{  ninea.formeJuridique.niFormeunite.id }}"
 			if (formeunite == 11 || formeunite == 12){
 				if ($('#idnationalite_personne').val() == "SN") {
 					document.getElementById("tablePassport_personne").style.display = "none";
+					document.getElementById("tablePassport_personne_2").style.display = "none";
 				}else{
 					document.getElementById("tableCni_personne").style.display = "none";
+					document.getElementById("tableCni_personne_2").style.display = "none";
 				}
+			}else{
+
+				$('#idBtnSuivantActiviteEconomique').click(function () {
+					$('#activiteEconomiques').removeClass('active ');
+					$('#idactiviteEconomique').removeClass('active ');
+					$('#iddirigeant').addClass('active ');
+					$('#iddirigeant').removeClass('disabled');
+
+					$('#iddirigeant').attr('href', '#dirigeants');
+					$('#dirigeants').addClass('active');
+			    });
+
+				$('#idBtnPrecedantDirigeant').click(function () {
+					$('#iddirigeant').removeClass('active ');
+					$('#dirigeants').removeClass('active ');
+					$('#activiteEconomiques').addClass('active ');
+					$('#idactiviteEconomique').attr('href', '#activiteEconomiques');
+					$('#idactiviteEconomique').addClass('active');
+			    });
+
+				
 			}
 
 			if (formeunite == 11 || formeunite == 12){
@@ -2563,6 +2990,12 @@
 					$('#idactiviteEconomique').addClass('active');
 			});
 
+
+
+			
+
+			
+
 			$('#idBtnPrecedantActivite').click(function () {
 					$('#activites').removeClass('active ');
 					$('#idactivite').removeClass('active ');
@@ -2578,6 +3011,8 @@
 					$('#idactivite').attr('href', '#activites');
 					$('#idactivite').addClass('active');
 			});
+
+		
 
 		    $('#idCivilite_modif').change(function () {
 					//alert(document.getElementById("idcni").value);
@@ -3018,6 +3453,158 @@
 						}
 				})
 			});
+
+
+			$('#btnAjouterActivities_modif').click(function(){
+					var table = document.getElementById("idtab_modif");
+						//table.setAttribute('style',"width:100% ;")
+					var newRow = table.insertRow(-1);
+					var rowNumber = table.rows.length-1;
+					var tab=[];
+					tab[0]="none";
+					
+					for(let i=1;i<table.rows.length-1;i++){
+						if(document.getElementById("idrefNaema_modif"+i)!=null)
+						tab[i]=document.getElementById("idrefNaema_modif"+i).value;
+						else
+						tab[i]="none";
+						
+					}
+					
+					let selectact = document.getElementById("idrefNaema_modif"+rowNumber);
+					var newCell = newRow.insertCell(0);
+					newCell.innerHTML = '<td  style="width: 20%;"> <input required type="text" name="ninAutact'+rowNumber+'" id="idninAutact_modif'+rowNumber+'" onkeyup="this.value=this.value.toUpperCase()"  class="form-control form-control-sm "> <span id="ninAutact'+rowNumber+'" style="color:red;"></span></td>';
+
+					$("#idninAutact_modif"+rowNumber).change(function() {
+						let idlieunais = document.getElementById("idninAutact_modif"+rowNumber).value;
+							
+							if (idlieunais.match(/^[0-9]+$/)!=null)
+							{
+								
+								//document.getElementById("btnSuivant").setAttribute("disabled", true);
+								document.getElementById("idBtnSuivantActivites_modif").setAttribute("disabled", true);
+								document.getElementById("ninAutact_modif"+rowNumber).innerHTML = "Le libellé ne peut pas contenir que des chiffres.";
+
+							}
+							else
+							{
+								//document.getElementById("btnSuivant").removeAttribute("disabled");
+								document.getElementById("idBtnSuivantActivites_modif").removeAttribute("disabled");
+								document.getElementById("ninAutact_modif"+rowNumber).innerHTML = "";
+							
+							}
+					});
+
+
+						//libellé unique
+
+
+					var newCell2 = newRow.insertCell(1);	
+					var opt="";
+
+
+					{% if ninea.formejuridique.id == 98  %}
+							{% for tag in naemas %}
+								{% if tag.id == "4800" %}
+									if ( !tab.includes('{{tag.id}}'))
+										opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							{% if ninea.formejuridique.id == 99  %}
+
+							{% for tag in naemas %}
+									{% if tag.id == "9803" %}
+										if ( !tab.includes('{{tag.id}}'))
+											opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+									{% endif %}
+							{% endfor %}
+								
+
+							{% else %}
+									{% if ninea.formejuridique.id == 94  %}
+										{% for tag in naemas %}
+											{% if tag.id == "9901" %}
+												if ( !tab.includes('{{tag.id}}'))
+													opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+											{% endif %}
+										{% endfor %}
+
+									{% else %}
+
+									{% for tag in naemas %}
+											{% if tag.id != "9901" and tag.id != "9803" and tag.id != "4800"   %}
+												if ( !tab.includes('{{tag.id}}'))
+													opt=opt+'<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> ';
+												{% endif %}
+										{% endfor %}
+
+									{% endif %}
+							{% endif %}
+
+
+					{% endif %}
+
+				
+					newCell2.innerHTML = '<td >	<select required style=" background-color :#D6EAF8;"class="form-control form-control-sm select2 classselect" name="refNaema_modif'+rowNumber+'"   id="idrefNaema_modif'+rowNumber+'" required> <option value="" selected> Sélectionner...</option> '+
+						opt+
+						'</select></td>';
+				
+					var newCell3 = newRow.insertCell(2);		    
+					newCell3.innerHTML = '<td style="width: 30%;"> <select required class="select2 form-control select2-multiple selectproduit" name="refProduit_modif'+rowNumber+'[]" required   id="idrefProduit_modif'+rowNumber+'" multiple="multiple" data-placeholder="Selectionner...">  </select> </td>';
+
+					var newCell4 = newRow.insertCell(3);
+					newCell4.innerHTML = ' <td style="width: 10%;"> <label> Secondaire </label></td>';
+				
+					var newCell5 = newRow.insertCell(4);
+					newCell5.innerHTML = ' <td> <input  id="idBtnSupprimerDirigeant_modif' + rowNumber + '"  type="button" value="Supprimer" ></td>';
+					
+					$('.selectproduit').select2();
+					$('#idrefNaema_modif'+rowNumber).select2();
+
+					$('#idrefNaema_modif'+rowNumber).change(function(){
+						
+						document.getElementById("idrefProduit_modif"+rowNumber).innerHTML = "";
+						{% for tag in produits %}
+							
+							if ($('#idrefNaema_modif'+rowNumber).val() == '{{ tag.naema.id }}') {
+							let opt = document.createElement('option');
+							opt.value = "{{ tag.id }}";
+							opt.innerHTML = "{{ tag.id }}"+"-"+"{{ tag.libelle }}";
+							document.getElementById("idrefProduit_modif"+rowNumber).add(opt);
+							}
+
+						{% endfor %}			
+
+					});
+
+
+
+					newRow.querySelector('#idBtnSupprimerDirigeant_modif'+rowNumber).addEventListener("click",()=>{
+						newRow.remove();
+					});
+
+			});
+
+			$('#idrefNaema_modif1').select2();
+			$('.selectproduit').select2();
+
+			$('#idrefNaema_modif1').change(function(){
+				
+				document.getElementById("idrefProduit_modif1").innerHTML = "";
+				{% for tag in produits %}
+					
+					if ($('#idrefNaema_modif1').val() == '{{ tag.naema.id }}') {
+						let opt = document.createElement('option');
+						opt.value = "{{ tag.id }}";
+						opt.innerHTML = "{{ tag.id }}"+"-"+"{{ tag.libelle }}";
+						document.getElementById("idrefProduit_modif1").add(opt);
+					}
+
+				{% endfor %}			
+
+			});
+
 
 
 		});

@@ -3,6 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\NAEMA;
+use App\Entity\TempNINinea;
+use App\Entity\TempNiCoordonnees;
+use App\Entity\TempNiPersonne;
+use App\Entity\TempNiDirigeant;
+use App\Entity\TempNiActivite;
+use App\Entity\TempNinproduits;
+use App\Entity\TempNiActiviteEconomique;
+
+
 use App\Entity\NAEMAS;
 use App\Entity\NiSexe;
 use App\Entity\Region;
@@ -28,6 +37,8 @@ use App\Entity\NiTypepersone;
 use App\Services\DiversUtils;
 use App\Entity\CategoryNaemas;
 use App\Entity\Ninproduits;
+use App\Entity\DemandeModification;
+
 
 use App\Entity\CategorySyscoa;
 use Doctrine\ORM\EntityManager;
@@ -68,6 +79,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use App\Entity\Nireactivation;
+
 /**
  * @Route("/ninea")
  * @Security("is_granted('ROLE_CONSULTATION_NINEA') or is_granted('ROLE_DEMANDE_NINEA') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_NINEA_ADMIN')")
@@ -100,6 +114,7 @@ class NINineaController extends AbstractController
         $sigle = "";
         $telephone = "";
         $email = "";
+        $adresse = "";
 
         if ($request->get("filtre") ) {
             $numNinea = $request->get('numNinea');
@@ -107,6 +122,7 @@ class NINineaController extends AbstractController
             $raison = $request->get("raisonsociale");
             $datenais = $request->get("datenais");
             $enseigne = $request->get("enseigne");
+            $adresse = $request->get("adresse");
             $cni = $request->get('cni/passport');   
             $numreg = str_replace(" ", "", $request->get("regcom"));
             $datereg = $request->get("dateregcom");
@@ -115,7 +131,7 @@ class NINineaController extends AbstractController
             $email = $request->get("email");
 
             $ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
-                                        $cni, $numreg, $datereg, $sigle, $telephone, $email);
+                                        $cni, $numreg, $datereg, $sigle, $telephone, $email,$adresse);
 
             if (count($ninea) < 1 )
             {
@@ -140,6 +156,7 @@ class NINineaController extends AbstractController
             "sigle"         => $sigle,
             "telephone"     => $telephone,
             "email"         => $email ,
+            "adresse"         => $adresse ,
 
         ]);
     }
@@ -147,9 +164,9 @@ class NINineaController extends AbstractController
 
 
     /**
-     * @Route("/recherche_NINEA", name="recherche_NINEA", methods={"GET", "POST"})
+     * @Route("/recherche_NINEA/{id}", name="recherche_NINEA", methods={"GET", "POST"})
      */
-    public function recherche_NINEA(NINineaRepository $nINineaRepository, Request $request): Response
+    public function recherche_NINEA(NINineaRepository $nINineaRepository, Request $request,$id=""): Response
     {
        /*  $ninea = [];
         
@@ -157,6 +174,11 @@ class NINineaController extends AbstractController
             $numNinea = $request->get('numNinea');
             $ninea=$nINineaRepository->findBy(["ninNinea"=>$numNinea]);
         } */
+        if($id!=21 && $id!=22 )
+            $fj = $this->getDoctrine()->getRepository(NiFormejuridique::class)->find($id);
+        else 
+          $fj=$id;
+
 
         $ninea = "";
         $numNinea = "";
@@ -178,8 +200,12 @@ class NINineaController extends AbstractController
             $datenais = $request->get("datenais");
             $enseigne = $request->get("enseigne");
            
+            if($id!=21 && $id!=22 )
+              $ninea=$nINineaRepository->findByFieldRechercheNINEA($numNinea, $nineamere,$raison, $datenais,$enseigne, $fj   );
+            else
+              $ninea=$nINineaRepository->findByFieldRechercheNINEAMorale($numNinea, $nineamere,$raison, $datenais,$enseigne, $fj   );
 
-            $ninea=$nINineaRepository->findByFieldRechercheNINEA($numNinea, $nineamere,$raison, $datenais,$enseigne  );
+            
 
                 
         }else {
@@ -277,9 +303,7 @@ class NINineaController extends AbstractController
             $datenais = $request->get("datenais");
             $enseigne = $request->get("enseigne");
            
-
             $ninea=$nINineaRepository->findNineaPersonnephysique($numNinea, $nineamere,$raison, $datenais,$enseigne  );
-
                 
         }else {
 
@@ -327,7 +351,7 @@ class NINineaController extends AbstractController
             //$ninea=  $nINineaRepository->findAll();
         }
 
-        return $this->render('ni_ninea/recherche_NINEA_Personne.html.twig', [
+        return $this->render('ni_ninea/recherche_NINEA_Personnemorale.html.twig', [
             //'ninineas'      =>$ninea,
             'ninineas'      => $ninea,
             "numNinea"      => $numNinea ,
@@ -358,6 +382,7 @@ class NINineaController extends AbstractController
       $sigle = "";
       $telephone = "";
       $email = "";
+      $adresse="";
 
       if ($request->get("filtre") ) {
           $numNinea = $request->get('numNinea');
@@ -371,14 +396,18 @@ class NINineaController extends AbstractController
           $sigle = $request->get("sigle");
           $telephone = $request->get("telephone");
           $email = $request->get("email");
-
+          $adresse =   str_replace($request->get("adresse")," ","");
+        
           $ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
-                                      $cni, $numreg, $datereg, $sigle, $telephone, $email);
+                                      $cni, $numreg, $datereg, $sigle, $telephone, $email,$adresse);
+
+
+                                 
 
               
       }else {
 
-          $ninea=  $nINineaRepository->findBy(array(),array('ninNinea'=>'desc'),80,0);
+          $ninea=  $nINineaRepository->findBy(array(),array('ninNinea'=>'desc'),100,0);
       }
         return $this->render('ni_ninea/index.html.twig', [
             'ninineas' =>$ninea,
@@ -394,6 +423,8 @@ class NINineaController extends AbstractController
             "sigle"         => $sigle,
             "telephone"     => $telephone,
             "email"         => $email ,
+            "adresse"         => $adresse ,
+            
 
         ]);
     }
@@ -417,6 +448,10 @@ class NINineaController extends AbstractController
       $sigle = "";
       $telephone = "";
       $email = "";
+      $adresse = "";
+
+      $session= new Session();
+      $session->set('erreurSaisie',"1");
 
       if ($request->get("filtre") ) {
           $numNinea = $request->get('numNinea');
@@ -430,9 +465,11 @@ class NINineaController extends AbstractController
           $sigle = $request->get("sigle");
           $telephone = $request->get("telephone");
           $email = $request->get("email");
+          $adresse = $request->get("adresse");
+          
 
           $ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
-                                      $cni, $numreg, $datereg, $sigle, $telephone, $email);
+                                      $cni, $numreg, $datereg, $sigle, $telephone, $email,$adresse);
 
               
       }else {
@@ -453,6 +490,73 @@ class NINineaController extends AbstractController
             "sigle"         => $sigle,
             "telephone"     => $telephone,
             "email"         => $email ,
+            "adresse"         => $adresse ,
+
+
+        ]);
+    }
+
+
+
+     /**
+     * @Route("/demande_miseajour", name="demande_miseajour", methods={"GET"})
+     */
+    public function demande_miseajour(NINineaRepository $nINineaRepository, Request $request): Response
+    {
+      $ninea = "";
+      $numNinea = "";
+      $nineamere ="";
+      $raison = "";
+      $datenais = "";
+      $enseigne = "";
+      $cni = "";   
+      $numreg = "";
+      $datereg = "";
+      $sigle = "";
+      $telephone = "";
+      $email = "";
+      $adresse = "";
+      
+      $session= new Session();
+      $session->set('erreurSaisie',"2");
+
+      if ($request->get("filtre") ) {
+          $numNinea = $request->get('numNinea');
+          $nineamere = $request->get("nineamere");
+          $raison = $request->get("raisonsociale");
+          $datenais = $request->get("datenais");
+          $enseigne = $request->get("enseigne");
+          $cni = $request->get('cni/passport');   
+          $numreg = $request->get("regcom");
+          $datereg = $request->get("dateregcom");
+          $sigle = $request->get("sigle");
+          $telephone = $request->get("telephone");
+          $email = $request->get("email");
+          $adresse = $request->get("adresse");
+
+          $ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
+                                      $cni, $numreg, $datereg, $sigle, $telephone, $email,$adresse);
+
+              
+      }else {
+
+          $ninea=  $nINineaRepository->findBy(array(),array('ninNinea'=>'desc'),80,0);
+      }
+        return $this->render('ni_ninea/demande_miseajour.html.twig', [
+            'ninineas' =>$ninea,
+           
+            "numNinea"      =>$numNinea ,
+            "nineamere"     => $nineamere,
+            "raison"         =>  $raison,
+            "datenais"       =>  $datenais,
+            "enseigne"      => $enseigne,
+            "cni"           => $cni,   
+            "numreg"        => $numreg,
+            "datereg"       => $datereg,
+            "sigle"         => $sigle,
+            "telephone"     => $telephone,
+            "email"         => $email ,
+            "adresse"         => $adresse ,
 
         ]);
     }
@@ -475,6 +579,7 @@ class NINineaController extends AbstractController
       $sigle = "";
       $telephone = "";
       $email = "";
+      $adresse = "";
 
       if ($request->get("filtre") ) {
           $numNinea = $request->get('numNinea');
@@ -490,7 +595,7 @@ class NINineaController extends AbstractController
           $email = $request->get("email");
 
           $ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
-                                      $cni, $numreg, $datereg, $sigle, $telephone, $email);
+                                      $cni, $numreg, $datereg, $sigle, $telephone, $email, $adresse);
 
               
       }else {
@@ -662,11 +767,16 @@ class NINineaController extends AbstractController
              * faut tester sur toutes les id forme juridique
              * $doc_creation_id = $vars->getFormeJuridique()->getId();
              */
-            $doc_create = str_replace("_", "", $vars->getNinRegcom()); // init docu creation
+            $doc_create = str_replace("_", "", $vars->getNinNumeroDocument());
 
-            $doc_create_txt = "RCCM";
+            $doc_create_txt = $vars->getNiTypedocument() ? $vars->getNiTypedocument()->getLibelle() : "";
+
+            $date_document = $vars->getNinDateDocument();
+
+            
+            /*$doc_create_txt = "RCCM";
             $doc_rccm_txt = "DATE D'IMMATRICULATION AU RCCM";
-            if ($doc_create==null) {
+            if ($doc_create=="") {
                 $doc_create = $vars->getNinBordereau();
                 $doc_create_txt = "BORDERAU";
             }
@@ -701,7 +811,7 @@ class NINineaController extends AbstractController
             if ($doc_create==null) {
                 $doc_create = $vars->getNiPersonne() ? $vars->getNiPersonne()->getNinCNI() : "";
                 $doc_create_txt = "CARTE NATIONALE D'IDENTITE";
-            }
+            }*/
 
             
             $html = $this->renderView('ni_ninea/_vimprimable.html.twig', array(
@@ -713,7 +823,7 @@ class NINineaController extends AbstractController
                 'denom_sociale' => $_denominationSocicale,
                 'doc_create' => $doc_create,
                 'doc_create_txt' => $doc_create_txt,
-                'doc_rccm_txt' => $doc_rccm_txt,
+                'date_document' => $date_document,
             )); 
 
 
@@ -956,6 +1066,19 @@ class NINineaController extends AbstractController
     }
 
 
+      /**
+     * @Route("/findby_ninea/{id}", name="findby_ninea", methods={"GET", "POST"})
+     */
+    public function findby_ninea(Request $request, EntityManagerInterface $entityManager, $id): Response
+    {
+        $ninea = $this->getDoctrine()->getRepository(NINinea::class)->findOneBy(["ninNinea" =>$id ]);
+
+        return $this->redirectToRoute('nininea_show', ["id"=>$ninea->getId()], Response::HTTP_SEE_OTHER);
+       
+
+    }
+
+
      /**
      * @Route("/editEntete/{id}", name="editEntete", methods={"GET", "POST"})
      */
@@ -996,72 +1119,123 @@ class NINineaController extends AbstractController
 
 
      /**
-     * @Route("/modifier_Ninea/{id}", name="modifier_Ninea", methods={"GET", "POST"})
-     */
-    public function modifier_Ninea(Request $request,  $id="", EntityManagerInterface $entityManager, $dirigeant=""): Response
-    {
-        $nINinea = $entityManager->getRepository(NINinea::class)->find($id);
-        $formeunites = $entityManager->getRepository(NiFormeunite::class)->findAll();
-        $formejuridiques = $entityManager->getRepository(NiFormejuridique::class)->findAll();
-        $regions = $entityManager->getRepository(Region::class)->findAll();
-        $departements = $entityManager->getRepository(Departement::class)->findAll();
-        $cacrs = $entityManager->getRepository(CACR::class)->findAll();
-        $cavs = $entityManager->getRepository(CAV::class)->findAll();
-        $departements = $entityManager->getRepository(Departement::class)->findAll();
-        $qvhs = $entityManager->getRepository(QVH::class)->findAll();
-
-        $sexe = $entityManager->getRepository(NiSexe::class)->findAll();
-        $nationalites = $entityManager->getRepository(Pays::class)->findAll();
-        $regions = $entityManager->getRepository(Region::class)->findAll();
-        $civilites = $entityManager->getRepository(NiCivilite::class)->findAll();
-        $typevoies = $entityManager->getRepository(NiTypevoie::class)->findAll();
-        $coordoonnes = $entityManager->getRepository(NiCoordonnees::class)->findBy(array("ninNinea"=>$nINinea),array('id'=>'desc'));
-        $lastacteEcononomique=$entityManager->getRepository(NiActiviteEconomique::class)->findBy(array("nINinea"=>$nINinea),array('id'=>'desc'),1,0);
-        if(count($lastacteEcononomique)>0)
-          $lastactiviteEco =$lastacteEcononomique[0];
-        else
-          $lastactiviteEco=null;
+      * @Route("/modifier_Ninea/{id}", name="modifier_Ninea", methods={"GET", "POST"})
+      */
+      public function modifier_Ninea(Request $request,  $id="", EntityManagerInterface $entityManager, AuthorizationCheckerInterface $autorization, $dirigeant=""): Response
+      {
         
-        $activiteseconmiques = $entityManager->getRepository(NiActiviteEconomique::class)->findBy(array("nINinea"=>$nINinea),array('id'=>'desc'));
+        $demandeModification=$entityManager->getRepository(DemandeModification::class)->find($id);
+        $nINinea = $demandeModification->getTempNinea();
+        $ninea_anc = $demandeModification->getNinea();
         
+        if($demandeModification->getTypeDemande() != "3"){
+          
+        }else{
+          
+          $demandeReactivation=$entityManager->getRepository(Nireactivation::class)->findOneBy(["ninea"=>$ninea_anc]);
+          
+          //si l'utilisateur connecté est agent validateur
+          if($demandeModification->getEtat() == "c" ||  $demandeModification->getEtat() == "t" || $demandeModification->getEtat() == "a")
+          {
+            if ($autorization->isGranted("ROLE_VALIDER_DEMANDE_NINEA" ) or $autorization->isGranted("ROLE_ADMIN" )) {
+                
+                $demandeModification->setNinlock(true);
+                $demandeModification->setUpdatedBy($this->getUser());
 
-        if(count($coordoonnes)>0)
-         $coordoonne =$coordoonnes[0];
-        else
-         $coordoonne=null;
+                if($demandeReactivation){
+
+                  $demandeReactivation->setNinlock(true);
+                  $demandeReactivation->setUpdatedBy($this->getUser());
+                }
+
+    
+                $entityManager->flush();
+    
+            }
+          }
+        }
+
+
+      $formeunites = $entityManager->getRepository(NiFormeunite::class)->findAll();
+      $formejuridiques = $entityManager->getRepository(NiFormejuridique::class)->findAll();
+      $regions = $entityManager->getRepository(Region::class)->findAll();
+      $departements = $entityManager->getRepository(Departement::class)->findAll();
+      $cacrs = $entityManager->getRepository(CACR::class)->findAll();
+      $cavs = $entityManager->getRepository(CAV::class)->findAll();
+      $departements = $entityManager->getRepository(Departement::class)->findAll();
+      $qvhs = $entityManager->getRepository(QVH::class)->findAll();
+      
+      $sexe = $entityManager->getRepository(NiSexe::class)->findAll();
+      $nationalites = $entityManager->getRepository(Pays::class)->findAll();
+      $regions = $entityManager->getRepository(Region::class)->findAll();
+      $civilites = $entityManager->getRepository(NiCivilite::class)->findAll();
+      $typevoies = $entityManager->getRepository(NiTypevoie::class)->findAll();
+      $coordoonnes = $entityManager->getRepository(TempNiCoordonnees::class)->findBy(array("ninNinea"=>$nINinea),array('id'=>'desc'));
+      $lastacteEcononomique=$entityManager->getRepository(TempNiActiviteEconomique::class)->findBy(array("niNinea"=>$nINinea),array('id'=>'desc'),1,0);
+      if(count($lastacteEcononomique)>0)
+      $lastactiviteEco =$lastacteEcononomique[0];
+      else
+      $lastactiviteEco=null;
+      
+      //$activiteseconmiques = $entityManager->getRepository(NiActiviteEconomique::class)->findBy(array("nINinea"=>$nINinea),array('id'=>'desc'));
+      $activiteseconmiques = $entityManager->getRepository(TempNiActiviteEconomique::class)->findBy(array("niNinea"=>$nINinea),array('id'=>'desc'));
+      
+      
+      if(count($coordoonnes)>0)
+      $coordoonne =$coordoonnes[0];
+      else
+      $coordoonne=null;
+      
+      
+      $ninactivites = $entityManager->getRepository(TempNiActivite::class)->findBy(array("niNinea"=>$nINinea),array('statActivprincipale'=>'desc'));
+      $ninactivites_anc = $entityManager->getRepository(NiActivite::class)->findBy(array("nINinea"=>$ninea_anc),array('statActivprincipale'=>'desc'));
+
+      //dd($ninactivites_anc);
+      
+      
+      $ninproduits = $entityManager->getRepository(TempNinproduits::class)->findBy(array("nINinea"=>$nINinea));
+      $ninproduits_anc = $entityManager->getRepository(TempNinproduits::class)->findBy(array("nINinea"=>$ninea_anc));
+      
+      
+      //$ninactivites = $entityManager->getRepository(NiActivite::class)->findBy(array("nINinea"=>$nINinea),array('statActivprincipale'=>'desc'));
+      // $ninproduits = $entityManager->getRepository(Ninproduits::class)->findBy(array("nINinea"=>$nINinea));
+      $activiteglobale = $nINinea->getNiLibelleactiviteglobale();
+      $activiteglobale_anc = $ninea_anc->getNiLibelleactiviteglobale();
+      $naemas = $entityManager->getRepository(NAEMA::class)->findAll();
+      $produits = $entityManager->getRepository(RefProduits::class)->findAll();
+      
+      return $this->render('ni_ninea/modifier_Ninea.html.twig', [
+        'ninea' => $nINinea,
+        'ninactivites_anc' => $ninactivites_anc,
+        'ninproduits_anc' => $ninproduits_anc,
+        'activiteglobale_anc' => $activiteglobale_anc,
+        'ninea_anc'=>$ninea_anc,
+        'demande_modification'=>$demandeModification,
         
-        $ninactivites = $entityManager->getRepository(NiActivite::class)->findBy(array("nINinea"=>$nINinea),array('statActivprincipale'=>'desc'));
-        $ninproduits = $entityManager->getRepository(Ninproduits::class)->findBy(array("nINinea"=>$nINinea));
-        $activiteglobale = $nINinea->getNiLibelleactiviteglobale();
-        $naemas = $entityManager->getRepository(NAEMA::class)->findAll();
-        $produits = $entityManager->getRepository(RefProduits::class)->findAll();
-
-        return $this->render('ni_ninea/modifier_Ninea.html.twig', [
-            'ninea' => $nINinea,
-            'formeunites' => $formeunites,             
-            'formejuridiques' => $formejuridiques, 
-            'registreCommerce'=>"",
-            'regions' => $regions,
-            'sexes' => $sexe,
-            'nationalites' => $nationalites,
-            'civilites' => $civilites,
-            'typevoies' => $typevoies,
-            'departements' => $departements,
-            'cacrs' => $cacrs,
-            'cavs' => $cavs,
-            'qvhs' => $qvhs,
-            'lastcoordoonnee'=>$coordoonne,
-            'lastactiviteEco'=>$lastactiviteEco,
-            'activiteseconmiques' => $activiteseconmiques,
-            'activiteglobale' => $activiteglobale,
-            'naemas' => $naemas,
-				    'ninactivites' => $ninactivites,
-				    'ninproduits' => $ninproduits,
-            'produits' => $produits,
-            'statut' => "c",
-            
-        ]);
-       
+        'formeunites' => $formeunites,             
+        'formejuridiques' => $formejuridiques, 
+        'registreCommerce'=>"",
+        'regions' => $regions,
+        'sexes' => $sexe,
+        'nationalites' => $nationalites,
+        'civilites' => $civilites,
+        'typevoies' => $typevoies,
+        'departements' => $departements,
+        'cacrs' => $cacrs,
+        'cavs' => $cavs,
+        'qvhs' => $qvhs,
+        'lastcoordoonnee'=>$coordoonne,
+        'lastactiviteEco'=>$lastactiviteEco,
+        'activiteseconmiques' => $activiteseconmiques,
+        'activiteglobale' => $activiteglobale,
+        'naemas' => $naemas,
+        'ninactivites' => $ninactivites,
+        'ninproduits' => $ninproduits,
+        'produits' => $produits,
+        'statut' => "c",
+        
+      ]);
+      
      //   return $this->renderForm('ni_ninea/edit.html.twig', [
      //       'n_i_ninea' => $nINinea,
          //   'form' => $form,
@@ -1146,7 +1320,7 @@ class NINineaController extends AbstractController
     
 
 
-              /**
+    /**
      * @Route("/editPersonne/{id}", name="ninea_editPersonne", methods={"GET", "POST"})
      */
     public function editPersonne(Request $request, EntityManagerInterface $entityManager,$id=""): Response
@@ -1749,84 +1923,84 @@ class NINineaController extends AbstractController
         $dirigeant =  $entityManager->getRepository(NiDirigeant::class)->find($id);
         $niNinea= $dirigeant->getNINinea();
 
-   //var_dump($civilites);
-   if($request->get("valider"))
-   {
-     $dirigeantNouveau =  new NiDirigeant();
+        //var_dump($civilites);
+        if($request->get("valider"))
+        {
+          $dirigeantNouveau =  new NiDirigeant();
 
-     $session= new Session();
-     $session->set('actived',5);
+          $session= new Session();
+          $session->set('actived',5);
 
-     $nationalite = $entityManager->getRepository(NiStatut::class)->find($request->get("nationalite"));
-     $cni = $request->get('cni');
-     $datecni = $request->get('datecni');
-     $nationalite = $request->get("nationalite");
-     if( $nationalite=="SN"){
-       $cni = $request->get("cni");
-       $datecni = $request->get("dateCni");
-       $dirigeantNouveau->setNinCni($cni);
-       $dirigeantNouveau->setNinDateCni(new \DateTime($datecni));
-   }
-   else {
-       $passport = $request->get("passport");
-       $datepassport = $request->get("datepassport");
-       $dirigeantNouveau->setNinCni($passport);
-       $dirigeantNouveau->setNinDateCni(new \DateTime($datepassport));
-   }
+          $nationalite = $entityManager->getRepository(NiStatut::class)->find($request->get("nationalite"));
+          $cni = $request->get('cni');
+          $datecni = $request->get('datecni');
+          $nationalite = $request->get("nationalite");
+          if( $nationalite=="SN"){
+            $cni = $request->get("cni");
+            $datecni = $request->get("dateCni");
+            $dirigeantNouveau->setNinCni($cni);
+            $dirigeantNouveau->setNinDateCni(new \DateTime($datecni));
+        }
+        else {
+            $passport = $request->get("passport");
+            $datepassport = $request->get("datepassport");
+            $dirigeantNouveau->setNinCni($passport);
+            $dirigeantNouveau->setNinDateCni(new \DateTime($datepassport));
+        }
              
-     $nom = $request->get("nom");
-     $prenom = $request->get("prenom");
-     //$adresse = $request->get("adresse");
-     $civilite = $request->get("civilite");
-     $datenais = $request->get("datenais");
-     $lieunais = $request->get("lieunais");
-     $nsexe = $request->get("sexe");
-     $email = $request->get("email");
-     $qualification = $request->get("qualification");
-     $telephone = $request->get("telephone");
-     $qvh = $request->get("qvh");
+        $nom = $request->get("nom");
+        $prenom = $request->get("prenom");
+        //$adresse = $request->get("adresse");
+        $civilite = $request->get("civilite");
+        $datenais = $request->get("datenais");
+        $lieunais = $request->get("lieunais");
+        $nsexe = $request->get("sexe");
+        $email = $request->get("email");
+        $qualification = $request->get("qualification");
+        $telephone = $request->get("telephone");
+        $qvh = $request->get("qvh");
 
-     $dirigeantNouveau->setNinNom($nom);
-     $dirigeantNouveau->setNinPrenom($prenom);
-     //$personne->setAdresse($adresse);
-     $dirigeantNouveau->setNinCivilite($entityManager->getRepository(NiCivilite::class)->find($civilite));
-     $dirigeantNouveau->setNinDatenais(new \DateTime($datenais));
-     $dirigeantNouveau->setNinLieunais($lieunais);
-     $dirigeantNouveau->setNinTelephone1($telephone);
-     $dirigeantNouveau->setNinEmail($email);
-     $dirigeantNouveau->setNinPosition($entityManager->getRepository(Qualite::class)->find($qualification));
+        $dirigeantNouveau->setNinNom($nom);
+        $dirigeantNouveau->setNinPrenom($prenom);
+        //$personne->setAdresse($adresse);
+        $dirigeantNouveau->setNinCivilite($entityManager->getRepository(NiCivilite::class)->find($civilite));
+        $dirigeantNouveau->setNinDatenais(new \DateTime($datenais));
+        $dirigeantNouveau->setNinLieunais($lieunais);
+        $dirigeantNouveau->setNinTelephone1($telephone);
+        $dirigeantNouveau->setNinEmail($email);
+        $dirigeantNouveau->setNinPosition($entityManager->getRepository(Qualite::class)->find($qualification));
 
-     $dirigeantNouveau->setNinNationalite($entityManager->getRepository(Pays::class)->find($nationalite));
-     $dirigeantNouveau->setNinSexe($entityManager->getRepository(NiSexe::class)->find($nsexe));
-     $dirigeantNouveau->setNinQvh($entityManager->getRepository(QVH::class)->find($qvh));
+        $dirigeantNouveau->setNinNationalite($entityManager->getRepository(Pays::class)->find($nationalite));
+        $dirigeantNouveau->setNinSexe($entityManager->getRepository(NiSexe::class)->find($nsexe));
+        $dirigeantNouveau->setNinQvh($entityManager->getRepository(QVH::class)->find($qvh));
+        
+        $niNineaproposition=$niNinea->getNinNumerodemande();
+        $dirigeantNouveau->setNINinea($niNinea);
+        $dirigeantNouveau->setNinNineaProposition($niNineaproposition);
+
+        $dirigeant->setDateDeCloture(new \DateTime());
+
+        //var_dump($dirigeantNouveau);
+        
+        $entityManager->persist($dirigeantNouveau);
+        $entityManager->flush();
     
-     $niNineaproposition=$niNinea->getNinNumerodemande();
-     $dirigeantNouveau->setNINinea($niNinea);
-     $dirigeantNouveau->setNinNineaProposition($niNineaproposition);
-
-     $dirigeant->setDateDeCloture(new \DateTime());
-
-     //var_dump($dirigeantNouveau);
-     
-     $entityManager->persist($dirigeantNouveau);
-     $entityManager->flush();
+        return $this->redirectToRoute('n_i_ninea_edit', ["id"=> $niNinea->getId()], Response::HTTP_SEE_OTHER);
     
-     return $this->redirectToRoute('n_i_ninea_edit', ["id"=> $niNinea->getId()], Response::HTTP_SEE_OTHER);
-   
-    
-   }
-   else if($request->get("enlever"))
-   {
-    $entityManager->remove($dirigeant);
-    //$dirigeant->getModifiedBy($this->getUser());
-    $dirigeant->setDateDeCloture(new \DateTime());
+      
+        }
+        else if($request->get("enlever"))
+        {
+          $entityManager->remove($dirigeant);
+          //$dirigeant->getModifiedBy($this->getUser());
+          $dirigeant->setDateDeCloture(new \DateTime());
 
-    $entityManager->flush();
+          $entityManager->flush();
 
-    return $this->redirectToRoute('n_i_ninea_edit', ["id"=> $niNinea->getId()], Response::HTTP_SEE_OTHER);
+          return $this->redirectToRoute('n_i_ninea_edit', ["id"=> $niNinea->getId()], Response::HTTP_SEE_OTHER);
 
 
-   }
+        }
 
 
        // var_dump($dirigeant);

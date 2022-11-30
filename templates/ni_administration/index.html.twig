@@ -4,7 +4,6 @@
 
 {% block body %}
 
-<a href="{{ path('app_ni_administration_new') }}" class="btn btn-primary btn-sm mt-lg-5">Ajouter un centre secondaire d'immatriculation</a>
 
 <div class="box ">
 	<div class="box-header">
@@ -15,8 +14,6 @@
                    Liste des centres d'immatriculation
 				</a>
 			</li>
-
-          
 
 		</ul>
 	</div>
@@ -31,8 +28,8 @@
                         <div class="card-body">
                         
   
-                            <table class="table" id="administList">
-                                <thead>
+                            <table class="table table-bordered table-striped" id="administList">
+                                <thead class="tr_entete">
                                     <tr>
                                         <th>Code</th>
                                         <th>Libelle</th>
@@ -45,9 +42,9 @@
                                     <tr>
                                         <td>{{ ni_administration.admcode }}</td>
                                         <td>{{ ni_administration.admlibelle }}</td>
-                                        <td>{{ ni_administration.admContactDetails }}</td>
+                                        <td style="width: 20%;">{{ ni_administration.admContactDetails }}</td>
                                         <td>
-                                            <a href="{{ path('app_ni_administration_edit', {'id': ni_administration.id}) }}" title="Modifier"  class="btn btn-outline-success btn-sm showjf" id="showjf"><i class="fas fa-pencil-alt"></i></a>
+                                            <a href="{{ path('app_ni_administration_edit', {'id': ni_administration.id}) }}" title="Modifier"  > <i class="fas fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 {% else %}
@@ -67,6 +64,11 @@
 								
 		</div>
 			
+    </div>
+
+    <div class="box-footer">
+        <a href="{{ path('app_ni_administration_new') }}" class="btn btn-outline-secondary">Ajouter un centre secondaire d'immatriculation</a>
+
     </div>
 </div>
 

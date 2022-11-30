@@ -5,7 +5,6 @@
 {% block body %}
 
                   
-<a href="{{ path('app_ni_formeunite_new') }}" class="btn btn-primary mt-lg-3">+ Ajouter  forme unité</a>
 
 <div class="box mt-lg-2">
 	<div class="box-header">
@@ -32,30 +31,32 @@
                     <div class="col-12">
                         <div class="card">
                         <div class="card-body">
-                        <table class="table">
-        <thead>
-            <tr>
-                <th>Code</th>
-                <th>Libelle</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ni_formeunite in ni_formeunites %}
-            <tr>
-                <td>{{ ni_formeunite.id }}</td>
-                <td>{{ ni_formeunite.libelle }}</td>
-                <td>
-                    <a href="{{ path('app_ni_formeunite_edit', {'id': ni_formeunite.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                        <table class="table table-bordered table-striped">
+                            <thead class="tr_entete">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Libelle</th>
+                                    <th>actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for ni_formeunite in ni_formeunites %}
+                                <tr>
+                                    <td>{{ ni_formeunite.id }}</td>
+                                    <td>{{ ni_formeunite.libelle }}</td>
+                                    <td>
+                                        <a href="{{ path('app_ni_formeunite_edit', {'id': ni_formeunite.id}) }}">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                                 
                         </div>
                     </div>
@@ -67,6 +68,12 @@
 		</div>
 			
     </div>
+
+    <div class="box-footer">
+        <a href="{{ path('app_ni_formeunite_new') }}" class="btn btn-outline-secondary">+ Ajouter  forme unité</a>
+
+    </div>
+
 </div>
     
 

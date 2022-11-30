@@ -226,33 +226,30 @@
                                                     <tr>
                                                         <th>ACTIVITE EXERCEES</th>
                                                         <td scope="row" colspan="3">
+                                                            {{some.niLibelleactiviteglobale ~" "}}
                                                             {% if some.ninActivite|length - 1 != -1 %}
                                                                 {{some.ninActivite[some.ninActivite|length - 1].ninAutact}}
                                                             {% endif %}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th >{{doc_create_txt | upper}}</th>
-                                                        <td scope="row" colspan="3">{{doc_create}}</td>
+                                                        <th >{{ "N° "~ doc_create_txt | upper}}</th>
+                                                        <td scope="row" >{{doc_create}}</td>
+                                                        <th >{{"N° document de réactivation" | upper}}</th>
+                                                        <td scope="row" >{{some.ninRegcomReprise}}</td>
                                                     </tr>
-                                                    {% if doc_create_txt == "RCCM" %}
                                                         
-                                                        <tr>
-                                                            <th >{{ doc_rccm_txt|upper }}</th>
-                                                            <td scope="row" colspan="3">{{some.ninDatreg ? some.ninDatreg|date('d/m/Y') : '' }}</td>
-                                                        </tr>
-                                                    {% else %}
-                                                        <!--<tr>
-                                                            <th >DATE DE DELIVRANCE DU DOCUMENT DE CREATION</th>
-                                                            <td scope="row" colspan="3">{{some.updatedAt ? some.updatedAt|date('d/m/Y') : '' }}</td>
-                                                        </tr>
-                                                        -->
-                                                        
-                                                    {% endif %}
+                                                    <tr>
+                                                        <th >{{ "Date du document "|upper }}</th>
+                                                        <td scope="row" >{{date_document  is not null ? date_document|date('d/m/Y') : '' }}</td>
+                                                        <th >{{ "Date document de réactivation"|upper }}</th>
+                                                        <td scope="row" >{{some.ninDatregReprise ? some.ninDatregReprise|date('d/m/Y') : '' }}</td>
+                                                    </tr>
+
                                                     <tr>
                                                         <th>CAPITAL SOCIAL</th>
                                                             {% if some.ninActivitesEconomiques|length - 1 != -1 %}
-                                                            <td>
+                                                            <td scope="row" colspan="3">
                                                                 {{some.ninActivitesEconomiques[some.ninActivitesEconomiques|length - 1].ninCapital}}
                                                             </td> 
                                                             
@@ -301,7 +298,7 @@
                                         {% if admin_csi %}
                                             <h4 class="text-center " style="font-weight: bold;">{{admin_csi.createdBy.niAdministration.admlibelle|upper}}</h4>
                                         {% endif %}
-                                        <p class="card-text font-size-16">
+                                        <p class="text-center card-text font-size-16">
                                             {{admin_csi.createdBy.niAdministration.admContactDetails}}
                                         </p>
                                     <!--</div>-->

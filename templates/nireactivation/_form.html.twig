@@ -18,7 +18,7 @@
                             
                            
 
-                             <div class="item row mt-2">
+                            <div class="item row mt-2">
                                 <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
                                 </label>
                                 <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> NINEA : </b> 
@@ -38,6 +38,20 @@
                                 </div>
                             </div>
                             
+
+                            <br>
+                            <div class="item row">
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 
+                                </label>
+                                <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b> {{ form_label(form.remarque) }} </b> 
+                                </label>
+                            
+                                <div class="col-md-4 col-sm-4 ">
+                                    <span style="color: red;" id="idPrenom"> {{form_errors(form.remarque)}}</span>
+                                    {{form_widget(form.remarque)}}
+                                </div>
+                            </div>
+
 
                             <div class="item row mt-4">
                                 <label class="col-form-label col-md-2 col-sm-3 " for="first-name"><b></b> 

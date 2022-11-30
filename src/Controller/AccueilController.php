@@ -251,6 +251,11 @@ class AccueilController extends AbstractController
         $session->set("delais", count($tabObj));
         
         $formeunites=$entityManager->getRepository(NINinea::class)->findbyformeUnite();
+
+        $demandeNINEAEnCours=$entityManager->getRepository(NiNineaproposition::class)->findBy(array('statut'=>'c'),array('id'=>'desc'),10,0);
+        $demandeNINEA=$entityManager->getRepository(NiNineaproposition::class)->findByCentre2($this->getUser(),'b');
+        $nineaParFormeJuridique=$entityManager->getRepository(NINinea::class)->findNineaParFormeJuridique(null,null,null);
+        $findNineaParMois=$entityManager->getRepository(NINinea::class)->findNineaParMois(null,"2022");
         
 
         return $this->render('accueil/ninea_accueil.html.twig', [
@@ -268,7 +273,15 @@ class AccueilController extends AbstractController
             "nbDemandesE" => $stmt->fetch(),
             "totaldmdStandby" => $req_sql->fetch(),
             "delais" => count($tabObj),
-            "formeunites"=>$formeunites
+            "formeunites"=>$formeunites,
+            "demandeNINEAEnCours"=>$demandeNINEAEnCours,
+            "demandeNINEA"=>$demandeNINEA,
+            "nineaParFormeJuridique"=>$nineaParFormeJuridique,
+            "findNineaParMois"=>$findNineaParMois,
+            
+            
+            
+            
         ]);
     }
 

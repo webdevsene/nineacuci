@@ -31,16 +31,23 @@ use App\Entity\NiTypepersone;
 use App\Services\DiversUtils;
 use App\Entity\CategoryNaemas;
 
+use App\Services\Control;
+
 use App\Entity\CategorySyscoa;
 use Doctrine\ORM\EntityManager;
 use App\Entity\NiFormejuridique;
 use App\Entity\NiNineaproposition;
 use App\Entity\CompteurDemandeNINEA;
+use App\Entity\Dirigeant;
 use App\Entity\NiActiviteEconomique;
 use App\Entity\NiDirigeant;
+use App\Entity\NiModaliteexploitation;
+use App\Entity\NiNatureLocaliteExploitation;
+
 use App\Entity\NinJourFerier;
 use App\Entity\Ninproduits;
 use App\Entity\NinTypedocuments;
+use App\Entity\NiSourcefinancement;
 use App\Entity\NiStatut;
 use App\Entity\Qualite;
 use App\Entity\RefProduits;
@@ -98,6 +105,22 @@ class NiNineapropositionController extends AbstractController
 
         // $nineapropsition = $entityManager->getRepository(NiNineaproposition::class)->findBy(array("ninAdministration"=>$this->getUser()->getNiAdministration(),"statut"=>'b'),array('id'=>'desc'));
       }
+
+      /* TODO comment recuperer les donnes historisees 
+      $gedmo = $this->getDoctrine()->getRepository("Gedmo\Loggable\Entity\LogEntry"::class);   
+      
+      $nineapropsition = $this->getDoctrine()->getRepository(NiNineaproposition::class)->find(14);
+
+      $logs = $gedmo->getLogEntries($nineapropsition);
+
+      $tab = [];
+
+      foreach($logs as $logData){
+        array_push($tab, [$logData->getData(), $logData->getVersion(), $logData->getUsername()]);
+      }
+
+      dd($tab);
+      */
 
         return $this->render('ni_nineaproposition/indexB.html.twig', [
             'ni_nineapropositions' =>$nineapropsition ,
@@ -169,7 +192,8 @@ class NiNineapropositionController extends AbstractController
       $niNineaproposition->removeDirigeant($dirigeant);
       $entityManager->remove($dirigeant);
       $entityManager->flush();
-
+      
+      
        return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
     }
 
@@ -180,36 +204,33 @@ class NiNineapropositionController extends AbstractController
     public function modifierDirigeants(Request $request, EntityManagerInterface $entityManager,$id=""): Response
     {
         $session= new Session();
-        $session->set('actived',5);
+        //$session->set('actived',5);
 
         $dirigeant =  $entityManager->getRepository(NiDirigeant::class)->find($id);
         $niNineaproposition = $dirigeant->getNinNineaProposition();
 
-      if($request->get("cni"))
-      {
-        $session= new Session();
-        $session->set('actived',5);
+         if($request->get("cni"))
+         {
 
-        $nationalite = $entityManager->getRepository(NiStatut::class)->find($request->get("nationalite"));
-        $cni = $request->get('cni');
-        $datecni = $request->get('datecni');
-        $nationalite = $request->get("nationalite");
-        if( $nationalite=="SN"){
-          $cni = $request->get("cni");
-          $datecni = $request->get("dateCni");
-          $dirigeant->setNinCni($cni);
-          $dirigeant->setNinDateCni(new \DateTime($datecni));
-      }
-      else {
-          $passport = $request->get("passport");
-          $datepassport = $request->get("datepassport");
-          $dirigeant->setNinCni($passport);
-          $dirigeant->setNinDateCni(new \DateTime($datepassport));
-      }
+         $nationalite = $entityManager->getRepository(NiStatut::class)->find($request->get("nationalite"));
+         $cni = $request->get('cni');
+         $datecni = $request->get('datecni');
+         $nationalite = $request->get("nationalite");
+         if( $nationalite=="SN"){
+            $cni = $request->get("cni");
+            $datecni = $request->get("dateCni");
+            $dirigeant->setNinCni($cni);
+            $dirigeant->setNinDateCni(new \DateTime($datecni));
+         }
+         else {
+            $passport = $request->get("passport");
+            $datepassport = $request->get("datepassport");
+            $dirigeant->setNinCni($passport);
+            $dirigeant->setNinDateCni(new \DateTime($datepassport));
+         }
                 
         $nom = $request->get("nom");
         $prenom = $request->get("prenom");
-        //$adresse = $request->get("adresse");
         $civilite = $request->get("civilite");
         $datenais = $request->get("datenais");
         //$lieunais = $request->get("lieunais");
@@ -222,7 +243,6 @@ class NiNineapropositionController extends AbstractController
 
       $dirigeant->setNinNom($nom);
       $dirigeant->setNinPrenom($prenom);
-      //$personne->setAdresse($adresse);
       $dirigeant->setNinCivilite($entityManager->getRepository(NiCivilite::class)->find($civilite));
       $dirigeant->setNinDatenais(new \DateTime($datenais));
       //$dirigeant->setNinLieunais($lieunais);
@@ -236,23 +256,34 @@ class NiNineapropositionController extends AbstractController
 
     //  $dirigeant->setModifiedBy($this->getUser());
       $dirigeant->setDateDeCloture(new \DateTime());
-           
+      $entityManager->flush();
+      $request->getSession()->getFlashBag()->add('enregistre',"Dirigeant enregistré.");
+
     // $entityManager->persist($dirigeantNouveau);
-     $entityManager->flush();
-    
-     return $this->redirectToRoute('ni_nineaproposition_show', ["id"=> $niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
-    
-      }
-      else if($request->get("enlever"))
-      {
-        $dirigeant->getModifiedBy($this->getUser());
-        $dirigeant->setDateDeCloture(new \DateTime());
+        $msg=$this->verifieDirigeant($dirigeant,$request, $niNineaproposition);
+                if ($msg != "")
+                {
+                    $session->set('actived',5);
+                }
+                    
+                else  
+                {
+                    $session->set('actived',5);
+                    return $this->redirectToRoute('ni_nineaproposition_show', ["id"=> $niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+        
+                }
+                           
+         }
+            else if($request->get("enlever"))
+            {
+            $dirigeant->getModifiedBy($this->getUser());
+            $dirigeant->setDateDeCloture(new \DateTime());
 
-        $entityManager->flush();
+            $entityManager->flush();
 
-        return $this->redirectToRoute('ni_nineaproposition_show', ["id"=> $niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('ni_nineaproposition_show', ["id"=> $niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
 
-   }
+         }
 
        // var_dump($dirigeant);
        return $this->redirectToRoute('ni_nineaproposition_show', ["id"=> $niNineaproposition->getId(),"dirigeant"=> $dirigeant->getId()], Response::HTTP_SEE_OTHER);
@@ -268,7 +299,6 @@ class NiNineapropositionController extends AbstractController
         $max = new \DateTime("-10 years");
     
         $session= new Session();
-        $session->set('actived',5);
 
        // var_dump($session);
 
@@ -276,12 +306,12 @@ class NiNineapropositionController extends AbstractController
         {
           $dirigeant =  new NiDirigeant();
 
-
-          $nationalite = $entityManager->getRepository(NiStatut::class)->find($request->get("nationalite"));
+          $nationalite = $entityManager->getRepository(Pays::class)->find($request->get("nationalite"));
           $cni = $request->get('cni');
           $datecni = $request->get('datecni');
           $nationalite = $request->get("nationalite");
-          if( $nationalite=="SN"){
+          if( $nationalite=="SN")
+         {
             $cni = $request->get("cni");
             $datecni = $request->get("dateCni");
             $dirigeant->setNinCni($cni);
@@ -299,7 +329,6 @@ class NiNineapropositionController extends AbstractController
           //$adresse = $request->get("adresse");
           $civilite = $request->get("civilite");
           $datenais = $request->get("datenais");
-          $lieunais = $request->get("lieunais");
           $nsexe = $request->get("sexe");
           $email = $request->get("email");
           $qualification = $request->get("qualification");
@@ -324,12 +353,23 @@ class NiNineapropositionController extends AbstractController
           
           $entityManager->persist($dirigeant);
           $entityManager->flush();
-         
-          return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+          $request->getSession()->getFlashBag()->add('enregistre',"Dirigeant enregistré.");
+
+          $msg=$this->verifieDirigeant($dirigeant,$request, $niNineaproposition);
+          if ($msg != "")
+            {
+                //$session->set('actived',5);
+                $session->set('PageAjoutDirigeant',1);
+
+            }
+           else 
+           {
+                $session->set('actived',5);
+                return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+               
+           } 
         
         }
-
-        $session->set('PageAjoutDirigeant',1);
 
         return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
     }
@@ -341,33 +381,57 @@ class NiNineapropositionController extends AbstractController
     public function ajouterActivite_economique(NiNineaproposition $niNineaproposition, Request $request, EntityManagerInterface $entityManager): Response
     {
 
-          $activite_economique = new NiActiviteEconomique();
+         $activite_economique = new NiActiviteEconomique();
 
-          $form = $this->createForm(NiActiviteEconomiqueType::class, $activite_economique);
-          $form->handleRequest($request);
-
-          if ($form->isSubmitted() && $form->isValid()) {
+         $form = $this->createForm(NiActiviteEconomiqueType::class, $activite_economique);
+         $form->handleRequest($request);
+         
+         if ($form->isSubmitted() && $form->isValid()) {
            if($request->get("ni_activite"))
             $activite_economique->setNinAffaire( str_replace(" ","" , $request->get("ni_activite")));
-           if(count($niNineaproposition->getNiActiviteEconomiques())==0){
-            if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 or 
+            if($request->get("ninCapital"))
+              $activite_economique->setNinCapital( str_replace(" ","" , $request->get("ninCapital")));
+
+           if(count($niNineaproposition->getNiActiviteEconomiques()) == 0){
+             $session= new Session();
+           
+             if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 or 
                 $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12)
                 {
-                  $session= new Session();
-                  $session->set('actived',"4");
+                 
+                  //$session->set('actived',"4");
+                  $activite_economique->setCreateBy($this->getUser());
+
+                  $activite_economique->setNiNineaproposition($niNineaproposition);
+                 
+                  $entityManager->persist($activite_economique);
+                  $entityManager->flush();
+                  $request->getSession()->getFlashBag()->add('enregistre',"Activité enregistrée.");
+
+                  $msg=$this->verifieActiviteEconomique($activite_economique,$request, $niNineaproposition);
+                  if ($msg != "")
+
+                       $session->set('actived',4);
+                   else  
+                       $session->set('actived',4);
                 }
             else 
             {
-              $session= new Session();
-              $session->set('actived',5);
+              $activite_economique->setCreateBy($this->getUser());
+
+                  $activite_economique->setNiNineaproposition($niNineaproposition);
+                 
+                  $entityManager->persist($activite_economique);
+                  $entityManager->flush();
+                  
+                  $msg = $this->verifieActiviteEconomique($activite_economique,$request, $niNineaproposition);
+                  if ($msg != "")
+                       $session->set('actived',4);
+                 else
+                    $session->set('actived',5);
             }
             
-            $activite_economique->setCreateBy($this->getUser());
-
-            $activite_economique->setNiNineaproposition($niNineaproposition);
            
-            $entityManager->persist($activite_economique);
-            $entityManager->flush();
           }
   
             return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
@@ -381,10 +445,1220 @@ class NiNineapropositionController extends AbstractController
         ]);
     }
 
+
+    public function verifiePersonne (NiPersonne $niPersonne, Request $request , NiNineaproposition $niNineaproposition)
+    {
+        $message = "";
+        $pattern = "/^[0-9]+$/";
+        $pattern_telephone = "/^(70|77|78|72|75|76|33|30|32)[0-9]{7}$/";
+        $pattern_email = "/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/";
+        $pattern_url = "/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/";
+
+        if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 
+                or $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12 )
+            {
+                $prenom = $niPersonne->getNinPrenom();
+                $nom = $niPersonne->getNinNom();
+                $datenais = $niPersonne->getNinDateNaissance()->format("Y-m-d");
+                $lieunais = $niPersonne->getNinLieuNaissance();
+                $nationalite = $niPersonne->getNationalite()->getId();
+                $cni = $niPersonne->getNinCNI();
+                $datecni = $niPersonne->getNinDateCNI()->format("Y-m-d");
+                $telephone = $niPersonne->getNinTelephone();
+                $email = $niPersonne->getNinEmailPersonnel();
+                $adresse = $niPersonne->getAdresse();
+                $qvh = $niPersonne->getNinPrenom();
+               
+                $annee_cours = date("Y");
+                $datejour = date("Y-m-d");
+                $annee_datenais =  date('Y', strtotime($datenais));
+                $diffAnnee = $annee_cours - $annee_datenais;
+
+                $controleEmail =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninEmailPersonnel' => $email]);
+
+                if (preg_match($pattern, $nom) == 1 )
+                {
+                    $request->getSession()->getFlashBag()->add('message',"Le nom ne peut pas contenir que des chiffres .");
+                    $message="Erreur sur le nom";
+                
+                }elseif(preg_match($pattern, $prenom) == 1)
+                {
+                    $request->getSession()->getFlashBag()->add('message',"Le prénom ne peut pas contenir que des chiffres .");
+                    
+                    $message="Erreur sur le prénom";
+                
+                }elseif(preg_match($pattern, $adresse) == 1)
+                {
+                    $request->getSession()->getFlashBag()->add('message',"L'adresse ne peut pas contenir que des chiffres .");
+                    
+                    $message="Erreur sur l'adresse";
+                
+                }
+                elseif(preg_match($pattern, $lieunais) == 1)
+                {
+                    $request->getSession()->getFlashBag()->add('message',"L'adresse ne peut pas contenir que des chiffres .");
+                    
+                    $message="Erreur sur le lieu de naissance";
+                
+                }
+                elseif ($diffAnnee < 18)
+                {
+                    $request->getSession()->getFlashBag()->add('messageDate',"La date de naissance ne doit pas être inférieure à 18 ans.");
+                    $message="Erreur sur la date de naissance";
+                    
+                }
+                elseif ($datenais < "1900-01-01")
+                {
+                    $request->getSession()->getFlashBag()->add('messageDate',"La date de naissance ne doit pas être inférieure à l'année 1900.");
+                    $message="Erreur sur l'année de naissance";
+                }
+                elseif(preg_match($pattern_telephone, $telephone) == 0)
+                {
+                  $request->getSession()->getFlashBag()->add('message',"Le numéro de téléphone est invalide.");
+                  
+                  $message="Erreur sur le numéro de téléphone";
+                }
+                elseif( count($niNineaproposition->getNinFormejuridique()->getTypeDocument())>0)
+                {
+                  if($niNineaproposition->getNiTypeDocument()->getId()==1){
+                    if ($annee_datenais >= substr($niNineaproposition->getDocument(), 7, 4))
+                    {
+                      $request->getSession()->getFlashBag()->add('message',"La date de naissance ne doit pas être postérieure ou égale à la date du registre de commerce.");
+                      
+                      $message="Erreur sur la date de naissance.";
+                    }
+                  }else{
+                  
+                    if ($datenais >= $niNineaproposition->getDateDocumment()->format('Y-m-d'))
+                    {
+                      $request->getSession()->getFlashBag()->add('message',"La date de naissance ne doit pas être postérieure ou égale à la date de création du document.");
+                      
+                      $message="Erreur sur la date de naissance.";
+                    }
+
+                  }
+
+                }
+                              
+                elseif( $nationalite == "SN")
+                {
+                   
+                    $cni11 =  substr($cni, 0, 4).substr($cni,6, 7);
+                    $controleCni11 =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $cni11]);
+                   
+                    $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneByNinea($cni);
+                    if (count($controleCni) > 0)
+                      {
+                        if($niNineaproposition->getNinNineamere()==""){
+                           $request->getSession()->getFlashBag()->add('message',"Ce CNI a déjà un NINEA.");
+                           $message="Erreur sur la cni ";
+                        }
+                    }  
+                      elseif (count($controleCni11) > 0)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"Ce numero de CNI existe déjà mais sous 11 caractères.");
+                         $message="Erreur sur la CNI";
+                        }
+                               
+                      elseif ($datecni > $datejour)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"La date de délivrance du CNI  ne doit pas être postérieure à la date du jour.");
+                         $message="erreur";
+                        }
+                      elseif ($datecni < $datenais)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"La date de délivrance du CNI  ne doit pas être antérieure à la date de naissance.");
+                         $message="erreur";
+                      
+                      }
+                      elseif($datecni < "1901-01-01")
+                      {
+                         $request->getSession()->getFlashBag()->add('messageDate',"La date de délivrance ne doit pas être inférieure à l'année 1900.");
+                         $message="erreur";
+                      
+                      }else
+                      {
+                         return $message  ; 
+                      }
+                       
+                }
+                else {
+                  
+                    $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneEtrangerByNinea($cni,$nationalite);
+                   
+                      if (count($controleCni) > 0 && $niNineaproposition->getNinNineamere()=="")
+                      {
+                       
+                         $request->getSession()->getFlashBag()->add('message',"Ce passport a déjà un NINEA.");
+                         $message="erreur";
+                        
+
+                      } 
+                      if ($datecni > $datejour)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"La date du passport ne doit pas être postérieure à la date du jour.");
+                         $message="erreur";
+                        }
+                      elseif ($datecni < $datenais)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"La date du passport  ne doit pas être antérieure à la date de naissance.");
+                         $message="erreur";
+                      
+                      }
+                      elseif($datecni < "1901-01-01")
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"La date du passport ne doit pas être inférieure à l'année 1900.");
+                         $message="erreur";
+                      
+                      }
+                     else
+                     {
+
+                        return $message ;
+                        //$request->getSession()->getFlashBag()->add('messageSuccess',"Aucune erreur.");
+        
+                     }
+                }
+          
+                return $message ;
+            }
+        else 
+        {
+
+                $raison = $niPersonne->getNinRaison();
+                $sigle = $niPersonne->getNinSigle();
+                $controleRaison =   $this->getDoctrine()->getRepository(NINinea::class)->findPersonneEteRaison($raison);
+                $controleSigle =   $this->getDoctrine()->getRepository(NINinea::class)->findPersonneEteSigle( $sigle);
+
+                if($raison == "")
+                {
+                  $request->getSession()->getFlashBag()->add('message',"La raison ne peut pas etre vide .");
+                  
+                  $message="erreur";
+               
+                }
+               
+                else   if(preg_match($pattern, $raison) == 1 && $raison != "")
+                {
+                  $request->getSession()->getFlashBag()->add('message',"La raison ne peut pas contenir que des chiffres .");
+                  
+                  $message="erreur";
+               
+                }
+                elseif(count($controleRaison) > 0 && $raison != "")
+                {
+                  $request->getSession()->getFlashBag()->add('messageDate',"La raison sociale existe déjà .");
+                  
+                  $message="erreur";
+               
+                }
+                elseif(preg_match($pattern, $sigle) == 1 && $sigle!="")
+                {
+                  
+                 
+                  $request->getSession()->getFlashBag()->add('message',"Le sigle ne peut pas contenir que des chiffres .");
+                  
+                  $message="erreur";
+               
+                }
+                elseif(count($controleSigle) > 0 && $sigle!="")
+                {
+                  $request->getSession()->getFlashBag()->add('messageDate',"Le sigle  existe déjà ..");
+                  
+                  $message="erreur";
+               
+                }
+                else
+                {
+                    return $message ; 
+                }
+        }
+
+            return $message;
+    }
+   
+
+
+    public function verifieCoordonnes (?NiCoordonnees $niCoordonnees, Request $request )
+    {
+        $message = "";
+        $pattern = "/^[0-9]+$/";
+        $pattern_telephone = "/^(70|77|78|72|75|76|33|30|32)[0-9]{7}$/";
+        $pattern_email = "/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/";
+        $pattern_url = "/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/";
+
+        $qvh =  $request->get("qvh");
+        $numvoie = $request->get("numvoie");
+        $voie = $request->get("voie");
+
+
+        $adresse = $niCoordonnees->getNinadresse1();
+        $telephone1 = $niCoordonnees->getNinTelephon1();
+        $telephone2 = $niCoordonnees->getNintelephon2();
+        $email = $niCoordonnees->getNinEmail();
+        $url = $niCoordonnees->getNinUrl();
+        $boitepostale = $niCoordonnees->getNinBP();  
+
+        $controleEmailCoordonnees =   $this->getDoctrine()->getRepository(NiCoordonnees::class)->findBy(['ninEmail' => $email]);
+
+        if (preg_match($pattern, $adresse) == 1 )
+          {
+            $request->getSession()->getFlashBag()->add('message',"L'adresse ne peut pas contenir que des chiffres .");
+            
+            $message="Erreur sur l'adresse: chiffres";
+         
+          }
+          elseif(preg_match($pattern_telephone, $telephone1) == 0)
+          {
+            $request->getSession()->getFlashBag()->add('message',"Le numéro de téléphone est invalide.");
+            
+            $message="Erreur sur le numéro de téléphone1";
+        }
+         
+        
+          elseif(preg_match($pattern_telephone, $telephone2) == 0 and  $telephone2 != "")
+          {
+            $request->getSession()->getFlashBag()->add('message',"Le numéro de téléphone est invalide.");
+            
+            $message="Erreur sur le numéro de téléphone 2";
+         }
+         elseif(preg_match($pattern_email, $email) == 0 and $email != "") 
+         {
+            $request->getSession()->getFlashBag()->add('message',"L'email est invalide.");
+            
+            $message="Erreur sur l'email";
+         }
+        
+        elseif(preg_match($pattern_url, $url) == 0 and $url != "")
+          {
+            $request->getSession()->getFlashBag()->add('message',"L'url est invalide.");
+            
+            $message="Erreur sur l'url";
+        }
+         else
+          {
+                return $message;
+          }
+
+            return $message;
+    }
+   
+
+    public function verifieActivite (NiActivite $niActivite, Request $request , NiNineaproposition $niNineaproposition, $tabAct = array())
+    {
+        $message = "";
+        $pattern = "/^[0-9]+$/";
+        
+        $nbActivites = $niNineaproposition->getNinActivites();
+        
+        $libelleglobale = $niNineaproposition->getNiLibelleactiviteglobale();
+        $libelleAct = $niActivite->getNinAutact();
+        $tabLibelle =  array();
+        $tabCodeNaema =  array();
+
+        $tabCode = array();
+        
+        //tableau contenant les libelles des activités
+        for($i = 0, $size = count($nbActivites); $i < $size; $i++) {
+            
+            $libelle = $nbActivites[$i]->getNinAutact();
+            
+            array_push($tabLibelle,$libelle);
+        }
+
+        //tableau contenant les codes des naemas
+        for($i = 0, $size = count($nbActivites); $i < $size; $i++) {
+            
+            $codeNaema = $nbActivites[$i]->getRefNaema()->getId();
+            array_push($tabCodeNaema,$codeNaema);
+        }
+
+        //existence doublons
+        function existenceDoublons($tableau) 
+        {
+            $doublons = false; // valeur par défaut
+            $freq = array_count_values($tableau); 
+        // fréquence de chaque valeur du $tableau
+            
+            foreach ($freq as $valeur)
+            {
+                if ($valeur != 1)
+                {
+                    $doublons = true;
+                    break; // on sort de la boucle
+                }
+            }
+            return $doublons;
+        }
+
+        if (existenceDoublons($tabLibelle))
+        {
+            $request->getSession()->getFlashBag()->add('message',"Le libellé de l'activité existe déjà .");
+                  
+             $message="erreur";
+        }
+        elseif(existenceDoublons($codeNaema))
+        {
+            $request->getSession()->getFlashBag()->add('message',"Le code de l'activité existe déjà .");
+                  
+            $message="erreur";
+        }
+        elseif(preg_match($pattern, $libelleglobale) == 1)
+        {
+            $request->getSession()->getFlashBag()->add('message',"Le libellé de l'activité ne peut contenir que des chiffres .");
+                  
+            $message="Le libellé de l'activité ne peut contenir que des chiffres ";
+        }          
+        else
+         {
+            return $message;
+         }
+
+           
+    }
+
+
+    
+    public function verifieActiviteEconomique (NiActiviteEconomique $niActiviteEconomique, Request $request , NiNineaproposition $niNineaproposition)
+    {
+        $message = "";
+        $pattern = "/^[0-9]+$/";
+        $pattern_telephone = "/^(70|77|78|72|75|76|33|30|32)[0-9]{7}$/";
+        $pattern_email = "/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/";
+        $pattern_url = "/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/";
+        if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 
+                or $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12 )
+            {
+              
+              if ($niNineaproposition->getNiPersonne() != null)
+                  $annee_datenais = $niNineaproposition->getNiPersonne()->getNinDateNaissance()->format("Y");
+              else{
+                    $annee_datenais = "";
+                 }
+
+            }else{
+               $annee_datenais = "";
+            }
+        $annee_cours = date("Y");
+
+        $effectif1 = $niActiviteEconomique->getNinEffect1(); //effectif temporaire total 
+        $ninEffectifFem = $niActiviteEconomique->getNinEffectifFem(); //Effectif permanent femme
+        $ninEffectifFemSAIS = $niActiviteEconomique->getNinEffectifFemSAIS(); //Effectif temporaire femme
+        $effectif = $niActiviteEconomique->getNinEffectif(); //l'effectif permanent total.
+        $annee = $niActiviteEconomique->getNinAnneeCa();
+
+        if ( ($ninEffectifFemSAIS != 0 and  $effectif1 != 0) and $ninEffectifFemSAIS > $effectif1)
+        {
+            $request->getSession()->getFlashBag()->add('message',"Effectif temporaire femme ne doit pas dépasser l'effectif temporaire total.");
+
+            $message = "Effectif temporaire femme ne doit pas dépasser l'effectif temporaire total.";
+        }
+     
+        elseif( ($ninEffectifFem != 0 and  $effectif != 0) and  $ninEffectifFem > $effectif)
+        {
+            $request->getSession()->getFlashBag()->add('message',"Effectif permanent femme ne doit pas dépasser l'effectif permanent total.");
+
+            $message = "Effectif permanent femme ne doit pas dépasser l'effectif permanent total.";
+        }
+        elseif( ($ninEffectifFemSAIS != 0 and  $effectif != 0) and $ninEffectifFemSAIS > $effectif)
+        {
+            $request->getSession()->getFlashBag()->add('message',"Effectif temporaire femme ne doit pas dépasser l'effectif permanent total..");
+
+            $message = "Effectif temporaire femme ne doit pas dépasser l'effectif permanent total.";
+        }
+        elseif(  ($effectif1 != 0 and  $effectif != 0) and $effectif1 > $effectif)
+        {
+            $request->getSession()->getFlashBag()->add('message',"Effectif temporaire total ne doit pas dépasser l'effectif permanent total.");
+
+            $message = "Effectif temporaire total ne doit pas dépasser l'effectif permanent total.";
+        }
+       
+        elseif($annee > $annee_cours)
+        {
+            $request->getSession()->getFlashBag()->add('message',"L'année ne doit pas postérieure  à l'année en cours.");
+
+            $message = "L'année ne doit pas inférieure à 4 chiffres.";
+        }
+        elseif( $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 
+                or $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12)
+        {
+           
+         if($annee){
+            if ($annee <= $annee_datenais)
+           {
+                $request->getSession()->getFlashBag()->add('message',"L'année du chiffre d'affaires ne doit pas antérieure  à la date naissance.");
+
+                $message = "L'année du chiffre d'affaires ne doit pas antérieure  à la date naissance";
+           }
+         }
+            
+        }
+        else
+        {
+            return $message;
+        }
+        
+            return $message;
+    }
+   
+
+    public function verifieDirigeant (NiDirigeant $niDirigeant, Request $request , NiNineaproposition $niNineaproposition)
+    {
+        $message = "";
+        $msg = "";
+        $pattern = "/^[0-9]+$/";
+        $pattern_telephone = "/^(70|77|78|72|75|76|33|30|32)[0-9]{7}$/";
+        $pattern_email = "/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/";
+        $pattern_url = "/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/";
+
+            $prenom = $niDirigeant->getNinPrenom();
+            $nom = $niDirigeant->getNinNom();
+            $datenais = $niDirigeant->getNinDatenais()->format("Y-m-d");
+            $lieunais = $niDirigeant->getNinLieunais();
+            $nationalite = $niDirigeant->getNinNationalite()->getId();
+            $cni = $niDirigeant->getNinCni();
+            $datecni = $niDirigeant->getNinDateCni()->format("Y-m-d");
+            $telephone = $niDirigeant->getNinTelephone1();
+            $email = $niDirigeant->getNinEmail();
+            $adresse = $niDirigeant->getNinAddresse();
+            // $qvh = $niDirigeant->getNinPrenom();
+             
+            $annee_cours = date("Y");
+            $datejour = date("Y-m-d");
+            $annee_datenais =  date('Y', strtotime($datenais));
+            $diffAnnee = $annee_cours - $annee_datenais;
+            
+            $controleEmail =   $this->getDoctrine()->getRepository(NiDirigeant::class)->findBy(['ninEmail' => $email]);
+
+            if (preg_match($pattern, $nom) == 1 )
+            {
+                $request->getSession()->getFlashBag()->add('message',"Le nom ne peut pas contenir que des chiffres .");
+                $message="Erreur sur le nom";
+            
+            }elseif(preg_match($pattern, $prenom) == 1)
+            {
+                $request->getSession()->getFlashBag()->add('message',"Le prénom ne peut pas contenir que des chiffres .");
+                
+                $message="Erreur sur le prénom";
+            
+            }elseif(preg_match($pattern, $adresse) == 1)
+            {
+                $request->getSession()->getFlashBag()->add('message',"L'adresse ne peut pas contenir que des chiffres .");
+                
+                $message="Erreur sur l'adresse";
+            
+            }
+            elseif(preg_match($pattern, $lieunais) == 1)
+            {
+                $request->getSession()->getFlashBag()->add('message',"L'adresse ne peut pas contenir que des chiffres .");
+                
+                $message="Erreur sur le lieu de naissance";
+            
+            }
+            
+            elseif ($diffAnnee < 18)
+            {
+                $request->getSession()->getFlashBag()->add('messageDate',"La date de naissance ne doit pas être inférieure à 18 ans.");
+                $message="Erreur sur la date de naissance";
+                
+            }
+            elseif ($datenais < "1900-01-01")
+            {
+                $request->getSession()->getFlashBag()->add('messageDate',"La date de naissance ne doit pas être inférieure à l'année 1900.");
+                $message="Erreur sur l'année de naissance";
+            }
+            elseif(preg_match($pattern_telephone, $telephone) == 0)
+            {
+                $request->getSession()->getFlashBag()->add('message',"Le numéro de téléphone est invalide.");
+                
+                $message="Erreur sur le numéro de téléphone";
+            }
+            elseif(preg_match($pattern_email, $email) == 0 and $email != "")
+            {
+                $request->getSession()->getFlashBag()->add('message',"L'email est invalide.");
+                
+                $message="Erreur sur l'email";
+            }
+            
+            elseif( $nationalite == "SN")
+            {
+                $cni11 =  substr($cni, 0, 4).substr($cni,6, 7);
+                $controleCni11 =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $cni11]);
+                
+                $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneByNinea($cni);
+                if (count($controleCni) > 0)
+                    {
+                   // $request->getSession()->getFlashBag()->add('message',"Ce CNI a déjà un NINEA.");
+            
+                    $message="";
+                }  
+                    elseif (count($controleCni11) > 0)
+                    {
+                        //$request->getSession()->getFlashBag()->add('message',"Ce numero de CNI existe déjà mais sous 11 caractères.");
+                        $message="";
+                    }
+                            
+                    elseif ($datecni > $datejour)
+                    {
+                        $request->getSession()->getFlashBag()->add('message',"La date de délivrance du CNI  ne doit pas être postérieure à la date du jour.");
+                        $message="erreur";
+                    }
+                    elseif ($datecni < $datenais)
+                    {
+                        $request->getSession()->getFlashBag()->add('message',"La date de délivrance du CNI  ne doit pas être antérieure à la date de naissance.");
+                        $message="erreur";
+                    
+                    }
+                    elseif($datecni < "1901-01-01")
+                    {
+                        $request->getSession()->getFlashBag()->add('messageDate',"La date de délivrance ne doit pas être inférieure à l'année 1900.");
+                        $message="erreur";
+                    
+                    }else
+                    {
+                        return $message ; 
+                    }
+                    
+            }
+            elseif($nationalite != "SN")
+            {
+                
+                $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneByNinea($cni);
+    
+                    if (count($controleCni) > 0)
+                    {
+                        $request->getSession()->getFlashBag()->add('message',"Ce passport a déjà un NINEA.");
+            
+                        $message="erreur";
+                    } 
+                    if ($datecni > $datejour)
+                    {
+                        $request->getSession()->getFlashBag()->add('message',"La date du passport ne doit pas être postérieure à la date du jour.");
+                        $message="erreur";
+                    }
+                    elseif ($datecni < $datenais)
+                    {
+                        $request->getSession()->getFlashBag()->add('message',"La date du passport  ne doit pas être antérieure à la date de naissance.");
+                        $message="erreur";
+                    
+                    }
+                    elseif($datecni < "1901-01-01")
+                    {
+                        $request->getSession()->getFlashBag()->add('message',"La date du passport ne doit pas être inférieure à l'année 1900.");
+                        $message="erreur";
+                    
+                    }
+                    else
+                    {
+
+                    return $message ;
+                    //$request->getSession()->getFlashBag()->add('messageSuccess',"Aucune erreur.");
+    
+                    }
+            }
+            else
+            {
+                return $message;
+            }
+
+            return $message;
+               
+    }
+           
+ 
+    public function verifieEntete ( Request $request , NiNineaproposition $niNineaproposition)
+    {
+                //RCCM: SNDKR2000A22222
+                $rccm =  str_replace(" ","",$request->get("registreCommerce")) ;
+                $rccmNormal = str_replace("_","",$rccm);
+                //$dateReg = $niNineaproposition->getNinRegcom();
+                $pays = substr($rccm, 0, 2);
+                $juridiction = substr($rccm, 2, 3);
+                $annee = substr($rccm, 5, 4);
+                $lettrecle = substr($rccm, 9, 1);
+                $sequence = substr($rccm, 10, 5);
+                $annee_cours = date("Y");
+                $controleRccm =  $this->getDoctrine()->getRepository(NINinea::class)->findninRegcom($rccmNormal);
+                $datereg = $request->get("dateregcom");
+                $datereg_annee =  date('Y', strtotime($datereg));
+                //dd($controleRccm);
+                $pattern_rccm = "/^(SN)(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR)(\d{4})(A|B|C|E)(\d{1,5})$/"; 
+                $dateJour = date('Y-m-d');
+                $pattern = "/(SN)(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR|[A-Z]{3})(\d{4})(A|B|C|E|[A-Z]{1})(\d{1,5})$/"; 
+ 
+                $ninFormeunite = $niNineaproposition->getNinFormejuridique()->getNiFormeunite();
+                $ninFormejuridique = $niNineaproposition->getNinFormejuridique();
+                $ninStatut = $niNineaproposition->getNinStatut();
+                $enseigne = $niNineaproposition->getNinEnseigne();
+               
+                $ninEnseigne = $request->get('ninEnseigne');
+                $message = "";
+
+        
+            if ($niNineaproposition->getNinFormejuridique()->getId() == 10)
+            {  
+                
+                if (count($controleRccm) > 0)
+                 {
+                        $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+ 
+                        return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+                    }
+                     
+                elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
+                {
+                     
+                      $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+ 
+                elseif($annee > $annee_cours)
+                {
+                   
+                   $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+            
+                }
+                elseif($annee < "1900")
+                {
+                   
+                   $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
+
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+                }
+                elseif ($datereg > $dateJour)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                elseif ($datereg_annee < $annee)
+                {
+                   //dd($datereg_annee);
+                   $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else
+                {
+                   $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
+                   $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
+                   //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
+ 
+                }
+             
+            } 
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 92) 
+             {
+                $bordereau = trim($request->get('inputbordereau'));
+                $controleBordereau =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninBordereau' => $bordereau]);
+ 
+                if (preg_match($pattern, $bordereau) == 1)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"Le format du bordereau n'est pas valide.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+                }
+                else if (count($controleBordereau) > 0)
+                {
+                      $request->getSession()->getFlashBag()->add('message',"Ce bordereau existe déjà.");
+                      //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else 
+                {
+                   $niNineaproposition->setNinBordereau($request->get('inputbordereau'));
+                   $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(2));
+ 
+                }
+                
+             }  
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 91 
+                 or $niNineaproposition->getNinFormejuridique()->getId() == 29) 
+             {
+               
+                      $bordereau = $request->get('inputbordereau');
+                      $controleBordereau =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninBordereau' => $bordereau]);
+ 
+                      if (preg_match($pattern, $bordereau) == 1)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"Le format du bordereau n'est pas valide.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else if (count($controleBordereau) > 0)
+                      {
+                            $request->getSession()->getFlashBag()->add('message',"Ce bordereau existe déjà.");
+                            //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+                            return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else 
+                      {
+                         $niNineaproposition->setNinBordereau($request->get('inputbordereau'));
+                         //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(2));
+ 
+                      }
+                      
+                      if (count($controleRccm) > 0)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+                         //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+                      }
+                      
+                      elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
+                      {
+                         
+                            $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+                            
+                            return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+ 
+                      elseif($annee > $annee_cours)
+                      {
+                         
+                         $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      elseif($annee < "1900")
+                      {
+                         
+                         $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      elseif ($datereg > $dateJour)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      elseif ($datereg_annee < $annee)
+                      {
+                         //dd($datereg_annee);
+                         $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else
+                      {
+                         $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
+                         $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
+                         //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
+ 
+                      }
+                
+             } 
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 26 
+               or $niNineaproposition->getNinFormejuridique()->getId() == 96 or $niNineaproposition->getNinFormejuridique()->getId() == 99) 
+             {
+ 
+                //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
+              
+                      $titrefoncier = trim($request->get('titrefoncier'));
+                      $controleTitre =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninTitrefoncier' => $titrefoncier]);
+ 
+                      //dd(preg_match($pattern, $titrefoncier));
+ 
+                      if (preg_match($pattern, $titrefoncier) == 1)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"Le format du titre foncier n'est pas valide.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else if (count($controleTitre) > 0)
+                      {
+                            $request->getSession()->getFlashBag()->add('message',"Ce titre foncier existe déjà.");
+                            //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+       
+                            return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else 
+                      {
+                         $niNineaproposition->setNinTitrefoncier($request->get('titrefoncier'));
+                         $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(3));
+ 
+                      }
+ 
+               
+                      $bail = trim($request->get('inputbail'));
+                      $controleBail =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninBail' => $bail]);
+ 
+                      if (preg_match($pattern, $bail) == 1)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"Le format du bail n'est pas valide.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else if (count($controleBail) > 0)
+                      {
+                            $request->getSession()->getFlashBag()->add('message',"Ce bail existe déjà.");
+                            //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+       
+                            return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else 
+                      {
+                         $niNineaproposition->setNinBail($request->get('inputbail'));
+                         $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(4));
+ 
+                      }
+             
+                
+                      $permisdoccuper = trim($request->get('inputpermisoccuper'));
+                      $controlePermis =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninPermisoccuper' => $permisdoccuper]);
+ 
+                      if (preg_match($pattern, $permisdoccuper) == 1)
+                      {
+                         $request->getSession()->getFlashBag()->add('message',"Le format du permis n'est pas valide.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else if (count($controlePermis) > 0)
+                      {
+                            $request->getSession()->getFlashBag()->add('message',"Ce permis existe déjà.");
+                            //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+       
+                            return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                      }
+                      else 
+                      {
+                         $niNineaproposition->setNinPermisoccuper($request->get('inputpermisoccuper'));
+                         $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(5));
+ 
+                      }
+                              
+             } 
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 90) 
+             {
+ 
+                $accord = trim($request->get('inputaccord'));
+                $controlePermis =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninAccord' => $accord]);
+ 
+                if (preg_match($pattern, $accord) == 1)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"Le format de l'accord n'est pas valide.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else if (count($controlePermis) > 0)
+                {
+                      $request->getSession()->getFlashBag()->add('message',"Cet accord existe déjà.");
+                      //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else 
+                {
+                   $niNineaproposition->setNinAccord($request->get('inputaccord'));
+                }
+             }  
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 44      or $niNineaproposition->getNinFormejuridique()->getId() == 48) 
+             {
+                $agrement = trim($request->get('inputagrement'));
+                $controleAgrement =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninAgrement' => $agrement]);
+ 
+                if (preg_match($pattern, $agrement) == 1)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"Le format de l'agrément n'est pas valide.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else if (count($controleAgrement) > 0)
+                {
+                      $request->getSession()->getFlashBag()->add('message',"Cet agrément existe déjà.");
+                      //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else 
+                {
+                   $niNineaproposition->setNinAgrement($request->get('inputagrement'));
+                }
+             } 
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 27)
+             {
+                $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
+               
+                   if (count($controleRccm) > 0)
+                   {
+                      $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+                      //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   
+                   elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
+                   {
+                      
+                         $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+                         
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+ 
+                   elseif($annee > $annee_cours)
+                   {
+                      
+                      $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   elseif($annee < "1900")
+                   {
+                      
+                      $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   elseif ($datereg > $dateJour)
+                   {
+                      $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   elseif ($datereg_annee < $annee)
+                   {
+                      //dd($datereg_annee);
+                      $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else
+                   {
+                      $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
+                      $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
+                      $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
+ 
+                   }
+                
+                   $agrement = trim($request->get('inputagrement'));
+                   $controleAgrement =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninAgrement' => $agrement]);
+    
+                   if (preg_match($pattern, $agrement) == 1)
+                   {
+                      $request->getSession()->getFlashBag()->add('message',"Le format de l'agrément n'est pas valide.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else if (count($controleAgrement) > 0)
+                   {
+                         $request->getSession()->getFlashBag()->add('message',"Cet agrément existe déjà.");
+                         //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else 
+                   {
+                      $niNineaproposition->setNinAgrement($request->get('inputagrement'));
+                      $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(6));
+ 
+                   }
+              
+             } 
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 50 or $niNineaproposition->getNinFormejuridique()->getId() == 51  
+                 or $niNineaproposition->getNinFormejuridique()->getId() == 52 or $niNineaproposition->getNinFormejuridique()->getId() == 54  or  $niNineaproposition->getNinFormejuridique()->getId() == 55 or $niNineaproposition->getNinFormejuridique()->getId() == 59) 
+             {
+                $recepisse= trim($request->get('inputrecepisse'));
+                $controleRecepisee =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninRecepisse' => $recepisse]);
+ 
+                if (preg_match($pattern, $recepisse) == 1)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"Le format du récépisse n'est pas valide.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else if (count($controleRecepisee) > 0)
+                {
+                      $request->getSession()->getFlashBag()->add('message',"Cet récepissé existe déjà.");
+                      //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else 
+                {
+                   $niNineaproposition->setNinRecepisse($request->get('inputrecepisse'));
+                   //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
+ 
+                }
+             } 
+            else if ($niNineaproposition->getNinFormejuridique()->getId() == 32 or $niNineaproposition->getNinFormejuridique()->getId() == 40  or $niNineaproposition->getNinFormejuridique()->getId() == 41  or $niNineaproposition->getNinFormejuridique()->getId() == 45 
+                or $niNineaproposition->getNinFormejuridique()->getId() == 42  or  $niNineaproposition->getNinFormejuridique()->getId() == 43  or $niNineaproposition->getNinFormejuridique()->getId() == 46  or $niNineaproposition->getNinFormejuridique()->getId() == 47  or $niNineaproposition->getNinFormejuridique()->getId() == 56
+                 or $niNineaproposition->getNinFormejuridique()->getId() == 97  or $niNineaproposition->getNinFormejuridique()->getId() == 95) 
+             {
+                $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
+                $arrete= trim($request->get('inputarrete'));
+                $controleArrete =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninArrete' => $arrete]);
+ 
+                   if (preg_match($pattern, $arrete) == 1)
+                   {
+                      $request->getSession()->getFlashBag()->add('message',"Le format de l'arrêté n'est pas valide.");
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else if (count($controleArrete) > 0)
+                   {
+                         $request->getSession()->getFlashBag()->add('messageDoublons',"Cet arrêté existe déjà.");
+                         //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else 
+                   {
+                      $niNineaproposition->setNinArrete($request->get('inputarrete'));
+                      //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(8));
+ 
+                   }
+                
+                 if (preg_match($pattern, $arrete) == 1)
+                   {
+                      $request->getSession()->getFlashBag()->add('message',"Le format de l'arrêté n'est pas valide.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else if (count($controleArrete) > 0)
+                   {
+                         $request->getSession()->getFlashBag()->add('message',"Cet arrêté existe déjà.");
+                         //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else 
+                   {
+                      $niNineaproposition->setNinArrete($request->get('inputarrete'));
+                      $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(12));
+ 
+                   }
+                   
+                
+                 if (preg_match($pattern, $arrete) == 1)
+                   {
+                      $request->getSession()->getFlashBag()->add('message',"Le format de l'arrêté n'est pas valide.");
+                      
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else if (count($controleArrete) > 0)
+                   {
+                         $request->getSession()->getFlashBag()->add('message',"Cet arrêté existe déjà.");
+                         //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+                         return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                   }
+                   else 
+                   {
+                      $niNineaproposition->setNinArrete($request->get('inputarrete'));
+                      $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(13));
+                   }
+                
+             } 
+            else
+             {
+                if (count($controleRccm) > 0)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+                   //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
+ 
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+ 
+                }
+                
+                elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
+                {
+                   
+                      $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+                      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+ 
+                }
+ 
+                elseif($annee > $annee_cours)
+                {
+                   
+                   $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                elseif($annee < "1900")
+                {
+                   
+                   $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                elseif ($datereg > $dateJour)
+                {
+                   $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+                   
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                elseif ($datereg_annee < $annee)
+                {
+                   //dd($datereg_annee);
+                   $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+                   return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+ 
+                }
+                else
+                {
+                   $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
+                   $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
+                   //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
+ 
+                }
+                
+             }
+        }
+       
+    
+   
+
      /**
      * @Route("/ajouterPersonne/{id}", name="ajouterPersonnes", methods={"GET", "POST"})
      */
-    public function ajouterPersonne(NiNineaproposition $niNineaproposition, Request $request, EntityManagerInterface $entityManager): Response
+    
+     public function ajouterPersonne(NiNineaproposition $niNineaproposition, Request $request, EntityManagerInterface $entityManager): Response
     {
 
         $sexes = $entityManager->getRepository(NiSexe::class)->findAll();
@@ -397,27 +1671,21 @@ class NiNineapropositionController extends AbstractController
 
         $typevoie = null;
 
+
         if ($request->get("nom") || $request->get("raison")) 
         {
-          
-            $session= new Session();
-            $session->set('actived',2);
 
+            $session= new Session();
+           
             $personne = new NiPersonne();
             $nsexe = $request->get("sexe");
-
-            if ($request->get("qvh"))
-            {
-              $qvh_personne =  $request->get("qvh");
-              $personne->setNinQvh($entityManager->getRepository(QVH::class)->find($qvh_personne));
-
-            }    
-           
+                      
             if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 
                 or $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12 )
             {
 
                 //récupération personne physique
+                $sigle = $request->get("sigle");
                 $nom = $request->get("nom");
                 $prenom = $request->get("prenom");
                 $adresse = $request->get("adresse");
@@ -434,7 +1702,8 @@ class NiNineapropositionController extends AbstractController
                 }
                 $voie = $request->get('voie');
                 $numvoie = $request->get('numvoie');
-
+         
+                $personne->setNinSigle($sigle);
                 $personne->setNinNom($nom);
                 $personne->setNinPrenom($prenom);
                 $personne->setNinEmailPersonnel($email);
@@ -451,6 +1720,13 @@ class NiNineapropositionController extends AbstractController
                 {
                   $personne->setNinTypevoie($entityManager->getRepository(NiTypevoie::class)->find($typevoie));
                 }
+
+                if ($request->get("qvh"))
+                {
+                  $qvh_personne =  $request->get("qvh");
+                  $personne->setNinQvh($entityManager->getRepository(QVH::class)->find($qvh_personne));
+    
+                }    
                 
                 // Recherche de tous les articles en fonction de multiples conditions
                 // $articles = $repository->findBy(
@@ -459,47 +1735,61 @@ class NiNineapropositionController extends AbstractController
                 //   10, // le troisième la limite
                 //   2 // et à partir duquel on récupère ("OFFSET" au sens MySQL)
                 // );
-                  if( $nationalite=="SN"){
+                  if( $nationalite=="SN")
+                  {
+                    
                       $cni = $request->get("cni");
-                      //parcourir la base de données
-
+                      
                       $datecni = $request->get("datecni");
 
-                      $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneByNinea($cni);
-                      if (count($controleCni) > 0)
-                        {
-                          $request->getSession()->getFlashBag()->add('messageCNI',"Ce CNI a déjà un NINEA.");
-                  
-                          return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
-                        }
-                                    
                       $personne->setNinCNI($cni);
-                      if($datecni)
-                          $personne->setNinDateCNI(new \DateTime($datecni));
+                      $personne->setNinDateCNI(new \DateTime($datecni));
+
+                       
                   }
                   else {
                       $passport = $request->get("passport");
                       $datepassport = $request->get("datepassport");
-                      $personne->setNinCNI($passport);
-                      if($datepassport)
-                          $personne->setNinDateCNI(new \DateTime($datepassport));
+
+                      
+                        $personne->setNinCNI($passport);
+                        $personne->setNinDateCNI(new \DateTime($datepassport));
+
                   }
             
+
                     $personne->setNinRaison("");
                     $personne->setNinSigle("");
 
+                    
                     if($niNineaproposition->getNinStatut()->getId() == 1)
                     {
+                     
                       $personne->addNiNineaproposition($niNineaproposition);
                       $personne->setCreatedBy($this->getUser());
                       $entityManager->persist($personne);
                       $entityManager->flush();
+                      $msg=$this->verifiePersonne($personne,$request, $niNineaproposition);
+                       if ($msg != "")
+
+                            $session->set('actived',1);
+                        else  
+                            $session->set('actived',2);
                     }else{
                       $nin_nineamere = $niNineaproposition->getNinNineamere();
                       $niNinea_mere =  $entityManager->getRepository(NINinea::class)->findOneBy(['ninNinea' => $nin_nineamere]);
                       $niNinea_mere->getNiPersonne()->addNiNineaproposition($niNineaproposition);
                       $personne->setCreatedBy($this->getUser());
-                      $entityManager->flush();
+                     
+                      $msg=$this->verifiePersonne($personne,$request, $niNineaproposition);
+                      if ($msg != "")
+
+                           $session->set('actived',1);
+                       else  
+                           $session->set('actived',2);
+                         $entityManager->flush();
+                         $request->getSession()->getFlashBag()->add('enregistre',"Personne enregistrée.");
+
                     }
                     return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
 
@@ -508,12 +1798,24 @@ class NiNineapropositionController extends AbstractController
                   //recupération personne morale
                 $raison = $request->get("raison");
                 $sigle = $request->get("sigle");
-                $personne->setNinRaison($raison);
-                $personne->setNinSigle($sigle);
-                $personne->addNiNineaproposition($niNineaproposition);
-                $personne->setCreatedBy($this->getUser());
-                $entityManager->persist($personne);
-                $entityManager->flush();
+              
+                  $personne->setNinRaison($raison);
+                  $personne->setNinSigle($sigle);
+                  $personne->addNiNineaproposition($niNineaproposition);
+                  $personne->setCreatedBy($this->getUser());
+  
+                  $entityManager->persist($personne);
+                  $entityManager->flush();
+                  $request->getSession()->getFlashBag()->add('enregistre',"Personne enregistrée.");
+
+                  $msg=$this->verifiePersonne($personne,$request, $niNineaproposition);
+                  if ($msg != "")
+
+                       $session->set('actived',1);
+                   else  
+                       $session->set('actived',2);
+                  
+               
               }
             
           
@@ -551,16 +1853,17 @@ class NiNineapropositionController extends AbstractController
         $civilites = $entityManager->getRepository(NiCivilite::class)->findAll();
         $typevoies = $entityManager->getRepository(NiTypevoie::class)->findAll();
         $typevoie="";
+    
         if ($request->get('ajouter')) 
         {
           $session= new Session();
-          $session->set('actived',3);
 
           $coordonnee = new NiCoordonnees();
           if ($request->get("typevoie"))
           {
             $typevoie = $request->get("typevoie");
           }
+
           $qvh =  $request->get("qvh");
           $numvoie = $request->get("numvoie");
           $voie = $request->get("voie");
@@ -577,26 +1880,41 @@ class NiNineapropositionController extends AbstractController
           }
           $coordonnee->setNinVoie($voie);
           $coordonnee->setNinnumVoie($numvoie);
-          $coordonnee->setNinadresse1($adresse1);
-           $coordonnee->setNintelephon2($telephone2);
-           $coordonnee->setNinTelephon1($telephone1);
-           $coordonnee->setNinEmail($email);
-           $coordonnee->setQvh($entityManager->getRepository(QVH::class)->find($qvh));
-           $coordonnee->setNinBP($boitepostale);
-           $coordonnee->setNinUrl($url);
 
-           $coordonnee->setCreateBy($this->getUser());
-           $coordonnee->setUpdateBy($this->getUser());
+          
+            $coordonnee->setNinadresse1($adresse1);
+            $coordonnee->setNintelephon2($telephone2);
+            $coordonnee->setNinTelephon1($telephone1);
+            $coordonnee->setNinEmail($email);
+            $coordonnee->setQvh($entityManager->getRepository(QVH::class)->find($qvh));
+            $coordonnee->setNinBP($boitepostale);
+            $coordonnee->setNinUrl($url);
 
-          $coordonnee->setNiNineaproposition($niNineaproposition);
+            $coordonnee->setCreateBy($this->getUser());
+            $coordonnee->setUpdateBy($this->getUser());
+  
+            $coordonnee->setNiNineaproposition($niNineaproposition);
+            $entityManager->persist($coordonnee);
+            $entityManager->flush();
+            $request->getSession()->getFlashBag()->add('enregistre',"Coordonnée enregistrée.");
 
-          $entityManager->persist($coordonnee);
-          $entityManager->flush();
-
-            return $this->redirectToRoute('ni_nineaproposition_show', [
-              'id'=>$niNineaproposition->getId(), 
-            
-            ], Response::HTTP_SEE_OTHER);
+            $msg=$this->verifieCoordonnes($coordonnee,$request);
+            //dd($msg);
+            if ($msg != "")
+                {
+                  
+                    $session->set('actived',2);
+                }
+            else  
+            {
+                    $session->set('actived',3);
+            }
+  
+        return $this->redirectToRoute('ni_nineaproposition_show', [
+                  'id'=>$niNineaproposition->getId(), 
+              
+              ], Response::HTTP_SEE_OTHER);
+                  
           
         }
 
@@ -701,50 +2019,124 @@ class NiNineapropositionController extends AbstractController
     }
 
 
-    //controle sur le formulaire personne physique
-     /**
-     * @Route("/controleCNI/{id}", name="controleCNI",  methods={"GET","POST"})
-     */
-    public function controlePersonnephysique()
-    {
-
-      //$controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $id]);
-      $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneByNinea($id);
-      if (count($controleCni) > 0)
-      {
-        return  new JsonResponse( 1);
-      } 
-
-      else 
-      {
-         
-        $cni11 =  substr($id, 0, 4).substr($id,6, 7);
-        $controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $cni11]);
-        if (count($controleCni) > 0)
-         {
-            return  new JsonResponse(  1);
-          } else  
-            return new JsonResponse(  0);
-       }
-    }
-
-
-
      /**
      * @Route("/soumission/{id}", name="ni_nineaproposition_soumission", methods={"GET", "POST"})
      */
-    public function soumission(Request $request, EntityManagerInterface $entityManager, NiNineaproposition $niNineaproposition): Response
+    public function soumission(Request $request, EntityManagerInterface $entityManager, NiNineaproposition $niNineaproposition, $id=""): Response
 
       {
+            $niNineaproposition = $entityManager->getRepository(NiNineaproposition::class)->find($id);
+            if($niNineaproposition->getNiTypedocument() != null)
+              $msgPersonne =$this->verifiePersonne($niNineaproposition->getNiPersonne(), $request, $niNineaproposition);
+            else
+             $msgPersonne ="";
 
-         $niNineaproposition->setStatut("c");    
-                  $niNineaproposition->setNinlock(false);     
-                  $entityManager->flush();
+            if(count($niNineaproposition->getNiCoordonnees())>0)
+               $msgCoordonnee = $this->verifieCoordonnes($niNineaproposition->getNiCoordonnees()[0], $request);
+            else{
+               $msgCoordonnee = "";
+            }
 
-                  return $this->redirectToRoute('ni_nineaproposition_index', [], Response::HTTP_SEE_OTHER);
-          
+            if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 
+            or $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12 )
+              $msgDirigeant ="";
+           
+            else
+              $msgDirigeant ="";//$this->verifieDirigeant($niNineaproposition->getNinDirigeants()[0], $request, $niNineaproposition);
+            if(count($niNineaproposition->getniActiviteEconomiques())>0)  
+               $msgActiviteEconomique = $this->verifieActiviteEconomique($niNineaproposition->getniActiviteEconomiques()[0], $request, $niNineaproposition);
+            else{
+               $activite_economique = new NiActiviteEconomique();
+               $activite_economique->setCreateBy($this->getUser());
+
+               $activite_economique->setNiNineaproposition($niNineaproposition);
+            
+               $entityManager->persist($activite_economique);
+               $msgActiviteEconomique ="";
+            
+            }
+
+            $control=new Control();
+            $sms="";
+            if($niNineaproposition->getNiTypedocument() != null){
+            if($niNineaproposition->getNiTypedocument()->getId()==1){
+               $ctrl = $control->controlRCCM( $niNineaproposition->getDocument(),$niNineaproposition->getDateDocumment()->format("Y-m-d"),
+                $entityManager,$niNineaproposition->getNinFormejuridique(),$niNineaproposition->getNinStatut()->getId());
+               if ($ctrl == 1)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+                  $sms="error";
+               }
+               else if ($ctrl == 2)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+                  $sms="error";
+   
+               }
+               else if ($ctrl == 3)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+                  $sms="error";
+                  
+               }
+               else if ($ctrl == 4)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+                  $sms="error";
+                 
+               }
+               else if ($ctrl == 5)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"L'année de création  du registre de  commerce ne doit pas être antérieure à l'année 1900.");
+                  $sms="error";
+                  
+               }
+               else if ($ctrl == 6)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+                  $sms="error";
+                  
+               }
+               else 
+               {
+                  $sms="";
+                  
+               }
+            }else{
+               $document = $control->controlDocument($niNineaproposition->getDocument());
+               if($document==1){
+                  $request->getSession()->getFlashBag()->add('message',"Le format est invalide.");
+                  $sms="error";
+   
+               }else{
+                  $tabninea= $this->getDoctrine()->getRepository(NINinea::class)->findninRegcom($niNineaproposition->getDocument());
+                  if(count($tabninea)>0){
+                     $request->getSession()->getFlashBag()->add('message',"Le document de creation existe déjà.");
+                     $sms="error";
+   
+                  }
+               }
+            }
+            }
+            
+            if (  $sms=="" and $msgPersonne == ""  and  $msgCoordonnee == ""  and $msgActiviteEconomique == ""  and $msgDirigeant == "" )
+                
+            {
+                $niNineaproposition->setStatut("c");    
+                $niNineaproposition->setNinlock(false);     
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('ni_nineaproposition_index', [], Response::HTTP_SEE_OTHER);
+           
+            }
+
+            else
+            {
+                return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+                         
       }
-
 
 
 
@@ -773,6 +2165,51 @@ class NiNineapropositionController extends AbstractController
 
     {
 
+      if($niNineaproposition->getStatut()=="v")
+        return $this->redirectToRoute('ni_nineaproposition_index', [], Response::HTTP_SEE_OTHER);
+
+      if($niNineaproposition->getNiTypedocument() != null)
+         $msgPersonne =$this->verifiePersonne($niNineaproposition->getNiPersonne(), $request, $niNineaproposition);
+      else
+      $msgPersonne ="";
+      if(count($niNineaproposition->getNiCoordonnees())>0)
+         $msgCoordonnee = $this->verifieCoordonnes($niNineaproposition->getNiCoordonnees()[0], $request);
+      else{
+         $msgCoordonnee = "";
+      }
+      if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 
+      or $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12 )
+        $msgDirigeant ="";
+      else
+        $msgDirigeant ="";//$this->verifieDirigeant($niNineaproposition->getNinDirigeants()[0], $request, $niNineaproposition);
+      if(count($niNineaproposition->getniActiviteEconomiques())>0)  
+         $msgActiviteEconomique = $this->verifieActiviteEconomique($niNineaproposition->getniActiviteEconomiques()[0], $request, $niNineaproposition);
+      else{
+         $activite_economique = new NiActiviteEconomique();
+         $activite_economique->setCreateBy($this->getUser());
+
+         $activite_economique->setNiNineaproposition($niNineaproposition);
+      
+         $entityManager->persist($activite_economique);
+         $msgActiviteEconomique ="";
+      
+      }
+      
+      if ( $msgPersonne == ""  and  $msgCoordonnee == ""  and $msgActiviteEconomique == ""  
+            and $msgDirigeant == "" )
+          
+      {
+        
+     
+      }
+
+      else
+      {
+          return $this->redirectToRoute('ni_nineaproposition_show', ['id'=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+      }
+     
+
       $entityManager->getConnection()->beginTransaction();
       try {
         
@@ -786,28 +2223,17 @@ class NiNineapropositionController extends AbstractController
               $ninea->setFormeJuridique($niNineaproposition->getNinFormejuridique());
               //dd($niNineaproposition->getNinStatut());
               $ninea->setNinStatut($niNineaproposition->getNinStatut());
+
+              $ninea->setNomCommercial($niNineaproposition->getNomCommerce());
+              $ninea->setNinNumeroDocument($niNineaproposition->getDocument());
+              $ninea->setNinDateDocument($niNineaproposition->getDateDocumment());
+
               $ninea->setNinEnseigne($niNineaproposition->getNinEnseigne());
-              $ninea->setNinRegcom($niNineaproposition->getNinRegcom());
               $ninea->setNinEtat("1");
               $ninea->setNiTypedocument($niNineaproposition->getNiTypedocument());
-              if($niNineaproposition->getNinDatreg())
-                $ninea->setNinDatreg($niNineaproposition->getNinDatreg());
-               
+              
               $ninea->setNinRaison($niNineaproposition->getNinRaison());
 
-              $ninea->setNinTitrefoncier($niNineaproposition->getNinTitrefoncier());
-              $ninea->setNinAgrement($niNineaproposition->getNinAgrement());
-              $ninea->setNinArrete($niNineaproposition->getNinArrete());
-              $ninea->setNinRecepisse($niNineaproposition->getNinRecepisse());
-              if($niNineaproposition->getNinAccord())
-                  $ninea->setNinAccord($niNineaproposition->getNinAccord());
-              if($niNineaproposition->getNinBordereau())
-                    $ninea->setNinBordereau($niNineaproposition->getNinBordereau());
-              if($niNineaproposition->getNinBail())     
-                  $ninea->setNinBail($niNineaproposition->getNinBail());
-                if($niNineaproposition->getNinPermisoccuper())
-                    $ninea->setNinPermisoccuper($niNineaproposition->getNinPermisoccuper());
-               
               $ninea->setNiPersonne($niNineaproposition->getNiPersonne());
               $ninea->addNiCoordonnee($niNineaproposition->getCoordonnees()[0]);
               //$ninea->addNinActivite($niNineaproposition->getNinActivites()[0]);
@@ -867,13 +2293,15 @@ class NiNineapropositionController extends AbstractController
 
                 // faire un traitement sur ces objets qui sont à présent lockés
                 
-          } catch (\Doctrine\ORM\PessimisticLockException $exception) {
-                   $entityManager->getConnection()->rollback();
-                   throw $exception;
-          }
+      } catch (\Doctrine\ORM\PessimisticLockException $exception) 
+      {
+                    $entityManager->getConnection()->rollback();
+                    throw $exception;
+      }
 
-          return $this->redirectToRoute('ni_nineaproposition_index', [], Response::HTTP_SEE_OTHER);
-        }
+      return $this->redirectToRoute('ni_nineaproposition_index', [], Response::HTTP_SEE_OTHER);
+
+  }
 
 
       /**
@@ -881,11 +2309,16 @@ class NiNineapropositionController extends AbstractController
      */
    
    
-     public function ninea(EntityManagerInterface $entityManager, NiNineaproposition $niNineaproposition): Response
+     public function ninea(Request $request,EntityManagerInterface $entityManager, NiNineaproposition $niNineaproposition): Response
 
     {
           $ninea= $entityManager->getRepository(NINinea::class )->findOneBy(["ninNinea"=>$niNineaproposition->getNinNinea()]);
-          return $this->redirectToRoute('nininea_show', ["id" => $ninea->getId()], Response::HTTP_SEE_OTHER);
+          if($ninea)
+            return $this->redirectToRoute('nininea_show', ["id" => $ninea->getId()], Response::HTTP_SEE_OTHER);
+          else{
+            $request->getSession()->getFlashBag()->add('message',"Ce ninea à été supprimé.");
+            return $this->redirectToRoute('ni_nineaproposition_index', [], Response::HTTP_SEE_OTHER);
+          }
     }
 
 
@@ -939,7 +2372,7 @@ class NiNineapropositionController extends AbstractController
         
     }
 
-          /**
+      /**
      * @Route("/editPersonne/{id}/{idDemande}", name="ni_nineaproposition_editPersonne", methods={"GET", "POST"})
      */
     public function editPersonne(Request $request, EntityManagerInterface $entityManager,$id="",$idDemande=""): Response
@@ -947,6 +2380,7 @@ class NiNineapropositionController extends AbstractController
         $lastpersonne=  $entityManager->getRepository(NiPersonne::class)->find($id);
         $niNineaproposition=  $entityManager->getRepository(NiNineaproposition::class)->find($idDemande);
         
+        $sigle = $lastpersonne->getNinSigle() ;
         $nom = $lastpersonne->getNinNom() ;
         $prenom =  $lastpersonne->getNinPrenom()   ;
         //$adresse =   $lastpersonne[0]->getAdresse()  ;
@@ -1003,7 +2437,6 @@ class NiNineapropositionController extends AbstractController
           }else
               $region_personne ="" ;
 
-
         $departements = $entityManager->getRepository(Departement::class)->findAll();
         $cavs = $entityManager->getRepository(CAV::class)->findAll();
         $cacrs = $entityManager->getRepository(CACR::class)->findAll();
@@ -1029,16 +2462,16 @@ class NiNineapropositionController extends AbstractController
         $nationalites = $entityManager->getRepository(Pays::class)->findAll();
         $civilites = $entityManager->getRepository(NiCivilite::class)->findAll();
 
-        if ($request->get("nom")||$request->get("raison")) {
+        if ($request->get("nom") || $request->get("raison")) 
+        {
+            $session= new Session();
 
-          $session= new Session();
-          $session->set('actived',2);
-         
           if ($niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 11 || 
             $niNineaproposition->getNinFormejuridique()->getNiFormeunite()->getId() == 12)
             {
 
               //récupération personne physique
+              $sigle = $request->get("sigle");
               $nom = $request->get("nom");
               $prenom = $request->get("prenom");
              
@@ -1055,6 +2488,7 @@ class NiNineapropositionController extends AbstractController
               $nsexe = $request->get("sexe");
                $qvh = $request->get("qvh");
 
+               $lastpersonne->setNinNom($sigle);
               $lastpersonne->setNinNom($nom);
               $lastpersonne->setNinPrenom($prenom);
               $lastpersonne->getNinTelephone($telephone);
@@ -1069,23 +2503,40 @@ class NiNineapropositionController extends AbstractController
               $lastpersonne->setNationalite($entityManager->getRepository(Pays::class)->find($nationalite));
               $lastpersonne->setNinSexe($entityManager->getRepository(NiSexe::class)->find($nsexe));
                $lastpersonne->setNinQvh($entityManager->getRepository(QVH::class)->find($qvh));
-               
-              if( $nationalite=="07"){
-                  $cni = $request->get("cni");
-                  $datecni = $request->get("dateCni");
-                  $lastpersonne->setNinCNI($cni);
-                  $lastpersonne->setNinDateCNI(new \DateTime($datecni));
+              
+              if ( $nationalite == "SN"){
+                  
+                  $cni2 = $request->get("cni");
+                  $datecni2 = $request->get("datecni");
+                  $lastpersonne->setNinCNI($cni2);
+                  $lastpersonne->setNinDateCNI(new \DateTime($datecni2));
+                  
               }
               else {
-                  $passport = $request->get("passport");
-                  $datepassport = $request->get("datepassport");
-                  $lastpersonne->setNinCNI($passport);
-                  $lastpersonne->setNinDateCNI(new \DateTime($datepassport));
+                  $passport2 = $request->get("passport");
+                  $datepassport2 = $request->get("datepassport");
+                  $lastpersonne->setNinCNI($passport2);
+                  $lastpersonne->setNinDateCNI(new \DateTime($datepassport2));
               }
-
+             
                $lastpersonne->setNinRaison("");
                $lastpersonne->setNinSigle("");
 
+               $entityManager->flush();
+
+               $request->getSession()->getFlashBag()->add('enregistre',"Personne enregistrée.");
+
+               $msg = $this->verifiePersonne($lastpersonne,$request, $niNineaproposition);
+                //dd($msg);
+                if ($msg != "")
+                    {
+                        $session->set('actived',1);
+                    }
+                   
+                else
+                {
+                    $session->set('actived',2);
+                }  
             }
             else
             {
@@ -1094,14 +2545,24 @@ class NiNineapropositionController extends AbstractController
                   $siglesociale = $request->get("sigle");
                   $lastpersonne->setNinRaison($raisonsociale);
                   $lastpersonne->setNinSigle($siglesociale);
+                  
+                  $entityManager->flush();
+                  $request->getSession()->getFlashBag()->add('enregistre',"Personne enregistrée.");
 
+                  $msg=$this->verifiePersonne($lastpersonne,$request, $niNineaproposition);
+                // dd($msg);
+                    if ($msg != "")
+                        {
+                            $session->set('actived',1);
+                        }
+                    
+                    else
+                    {
+                        $session->set('actived',2);
+
+                    }  
             }
-
-
-                $entityManager->flush();
-
-           // $request->getSession()->getFlashBag()->add('message',"L'activité  a été modifiée avec succés.");
-
+                
             return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -1154,11 +2615,11 @@ class NiNineapropositionController extends AbstractController
     {
 
         $coordonnee=$entityManager->getRepository(NiCoordonnees::class)->find($id);
-        
+        $niNineaproposition=  $coordonnee->getNiNineaproposition()->getId();
+
         if ($request->get('editer')) 
         {
           $session=new Session();
-          $session->set('actived',3);
         
           $typevoie = $request->get("typevoie");
           $qvh =  $request->get("qvh");
@@ -1183,9 +2644,20 @@ class NiNineapropositionController extends AbstractController
           $coordonnee->setNinUrl($url);
 
           $coordonnee->setUpdateBy($this->getUser());
-
           $entityManager->flush();
+          $request->getSession()->getFlashBag()->add('enregistre',"Coordonnées enregistrée.");
 
+          $msg = $this->verifieCoordonnes($coordonnee,$request);
+           if ($msg != "")
+                {
+                    $session->set('actived',2);
+                }
+              
+           else  
+           {
+                $session->set('actived',3);
+           }
+               
          // $request->getSession()->getFlashBag()->add('message',"Les coordonnées ont été  modifiées avec succés.");
 
             return $this->redirectToRoute('ni_nineaproposition_show', [
@@ -1195,7 +2667,7 @@ class NiNineapropositionController extends AbstractController
           
         }
 
-        return $this->renderForm('ni_nineaproposition/editCoordonnee.html.twig', [
+            return $this->renderForm('ni_nineaproposition/editCoordonnee.html.twig', [
            
 
         ]);
@@ -1216,15 +2688,17 @@ class NiNineapropositionController extends AbstractController
           if ($form->isSubmitted() && $form->isValid()) {
             $session=new Session();
 
-            if ($lastactivites->getNiNineaproposition()->getNinFormejuridique()->getNiFormeunite()->getId() == "11"  or $lastactivites->getNiNineaproposition()->getNinFormejuridique()->getNiFormeunite()->getId() == "12")
+            if ($lastactivites->getNiNineaproposition()->getNinFormejuridique()->getNiFormeunite()->getId() == "11" 
+                or $lastactivites->getNiNineaproposition()->getNinFormejuridique()->getNiFormeunite()->getId() == "12")
             {
               $session->set('actived',5);
             }else
             $session->set('actived',4);
 
             $entityManager->flush();
+            $request->getSession()->getFlashBag()->add('enregistre',"Activité enregistrée.");
 
-            $request->getSession()->getFlashBag()->add('message',"L'activité  a été modifiée avec succés.");
+            //$request->getSession()->getFlashBag()->add('message',"L'activité  a été modifiée avec succés.");
 
             return $this->redirectToRoute('ni_nineaproposition_show', ["id"=> $lastactivites->getNiNineaproposition()->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -1468,7 +2942,6 @@ class NiNineapropositionController extends AbstractController
 
      // var_dump($niNineaproposition);
 
-
       $niNineaproposition->setNinmajdate(new \DateTime());
 
       $session=new Session();
@@ -1476,68 +2949,105 @@ class NiNineapropositionController extends AbstractController
       
        $ninRegcom = "";
        $ninDatreg = "";
+       $message = "";
+       
+  
 
-      if ($request->get('modifierEntete')) {
+         if ($request->get('ninStatut') == 2)
+         {
+           // $nineamere = $request->get('nineamere');
+           // $siglemere = $request->get('siglemere');
+          //  $niNineaproposition->setNinSiglemere($siglemere);
+          //  $niNineaproposition->setNinNineamere($nineamere);
+         }
+         $niNineaproposition->setUpdatedBy($this->getUser());
+        
 
-
-          if ($request->get('ninStatut') == 2)
-          {
-            
-            $nineamere = $request->get('nineamere');
-            $siglemere = $request->get('siglemere');
-
-            $niNineaproposition->setNinSiglemere($siglemere);
-            $niNineaproposition->setNinNineamere($nineamere);
-          }
-
-          $niNineaproposition->setUpdatedBy($this->getUser());
-
-          $ninEnseigne = $request->get('ninEnseigne');
-          $ninDatreg = $request->get('ninDatreg');
-          $ninRegcom= $request->get('ni_nineaproposition_ninRegcom');
-
-          $niNineaproposition->setNinEnseigne($ninEnseigne);
-          $niNineaproposition->setNinDatreg(new \DateTime($ninDatreg));
-          $niNineaproposition->setNinRegcom( str_replace("_","",$ninRegcom));
-
+         $control= new Control();
+        // $typeDocument = $niNineaproposition->getNiTypedocument()->getId();
+          
+         $niNineaproposition->setNinEnseigne($request->get('enseigne'));
+         $niNineaproposition->setNomCommerce($request->get('commercial'));
+         if($request->get('typdocument'))
+          $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typdocument')));
+         $niNineaproposition->setDocument(str_replace("_","",$request->get('document')));
+         if($request->get('observation'))
+            $niNineaproposition->setNinObservationsrccm($request->get('observation'));
          
-          $entityManager->flush();
+         if($request->get('datedocument'))
+            $niNineaproposition->setDateDocumment(new \DateTime($request->get('datedocument')));
 
-          return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
-        }
-        else if ($request->get('reprendre')) {
-          $personne = $niNineaproposition->getNiPersonne();
-          $coordonnee = $niNineaproposition->getCoordonnees()[0];
-          $activite_economique = $niNineaproposition->getNiActiviteEconomiques()[0];
-  
-          if($personne){
-            $entityManager->remove($personne);
-          }
-          if($coordonnee){
-            $entityManager->remove($coordonnee);
-          }
-          if($activite_economique){
-            $entityManager->remove($activite_economique);
-          }
-  
-          foreach ($niNineaproposition->getNinActivites() as $key) {
-            $entityManager->remove($key);
-          }
-          foreach ($niNineaproposition->getNinDirigeants() as $key) {
-            $entityManager->remove($key);
-          }
-          foreach ($niNineaproposition->getNinproduits() as $key) {
-            $entityManager->remove($key);
-          }
-  
-          $entityManager->remove($niNineaproposition);
-          $entityManager->flush();
-  
-  
-          return $this->redirectToRoute('ni_nineaproposition_new', [], Response::HTTP_SEE_OTHER);
-        }
 
-    }
+         if($request->get('typdocument')==1){
+            $ctrl = $control->controlRCCM( $request->get('document'),$request->get('datedocument'), $entityManager,$niNineaproposition->getNinFormejuridique(),$request->get('ninStatut'));
+            if ($ctrl == 1)
+            {
+               $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+            //  $entityManager->flush();
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+            }
+            else if ($ctrl == 2)
+            {
+               $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+            // $entityManager->flush();
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+            else if ($ctrl == 3)
+            {
+               $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+            //  $entityManager->flush();
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+            else if ($ctrl == 4)
+            {
+               $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+            // $entityManager->flush();
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+            else if ($ctrl == 5)
+            {
+               $request->getSession()->getFlashBag()->add('message',"L'année de création  du registre de  commerce ne doit pas être antérieure à l'année 1900.");
+            // $entityManager->flush();
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+            else if ($ctrl == 6)
+            {
+               $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+            // $entityManager->flush();
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+         
+         else 
+         {
+            $entityManager->flush();
+            //return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+         }
+         }else{
+            $document = $control->controlDocument($request->get('document'));
+            if($document==1){
+               $request->getSession()->getFlashBag()->add('message',"Le format est invalide.");
+               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }else{
+               $tabninea= $this->getDoctrine()->getRepository(NINinea::class)->findninRegcom($request->get('document'));
+               if(count($tabninea)>0){
+                  $request->getSession()->getFlashBag()->add('message',"Le document de creation existe déjà.");
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }
+            }
+         }
+
+      $entityManager->flush();
+      return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+   
+   }
 
 
     /**
@@ -1547,29 +3057,37 @@ class NiNineapropositionController extends AbstractController
     {
             
       $acteconom=$entityManager->getRepository(NiActiviteEconomique::class)->find($id);
-        
+      $session= new Session();
+
+         $sources =  $entityManager->getRepository(NiSourcefinancement::class)->findAll();
+          $occupations =  $entityManager->getRepository(NiModaliteexploitation::class)->findAll();
+          $natures =  $entityManager->getRepository(NiNatureLocaliteExploitation::class)->findAll();
+
         if ($request->get('modifierActivitesEcos')) 
         {
           if ($acteconom->getNiNineaproposition()->getNinFormejuridique()->getNiFormeunite()->getId() == 11 or 
             $acteconom->getNiNineaproposition()->getNinFormejuridique()->getNiFormeunite()->getId() == 12)
           {
-            $session= new Session();
-            $session->set('actived',"4");
+            
+            $session->set('actived',4);
           }
           else 
           {
-            $session= new Session();
             $session->set('actived',5);
           }
 
           $ninAffaire = str_replace(" ", "", $request->get("ninAffaire"));
           $ninAnneeCa =  $request->get("ninAnneeCa");
-          $ninCapital = $request->get("ninCapital");
+          $ninCapital = str_replace(" ", "", $request->get("ninCapital")); 
           $ninEffectif = $request->get("ninEffectif");
           $ninEffect1 = $request->get("ninEffect1");
           $ninEffectifFem = $request->get("ninEffectifFem");
           $ninEffectifFemSAIS = $request->get("ninEffectifFemSAIS");
-
+          
+          $ninsource = $request->get("ninOcc");
+          $ninmode = $request->get("ninMode");
+          $ninature = $request->get("ninNature");
+          
           if($ninAffaire){
             $acteconom->setNinAffaire($ninAffaire);
           }
@@ -1592,11 +3110,27 @@ class NiNineapropositionController extends AbstractController
           if($ninEffectifFemSAIS){
             $acteconom->setNinEffectifFemSAIS($ninEffectifFemSAIS);
           }
+          
+          
+          if ($ninsource)
+          {
+            $acteconom->setNinOcc($this->getDoctrine()->getRepository(NiSourcefinancement::class)->find($ninsource));
+            
+          }
+          if ($ninmode)
+          {
+            $acteconom->setNinMode($this->getDoctrine()->getRepository(NiModaliteexploitation::class)->find($ninmode));
 
+          }
 
+          if($ninature)
+          {
+            $acteconom->setNinNature($this->getDoctrine()->getRepository(NiNatureLocaliteExploitation::class)->find($ninature));
 
+          }
 
           $entityManager->flush();
+          $request->getSession()->getFlashBag()->add('enregistre',"Activité enregistrée.");
 
          // $request->getSession()->getFlashBag()->add('message',"L'activité économique  a été modifiée avec succés.");
 
@@ -1609,12 +3143,15 @@ class NiNineapropositionController extends AbstractController
         }
 
         return $this->renderForm('ni_nineaproposition/editActivitesEconomiques.html.twig', [
-           
+           "sources"  => $sources,
+           "occupations"  => $occupations,
+           "natures"  => $natures
 
         ]);
 
      }
 
+      
      
 
      /**
@@ -1632,89 +3169,83 @@ class NiNineapropositionController extends AbstractController
 
         $formeunites = $entityManager->getRepository(NiFormeunite::class)->findAll();
         $formejuridiques = $entityManager->getRepository(NiFormejuridique::class)->findAll();
+        $typedocuments = $entityManager->getRepository(NinTypedocuments::class)->findAll();
 
         $form = $this->createForm(NiNineapropositionAncienNINEAType::class, $niNineaproposition);
         $form->handleRequest($request);
         
-         $ninRegcom = "";
-         $ninDatreg = "";
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $CompteurDemandeNINEA = new CompteurDemandeNINEA();
+            $ninea = $form["ninNinea"]->getData();
+            //dd($ninea);
 
-            if ($form['ninStatut']->getData()->getId() == 2)
+          /*  if ($form['ninStatut']->getData()->getId() == 2)
             {
-              $nineamere = $request->get('nineamere');
-              $siglemere = $request->get('siglemere');
-
-              $niNineaproposition->setNinSiglemere($siglemere);
-              $niNineaproposition->setNinNineamere($nineamere);
+             
+              /* if (strlen($ninea) == 9)
+               {
+                  
+                  $request->getSession()->getFlashBag()->add('message',"Ce ninea ne peut pas avoir de statut ETS SECONDAIRE. ");
+                  
+                  //return $this->redirectToRoute('ni_nineaproposition_newAncienNINEA', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+                     return $this->renderForm('ni_nineaproposition/new_ancienNINEA.html.twig', [
+                        'ni_nineaproposition' => $niNineaproposition,
+                        'form' => $form,
+                        'formeunites' => $formeunites,
+                        'formejuridiques' => $formejuridiques,
+                        'ninRegcom' => $request->get("registreCommerce"),
+                        'ninDatreg' => $request->get("dateregcom"),
+                  
+                  ]);
+                  
+               }
+ 
+               
             }
-
-            if($request->get('inputenseigne'))
-              $niNineaproposition->setNinEnseigne( $request->get('inputenseigne'));
-
-               //$formeunite = $entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique"))->getNiFormeunite()->getId();
-            $niNineaproposition->setNinFormejuridique($entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique")));
-
-            if ($request->get("formejuridique") == 10)
-            {
-
-               $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-               $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-
-            } 
-            else if ($request->get("formejuridique") == 92) {
-              $niNineaproposition->setNinBordereau($request->get('inputbordereau'));
-
-            }  
-            else if ($request->get("formejuridique") == 91 
-                or $request->get("formejuridique") == 29) 
-            {
-              $niNineaproposition->setNinBordereau($request->get('inputbordereau'));
-              $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-              $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-
-            } 
-            else if ($request->get("formejuridique") == 26 
-              or $request->get("formejuridique") == 96 or $request->get("formejuridique") == 99) 
-              {
-              $niNineaproposition->setNinTitrefoncier($request->get('titrefoncier'));
-              $niNineaproposition->setNinBail($request->get('inputbail'));
-
-            } 
-             else if ($request->get("formejuridique") == 90) {
-              $niNineaproposition->setNinAccord($request->get('inputaccord'));
-            }  
-            else if ($request->get("formejuridique") == 44 
-              or $request->get("formejuridique") == 48) {
-              $niNineaproposition->setNinAgrement($request->get('inputagrement'));
-            } 
-            else if ($request->get("formejuridique") == 27) {
-              $niNineaproposition->setNinAgrement($request->get('inputagrement'));
-              $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-              $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-            } 
-            else if ($request->get("formejuridique") == 50 or $request->get("formejuridique") == 51  
-                or $request->get("formejuridique") == 52 or $request->get("formejuridique") == 54  or  $request->get("formejuridique") == 55 or $request->get("formejuridique") == 59) 
-            {
-              $niNineaproposition->setNinRecepisse($request->get('inputrecepisse'));
-            } 
-            else if ($request->get("formejuridique") == 32 or $request->get("formejuridique") == 45 
-               or $request->get("formejuridique") == 42  or  $request->get("formejuridique") == 43  or $niNineaproposition->getNinFormejuridique()->getId() == 46  or $niNineaproposition->getNinFormejuridique()->getId() == 47  or $niNineaproposition->getNinFormejuridique()->getId() == 56
-                or $request->get("formejuridique") == 97  or $request->get("formejuridique") == 95) 
-              {
-                $niNineaproposition->setNinArrete($request->get('inputarrete'));
-                //dd($request->get('inputarrete'));
-              } 
             else
             {
-              $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-              $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
+               /* if (strlen($ninea) == 13)
+               {
+                  
+                  $request->getSession()->getFlashBag()->add('message',"Ce ninea ne peut pas avoir de statut SIEGE.");
+                  
+                  //return $this->redirectToRoute('ni_nineaproposition_newAncienNINEA', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+                     return $this->renderForm('ni_nineaproposition/new_ancienNINEA.html.twig', [
+                        'ni_nineaproposition' => $niNineaproposition,
+                        'form' => $form,
+                        'formeunites' => $formeunites,
+                        'formejuridiques' => $formejuridiques,
+                        'ninRegcom' => $request->get("registreCommerce"),
+                        'ninDatreg' => $request->get("dateregcom"),
+                  
+                  ]);
 
+               } 
+
+            } */
+
+            if ($form['ninStatut']->getData())
+            {
+               if ($form['ninStatut']->getData()->getId() == 2)
+               {
+                 
+                 $nineamere = $request->get('nineamere');
+                 $siglemere = $request->get('siglemere');
+   
+                 $niNineaproposition->setNinSiglemere($siglemere);
+                 $niNineaproposition->setNinNineamere($nineamere);
+   
+                
+                 $ninineamere =  $entityManager->getRepository(NINinea::class)->findBy(['ninNinea' => $nineamere]);
+   
+
+               }
+               
             }
-
+            
+            $control= new Control();
 
             $niNineaproposition->setCreatedBy($this->getUser());
             $niNineaproposition->setUpdatedBy($this->getUser());
@@ -1723,10 +3254,91 @@ class NiNineapropositionController extends AbstractController
             $numDemande=$diversUtils->numDemandeSuivant($entityManager);
             $niNineaproposition->setNinnumerodemande($numDemande);
             $niNineaproposition->setStatut("b");
+            $niNineaproposition->setNinFormejuridique($entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique")));
+            $niNineaproposition->setNinEnseigne($request->get('enseigne'));
+            $niNineaproposition->setNomCommerce($request->get('commercial'));
+           
+            if($request->get('typdocument'))
+               $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typdocument')));
+            if($request->get('document'))
+               $niNineaproposition->setDocument(str_replace("_","",$request->get('document')));
+            if($request->get('observation'))
+               $niNineaproposition->setNinObservationsrccm($request->get('observation'));
+         
+            if($request->get('datedocument'))
+               $niNineaproposition->setDateDocumment(new \DateTime($request->get('datedocument')));
 
-            $entityManager->persist($niNineaproposition);
-            $entityManager->persist($CompteurDemandeNINEA);
-            $entityManager->flush();
+
+            /*if($request->get('typdocument')==1){
+               $ctrl = $control->controlRCCM( $request->get('document'),$request->get('datedocument'), $entityManager,$niNineaproposition->getNinFormejuridique());
+               if ($ctrl == 1)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"Ce registre de commerce existe déjà.");
+               //  $entityManager->flush();
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+               }
+               else if ($ctrl == 2)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"Format invalide pour le registre de commerce.");
+               // $entityManager->flush();
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }
+               else if ($ctrl == 3)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
+               //  $entityManager->flush();
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }
+               else if ($ctrl == 4)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
+               // $entityManager->flush();
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }
+               else if ($ctrl == 5)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"L'année de création  du registre de  commerce ne doit pas être antérieure à l'année 1900.");
+               // $entityManager->flush();
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }
+               else if ($ctrl == 6)
+               {
+                  $request->getSession()->getFlashBag()->add('message',"La date du registre ne doit pas être postérieure à la date du jour.");
+               // $entityManager->flush();
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }
+            
+            else 
+            {
+               $entityManager->flush();
+               //return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+            }
+            }else{
+               $document = $control->controlDocument($request->get('document'));
+               if($document==1){
+                  $request->getSession()->getFlashBag()->add('message',"Le format est invalide.");
+                  return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+               }else{
+                  $tabninea= $this->getDoctrine()->getRepository(NINinea::class)->findninRegcom($request->get('document'));
+                  if(count($tabninea)>0){
+                     $request->getSession()->getFlashBag()->add('message',"Le document de creation existe déjà.");
+                     return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
+
+                  }
+               }
+            }*/
+
+
+               $entityManager->persist($niNineaproposition);
+               $entityManager->persist($CompteurDemandeNINEA);
+               $entityManager->flush();
 
 
               return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
@@ -1739,8 +3351,8 @@ class NiNineapropositionController extends AbstractController
              
               'formejuridiques' => $formejuridiques,
                        
-              'ninRegcom' => $ninRegcom,
-              'ninDatreg' => $ninDatreg,
+              'ninRegcom' => $request->get("registreCommerce"),
+              'ninDatreg' => $request->get("dateregcom"),
           
 
         ]);
@@ -1754,7 +3366,7 @@ class NiNineapropositionController extends AbstractController
     {
 
       //$controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $id]);
-      $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneByNinea($id);
+      $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneEtrangerByNinea($id,"SN");
       if (count($controleCni) > 0)
       {
         return  new JsonResponse( 1);
@@ -1774,6 +3386,103 @@ class NiNineapropositionController extends AbstractController
     }
 
 
+     /**
+     * @Route("/controleetrangerCNI/{id}/{ind}", name="controleetrangerCNI",  methods={"GET","POST"})
+     */
+    public function controleetrangerCNI( $id = "",$ind="")
+    {
+
+      //$controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $id]);
+      $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findPersonneEtrangerByNinea($id,$ind);
+      if (count($controleCni) > 0)
+      {
+        return  new JsonResponse( 1);
+      } 
+
+      else 
+      {
+         
+        $cni11 =  substr($id, 0, 4).substr($id,6, 7);
+        $controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $cni11]);
+        if (count($controleCni) > 0)
+         {
+            return  new JsonResponse(  1);
+          } else  
+            return new JsonResponse(  0);
+       }
+    }
+
+
+     /**
+     * @Route("/controleDirigCNI/{id}/{ind}/{idDemande}/{iddirig}", name="controleDirigCNI",  methods={"GET","POST"})
+     */
+    public function controleDirigCNI( $id = "", $ind="", $idDemande="",$iddirig="")
+    {
+
+      //$controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $id]);
+      $controleCni = $this->getDoctrine()->getRepository(NiNineaproposition::class)->findDirigeantEtrangerByNinea($id,$ind,$idDemande,$iddirig );
+      if (count($controleCni) > 0)
+      {
+        return  new JsonResponse( 1);
+      } 
+
+      else 
+      {
+       
+         return new JsonResponse(  0);
+       }
+    }
+
+     /**
+     * @Route("/controleDirigCNIPers/{id}/{ind}", name="controleDirigCNIPers",  methods={"GET","POST"})
+     */
+    public function controleDirigCNIPers( $id = "", $ind="")
+    {
+
+      //$controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $id]);
+      $controleCni = $this->getDoctrine()->getRepository(NiNineaproposition::class)->findDirigeantCNIByNinea($id,$ind);
+      
+      if (count($controleCni) > 0)
+      {
+        return  new JsonResponse( 1);
+      } 
+
+      else 
+      {
+        $cni11 =  substr($id, 0, 4).substr($id,6, 7);
+       // $controleCni =   $this->getDoctrine()->getRepository(NiDirigeant::class)->findBy(['ninCni' => $cni11]);
+       $controleCni = $this->getDoctrine()->getRepository(NiNineaproposition::class)->findDirigeantCNIByNinea($id,$ind);
+
+        if (count($controleCni) > 0)
+         {
+            return  new JsonResponse(1);
+         } 
+          else  
+            return new JsonResponse( 0);
+      }
+
+      return new JsonResponse( 0);
+   }
+
+    
+
+
+     /**
+     * @Route("/controleetrangerCNIDirigeant/{id}/{ind}", name="controleetrangerCNIDirigeant",  methods={"GET","POST"})
+     */
+    public function controleetrangerCNIDirigeant($id = "",$ind="")
+    {
+
+      //$controleCni =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninCNI' => $id]);
+      $controleCni = $this->getDoctrine()->getRepository(NINinea::class)->findDirigeantEtrangerByNinea($id,$ind);
+      if (count($controleCni) > 0)
+      {
+        return  new JsonResponse(1);
+      } 
+              
+       return new JsonResponse(0);
+    }
+    
     
      /**
      * @Route("/controleRCCM/{id}", name="controleRCCM",  methods={"GET","POST"})
@@ -1800,8 +3509,10 @@ class NiNineapropositionController extends AbstractController
      */
     public function controleRaison( $id = "")
     {
-      $controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
       
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleRaison =   $this->getDoctrine()->getRepository(NINinea::class)->findPersonneEteRaison($id);
+
       if (count($controleRaison) > 0)
       {        
         return  new JsonResponse(1);
@@ -1813,6 +3524,134 @@ class NiNineapropositionController extends AbstractController
     }
 
 
+     /**
+     * @Route("/controleTelephonePersonne/{id}", name="controleTelephonePersonne",  methods={"GET","POST"})
+     */
+    public function controleTelephonePersonne( $id = "")
+    {
+      
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleTelephone =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninTelephone' => $id]);
+
+      if (count($controleTelephone) > 0)
+      {        
+        return  new JsonResponse(1);
+      } 
+      else 
+      {
+          return new JsonResponse(0);
+      }
+    }
+
+
+    /**
+     * @Route("/controleTelephoneCoordonnees/{id}", name="controleTelephoneCoordonnees",  methods={"GET","POST"})
+     */
+    public function controleTelephoneCoordonnees( $id = "", $tel="")
+    {
+      
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleTelephone1 =   $this->getDoctrine()->getRepository(NiCoordonnees::class)->findBy(['ninTelephon1' => $id]);
+      $controleTelephone2 =   $this->getDoctrine()->getRepository(NiCoordonnees::class)->findBy(['nintelephon2' => $tel]);
+
+      if (count($controleTelephone1) > 0)
+      {        
+        return  new JsonResponse(1);
+      } 
+      else if (count($controleTelephone2) > 0)
+      {        
+         return  new JsonResponse(1);
+      } 
+      
+      else 
+      {
+          return new JsonResponse(0);
+      }
+    }
+
+ /**
+     * @Route("/controleTelephoneDirigeants/{id}", name="controleTelephoneDirigeants",  methods={"GET","POST"})
+     */
+    public function controleTelephoneDirigeants( $id = "")
+    {
+      
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleTelephone =   $this->getDoctrine()->getRepository(NiDirigeant::class)->findBy(['ninTelephone1' => $id]);
+
+      if (count($controleTelephone) > 0)
+      {        
+        return  new JsonResponse(1);
+      } 
+      else 
+      {
+          return new JsonResponse(0);
+      }
+    }
+
+
+    /**
+     * @Route("/controleEmailPersonne/{id}", name="controleEmailPersonne",  methods={"GET","POST"})
+     */
+    public function controleEmailPersonne( $id = "")
+    {
+      
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleEmailPersonne =   $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninEmailPersonnel' => $id]);
+
+      if (count($controleEmailPersonne) > 0)
+      {        
+        return  new JsonResponse(1);
+      } 
+      else 
+      {
+          return new JsonResponse(0);
+      }
+    }
+
+
+      /**
+     * @Route("/controleEmailCoordonnees/{id}", name="controleEmailCoordonnees",  methods={"GET","POST"})
+     */
+    public function controleEmailCoordonnees( $id = "")
+    {
+      
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleEmailCoordonnees =   $this->getDoctrine()->getRepository(NiCoordonnees::class)->findBy(['ninEmail' => $id]);
+
+      if (count($controleEmailCoordonnees) > 0)
+      {        
+        return  new JsonResponse(1);
+      } 
+      else 
+      {
+          return new JsonResponse(0);
+      }
+    }
+
+
+
+    
+      /**
+     * @Route("/controleEmailDirigeants/{id}", name="controleEmailDirigeants",  methods={"GET","POST"})
+     */
+    public function controleEmailDirigeants( $id = "")
+    {
+      
+      //$controleRaison =  $this->getDoctrine()->getRepository(NiPersonne::class)->findBy(['ninRaison' => $id]);
+      $controleEmailDirigeants =   $this->getDoctrine()->getRepository(NiDirigeant::class)->findBy(['ninEmail' => $id]);
+
+      if (count($controleEmailDirigeants) > 0)
+      {        
+        return  new JsonResponse(1);
+      } 
+      else 
+      {
+          return new JsonResponse(0);
+      }
+    }
+
+
+    
   /**
      * @Route("/controleCNIDIRIG/{id}", name="controleCNIDIRIG",  methods={"GET","POST"})
      */
@@ -1844,8 +3683,7 @@ class NiNineapropositionController extends AbstractController
     public function controlesRCCM( $registre = "", $dateregistre)
     {
 
-     
-               //RCCM: SNDKR2000A22222
+                    //RCCM: SNDKR2000A22222
                $rccm =  str_replace(" ","",$registre) ;
                $rccmNormal = str_replace("_","",$rccm);
                //$dateReg = $niNineaproposition->getNinRegcom();
@@ -1893,7 +3731,7 @@ class NiNineapropositionController extends AbstractController
         {
 
             $CompteurDemandeNINEA = new CompteurDemandeNINEA();
-
+         
             if ($form['ninStatut']->getData())
             {
                if ($form['ninStatut']->getData()->getId() == 2)
@@ -1905,1203 +3743,38 @@ class NiNineapropositionController extends AbstractController
                  $niNineaproposition->setNinSiglemere($siglemere);
                  $niNineaproposition->setNinNineamere($nineamere);
    
+                
                  $ninineamere =  $entityManager->getRepository(NINinea::class)->findBy(['ninNinea' => $nineamere]);
    
-               }
-               
-            }
-         
-               //$formeunite = $entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique"))->getNiFormeunite()->getId();
-               $niNineaproposition->setNinFormejuridique($entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique")));
-               $niNineaproposition->setCreatedBy($this->getUser());
-               $niNineaproposition->setUpdatedBy($this->getUser());
-
-               //generer le code de numéro de demande
-               $numDemande=$diversUtils->numDemandeSuivant($entityManager);
-               $niNineaproposition->setNinnumerodemande($numDemande);
-               $niNineaproposition->setStatut("b");
-               $niNineaproposition->setNinEnseigne($request->get('inputenseigne'));
-
-               //RCCM: SNDKR2000A22222
-               $rccm =  str_replace(" ","",$request->get("registreCommerce")) ;
-               $rccmNormal = str_replace("_","",$rccm);
-               //$dateReg = $niNineaproposition->getNinRegcom();
-               $pays = substr($rccm, 0, 2);
-               $juridiction = substr($rccm, 2, 3);
-               $annee = substr($rccm, 5, 4);
-               $lettrecle = substr($rccm, 9, 1);
-               $sequence = substr($rccm, 10, 5);
-               $annee_cours = date("Y");
-               $controleRccm =  $this->getDoctrine()->getRepository(NINinea::class)->findninRegcom($rccmNormal);
-               $datereg = $request->get("dateregcom");
-               $datereg_annee =  date('Y', strtotime($datereg));
-               //dd($controleRccm);
-               $pattern_rccm = "/^(SN)(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR)(\d{4})(A|B|C|E)(\d{1,5})$/"; 
-               $dateJour = date('Y-m-d');
-               $pattern = "/(SN)(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR|[A-Z]{3})(\d{4})(A|B|C|E|[A-Z]{1})(\d{1,5})$/"; 
-
-               $ninFormeunite = $niNineaproposition->getNinFormejuridique()->getNiFormeunite();
-               $ninFormejuridique = $niNineaproposition->getNinFormejuridique();
-               $ninStatut = $niNineaproposition->getNinStatut();
-               $enseigne = $niNineaproposition->getNinEnseigne();
-
-            if ($niNineaproposition->getNinFormejuridique()->getId() == 10)
-            {  
-               //$niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-               //$niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-
-               
-               if (count($controleRccm) > 0)
-                  {
-                       $request->getSession()->getFlashBag()->add('messageDoublons',"Ce registre de commerce existe déjà.");
-                       //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                       return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,    
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-
-                        'ni_nineaproposition_mere' => $ninineamere,
-                       
-                     ]);
-
-                  }
-                    
-               elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
-               {
-                    
-                     $request->getSession()->getFlashBag()->add('messageFormat',"Format invalide pour le registre de commerce.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,                       
-                     'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-
-               }
-
-               elseif($annee > $annee_cours)
-               {
-                  
-                  $request->getSession()->getFlashBag()->add('messageDate',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                  'ni_nineaproposition' => $niNineaproposition,
-                  'form' => $form,
-                  'formeunites' => $formeunites,             
-                  'formejuridiques' => $formejuridiques,                       
-                  'ninFormeJuridique' => $ninFormejuridique,
-                  'ninFormeunite' => $ninFormeunite,
-                  'ninStatut' => $ninStatut,
-                  'ninEnseigne' => $enseigne,
-                  'ninRegcom' => $request->get("registreCommerce"),
-                  'ninDatereg' => $request->get("dateregcom"),
-                  'ni_nineaproposition_mere' => $ninineamere,
-                  
-                  ]);
-               }
-               elseif($annee < "1900")
-               {
-                  
-                  $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                  'ni_nineaproposition' => $niNineaproposition,
-                  'form' => $form,
-                  'formeunites' => $formeunites,             
-                  'formejuridiques' => $formejuridiques,                       
-                  'ninFormeJuridique' => $ninFormejuridique,
-                  'ninFormeunite' => $ninFormeunite,
-                  'ninStatut' => $ninStatut,
-                  'ninEnseigne' => $enseigne,
-                  'ninRegcom' => $request->get("registreCommerce"),
-                  'ninDatereg' => $request->get("dateregcom"),
-                  'ni_nineaproposition_mere' => $ninineamere,
-                  
-                  ]);
-               }
-               elseif ($datereg > $dateJour)
-               {
-                  $request->getSession()->getFlashBag()->add('messageDateJour',"La date du registre ne doit pas être postérieure à la date du jour.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,                       
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               elseif ($datereg_annee < $annee)
-               {
-                  //dd($datereg_annee);
-                  $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,                       
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else
-               {
-                  $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-                  $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-                  $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
-
-               }
-            
-            } 
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 92) {
-               $bordereau = trim($request->get('inputbordereau'));
-               $controleBordereau =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninBordereau' => $bordereau]);
-
-               if (preg_match($pattern, $bordereau) == 1)
-               {
-                  $request->getSession()->getFlashBag()->add('message',"Le format du bordereau n'est pas valide.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,                       
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninBordereau' => $request->get("inputbordereau"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else if (count($controleBordereau) > 0)
-               {
-                     $request->getSession()->getFlashBag()->add('messageDoublons',"Ce bordereau existe déjà.");
-                     //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,    
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninBordereau' => $request->get("inputbordereau"),
-
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else 
-               {
-                  $niNineaproposition->setNinBordereau($request->get('inputbordereau'));
-                  $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(2));
-
-               }
-               
-            }  
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 91 
-                or $niNineaproposition->getNinFormejuridique()->getId() == 29) 
-            {
-               $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
-               if($request->get('typedocuments') != 1)
-                  {
-                     $bordereau = $request->get('inputbordereau');
-                     $controleBordereau =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninBordereau' => $bordereau]);
-
-                     if (preg_match($pattern, $bordereau) == 1)
-                     {
-                        $request->getSession()->getFlashBag()->add('message',"Le format du bordereau n'est pas valide.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,   
-                           'typedocuments'  => $typedocuments,                  
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninBordereau' => $request->get("inputbordereau"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else if (count($controleBordereau) > 0)
-                     {
-                           $request->getSession()->getFlashBag()->add('messageDoublons',"Ce bordereau existe déjà.");
-                           //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-      
-                           return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,    
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'typedocuments'  => $typedocuments,                  
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninBordereau' => $request->get("inputbordereau"),
-      
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else 
-                     {
-                        $niNineaproposition->setNinBordereau($request->get('inputbordereau'));
-                        $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(2));
-
-                     }
-                     
-                  }
-               else{ //typedocument = 1
-                     if (count($controleRccm) > 0)
-                     {
-                        $request->getSession()->getFlashBag()->add('messageDoublons',"Ce registre de commerce existe déjà.");
-                        //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,    
-                           'typedocuments'  => $typedocuments,                  
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninRegcom' => $request->get("registreCommerce"),
-                           'ninDatereg' => $request->get("dateregcom"),
-
-                           'ni_nineaproposition_mere' => $ninineamere,
-                        
-                        ]);
-
-                     }
-                     
-                     elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
-                     {
-                        
-                           $request->getSession()->getFlashBag()->add('messageFormat',"Format invalide pour le registre de commerce.");
-                           
-                           return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,   
-                           'typedocuments'  => $typedocuments,                                      
-                           'ninFormeJuridique' => $ninFormejuridique,
-                              'ninFormeunite' => $ninFormeunite,
-                              'ninStatut' => $ninStatut,
-                              'ninEnseigne' => $enseigne,
-                              'ninRegcom' => $request->get("registreCommerce"),
-                              'ninDatereg' => $request->get("dateregcom"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-
-                     }
-
-                     elseif($annee > $annee_cours)
-                     {
-                        
-                        $request->getSession()->getFlashBag()->add('messageDate',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,     
-                        'typedocuments'  => $typedocuments,                                    
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                        ]);
-                     }
-                     elseif($annee < "1900")
-                     {
-                        
-                        $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,    
-                        'typedocuments'  => $typedocuments,                                     
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                        ]);
-                     }
-                     elseif ($datereg > $dateJour)
-                     {
-                        $request->getSession()->getFlashBag()->add('messageDateJour',"La date du registre ne doit pas être postérieure à la date du jour.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,
-                           'typedocuments'  => $typedocuments,                                         
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninRegcom' => $request->get("registreCommerce"),
-                           'ninDatereg' => $request->get("dateregcom"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     elseif ($datereg_annee < $annee)
-                     {
-                        //dd($datereg_annee);
-                        $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,  
-                           'typedocuments'  => $typedocuments,                                       
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninRegcom' => $request->get("registreCommerce"),
-                           'ninDatereg' => $request->get("dateregcom"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else
-                     {
-                        $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-                        $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-                        $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
-
-                     }
-                  
-               }
-            } 
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 26 
-              or $niNineaproposition->getNinFormejuridique()->getId() == 96 or $niNineaproposition->getNinFormejuridique()->getId() == 99) 
-              {
-
-               $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
-               if($request->get('typedocuments') == 3)
-               {
-                     $titrefoncier = trim($request->get('titrefoncier'));
-                     $controleTitre =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninTitrefoncier' => $titrefoncier]);
-
-                     //dd(preg_match($pattern, $titrefoncier));
-
-                     if (preg_match($pattern, $titrefoncier) == 1)
-                     {
-                        $request->getSession()->getFlashBag()->add('messageValide',"Le format du titre foncier n'est pas valide.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,   
-                           'typedocuments'  => $typedocuments,                  
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninTitrefoncier' => $request->get("titrefoncier"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else if (count($controleTitre) > 0)
-                     {
-                           $request->getSession()->getFlashBag()->add('messageDoublons',"Ce titre foncier existe déjà.");
-                           //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-      
-                           return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,    
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'typedocuments'  => $typedocuments,                  
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninTitrefoncier' => $request->get("titrefoncier"),
-      
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else 
-                     {
-                        $niNineaproposition->setNinTitrefoncier($request->get('titrefoncier'));
-                        $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(3));
-
-                     }
-
-               } else if($request->get('typedocuments') == 4)
-               {
-                     $bail = trim($request->get('inputbail'));
-                     $controleBail =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninBail' => $bail]);
-
-                     if (preg_match($pattern, $bail) == 1)
-                     {
-                        $request->getSession()->getFlashBag()->add('message',"Le format du bail n'est pas valide.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,   
-                           'typedocuments'  => $typedocuments,                  
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninBail' => $request->get("inputbail"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else if (count($controleBail) > 0)
-                     {
-                           $request->getSession()->getFlashBag()->add('messageDoublons',"Ce bail existe déjà.");
-                           //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-      
-                           return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,    
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'typedocuments'  => $typedocuments,                  
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninBail' => $request->get("inputbail"),
-      
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else 
-                     {
-                        $niNineaproposition->setNinBail($request->get('inputbail'));
-                        $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(4));
-
-                     }
-               }else
-               {
-                     $permisdoccuper = trim($request->get('inputpermisoccuper'));
-                     $controlePermis =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninPermisoccuper' => $permisdoccuper]);
-
-                     if (preg_match($pattern, $permisdoccuper) == 1)
-                     {
-                        $request->getSession()->getFlashBag()->add('message',"Le format du permis n'est pas valide.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,   
-                           'typedocuments'  => $typedocuments,                  
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninPermisdoccuper' => $request->get("inputpermisoccuper"),
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else if (count($controlePermis) > 0)
-                     {
-                           $request->getSession()->getFlashBag()->add('messageDoublons',"Ce permis existe déjà.");
-                           //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-      
-                           return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                           'ni_nineaproposition' => $niNineaproposition,
-                           'form' => $form,
-                           'formeunites' => $formeunites,             
-                           'formejuridiques' => $formejuridiques,    
-                           'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'typedocuments'  => $typedocuments,                  
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninPermisdoccuper' => $request->get("inputpermisoccuper"),
-      
-                           'ni_nineaproposition_mere' => $ninineamere,
-                           
-                        ]);
-                     }
-                     else 
-                     {
-                        $niNineaproposition->setNinPermisoccuper($request->get('inputpermisoccuper'));
-                        $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(5));
-
-                     }
-               }
-              
-            } 
-             else if ($niNineaproposition->getNinFormejuridique()->getId() == 90) {
-
-               $accord = trim($request->get('inputaccord'));
-               $controlePermis =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninAccord' => $accord]);
-
-               if (preg_match($pattern, $accord) == 1)
-               {
-                  $request->getSession()->getFlashBag()->add('message',"Le format de l'accord n'est pas valide.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,   
-                     'typedocuments'  => $typedocuments,                  
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninAcccord' => $request->get("inputaccord"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else if (count($controlePermis) > 0)
-               {
-                     $request->getSession()->getFlashBag()->add('messageDoublons',"Cet accord existe déjà.");
-                     //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,    
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'typedocuments'  => $typedocuments,                  
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninAccord' => $request->get("inputaccord"),
-
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else 
-               {
-                  $niNineaproposition->setNinAccord($request->get('inputaccord'));
-               }
-            }  
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 44      or $niNineaproposition->getNinFormejuridique()->getId() == 48) 
-            {
-               $agrement = trim($request->get('inputagrement'));
-               $controleAgrement =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninAgrement' => $agrement]);
-
-               if (preg_match($pattern, $agrement) == 1)
-               {
-                  $request->getSession()->getFlashBag()->add('message',"Le format de l'agrément n'est pas valide.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,   
-                     'typedocuments'  => $typedocuments,                  
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninAgrement' => $request->get("inputagrement"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else if (count($controleAgrement) > 0)
-               {
-                     $request->getSession()->getFlashBag()->add('messageDoublons',"Cet agrément existe déjà.");
-                     //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,    
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'typedocuments'  => $typedocuments,                  
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninAgrement' => $request->get("inputagrement"),
-
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else 
-               {
-                  $niNineaproposition->setNinAgrement($request->get('inputagrement'));
-               }
-            } 
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 27) {
-               $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
-               if($request->get('typedocuments') == 1)
-               {
-                  if (count($controleRccm) > 0)
-                  {
-                     $request->getSession()->getFlashBag()->add('messageDoublons',"Ce registre de commerce existe déjà.");
-                     //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,    
-                        'typedocuments'  => $typedocuments,                  
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-
-                        'ni_nineaproposition_mere' => $ninineamere,
-                     
-                     ]);
-
-                  }
-                  
-                  elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
-                  {
-                     
-                        $request->getSession()->getFlashBag()->add('messageFormat',"Format invalide pour le registre de commerce.");
-                        
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,   
-                        'typedocuments'  => $typedocuments,                                      
-                        'ninFormeJuridique' => $ninFormejuridique,
-                           'ninFormeunite' => $ninFormeunite,
-                           'ninStatut' => $ninStatut,
-                           'ninEnseigne' => $enseigne,
-                           'ninRegcom' => $request->get("registreCommerce"),
-                           'ninDatereg' => $request->get("dateregcom"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-
-                  }
-
-                  elseif($annee > $annee_cours)
-                  {
-                     
-                     $request->getSession()->getFlashBag()->add('messageDate',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,     
-                     'typedocuments'  => $typedocuments,                                    
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                     ]);
-                  }
-                  elseif($annee < "1900")
-                  {
-                     
-                     $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,    
-                     'typedocuments'  => $typedocuments,                                     
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                     ]);
-                  }
-                  elseif ($datereg > $dateJour)
-                  {
-                     $request->getSession()->getFlashBag()->add('messageDateJour',"La date du registre ne doit pas être postérieure à la date du jour.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,
-                        'typedocuments'  => $typedocuments,                                         
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  elseif ($datereg_annee < $annee)
-                  {
-                     //dd($datereg_annee);
-                     $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,  
-                        'typedocuments'  => $typedocuments,                                       
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else
-                  {
-                     $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-                     $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-                     $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
-
-                  }
-               }
-               else
-               {
-                  $agrement = trim($request->get('inputagrement'));
-                  $controleAgrement =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninAgrement' => $agrement]);
-   
-                  if (preg_match($pattern, $agrement) == 1)
-                  {
-                     $request->getSession()->getFlashBag()->add('message',"Le format de l'agrément n'est pas valide.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,   
-                        'typedocuments'  => $typedocuments,                  
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninAgrement' => $request->get("inputagrement"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else if (count($controleAgrement) > 0)
-                  {
-                        $request->getSession()->getFlashBag()->add('messageDoublons',"Cet agrément existe déjà.");
-                        //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-   
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,    
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'typedocuments'  => $typedocuments,                  
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninAgrement' => $request->get("inputagrement"),
-   
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else 
-                  {
-                     $niNineaproposition->setNinAgrement($request->get('inputagrement'));
-                     $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(6));
-
-                  }
-               }
-             
-            } 
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 50 or $niNineaproposition->getNinFormejuridique()->getId() == 51  
-                or $niNineaproposition->getNinFormejuridique()->getId() == 52 or $niNineaproposition->getNinFormejuridique()->getId() == 54  or  $niNineaproposition->getNinFormejuridique()->getId() == 55 or $niNineaproposition->getNinFormejuridique()->getId() == 59) 
-            {
-               $recepisse= trim($request->get('inputrecepisse'));
-               $controleRecepisee =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninRecepisse' => $recepisse]);
-
-               if (preg_match($pattern, $recepisse) == 1)
-               {
-                  $request->getSession()->getFlashBag()->add('message',"Le format du récépisse n'est pas valide.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,   
-                     'typedocuments'  => $typedocuments,                  
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRecepisse' => $request->get("inputrecepisse"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else if (count($controleRecepisee) > 0)
-               {
-                     $request->getSession()->getFlashBag()->add('messageDoublons',"Cet récepissé existe déjà.");
-                     //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,    
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'typedocuments'  => $typedocuments,                  
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRecepisse' => $request->get("inputrecepisse"),
-
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else 
-               {
-                  $niNineaproposition->setNinRecepisse($request->get('inputrecepisse'));
-                  //$niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
-
-               }
-            } 
-            else if ($niNineaproposition->getNinFormejuridique()->getId() == 32 or $niNineaproposition->getNinFormejuridique()->getId() == 40  or $niNineaproposition->getNinFormejuridique()->getId() == 41  or $niNineaproposition->getNinFormejuridique()->getId() == 45 
-               or $niNineaproposition->getNinFormejuridique()->getId() == 42  or  $niNineaproposition->getNinFormejuridique()->getId() == 43  or $niNineaproposition->getNinFormejuridique()->getId() == 46  or $niNineaproposition->getNinFormejuridique()->getId() == 47  or $niNineaproposition->getNinFormejuridique()->getId() == 56
-                or $niNineaproposition->getNinFormejuridique()->getId() == 97  or $niNineaproposition->getNinFormejuridique()->getId() == 95) 
-              {
-               $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typedocuments')));
-               $arrete= trim($request->get('inputarrete'));
-               $controleArrete =  $this->getDoctrine()->getRepository(NiNineaproposition::class)->findBy(['ninArrete' => $arrete]);
-
-               if($request->get('typedocuments') == 8)
-               {
-                 
-                  if (preg_match($pattern, $arrete) == 1)
-                  {
-                     $request->getSession()->getFlashBag()->add('message',"Le format de l'arrêté n'est pas valide.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,   
-                        'typedocuments'  => $typedocuments,                  
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninArrete' => $request->get("inputarrete"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else if (count($controleArrete) > 0)
-                  {
-                        $request->getSession()->getFlashBag()->add('messageDoublons',"Cet arrêté existe déjà.");
-                        //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,    
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'typedocuments'  => $typedocuments,                  
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninArrete' => $request->get("inputarrete"),
-
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else 
-                  {
-                     $niNineaproposition->setNinArrete($request->get('inputarrete'));
-                     $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(8));
-
-                  }
-               }
-               else if ($request->get('typedocuments') == 12)
-               {
-                  if (preg_match($pattern, $arrete) == 1)
-                  {
-                     $request->getSession()->getFlashBag()->add('message',"Le format de l'arrêté n'est pas valide.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,   
-                        'typedocuments'  => $typedocuments,                  
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninArrete' => $request->get("inputarrete"),
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else if (count($controleArrete) > 0)
-                  {
-                        $request->getSession()->getFlashBag()->add('messageDoublons',"Cet arrêté existe déjà.");
-                        //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                        return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                        'ni_nineaproposition' => $niNineaproposition,
-                        'form' => $form,
-                        'formeunites' => $formeunites,             
-                        'formejuridiques' => $formejuridiques,    
-                        'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'typedocuments'  => $typedocuments,                  
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninArrete' => $request->get("inputarrete"),
-
-                        'ni_nineaproposition_mere' => $ninineamere,
-                        
-                     ]);
-                  }
-                  else 
-                  {
-                     $niNineaproposition->setNinArrete($request->get('inputarrete'));
-                     $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(8));
-
-                  }
-                  
-               }else if($request->get('typedocuments') == 13)
-               {
-                  $niNineaproposition->setNinArrete($request->get('inputarrete'));
-                  $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(13));
-
-               }
-              } 
-            else
-            {
-               if (count($controleRccm) > 0)
-               {
-                  $request->getSession()->getFlashBag()->add('messageDoublons',"Ce registre de commerce existe déjà.");
-                  //$formulaire += '<table id="tb_documents"> <tr><td style="width:40%"><label for="" class="TXT mt-2" id="labelregcom"> <b><u> Registre de commerce :</u>  <span style="color: red;">*</span> </b> </label></td> <td style="width:60%"> <input type="text" id="inputregcom" value="'.$request->get("registreCommerce").'" maxlength="19"	  minlength="15"   name="registreCommerce" required class="form-control form-control-sm mt-2 input-mask inputregcom" > <span style="color: red;" id="ninreg"></span></td></tr> </table>';
-
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,    
-                     'typedocuments'  => $typedocuments,                  
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-
-                     'ni_nineaproposition_mere' => $ninineamere,
-                  
-                  ]);
-
-               }
-               
-               elseif (preg_match($pattern_rccm, $rccmNormal) == 0) 
-               {
-                  
-                     $request->getSession()->getFlashBag()->add('messageFormat',"Format invalide pour le registre de commerce.");
-                     
-                     return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,   
-                     'typedocuments'  => $typedocuments,                                      
-                     'ninFormeJuridique' => $ninFormejuridique,
-                        'ninFormeunite' => $ninFormeunite,
-                        'ninStatut' => $ninStatut,
-                        'ninEnseigne' => $enseigne,
-                        'ninRegcom' => $request->get("registreCommerce"),
-                        'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-
-               }
-
-               elseif($annee > $annee_cours)
-               {
-                  
-                  $request->getSession()->getFlashBag()->add('messageDate',"La date de création du registre ne doit pas être postérieure à l'année en cours.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                  'ni_nineaproposition' => $niNineaproposition,
-                  'form' => $form,
-                  'formeunites' => $formeunites,             
-                  'formejuridiques' => $formejuridiques,     
-                  'typedocuments'  => $typedocuments,                                    
-                  'ninFormeJuridique' => $ninFormejuridique,
-                  'ninFormeunite' => $ninFormeunite,
-                  'ninStatut' => $ninStatut,
-                  'ninEnseigne' => $enseigne,
-                  'ninRegcom' => $request->get("registreCommerce"),
-                  'ninDatereg' => $request->get("dateregcom"),
-                  'ni_nineaproposition_mere' => $ninineamere,
-                  
-                  ]);
-               }
-               elseif($annee < "1900")
-               {
-                  
-                  $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                  'ni_nineaproposition' => $niNineaproposition,
-                  'form' => $form,
-                  'formeunites' => $formeunites,             
-                  'formejuridiques' => $formejuridiques,    
-                  'typedocuments'  => $typedocuments,                                     
-                  'ninFormeJuridique' => $ninFormejuridique,
-                  'ninFormeunite' => $ninFormeunite,
-                  'ninStatut' => $ninStatut,
-                  'ninEnseigne' => $enseigne,
-                  'ninRegcom' => $request->get("registreCommerce"),
-                  'ninDatereg' => $request->get("dateregcom"),
-                  'ni_nineaproposition_mere' => $ninineamere,
-                  
-                  ]);
-               }
-               elseif ($datereg > $dateJour)
-               {
-                  $request->getSession()->getFlashBag()->add('messageDateJour',"La date du registre ne doit pas être postérieure à la date du jour.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,
-                     'typedocuments'  => $typedocuments,                                         
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               elseif ($datereg_annee < $annee)
-               {
-                  //dd($datereg_annee);
-                  $request->getSession()->getFlashBag()->add('messageDate',"La date du registre de commerce ne doit pas être antérieure à la date de création sur le registre.");
-                  
-                  return $this->renderForm('ni_nineaproposition/new.html.twig', [
-                     'ni_nineaproposition' => $niNineaproposition,
-                     'form' => $form,
-                     'formeunites' => $formeunites,             
-                     'formejuridiques' => $formejuridiques,  
-                     'typedocuments'  => $typedocuments,                                       
-                     'ninFormeJuridique' => $ninFormejuridique,
-                     'ninFormeunite' => $ninFormeunite,
-                     'ninStatut' => $ninStatut,
-                     'ninEnseigne' => $enseigne,
-                     'ninRegcom' => $request->get("registreCommerce"),
-                     'ninDatereg' => $request->get("dateregcom"),
-                     'ni_nineaproposition_mere' => $ninineamere,
-                     
-                  ]);
-               }
-               else
-               {
-                  $niNineaproposition->setNinRegcom( str_replace("_","",$request->get("registreCommerce")));
-                  $niNineaproposition->setNinDatreg(new \Datetime($request->get("dateregcom")));
-                  $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find(1));
 
                }
                
             }
 
            
+            //$formeunite = $entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique"))->getNiFormeunite()->getId();
+            $niNineaproposition->setNinFormejuridique($entityManager->getRepository(NiFormejuridique::class)->find($request->get("formejuridique")));
+            $niNineaproposition->setCreatedBy($this->getUser());
+            $niNineaproposition->setUpdatedBy($this->getUser());
+
+            //generer le code de numéro de demande
+            $numDemande=$diversUtils->numDemandeSuivant($entityManager);
+            $niNineaproposition->setNinnumerodemande($numDemande);
+            $niNineaproposition->setStatut("b");
+            $niNineaproposition->setNinEnseigne($request->get('enseigne'));
+            $niNineaproposition->setNomCommerce($request->get('commercial'));
+            if($request->get('typdocument'))
+              $niNineaproposition->setNiTypedocument($this->getDoctrine()->getRepository(NinTypedocuments::class)->find($request->get('typdocument')));
+            $niNineaproposition->setDocument(str_replace("_","",$request->get('document')));
+
+            if($request->get('observation'))
+              $niNineaproposition->setNinObservationsrccm($request->get('observation'));
+            
+            if($request->get('datedocument'))
+             $niNineaproposition->setDateDocumment(new \DateTime($request->get('datedocument')));
+
+
+             
             $entityManager->persist($niNineaproposition);
             $entityManager->persist($CompteurDemandeNINEA);
             $entityManager->flush();
@@ -3136,7 +3809,6 @@ class NiNineapropositionController extends AbstractController
                   $jf= 1;
                 }
               }
-
 
             }
 
@@ -3221,6 +3893,38 @@ class NiNineapropositionController extends AbstractController
     }
 
 
+
+      /**
+     * @Route("/controleNINEASup/{id}", name="controleNINEASup",  methods={"GET","POST"})
+     */
+    public function controleNINEASup( $id = "")
+    {
+      
+      if (strlen($id) == 9)
+      {
+        
+        $controlesupNINEA =  $this->getDoctrine()->getRepository(NINinea::class)->findNINEAsup($id);
+      
+      }
+      else 
+      {
+        $controlesupNINEA =  $this->getDoctrine()->getRepository(NINinea::class)->findNINETsup($id);
+      
+      }
+       
+        if (count($controlesupNINEA) > 0)
+        {
+           return new JsonResponse( 1);
+        }
+        else
+        {
+           return new JsonResponse(0);
+        }
+      
+     
+    }
+
+
       /**
      * @Route("/new/activite/{id}", name="ni_nineaproposition_new_activite", methods={"GET", "POST"})
      */
@@ -3295,6 +3999,8 @@ class NiNineapropositionController extends AbstractController
        return $this->redirectToRoute('ni_nineaproposition_show', ["id"=>$niNineaproposition->getId()], Response::HTTP_SEE_OTHER);
     }
 
+
+
      /**
      * @Route("/activiteEtProduits/{id}", name="activiteEtProduits", methods={"GET", "POST"})
      */
@@ -3302,20 +4008,21 @@ class NiNineapropositionController extends AbstractController
     {
 
         $naemas = $entityManager->getRepository(NAEMA::class)->findAll();
-       
+        $pattern = "/^[0-9]+$/";
         if ($request->get('ecohidden')) {
          
           $ninactivites = $entityManager->getRepository(NiActivite::class)->findBy(array("niNineaproposition"=>$niNineaproposition),array('id'=>'desc'));
           $ninproduits = $entityManager->getRepository(Ninproduits::class)->findBy(array("nineaproposition"=>$niNineaproposition),array('id'=>'desc'));
-  
         
           $nbActivites=$request->get('nbActivites');
           $libActiviteglobale=$request->get('libelleactiviteglobale');
+          
           $niNineaproposition->setNiLibelleactiviteglobale($libActiviteglobale);
 
           //dd($request->get('nbActivites'));
         
-          for($indice = 1; $indice <= (int)($nbActivites); $indice++){
+          for($indice = 1; $indice <= (int)($nbActivites); $indice++)
+          {
             //var_dump($ninproduits);
 
             $refProduit=$request->get('refProduit'.strval($indice));
@@ -3337,9 +4044,8 @@ class NiNineapropositionController extends AbstractController
             if($bActiviteTrouve==false){
               if($indice == 1 && count($niNineaproposition->getNinActivites())>0){
                 $ninactivite = $entityManager->getRepository(NiActivite::class)->findBy(array("niNineaproposition"=>$niNineaproposition,"statActivprincipale"=>true))[0];
-                
-               // dd($ninactivite);
 
+               
               $ninactivite->setNinAutact($libelleActivite);
               $ninactivite->setRefNaema($entityManager->getRepository(NAEMA::class)->find($refNaema));
             //  $niNineaproposition->addNinActivite($ninactivite);
@@ -3347,21 +4053,24 @@ class NiNineapropositionController extends AbstractController
 
               }
               else{
-                $ninactivite = new NiActivite();
+               if($refNaema){
+                   $ninactivite = new NiActivite();
                 
-             // var_dump($ninactivite);
+                  // var_dump($ninactivite);
 
-              $ninactivite->setNiNineaproposition($niNineaproposition);
-              if(count($niNineaproposition->getNinActivites())>0)
-              $ninactivite->setStatActivPrincipale(false);
-              else
-              $ninactivite->setStatActivPrincipale(true);
-              
-            $ninactivite->setNinAutact($libelleActivite);
-            $ninactivite->setRefNaema($entityManager->getRepository(NAEMA::class)->find($refNaema));
-            $niNineaproposition->addNinActivite($ninactivite);
-            $entityManager->persist($ninactivite);
+                  $ninactivite->setNiNineaproposition($niNineaproposition);
+                  if(count($niNineaproposition->getNinActivites())>0)
+                     $ninactivite->setStatActivPrincipale(false);
+                  else
+                     $ninactivite->setStatActivPrincipale(true);
+                           
+
+                     $ninactivite->setNinAutact($libelleActivite);
+                     $ninactivite->setRefNaema($entityManager->getRepository(NAEMA::class)->find($refNaema));
+                     $niNineaproposition->addNinActivite($ninactivite);
+                     $entityManager->persist($ninactivite);
               }
+            }
 
             }
             else {
@@ -3370,7 +4079,7 @@ class NiNineapropositionController extends AbstractController
               
              // var_dump($ninactivite);
             }
-
+         if($refNaema){
             foreach ($refProduit as $key) {
  
               $bProduitTrouve=false;
@@ -3414,6 +4123,7 @@ class NiNineapropositionController extends AbstractController
               }
              
             }
+         }
 
           }
 
@@ -3421,6 +4131,7 @@ class NiNineapropositionController extends AbstractController
           $session->set('actived',4);
         
           $entityManager->flush();
+          $request->getSession()->getFlashBag()->add('enregistre',"Personne enregistrée.");
 
            // $request->getSession()->getFlashBag()->add('message',"L'activité  a été ajoutée avec succés.");
 
@@ -3476,8 +4187,14 @@ class NiNineapropositionController extends AbstractController
      /**
      * @Route("/{id}/{dirigeant}", name="ni_nineaproposition_show", methods={"GET", "POST"})
      */
-    public function show(Request $request,  $id="",  EntityManagerInterface $entityManager,  DiversUtils $diversUtils, AuthorizationCheckerInterface $autorization, $dirigeant=""): Response
+    public function show(Request $request,  $id="",  EntityManagerInterface $entityManager,  
+         DiversUtils $diversUtils, AuthorizationCheckerInterface $autorization, $dirigeant=""): Response
     {
+
+      if($dirigeant){
+         $session= new Session();
+         $session->set('actived',5);
+      }
       $max= new \DateTime("-10 years");
 
       $niNineaproposition = $entityManager->getRepository(NiNineaproposition::class)->find($id);
@@ -3485,6 +4202,9 @@ class NiNineapropositionController extends AbstractController
 
       $formeunites = $entityManager->getRepository(NiFormeunite::class)->findAll();
       $formejuridiques = $entityManager->getRepository(NiFormejuridique::class)->findAll();
+      $sources =  $entityManager->getRepository(NiSourcefinancement::class)->findAll();
+      $occupations =  $entityManager->getRepository(NiModaliteexploitation::class)->findAll();
+      $natures =  $entityManager->getRepository(NiNatureLocaliteExploitation::class)->findAll();
 
      
         //si l'utilisateur connecté est agent validateur
@@ -3525,10 +4245,10 @@ class NiNineapropositionController extends AbstractController
         $nationalites = $entityManager->getRepository(Pays::class)->findAll();
         $regions = $entityManager->getRepository(Region::class)->findAll();
         $civilites = $entityManager->getRepository(NiCivilite::class)->findAll();
-        $typevoies = $entityManager->getRepository(NiTypevoie::class)->findAll();
+        $typevoies = $entityManager->getRepository(NiTypevoie::class)->filterTypevoies();
         $produits = $entityManager->getRepository(RefProduits::class)->findAll();
         $qualifications = $entityManager->getRepository(Qualite::class)->findAll();
-
+       
         $Dirigeants = $entityManager->getRepository(NiDirigeant::class)->findBy(array("ninNineaProposition"=>$niNineaproposition),array('id'=>'desc'));
         $naemas = $entityManager->getRepository(NAEMA::class)->findAll();
 
@@ -3537,7 +4257,18 @@ class NiNineapropositionController extends AbstractController
 
         //registre de commerce
         $regcommerce = $niNineaproposition->getNinRegcom();
-
+        $datereg =  $niNineaproposition->getNinDatreg();
+        $bordereau = $niNineaproposition->getNinBordereau();
+        $titrefoncier = $niNineaproposition->getNinTitrefoncier();
+        $bail = $niNineaproposition->getNinBail();
+        $agrement = $niNineaproposition->getNinAgrement();
+        $recepisse = $niNineaproposition->getNinRecepisse();
+        $accord = $niNineaproposition->getNinAccord();
+        $permisoccuper = $niNineaproposition->getNinPermisoccuper();
+        $arrete = $niNineaproposition->getNinArrete();
+        $ninObservationsrccm = $niNineaproposition->getNinObservationsrccm();
+        
+       $typedocuments = $entityManager->getRepository(NinTypedocuments::class)->findAll();;
         //libelle de l' activité globale
         $activiteglobale = $niNineaproposition->getNiLibelleactiviteglobale();
        
@@ -3569,6 +4300,17 @@ class NiNineapropositionController extends AbstractController
 				'form3' => $form3->createView(),
 				'ni_nineaproposition' => $niNineaproposition,
 				'registreCommerce' => $regcommerce,
+            'ninDatreg' => $datereg != null ? $datereg:"",
+            'ninBordereau' =>  $bordereau,
+            'ninTitrefoncier' => $titrefoncier,
+            'ninBail' => $bail,
+            'ninAgrement' => $agrement,
+            'ninRecepisse' => $recepisse,
+            'ninAccord' => $accord,
+            'ninPermisoccuper' => $permisoccuper,
+            'ninObservationsrccm' => $ninObservationsrccm,
+            'ninArrete' => $arrete,
+            'typedocuments' => $typedocuments,   
 				'formeunites' => $formeunites,
 				'formejuridiques' => $formejuridiques,
 				'regions' => $regions,
@@ -3591,6 +4333,10 @@ class NiNineapropositionController extends AbstractController
 				'ninproduits' => $ninproduits,
             'activiteglobale' => $activiteglobale,
             'niNinea_mere' => $niNinea_mere != null ? $niNinea_mere[0] : "",
+            'sources' => $sources,
+            'natures' => $natures,
+            'occupations' => $occupations,
+
         ]);
     }
 

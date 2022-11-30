@@ -47,4 +47,13 @@ class NiTypevoieRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function filterTypevoies()
+    {
+        return $this->createQueryBuilder('n')
+        ->andWhere('n.id <> 19 and n.id <> 20 and n.id <> 21')
+        ->getQuery()
+        ->getResult();
+    
+    }
 }

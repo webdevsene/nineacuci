@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\NiFormejuridique;
 use App\Entity\NiFormeunite;
+use App\Entity\NinTypedocuments;
+ 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +22,7 @@ class NiFormejuridiqueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        
             ->add('id',TextType::class,
             array('label'=>'Code ',
             'required'=>true,
@@ -39,6 +42,20 @@ class NiFormejuridiqueType extends AbstractType
                'label'=>'Forme unité '
                
            ])
+
+
+          
+           ->add('typeDocument', EntityType::class, [
+               'class' => NinTypedocuments::class,
+                'placeholder'=>'Sélectionner.......',
+              'choice_label' => 'libelle',
+              'attr'=>array('class'=>'form-control '),
+              'required'=>true,
+              'label'=>'Type Document',
+              'multiple' => true,
+              'expanded' => true,
+              
+          ])
 
         ;
     }

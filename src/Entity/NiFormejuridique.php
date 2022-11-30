@@ -68,6 +68,12 @@ class NiFormejuridique
      */
     private $tempNINineas;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=NinTypedocuments::class, inversedBy="niFormejuridiques")
+     */
+    private $typeDocument;
+
+
     public function __construct()
     {
         $this->niNineapropositions = new ArrayCollection();
@@ -75,6 +81,8 @@ class NiFormejuridique
         $this->historyNiNineapropositions = new ArrayCollection();
         $this->historyNINineas = new ArrayCollection();
         $this->tempNINineas = new ArrayCollection();
+        $this->typeDocument = new ArrayCollection();
+        
     }
 
     public function __toString()
@@ -274,6 +282,33 @@ class NiFormejuridique
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, NinTypedocuments>
+     */
+    public function getTypeDocument(): Collection
+    {
+        return $this->typeDocument;
+    }
+
+    public function addTypeDocument(NinTypedocuments $typeDocument): self
+    {
+        if (!$this->typeDocument->contains($typeDocument)) {
+            $this->typeDocument[] = $typeDocument;
+        }
+
+        return $this;
+    }
+
+    public function removeTypeDocument(NinTypedocuments $typeDocument): self
+    {
+        $this->typeDocument->removeElement($typeDocument);
+
+        return $this;
+    }
+
+   
+
 
 
 }

@@ -323,18 +323,23 @@ class DataCubingController extends AbstractController
     }
 
 
+
     /**
-     * @Route("/data/effectifMasseSalarialeReport", name="effectifMasseSalarialeReport")
+     * @Route("/data/effectifMasseSalarialeReport", name="effectifMasseSalarialeReport", methods={"GET", "POST"})
      */
     public function effectifMasseSalarialeReport(Request $request): Response
     {
-        ini_set("memory_limit", -1);
-        ini_set ( 'max_execution_time', -1);
-        if ($request->get('cuci-input')) { // quand le btn submit est envoye
+        
+        if ($request->get('annee-input')) { // quand le btn submit est envoye
             
             $annee = $request->get('annee-input');
-            $codeCuci = $request->get('cuci-input');            
+            $codeCuci = $request->get('cuci-input'); 
             
+            $effectifs_by_annee = $this->getDoctrine()->getRepository(Effectifs::class)->findByCodeCuci($codeCuci, $annee,'Effectif');
+
+
+            $personnel_by_annee = $this->getDoctrine()->getRepository(Effectifs::class)->findByCodeCuci($codeCuci, $annee,'Personnel');
+
             $spreadsheet = new Spreadsheet(); 
 
             $sheet = null ;
@@ -345,240 +350,161 @@ class DataCubingController extends AbstractController
             
             // Attach the "Interne", "Externe" worksheet as the first worksheet in the Spreadsheet object
             $spreadsheet->addSheet($interne_sheet, 0);     
-            $spreadsheet->addSheet($ext_sheet, 1);     
-            
-            
-                       
-            $_repertoire = $this->getDoctrine()->getRepository(Repertoire::class)->findOneBy(["codeCuci"=>$codeCuci]);
+            $spreadsheet->addSheet($ext_sheet, 1); 
 
-            if(!$_repertoire){
-                
-                $request->getSession()->getFlashBag()->add('notice', 'Not found data pour cette recherche !.');
-    
-                return $this->redirectToRoute("effectifMasseSalarialeReport");
-            }            
-            $effectifs_by_annee = $this->getDoctrine()->getRepository(Effectifs::class)->findBy(["anneeFinanciere"=>$annee, "repertoire"=>$_repertoire,"type"=>'Effectif'], array("refCode"=>'ASC'));
+            $i=2; $j=2;
             
-            $personnel_by_annee = $this->getDoctrine()->getRepository(Effectifs::class)->findBy(["anneeFinanciere"=>$annee, "repertoire"=>$_repertoire,"type"=>'Personnel'], array("refCode"=>'ASC'));
-            
-            
-            // on commence à injecter dans la feuille à partir dde B4
-            $i = 4; // pour le parcours en profondeur de la feuille Interne
-            $j = 4;
-
             
             if (!$effectifs_by_annee) {
-                $request->getSession()->getFlashBag()->add('notice', 'Not found data pour cette recherche !.');
+                $request->getSession()->getFlashBag()->add('notice', 'Aucune donnée trouvée pour cette recherche !.');
 
                 return $this->redirectToRoute("effectifMasseSalarialeReport");
-            }
-            else {
-
+            }else{
                 $spreadsheet->setActiveSheetIndex(0);            
                 $spreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
                 /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
                 $sheet = $spreadsheet->getActiveSheet();
 
-                // set header load entete MF
-                $sheet->setCellValue('A3', 'Qualification');
-                $sheet->setCellValue('B3', 'M');
-                $sheet->setCellValue('C3', 'F');
-                $sheet->setCellValue('D3', 'M');
-                $sheet->setCellValue('E3', 'F');
-                $sheet->setCellValue('F3', 'M');
-                $sheet->setCellValue('G3', 'F');
-                $sheet->setCellValue('H3', 'Total');
-                $sheet->setCellValue('I3', 'M');
-                $sheet->setCellValue('J3', 'F');
-                $sheet->setCellValue('K3', 'M');
-                $sheet->setCellValue('L3', 'F');
-                $sheet->setCellValue('M3', 'M');
-                $sheet->setCellValue('N3', 'F');
-                $sheet->setCellValue('O3', 'Total');
+                $sheet->setCellValue('A1', 'CODE CUCI')
+                ->setCellValue('B1', 'ANNEE')
+                ->setCellValue('C1', 'EFF_NAT_MASCULIN')
+                ->setCellValue('D1', 'EFF_NAT_FEMININ')
+                ->setCellValue('E1', 'EFF_OHADA_M')
+                ->setCellValue('F1', 'EFF_OHADA_F')
+                ->setCellValue('G1', 'EFF_HORS_OHADA_M')
+                ->setCellValue('H1', 'EFF_HORS_OHADA_F')
+                ->setCellValue('I1', 'EFF_TOTAL')
+                ->setCellValue('J1', 'MS_NAT_M')
+                ->setCellValue('K1', 'MS_NAT_F')
+                ->setCellValue('L1', 'MS_OHADA_M')
+                ->setCellValue('M1', 'MS_OHADA_F')
+                ->setCellValue('N1', 'MS_HORS_OHADA_M')
+                ->setCellValue('O1', 'MS_HORS_OHADA_F')
+                ->setCellValue('P1', 'MS_TOT')
+                ->setCellValue('Q1', 'QUALIFICATION');
 
-                // set les libelles
-                $sheet->setCellValue('A4', "Cadres Superieurs");
-                $sheet->setCellValue('A5', "Techniciens Superieurs et Cadres Moyens");
-                $sheet->setCellValue('A6', "Techniciens, Agents de Matrise et Ouvriers Qualifies");
-                $sheet->setCellValue('A7', "Employes, Manoevres Ouvriers et Apprentis");
-                $sheet->setCellValue('A8', "Total (1)");
-                $sheet->setCellValue('A9', "Permanents");
-                $sheet->setCellValue('A10', "Saisonniers");
-                
-                
-                
-                // set header for effectifs
-                $sheet->mergeCells("B2:" . "C2")->setCellValueExplicit('B2', 'Nationaux', DataType::TYPE_STRING2);    
-                $sheet->mergeCells("D2:" . "E2")->setCellValueExplicit('D2', 'Autres états de L\'UEMOA ', DataType::TYPE_STRING2);    
-                $sheet->mergeCells("F2:" . "G2")->setCellValueExplicit('F2', 'Hors L\'UEMOA ', DataType::TYPE_STRING2);    
-                $sheet->mergeCells("B1:" . "G1")->setCellValueExplicit('D1', 'Effectifs ', DataType::TYPE_STRING2); 
-                
-                
-                // mettre en tête pour masse salariale
-                $sheet->mergeCells("I2:" . "J2")->setCellValueExplicit('I2', 'Nationaux', DataType::TYPE_STRING2);    
-                $sheet->mergeCells("K2:" . "L2")->setCellValueExplicit('K2', 'Autres états de L\'UEMOA ', DataType::TYPE_STRING2);    
-                $sheet->mergeCells("M2:" . "N2")->setCellValueExplicit('M2', 'Hors L\'UEMOA ', DataType::TYPE_STRING2);    
-                $sheet->mergeCells("I1:" . "N1")->setCellValueExplicit('D1', 'Masse salariales ', DataType::TYPE_STRING2); 
-                
 
+                
                 foreach ($effectifs_by_annee as $key ) {
 
-                    $sheet->getCell('B'.$i)->setValueExplicit( $key->getNmef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('C'.$i)->setValueExplicit( $key->getNfef(), DataType::TYPE_STRING2);
 
-                    $sheet->getCell('D'.$i)->setValueExplicit( $key->getUmmef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('E'.$i)->setValueExplicit( $key->getUmfef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('A'.$i)->setValueExplicit($key->getRepertoire()->getCodeCuci(), DataType::TYPE_STRING2);
+                    $sheet->getCell('B'.$i)->setValueExplicit($key->getAnneeFinanciere(), DataType::TYPE_STRING2);
 
-                    $sheet->getCell('F'.$i)->setValueExplicit( $key->getHmmef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('G'.$i)->setValueExplicit( $key->getHmfef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('C'.$i)->setValueExplicit( $key->getNmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('D'.$i)->setValueExplicit( $key->getNfef(), DataType::TYPE_STRING2);
 
-                    $sheet->getCell('H'.$i)->setValueExplicit( $key->getTotalEf(), DataType::TYPE_STRING2);
+                    $sheet->getCell('E'.$i)->setValueExplicit( $key->getUmmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('F'.$i)->setValueExplicit( $key->getUmfef(), DataType::TYPE_STRING2);
 
-                    $sheet->getCell('I'.$i)->setValueExplicit( $key->getMnmef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('J'.$i)->setValueExplicit( $key->getMnfef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('K'.$i)->setValueExplicit( $key->getMummef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('L'.$i)->setValueExplicit( $key->getMumfef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('M'.$i)->setValueExplicit( $key->getMhmmef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('N'.$i)->setValueExplicit( $key->getMhmfef(), DataType::TYPE_STRING2);
-                    $sheet->getCell('O'.$i)->setValueExplicit( $key->getTotalMs(), DataType::TYPE_STRING2);
+                    $sheet->getCell('G'.$i)->setValueExplicit( $key->getHmmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('H'.$i)->setValueExplicit( $key->getHmfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('I'.$i)->setValueExplicit( $key->getTotalEf(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('J'.$i)->setValueExplicit( $key->getMnmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('K'.$i)->setValueExplicit( $key->getMnfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('L'.$i)->setValueExplicit( $key->getMummef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('M'.$i)->setValueExplicit( $key->getMumfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('N'.$i)->setValueExplicit( $key->getMhmmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('O'.$i)->setValueExplicit( $key->getMhmfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('P'.$i)->setValueExplicit( $key->getTotalMs(), DataType::TYPE_STRING2);
+                    $sheet->getCell('Q'.$i)->setValueExplicit( $key->getRefCode(), DataType::TYPE_STRING2);
                     
                     $i++;
                     
                 }
 
-                //Create Styles Array
-                $styleArrayFirstRow = [
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'alignment' => array(
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    )
-            ];
-
-                foreach (range('A', 'O') as $key => $row) {
-                    
-                            //set first row bold
-                    $sheet->getStyle('A1:' . 'O3' )->applyFromArray($styleArrayFirstRow);
-                    
-                    //$sheet->getColumnDimension($row)->setAutoSize(true); 
-                    $sheet->getColumnDimension('A')->setAutoSize(true); 
-                }
-
-                $sheet->getColumnDimension('I')->setAutoSize(true); 
-                $sheet->getColumnDimension('J')->setAutoSize(true); 
-                $sheet->getColumnDimension('O')->setAutoSize(true); 
-
-
-                if (!$personnel_by_annee) {
-                    $request->getSession()->getFlashBag()->add('notice', 'Not found data pour cette recherche !.');
-
-                    return $this->redirectToRoute("effectifMasseSalarialeReport");
-                }else {
-                    
-                    $spreadsheet->setActiveSheetIndex(1);            
-                    /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
-                    $sheet = $spreadsheet->getActiveSheet();
-
-
-                                    // set header load entete MF
-                    $sheet->setCellValue('A3', 'Qualification');
-                    $sheet->setCellValue('B3', 'M');
-                    $sheet->setCellValue('C3', 'F');
-                    $sheet->setCellValue('D3', 'M');
-                    $sheet->setCellValue('E3', 'F');
-                    $sheet->setCellValue('F3', 'M');
-                    $sheet->setCellValue('G3', 'F');
-                    $sheet->setCellValue('H3', 'Total');
-                    $sheet->setCellValue('I3', 'M');
-                    $sheet->setCellValue('J3', 'F');
-
-
-
-                    $sheet->setCellValue('A4', "Cadres Superieurs");
-                    $sheet->setCellValue('A5', "Techniciens Superieurs et Cadres Moyens");
-                    $sheet->setCellValue('A6', "Techniciens, Agents de Maîtrise et Ouvriers Qualifiés");
-                    $sheet->setCellValue('A7', "Employes, Manoeuvres Ouvriers et Apprentis");
-                    $sheet->setCellValue('A8', "Permanents");
-                    $sheet->setCellValue('A9', "Saisonniers");
-                    $sheet->setCellValue('A10', "Total (2)");
-                    $sheet->setCellValue('A11', "Total (1) + (2)");
-
-                    $sheet->mergeCells("B2:" . "C2")->setCellValueExplicit('B2', 'Nationaux', DataType::TYPE_STRING2);    
-                    $sheet->mergeCells("D2:" . "E2")->setCellValueExplicit('D2', 'Autres états de L\'UEMOA ', DataType::TYPE_STRING2);    
-                    $sheet->mergeCells("F2:" . "G2")->setCellValueExplicit('F2', 'Hors L\'UEMOA ', DataType::TYPE_STRING2);    
-                    $sheet->mergeCells("B1:" . "G1")->setCellValueExplicit('D1', 'Personnel exterieur ', DataType::TYPE_STRING2); 
-                    
-                    // mettre en tête pour masse salariale
-                    $sheet->mergeCells("I2:" . "J2")->setCellValueExplicit('I2', 'Facturation à l\'entreprise', DataType::TYPE_STRING2);    
-                                        
-
-                    $sheet->getColumnDimension('A')->setAutoSize(true);  
-        
-                    foreach ($personnel_by_annee as $key ) {
-
-                        $sheet->getCell('B'.$j)->setValueExplicit( $key->getNmef(), DataType::TYPE_STRING2);
-                        $sheet->getCell('C'.$j)->setValueExplicit( $key->getNfef(), DataType::TYPE_STRING2);
-    
-                        $sheet->getCell('D'.$j)->setValueExplicit( $key->getUmmef(), DataType::TYPE_STRING2);
-                        $sheet->getCell('E'.$j)->setValueExplicit( $key->getUmfef(), DataType::TYPE_STRING2);
-    
-                        $sheet->getCell('F'.$j)->setValueExplicit( $key->getHmmef(), DataType::TYPE_STRING2);
-                        $sheet->getCell('G'.$j)->setValueExplicit( $key->getHmfef(), DataType::TYPE_STRING2);
-    
-                        $sheet->getCell('H'.$j)->setValueExplicit( $key->getTotalEf(), DataType::TYPE_STRING2);
-
-                        $sheet->getCell('I'.$j)->setValueExplicit( $key->getFacm(), DataType::TYPE_STRING2);
-                        $sheet->getCell('J'.$j)->setValueExplicit( $key->getFacf(), DataType::TYPE_STRING2);
-
-                        $j++;
-    
-                    }
-
-                    
-                    foreach (range('A', 'J') as $key => $row) {
-                        
-                        //set first row bold
-                        $sheet->getStyle('A1:' . 'J3' )->applyFromArray($styleArrayFirstRow);
-                        
-                        //$sheet->getColumnDimension($row)->setAutoSize(true); 
-                        $sheet->getColumnDimension('A')->setAutoSize(true); 
-                    }
-
-                }
-
-                $writer = new Xlsx($spreadsheet);
-
-                $fileName = "Effectifs.xlsx";
-                
-                $temp_file = tempnam(sys_get_temp_dir(), $fileName);
-                
-                // Create the excel file in the tmp directory of the system
-                $writer->save($temp_file);
-
-                $response = new BinaryFileResponse($temp_file);
-
-                // Return the excel file as an attachment
-                $disposition = $response->headers->makeDisposition(
-                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                    $fileName
-                );
-                $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-                $response->headers->set('Content-Type', $contentType);
-                $response->headers->set("Content-Disposition", $disposition);
-
-                return $response;
 
             }
+
+            if (!$personnel_by_annee) {
+                $request->getSession()->getFlashBag()->add('notice', 'Aucune donnée trouvée pour cette recherche !.');
+
+                return $this->redirectToRoute("effectifMasseSalarialeReport");
+            }else{
+
+                $spreadsheet->setActiveSheetIndex(1);            
+                /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
+                $sheet = $spreadsheet->getActiveSheet();
+
+
+                // set header load entete MF
+                $sheet->setCellValue('A1', 'CODE CUCI');
+                $sheet->setCellValue('B1', 'ANNEE');
+                $sheet->setCellValue('C1', 'PERS_NAT_M');
+                $sheet->setCellValue('D1', 'PERS_NAT_F');
+                $sheet->setCellValue('E1', 'PERS_OHADA_M');
+                $sheet->setCellValue('F1', 'PERS_OHADA_F');
+                $sheet->setCellValue('G1', 'PERS_HORS_OHADA_M');
+                $sheet->setCellValue('H1', 'PERS_HORS_OHADA_F');
+                $sheet->setCellValue('I1', 'PERS_Total');
+                $sheet->setCellValue('J1', 'Fac M');
+                $sheet->setCellValue('K1', 'Fact F');
+
+
+                foreach ($personnel_by_annee as $key ) {
+
+                    $sheet->getCell('A'.$j)->setValueExplicit($key->getRepertoire()->getCodeCuci(), DataType::TYPE_STRING2);
+                    $sheet->getCell('B'.$j)->setValueExplicit($key->getAnneeFinanciere(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('C'.$j)->setValueExplicit( $key->getNmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('D'.$j)->setValueExplicit( $key->getNfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('E'.$j)->setValueExplicit( $key->getUmmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('F'.$j)->setValueExplicit( $key->getUmfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('G'.$j)->setValueExplicit( $key->getHmmef(), DataType::TYPE_STRING2);
+                    $sheet->getCell('H'.$j)->setValueExplicit( $key->getHmfef(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('I'.$j)->setValueExplicit( $key->getTotalEf(), DataType::TYPE_STRING2);
+
+                    $sheet->getCell('J'.$j)->setValueExplicit( $key->getFacm(), DataType::TYPE_STRING2);
+                    $sheet->getCell('K'.$j)->setValueExplicit( $key->getFacf(), DataType::TYPE_STRING2);
+
+                    $j++;
+
+                }
+
+            }
+
             
+            $writer = new Xlsx($spreadsheet);
+
+            $fileName = "Effectifs.xlsx";
+            
+            $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+            
+            // Create the excel file in the tmp directory of the system
+            $writer->save($temp_file);
+
+            $response = new BinaryFileResponse($temp_file);
+
+            // Return the excel file as an attachment
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $fileName
+            );
+            $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            $response->headers->set('Content-Type', $contentType);
+            $response->headers->set("Content-Disposition", $disposition);
+
+            return $response;
+
+
         }
+
         
         return $this->render('data_cubing/effectif_masse_salariale_report.html.twig', [
             'controller_name' => 'DataCubingController',
         ]);
 
     }
+
+
 
     /**
      * @Route("/data/exportation_par_cuci_annee_type", name="export_par_cuci_annee_type")

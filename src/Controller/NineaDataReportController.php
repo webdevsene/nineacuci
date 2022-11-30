@@ -63,6 +63,76 @@ class NineaDataReportController extends AbstractController
             'date2' => (new \DateTime('now'))->format('Y-m-d'),
         ]);
     }
+
+
+
+     /**
+     * @Route("/ninea/diagramme/report", name="diagramme_rep")
+     */
+    public function diagramme(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $dateDebut ="";
+        $dateFin ="";
+
+        if ($request->get("submit-templ")) {
+            
+            $dateDebut = $request->get("var-datedebut");
+            $dateFin = $request->get("var-datefin");
+            if ($this->IsGranted("ROLE_NINEA_ADMIN" ) || $this->IsGranted("ROLE_VALIDER_DEMANDE_NINEA")){
+                $nineaParEtat=$entityManager->getRepository(NINinea::class)->findNineaParEtat(null,$dateDebut,$dateFin);
+                $nineaParFormeJuridique=$entityManager->getRepository(NINinea::class)->findNineaParFormeJuridique(null,$dateDebut,$dateFin);
+                $nineaParFormeUnite=$entityManager->getRepository(NINinea::class)->findNineaParFormeUnite(null,$dateDebut,$dateFin);
+                $nineaParCentre=$entityManager->getRepository(NINinea::class)->findNineaParCentre(null,$dateDebut,$dateFin);
+                $nineaParActivite=$entityManager->getRepository(NINinea::class)->findNineaParActivite(null,$dateDebut,$dateFin);
+                
+                $findNineaParMois=$entityManager->getRepository(NINinea::class)->findNineaParMois(null,"2022");
+                
+            }else{
+                $nineaParCentre=$entityManager->getRepository(NINinea::class)->findNineaParCentre($this->getUser(),$dateDebut,$dateFin);
+                $nineaParEtat=$entityManager->getRepository(NINinea::class)->findNineaParEtat($this->getUser(),$dateDebut,$dateFin);
+                $nineaParFormeJuridique=$entityManager->getRepository(NINinea::class)->findNineaParFormeJuridique($this->getUser(),$dateDebut,$dateFin);
+                $nineaParFormeUnite=$entityManager->getRepository(NINinea::class)->findNineaParFormeUnite($this->getUser(),$dateDebut,$dateFin);
+                $nineaParActivite=$entityManager->getRepository(NINinea::class)->findNineaParActivite($this->getUser(),$dateDebut,$dateFin);
+
+                $findNineaParMois=$entityManager->getRepository(NINinea::class)->findNineaParMois($this->getUser(),"2022");
+
+            }
+        }else{
+
+            if ($this->IsGranted("ROLE_NINEA_ADMIN" ) || $this->IsGranted("ROLE_VALIDER_DEMANDE_NINEA")){
+                $nineaParCentre=$entityManager->getRepository(NINinea::class)->findNineaParCentre(null,null,null);
+                $nineaParEtat=$entityManager->getRepository(NINinea::class)->findNineaParEtat(null,null,null);
+                $nineaParFormeJuridique=$entityManager->getRepository(NINinea::class)->findNineaParFormeJuridique(null,null,null);
+                $nineaParFormeUnite=$entityManager->getRepository(NINinea::class)->findNineaParFormeUnite(null,null,null);
+                $nineaParActivite=$entityManager->getRepository(NINinea::class)->findNineaParActivite(null,null,null);
+
+                $findNineaParMois=$entityManager->getRepository(NINinea::class)->findNineaParMois(null,"2022");
+
+            }else{
+                $nineaParCentre=$entityManager->getRepository(NINinea::class)->findNineaParCentre($this->getUser(),null,null);
+                $nineaParEtat=$entityManager->getRepository(NINinea::class)->findNineaParEtat($this->getUser(),null,null);
+                $nineaParFormeJuridique=$entityManager->getRepository(NINinea::class)->findNineaParFormeJuridique($this->getUser(),null,null);
+                $nineaParFormeUnite=$entityManager->getRepository(NINinea::class)->findNineaParFormeUnite($this->getUser(),null,null);
+                $nineaParActivite=$entityManager->getRepository(NINinea::class)->findNineaParActivite($this->getUser(),null,null);
+
+                $findNineaParMois=$entityManager->getRepository(NINinea::class)->findNineaParMois(null,"2022");
+
+
+            }
+        }
+        return $this->render('ninea_data_report/diagramme.html.twig', [
+            'nineaParEtat' => $nineaParEtat,
+            'nineaParActivite' => $nineaParActivite,
+            'nineaParCentre' => $nineaParCentre,
+            'findNineaParMois' => $findNineaParMois,
+            
+            'nineaParFormeJuridique' => $nineaParFormeJuridique,
+            'nineaParFormeUnite' => $nineaParFormeUnite,
+            'dateDebut'=> $dateDebut,
+            'dateFin'=> $dateFin,
+           
+        ]);
+    }
     
     
     
@@ -200,37 +270,19 @@ class NineaDataReportController extends AbstractController
             foreach ($obj as $record) {
                 $obj_dmde = $this->getDoctrine()->getRepository(NiNineaproposition::class)->findOneBy(["ninNinea"=>$record->getNinNinea()]);
 
-                // dd($obj_dmde->getCreatedBy()->getNiAdministration()->getId());
+                $doc_create = str_replace("_", "", $record->getNinRegcomReprise());
+                if("" === $doc_create){
 
-                $doc_create = str_replace("_", "", $record->getNinRegcom()); // init docu creation
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinBordereau();
+                    $doc_create = str_replace("_", "", $record->getNinRegcomModif());
                 }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinTitrefoncier();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinAgrement();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinArrete();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinRecepisse();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinAccord();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinBail();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNinPermisoccuper();
-                }
-                if ($doc_create==null) {
-                    $doc_create = $record->getNiPersonne() ? $record->getNiPersonne()->getNinCNI() : "";
+                if("" === $doc_create){
+
+                    $doc_create = str_replace("_", "", $record->getNinNumeroDocument());
                 }
 
+                $doc_create_txt = $record->getNiTypedocument() ? $record->getNiTypedocument()->getLibelle() : "";
+    
+                $date_document = $record->getNinDateDocument();
                 
                 $raison_sociale = $record->getNiPersonne() ? str_replace("", ",", $record->getNiPersonne()->getNinRaison()) : "";
                 
@@ -245,8 +297,8 @@ class NineaDataReportController extends AbstractController
                     'Regime juridique' => $record->getFormeJuridique()->getFojLibelle(),
                     'Forme unite' => $record->getFormeJuridique()->getNiFormeunite()->getLibelle(),
                     'Date de creation' => $record->getCreatedAt()->format("Y/m/d"),
-                    'Service delever' => $obj_dmde->getCreatedBy()->getNiAdministration()->getAdmlibelle(),
-                    'Statut' => $record->getStatut()
+                    'Service deliver' => $obj_dmde->getCreatedBy()->getNiAdministration()->getAdmlibelle(),
+                    'Statut' => 1!=$record->getninEtat() ? "Inactif" : "V"
                 ];
             }
             

@@ -44,11 +44,17 @@ class NiStatut
      */
     private $tempNINineas;
 
+    /**
+     * @ORM\OneToMany(targetEntity=HistoryNINinea::class, mappedBy="ninStatutH")
+     */
+    private $historyNINineas;
+
     public function __construct()
     {
         $this->niNineapropositions = new ArrayCollection();
         $this->nINineas = new ArrayCollection();
         $this->tempNINineas = new ArrayCollection();
+        $this->historyNINineas = new ArrayCollection();
     }
 
 
@@ -154,6 +160,36 @@ class NiStatut
             // set the owning side to null (unless already changed)
             if ($tempNINinea->getNinStatut() === $this) {
                 $tempNINinea->setNinStatut(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HistoryNINinea>
+     */
+    public function getHistoryNINineas(): Collection
+    {
+        return $this->historyNINineas;
+    }
+
+    public function addHistoryNINinea(HistoryNINinea $historyNINinea): self
+    {
+        if (!$this->historyNINineas->contains($historyNINinea)) {
+            $this->historyNINineas[] = $historyNINinea;
+            $historyNINinea->setNinStatutH($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoryNINinea(HistoryNINinea $historyNINinea): self
+    {
+        if ($this->historyNINineas->removeElement($historyNINinea)) {
+            // set the owning side to null (unless already changed)
+            if ($historyNINinea->getNinStatutH() === $this) {
+                $historyNINinea->setNinStatutH(null);
             }
         }
 

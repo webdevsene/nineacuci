@@ -170,38 +170,151 @@
     <!--ligne pour les stats pour chaque agent dans le systeme -->
     <div class="row">  
 
-            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA')  %}
+            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_DEMANDE_NINEA')  %}
 
                             
-                            <div class="col-xl-6">
-                                <div class="card radius-10 border-start border-0 border-5 border-info">
-                                    <div class="card-title bg-info text-center text-white mt-0 mp-0" style="width: 100%">
-                                                NINEA par SRSD
-                                    </div>
-                                    <div class="card-body">
-                                        
+                <div class="col-xl-6">
+                    <div class="card radius-10 border-start border-0 border-5 border-info">
+                        <div class="card-title bg-info text-center text-white mt-0 mp-0" style="width: 100%">
+                                    Suivi demandes
+                        </div>
+                        <div class="card-body">
+                            
 
-                                        
+                            
 
-                                        <div class="table-responsive ">
-                                            <table class="table align-middle table-nowrap" style="width: 100%">
-                                                <tbody>
-                                                    {% for tag in nbreDemandesValidees %}
-                                                        <tr>
-                                                            <td style="width: 30%">
-                                                                <p class="mb-0"> {{tag.admlibelle}} </p>
-                                                            </td>
-                                                            <td style="width: 25%">
-                                                                <h5 class="mb-0"> {{tag.nombre}} </h5></td>
+                            <div class="table-responsive ">
+                                 <table id="demandeNINEA" class="table   table-hover  " style="width:100% ;">
+                                    <thead class="tr_entete p-4">
+                                        <tr>
+                                            
+                                            <th >N° </th>
+                                            <th>Raison</th>
+                                            <th>Statut </th>
+                                            <th>Date </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                
+                
+                                    <tbody>
+                                        {% for ni_nineaproposition in demandeNINEA %}
+                                        <tr>                           
+                                            <td>{{ ni_nineaproposition.ninnumerodemande }}</td>
+                                            <td style=" word-break: break-all; width: 20%;">
+                                                {% if ni_nineaproposition.ninFormejuridique is not null  %}
+                
+                                                    {% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 11 or ni_nineaproposition.ninFormejuridique.niFormeunite.id == 12 %} 
+                                                    {{ni_nineaproposition.niPersonne != null ? ni_nineaproposition.niPersonne.ninPrenom :""}} {{ni_nineaproposition.niPersonne != null ?  ni_nineaproposition.niPersonne.ninNom :""}}
+                                                    {% else %} 
+                                                        {% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 21  or ni_nineaproposition.ninFormejuridique.niFormeunite.id == 22 %}
+                                                           
+                                                                {{ni_nineaproposition.niPersonne != null ? ni_nineaproposition.niPersonne.ninRaison:""}} 
                                                             
-                                                        </tr> 
-                                                    {%  endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            
+                                            <td style="width: 10%;">
+                                                {% if ni_nineaproposition.ninlock == true %}
+                                                    <span class="badge badge-pill badge-soft-warning font-size-11">En  validation</span> 
+                
+                                                {% else %}
+                
+                                                    {% if ni_nineaproposition.statut == "c" %}
+                                                        <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                                                        {% else %}
+                                                            {% if ni_nineaproposition.statut == "b" %}
+                                                                <span class="badge badge-pill badge-soft-secondary font-size-11">Brouillon</span> 
+                                                            {% else %}
+                                                               {% if ni_nineaproposition.statut == "r" %}
+                                                                    <span class="badge badge-pill badge-soft-danger font-size-11" >Rejeter
+                                                                        
+                                                                    </span>
+                                                                    <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                    </button>
+                                                                  
+                                                                {% else %}
+                                                                    {% if ni_nineaproposition.statut == "t" %}
+                                                                        <span class="badge badge-pill badge-soft-pink font-size-11" >Retourner
+                                                                            
+                                                                        </span>
+                                                                        <button type="button" data-bs-toggle="popover" class="fa fa-comment badge-soft-danger" data-bs-placement="top" data-bs-content="{{ni_nineaproposition.ninRemarque }}">
+                                                                        </button>
+                                                                        
+                                                                    {% else %}
+                                                                        <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                                                                        
+                                                                    {% endif %} 
+                                                                 
+                                                            {% endif %} 
+                                                            {% endif %} 
+                                                        
+                                                    {% endif %}
+                                                {% endif %}
+                
+                                            </td>
+                                            <td>{{ ni_nineaproposition.ninmajdate | date("d/m/Y") }}</td>
+                
+                                            <td>
+                                                {% if ni_nineaproposition.statut != 'r' %}
+                                                    {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_DEMANDE_NINEA') %} 
+                                                       
+                                                        {% if ni_nineaproposition.statut == "v"   %}
+                                                            <a href="{{ path('ni_nineaproposition_ninea', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                Détails
+                                                            </a>
+                                                        {% else %} 
+                                                        
+                
+                                                                {% if ni_nineaproposition.ninlock == 1 %}                                     
+                                                                        {% if app.user.id ==  ni_nineaproposition.updatedBy.id %}    
+                                                                            <a  href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                                Détails
+                                                                                <a href="{{ path('liberer_demande', {'id': ni_nineaproposition.id})}}" class="idInconlock" title="Libérer la demande"  style="color: red">
+                                                                                    <i class="fas fa-lock "></i> 
+                                                                                </a>
+                                                                            </a>
+                
+                                                                        {% else %}
+                                                                            <a type="button"  class="idDetails"  style="color: red">
+                                                                                Détails
+                                                                            </a>
+                            
+                                                                            <a type="button" class="idInconlock" onclick="recupUtilisateur( '{{ni_nineaproposition.updatedBy.getPrenomNom}}' );"  style="color: red">
+                                                                                <i class="fas fa-lock "></i> 
+                                                                            </a>
+                                                                        {% endif %}
+                
+                
+                                                                {% else %}
+                                                                {% if ni_nineaproposition.statut == "t" %}
+                                                                {% if app.user.id == ni_nineaproposition.createdBy.id %}
+                                                                    <a href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                        Détails
+                                                                    </a>
+                                                                {% endif %}
+                                                                {% else %}
+                                                                <a href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification">
+                                                                    Détails
+                                                                </a>
+                                                                {% endif %}
+                                                                {% endif %}
+                
+                                                        {% endif %} 
+                                                    {% endif %} 
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
 
 
             {% endif %}
@@ -211,110 +324,158 @@
 
             {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                             
-                            <div class="col-xl-6">
-                                <div class="card  radius-10 border-start border-0 border-5 border-success">
-                                  <div class="card-title bg-success text-center text-white mt-0 mp-0" style="width: 100%">
-                                               NINEA par agent de validation
-                                    </div>
-                                    <div class="card-body">
-                                        
+                        <div class="col-xl-6">
+                            <div class="card  radius-10 border-start border-0 border-5 border-success">
+                                <div class="card-title bg-success text-center text-white mt-0 mp-0" style="width: 100%">
+                                            Demandes à valider
+                                </div>
+                                <div class="card-body">
+                                    
 
-                                        <div class="table-responsive ">
-                                            <table class="table align-middle table-nowrap">
-                                                <tbody>
-                                                    {% for tag in nombreDemandesValideesparAgent %}
-                                                        <tr>
-                                                            <td style="width: 30%">
-                                                                <p class="mb-0"> {{ tag.prenom }} {{tag.nom}} </p>
-                                                            </td>
-                                                            <td style="width: 25%">
-                                                                <h5 class="mb-0"> {{tag.nombre}} </h5></td>
+                                    <div class="table-responsive ">
+                                         <table id="demande" class="table table-bordered  table-hover  " style="width:100% ;">
+                                    <thead class="tr_entete p-4">
+                                        <tr>
+                                            <th>Raison</th>
+                                            <th>Date     </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                
+                
+                                    <tbody>
+                                        {% for ni_nineaproposition in demandeNINEAEnCours %}
+                                        <tr>                           
+                                            <td style=" word-break: break-all; width: 40%;">
+                                                {% if ni_nineaproposition.ninFormejuridique is not null  %}
+                
+                                                    {% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 11 or ni_nineaproposition.ninFormejuridique.niFormeunite.id == 12 %} 
+                                                    {{ni_nineaproposition.niPersonne != null ? ni_nineaproposition.niPersonne.ninPrenom :""}} {{ni_nineaproposition.niPersonne != null ?  ni_nineaproposition.niPersonne.ninNom :""}}
+                                                    {% else %} 
+                                                        {% if ni_nineaproposition.ninFormejuridique.niFormeunite.id == 21  or ni_nineaproposition.ninFormejuridique.niFormeunite.id == 22 %}
                                                            
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                                {{ni_nineaproposition.niPersonne != null ? ni_nineaproposition.niPersonne.ninRaison:""}} 
+                                                            
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ ni_nineaproposition.ninmajdate | date("d/m/Y") }}</td>
+                                            <td>
+                                                {% if ni_nineaproposition.statut != 'r' %}
+                                                    {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_DEMANDE_NINEA') %} 
+                                                       
+                                                        {% if ni_nineaproposition.statut == "v"   %}
+                                                            <a href="{{ path('ni_nineaproposition_ninea', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                Détails
+                                                            </a>
+                                                        {% else %} 
+                                                        
+                
+                                                                {% if ni_nineaproposition.ninlock == 1 %}                                     
+                                                                        {% if app.user.id ==  ni_nineaproposition.updatedBy.id %}    
+                                                                            <a  href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                                Détails
+                                                                                <a href="{{ path('liberer_demande', {'id': ni_nineaproposition.id})}}" class="idInconlock" title="Libérer la demande"  style="color: red">
+                                                                                    <i class="fas fa-lock "></i> 
+                                                                                </a>
+                                                                            </a>
+                
+                                                                        {% else %}
+                                                                            <a type="button"  class="idDetails"  style="color: red">
+                                                                                Détails
+                                                                            </a>
+                            
+                                                                            <a type="button" class="idInconlock" onclick="recupUtilisateur( '{{ni_nineaproposition.updatedBy.getPrenomNom}}' );"  style="color: red">
+                                                                                <i class="fas fa-lock "></i> 
+                                                                            </a>
+                                                                        {% endif %}
+                
+                
+                                                                {% else %}
+                                                                {% if ni_nineaproposition.statut == "t" %}
+                                                                {% if app.user.id == ni_nineaproposition.createdBy.id %}
+                                                                    <a href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification" >
+                                                                        Détails
+                                                                    </a>
+                                                                {% endif %}
+                                                                {% else %}
+                                                                <a href="{{ path('ni_nineaproposition_show', {'id': ni_nineaproposition.id}) }}" id="modification">
+                                                                    Détails
+                                                                </a>
+                                                                {% endif %}
+                                                                {% endif %}
+                
+                                                        {% endif %} 
+                                                    {% endif %} 
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
             {% endif %}
 
 
     </div>
-    <div class="row">  
+   
+   <!--end row -->
+    <div class="row">
+        
+        <!-- end col -->
 
-            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_DEMANDE_NINEA') %} 
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">NINEA par mois</h4>
+                    
+                    <div id="mois_chart" class="apex-charts"  dir="ltr"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">NINEA par forme juridique</h4>
+                    
+                    <div id="fj_chart" class="apex-charts"  dir="ltr"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">NINEA par SRSD</h4>
+                    
+                    <div id="donut_chart" class="apex-charts"  dir="ltr"></div>
+                </div>
+            </div>
+        </div>
 
-                            <div class="col-xl-6">
-                                <div class="card radius-10 border-start border-0 border-5 border-warning">
-                                   <div class="card-title bg-warning text-center text-white mt-0 mp-0" style="width: 100%">
-                                              Demandes validées pour l'agent de saisie
-                                    </div>
-                                 
-                                    <div class="card-body">
-                                        
-
-
-                                        <div class="table-responsive ">
-                                            <table class="table align-middle table-nowrap">
-                                                <tbody>
-                                                    {% for tag in nbreDemandesparAgent %}
-                                                        <tr>
-                                                            <td style="width: 30%">
-                                                                <p class="mb-0">{{tag.prenom}} {{tag.nom}}</p>
-                                                            </td>
-                                                            <td style="width: 25%">
-                                                                <h5 class="mb-0"> {{ tag.nombre }} </h5></td>
-                                                           
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-
-
-
-
-                            
-                            <div class="col-xl-6">
+         <div class="col-xl-12">
                                 <div class="card radius-10 border-start border-0 border-5 border-pink ">
                                    <div class="card-title bg-pink text-center text-white  mt-0 mp-0" style="width: 100%">
-                                              Demandes envoyées par agent de saisie
+                                              Map
                                     </div>
                                     <div class="card-body">
                                        
 
                                         <div class="table-responsive ">
-                                            <table class="table align-middle table-nowrap">
-                                                <tbody>
-                                                    {% for tag in nbreDemandes %}
-                                                        <tr>
-                                                            <td style="width: 30%">
-                                                                <p class="mb-0"> {{ tag.prenom }} {{ tag.nom }}  </p>
-                                                            </td>
-                                                            <td style="width: 25%">
-                                                                <h5 class="mb-0"> {{ tag.nombre }} </h5></td>
-                                                          
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                           
+                                           <div id="googleMap" style="width:100%;height:400px;"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-            {% endif %}
-
-
-    </div><!--end row -->
+        <!-- end col -->
+    </div>
 
    
 
@@ -326,10 +487,415 @@
 {% block javascript %}
 
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('admin/dist/assets/libs/jquery/jquery.min.js')}}"></script>
-    <script src="{{ asset('admin/dist/assets/libs/metismenu/metisMenu.min.js')}}"></script>
-    <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
-    <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
+   
+    <script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 
+    <script src="{{ asset('admin/dist/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+    <!-- apexcharts init -->
+    <script>
+        function myMap() {
+        var mapProp= {
+        center:new google.maps.LatLng(51.508742,-0.120850),
+        zoom:5,
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+        }
+   </script>
+   <script>
+   
+
+$(document).ready(function() {
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+   
+ 
+
+   
+
+
+    $("#demandeNINEA").DataTable({
+
+        "order": [3, "desc" ],
+         "pageLength": 5,
+        columnDefs: [
+            { type: 'date-uk', targets: 3 }
+          ],
+
+        "sDom": '<"top">tp',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+
+ 
+
+
+  
+});
+
+function getMonthString(num)
+    {
+
+    if(num==1)
+      return "Jan";
+    else if(num==2)
+      return "Fév";
+    else if(num==3)
+    return "Mar";
+    else if(num==4)
+      return "Avr";
+    else if(num==5)
+      return "Mai";
+    else if(num==6)
+      return "Juin";
+    else if(num==7)
+      return "Juillet";
+    else if(num==8)
+      return "Aout";
+    else if(num==9)
+      return "Setp";
+    else if(num==10)
+      return "Oct";
+    
+    else if(num==11)
+      return "Nov";
+    
+    else if(num==12)
+      return "Déc";
+
+    return "";
+    }
+
+
+var libellemois=[];
+var nombremois=[];
+var jan=0, fev=0,mar=0,avr=0,mai=0,juin=0,juillet=0,aout=0,oct=0,sept=0,nov=0,dec=0;
+{% for tag in findNineaParMois %}
+    
+    var num='{{tag.mois}}';
+    if(num==1)
+      jan=jan+parseInt('{{tag.nombre}}');
+    else if(num==2)
+      fev=fev+parseInt('{{tag.nombre}}');
+    else if(num==3)
+      mar=mar+parseInt('{{tag.nombre}}');
+    else if(num==4)
+       avr=avr+parseInt('{{tag.nombre}}');
+    else if(num==5)
+       mai=mai+parseInt('{{tag.nombre}}');
+    else if(num==6)
+      juin=juin+parseInt('{{tag.nombre}}');
+    else if(num==7)
+       juillet=juillet+parseInt('{{tag.nombre}}');
+     
+    else if(num==8)
+       aout=aout+parseInt('{{tag.nombre}}');
+    
+    else if(num==9)
+      sept=sept+parseInt('{{tag.nombre}}');
+     
+    else if(num==10)
+      oct=oct+parseInt('{{tag.nombre}}');
+      
+    
+    else if(num==11)
+      nov=nov+parseInt('{{tag.nombre}}');
+    
+    else if(num==12)
+       dec=dec+parseInt('{{tag.nombre}}');
+     
+
+{% endfor %}
+nombremois.push(jan,fev,mar,avr,mai,juin,juillet,aout,sept,oct,nov,dec);
+libellemois.push("jan","fev","mar","avr","mai","juin","juillet","aout","setp","oct","nov","dec");
+
+
+
+
+        var options = {
+          series: [{
+            name: "Desktops",
+            data: nombremois
+        }],
+          chart: {
+          height: 350,
+          type: 'line',
+          zoom: {
+            enabled: false
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        title: {
+          text: 'NINEA par mois',
+          align: 'left'
+        },
+        grid: {
+          row: {
+            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+            opacity: 0.5
+          },
+        },
+        xaxis: {
+          categories: libellemois,
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#mois_chart"), options);
+        chart.render();
+      
+      
+    
+
+var libelle=[];
+var nombre=[];
+{% for tag in nbreDemandesValidees %}
+    libelle.push('{{tag.admlibelle}}');
+    nombre.push('{{tag.nombre}}');
+{% endfor %}
+
+
+
+var libellefj=[];
+var nombrefj=[];
+{% for tag in nineaParFormeJuridique %}
+    libellefj.push('{{tag.libelle}}');
+    nombrefj.push('{{tag.nombre}}');
+{% endfor %}
+
+
+
+
+ var options = {
+          series: [{
+          data: nombrefj
+        }],
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: libellefj,
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#fj_chart"), options);
+        chart.render();
+
+
+
+
+  var options = {
+          series: [{
+          name: 'Servings',
+          data: nombre
+        }],
+          annotations: {
+          points: [{
+            x: 'Bananas',
+            seriesIndex: 0,
+            label: {
+              borderColor: '#775DD0',
+              offsetY: 0,
+              style: {
+                color: '#fff',
+                background: '#775DD0',
+              },
+              text: 'Bananas are good',
+            }
+          }]
+        },
+        chart: {
+          height: 500,
+          type: 'bar',
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 10,
+            columnWidth: '50%',
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          width: 2
+        },
+        
+        grid: {
+          row: {
+            colors: ['#fff', '#f2f2f2']
+          }
+        },
+        xaxis: {
+          labels: {
+            rotate: -45
+          },
+          categories: libelle,
+          tickPlacement: 'on'
+        },
+        yaxis: {
+          title: {
+            text: 'Servings',
+          },
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'light',
+            type: "horizontal",
+            shadeIntensity: 0.25,
+            gradientToColors: undefined,
+            inverseColors: true,
+            opacityFrom: 0.85,
+            opacityTo: 0.85,
+            stops: [50, 0, 100]
+          },
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#donut_chart"), options);
+        chart.render();
+    
+      var options = {
+          series: [{
+          name: 'Servings',
+          data: nombrefj
+        }],
+          annotations: {
+          points: [{
+            x: 'Bananas',
+            seriesIndex: 0,
+            label: {
+              borderColor: '#775DD0',
+              offsetY: 0,
+              style: {
+                color: '#fff',
+                background: '#775DD0',
+              },
+              text: 'Bananas are good',
+            }
+          }]
+        },
+        chart: {
+          height: 500,
+          type: 'bar',
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 10,
+            columnWidth: '50%',
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          width: 2
+        },
+        
+        grid: {
+          row: {
+            colors: ['#fff', '#f2f2f2']
+          }
+        },
+        xaxis: {
+          labels: {
+            rotate: -45
+          },
+          categories: libellefj,
+          tickPlacement: 'on'
+        },
+        yaxis: {
+          title: {
+            text: 'Servings',
+          },
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'light',
+            type: "horizontal",
+            shadeIntensity: 0.25,
+            gradientToColors: undefined,
+            inverseColors: true,
+            opacityFrom: 0.85,
+            opacityTo: 0.85,
+            stops: [50, 0, 100]
+          },
+        }
+        };
+
+      //  var chart = new ApexCharts(document.querySelector("#fj_chart"), options);
+      //  chart.render();
+      
+</script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_hFC0txHZxAdFcRzhjd8HLaL6c8NodAY&callback=myMap"></script>
 
 {% endblock %}

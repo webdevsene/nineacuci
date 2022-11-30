@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\NinproduitsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NinproduitsRepository::class)
+ * @Gedmo\Loggable
  */
 class Ninproduits
 {
@@ -30,6 +32,7 @@ class Ninproduits
 
     /**
      * @ORM\ManyToOne(targetEntity=NINinea::class, inversedBy="ninproduits")
+     * @Gedmo\Versioned 
      */
     private $nINinea;
 

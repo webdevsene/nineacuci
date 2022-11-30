@@ -57,6 +57,16 @@ class Nireactivation
      */
     private $remarque;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=TempNINinea::class, cascade={"persist","remove"}, inversedBy="nireactivations")
+     */
+    private $tempNinea;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $ninlock;
+
 
     public function __construct()
     {
@@ -163,6 +173,30 @@ class Nireactivation
     public function setRemarque(?string $remarque): self
     {
         $this->remarque = $remarque;
+
+        return $this;
+    }
+
+    public function getTempNinea(): ?TempNINinea
+    {
+        return $this->tempNinea;
+    }
+
+    public function setTempNinea(?TempNINinea $tempNinea): self
+    {
+        $this->tempNinea = $tempNinea;
+
+        return $this;
+    }
+
+    public function isNinlock(): ?bool
+    {
+        return $this->ninlock;
+    }
+
+    public function setNinlock(?bool $ninlock): self
+    {
+        $this->ninlock = $ninlock;
 
         return $this;
     }

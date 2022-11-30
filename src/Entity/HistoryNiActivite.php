@@ -63,6 +63,11 @@ class HistoryNiActivite
      */
     private $statActivprincipale;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $DateDeCloture;
+
     public function __construct()
     {
         $this->id = uniqid();
@@ -181,6 +186,18 @@ class HistoryNiActivite
     public function setStatActivprincipale(?bool $statActivprincipale): self
     {
         $this->statActivprincipale = $statActivprincipale;
+
+        return $this;
+    }
+
+    public function getDateDeCloture(): ?\DateTimeInterface
+    {
+        return $this->DateDeCloture;
+    }
+
+    public function setDateDeCloture(?\DateTimeInterface $DateDeCloture): self
+    {
+        $this->DateDeCloture = $DateDeCloture;
 
         return $this;
     }

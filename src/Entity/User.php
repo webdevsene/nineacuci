@@ -529,6 +529,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tempNINineas;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DemandeModification::class, mappedBy="createdBy")
+     */
+    private $demandeModifications;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DemandeModification::class, mappedBy="updatedBy")
+     */
+    private $demandeUpdatedBy;
+
    
 
    
@@ -616,6 +626,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tempNiDirigeants = new ArrayCollection();
         $this->tempNiPersonnes = new ArrayCollection();
         $this->tempNINineas = new ArrayCollection();
+        $this->demandeModifications = new ArrayCollection();
+        $this->demandeUpdatedBy = new ArrayCollection();
       
     }
 
@@ -3157,6 +3169,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($tempNINinea->getCreatedBy() === $this) {
                 $tempNINinea->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DemandeModification>
+     */
+    public function getDemandeModifications(): Collection
+    {
+        return $this->demandeModifications;
+    }
+
+    public function addDemandeModification(DemandeModification $demandeModification): self
+    {
+        if (!$this->demandeModifications->contains($demandeModification)) {
+            $this->demandeModifications[] = $demandeModification;
+            $demandeModification->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeModification(DemandeModification $demandeModification): self
+    {
+        if ($this->demandeModifications->removeElement($demandeModification)) {
+            // set the owning side to null (unless already changed)
+            if ($demandeModification->getCreatedBy() === $this) {
+                $demandeModification->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DemandeModification>
+     */
+    public function getDemandeUpdatedBy(): Collection
+    {
+        return $this->demandeUpdatedBy;
+    }
+
+    public function addDemandeUpdatedBy(DemandeModification $demandeUpdatedBy): self
+    {
+        if (!$this->demandeUpdatedBy->contains($demandeUpdatedBy)) {
+            $this->demandeUpdatedBy[] = $demandeUpdatedBy;
+            $demandeUpdatedBy->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeUpdatedBy(DemandeModification $demandeUpdatedBy): self
+    {
+        if ($this->demandeUpdatedBy->removeElement($demandeUpdatedBy)) {
+            // set the owning side to null (unless already changed)
+            if ($demandeUpdatedBy->getUpdatedBy() === $this) {
+                $demandeUpdatedBy->setUpdatedBy(null);
             }
         }
 

@@ -1,0 +1,228 @@
+{% extends 'ninea.html.twig' %}
+
+{% block title %}DemandeModification index{% endblock %}
+
+{% block body %}
+    
+
+<div class="box mt-4">
+
+	<div class="box-header">
+		<ul class="nav nav-tabs nav-tabs-left">
+			<li class="active">
+            	<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+					Demande de modification
+                  </a></li>
+
+		</ul>
+	</div>
+
+	<div class="box-content padded mt-4">
+
+		<div class="tab-content">            
+
+            <div class="card">
+            <div class="card-body ">
+            <div class="tab-pane box active table-responsive-lg" id="list">
+
+				 <table cellpadding="0" cellspacing="0" border="0" id="ninea" class="table table-striped table-bordered dt-responsive table-striped table-hover  " style="width: 100%;">
+                    <thead class="tr_entete" >
+                        <tr>
+                            
+                            <th>N°</th>
+                            <th>NINEA</th>
+                            <th>Raison</th>
+                            <th>Enseigne</th>
+                            <th>Etat</th>                           
+                            <th>Détails</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for tag in demande_modifications %}
+                            <tr>
+                              
+                                <td>{{ tag.id }}</td>
+                                <td>{{ tag.tempNinea.ninNinea }}</td>
+                                <td style=" word-break: break-all; width: 20%;">
+                                    
+                                    {% if tag.tempNinea.formeJuridique.niFormeunite.id ==  11 or tag.tempNinea.formeJuridique.niFormeunite.id ==  12 %} 
+                                            {{tag.tempNinea.tempNiPersonnes[0] != null ? tag.tempNinea.tempNiPersonnes[0].ninNom :"" }} {{tag.tempNinea.tempNiPersonnes[0] != null ? tag.tempNinea.tempNiPersonnes[0].ninPrenom : "" }} 
+                                    {% else %}
+                                       
+                                        {{tag.tempNinea.tempNiPersonnes[0] != null ? tag.tempNinea.tempNiPersonnes[0].ninRaison:"" }}
+                                    {% endif %}
+                                </td>
+                                <td style=" word-break: break-all; width: 20%;">{{ tag.tempNinea.ninEnseigne }}</td>
+                                
+
+                                <td> 
+                                   {% if tag.etat == "true" %}
+                                                    <span class="badge badge-pill badge-soft-warning font-size-11">En  validation</span> 
+                
+                                                {% else %}
+                
+                                                    {% if tag.etat == "c" %}
+                                                        <span class="badge badge-pill badge-soft-info font-size-11">En attendte de validation</span> 
+                                                        {% else %}
+                                                            {% if tag.etat == "b" %}
+                                                                <span class="badge badge-pill badge-soft-secondary font-size-11">Brouillon</span> 
+                                                            {% else %}
+                                                               {% if tag.etat == "r" %}
+                                                                    <span class="badge badge-pill badge-soft-danger font-size-11" >Rejeter
+                                                                        
+                                                                    </span>
+                                                                  
+                                                                {% else %}
+                                                                    {% if tag.etat == "t" %}
+                                                                        <span class="badge badge-pill badge-soft-pink font-size-11" >Retourner
+                                                                            
+                                                                        </span>
+                                                                        
+                                                                        
+                                                                    {% else %}
+                                                                        <span class="badge badge-pill badge-soft-success font-size-11">Valider</span> 
+                                                                        
+                                                                    {% endif %} 
+                                                                 
+                                                            {% endif %} 
+                                                            {% endif %} 
+                                                        
+                                                    {% endif %}
+                                                {% endif %}
+
+                                 </td>
+                                <td style="width: 10%;"> 
+
+                                  {% if tag.etat == "true" %}
+                                                  
+                
+                                                {% else %}
+                
+                                                    {% if tag.etat == "c" %}
+                                                           <a href="{{ path('app_demande_modification_show', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        {% else %}
+                                                            {% if tag.etat == "b" and tag.etat != "c" %}
+                                                                <!--a href="{{ path('app_demande_modification_show', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                                                    <i class="fas fa-eye"></i>
+                                        </a-->
+                                           <a href="{{ path('modifier_Ninea', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                                <i class="fas fa-eye"></i>
+                                                                    </a>
+                                                                {% else %}
+                                                               {% if tag.etat == "r" %}
+                                                                    
+                                                                  
+                                                                {% else %}
+                                                                    {% if tag.etat == "t" %}
+                                                                       <a href="{{ path('app_demande_modification_show', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                                                            <i class="fas fa-eye"></i>
+                                                                        </a>
+                                                                        
+                                                                        
+                                                                    {% else %}
+                                                                         <a href="{{ path('findby_ninea', {'id': tag.tempNinea.ninNinea}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
+                                                                            <i class="fas fa-eye"></i>
+                                                                        </a>
+                                                                                                        
+                                                                    {% endif %} 
+                                                                 
+                                                            {% endif %} 
+                                                            {% endif %} 
+                                                        
+                                                    {% endif %}
+                                                {% endif %}
+                                  
+                                    
+                                </td>
+                                                                
+                            </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="108">Pas de données trouvées</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+               
+			</div>
+
+          
+
+		</div>
+
+	</div>
+
+</div>
+    
+{% endblock %}
+{% block javascript %}
+
+
+<script src="{{ asset('admin/dist/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+       
+    <!-- App js -->
+
+<script src="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery-ui.min.js')}}"></script>
+<script src="{{ asset('admin/dist/assets/jquery-ui-1.12.1/jquery.ui.autocomplete.scroll.min.js')}}"></script>
+
+<script type="text/javascript">
+        
+      $("#ninea").DataTable({
+
+        "order": [0, "desc" ],
+        
+
+        "sDom": 'f<"top">tip',
+        "language": {
+
+            "processing": "Traitement en cours...",
+
+            "search": "Rechercher",
+
+            "width": "10%",
+
+            "lengthMenu": "Afficher _MENU_ ",
+
+            "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ ",
+
+            "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 ",
+
+            "infoFiltered": "(filtr&eacute; de _MAX_  au total)",
+
+            "infoPostFix": "",
+
+            "loadingRecords": "Chargement en cours...",
+
+            "zeroRecords": "Rien &agrave; afficher",
+
+            "emptyTable": "Aucune donnée disponible dans le tableau",
+
+            "paginate": {
+
+                first: "Premier",
+
+                previous: "Pr&eacute;c&eacute;dent",
+
+                next: "Suivant",
+
+                last: "Dernier"
+
+            },
+
+        }
+    });
+   
+
+
+
+</script>
+      
+{% endblock %}

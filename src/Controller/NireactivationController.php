@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use App\Entity\CACR;
 use App\Entity\CAV;
+use App\Entity\DemandeModification;
 use App\Entity\Departement;
 use App\Entity\NAEMA;
 use App\Entity\NiActivite;
 use App\Entity\NiActiviteEconomique;
+use App\Entity\NiCessation;
 use App\Entity\NiCivilite;
 use App\Entity\NiCoordonnees;
+use App\Entity\NiDirigeant;
 use App\Entity\NiFormejuridique;
 use App\Entity\NiFormeunite;
 use App\Entity\Nireactivation;
@@ -19,9 +22,17 @@ use App\Entity\Ninproduits;
 use App\Entity\NiSexe;
 use App\Entity\NiTypevoie;
 use App\Entity\Pays;
+use App\Entity\Qualite;
 use App\Entity\QVH;
 use App\Entity\RefProduits;
 use App\Entity\Region;
+use App\Entity\TempNiActivite;
+use App\Entity\TempNiActiviteEconomique;
+use App\Entity\TempNiCoordonnees;
+use App\Entity\TempNiDirigeant;
+use App\Entity\TempNINinea;
+use App\Entity\TempNinproduits;
+use App\Entity\TempNiPersonne;
 use App\Form\NireactivationType;
 use App\Repository\NINineaRepository;
 use App\Repository\NireactivationRepository;
@@ -36,7 +47,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Knp\Snappy\Pdf;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/nireactivation")
@@ -45,17 +56,32 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class NireactivationController extends AbstractController
 {
     /**
+     * cette action permettra de lister de Suivi des reactivations pour l'utilisateur
      * @Route("/", name="app_nireactivation_index", methods={"GET"})
      */
-    public function index(NireactivationRepository $nireactivationRepository): Response
+    public function index(NireactivationRepository $nireactivationRepository, AuthorizationCheckerInterface $autorization, EntityManagerInterface $entityManager): Response
     {
+
+        $demande_de_reprise = "";
+
+        if ($autorization->isGranted('ROLE_DEMANDE_NINEA')) {
+            $demande_de_reprise = $entityManager->getRepository(DemandeModification::class)->findBy(["typeDemande"=>"3", "createdBy"=>$this->getUser()], array("id"=>"DESC"));
+        }
+        
+        if ($autorization->isGranted('ROLE_NINEA_ADMIN') || $autorization->isGranted('ROLE_VALIDER_DEMANDE_NINEA')) {
+            // separer la visualisation de l historique selon profile agent repertoire / agent etat financier
+            // la liste des demande de reactivation en attente de validation seulement pour le profile Validateur
+            $demande_de_reprise = $entityManager->getRepository(DemandeModification::class)->findBy(["typeDemande"=>"3", "etat"=>array("a", "c", "v", "t", "r")], array("id"=>"DESC"));
+        }        
+        
         return $this->render('nireactivation/index.html.twig', [
-            'nireactivations' => $nireactivationRepository->findAll(),
+            'nireactivations' => $demande_de_reprise,
         ]);
     }
 
 
     /**
+     * retourner la liste des NINEAs suspendus
      * @Route("/nineaList", name="app_reprise_nineaList", methods={"GET"})
      */
     public function nineaList(NINineaRepository $nINineaRepository, Request $request): Response
@@ -74,6 +100,9 @@ class NireactivationController extends AbstractController
         $telephone = "";
         $email = "";
 
+        $session = new Session();
+        $session->set('erreurSaisie',"3");
+
         if ($request->get("filtre") ) {
             $numNinea = $request->get('numNinea');
             $nineamere = $request->get("nineamere");
@@ -87,13 +116,19 @@ class NireactivationController extends AbstractController
             $telephone = $request->get("telephone");
             $email = $request->get("email");
 
-            $ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
+            /*$ninea=$nINineaRepository->findByField($numNinea, $nineamere,$raison, $datenais,$enseigne,
                                         $cni, $numreg, $datereg, $sigle, $telephone, $email)
             ;
-
+            
             /// TODO found all suspendue NINEA
-            $ninea=$nINineaRepository->findNineaPersonnephysique($numNinea, $nineamere,$raison, $datenais,$enseigne  );
+            */
+            $user = $this->getUser();
 
+            $user_adm_id = $user->getNiAdministration()->getId();
+            $ninea=$nINineaRepository->findByFieldRechercheEtat($numNinea, $nineamere,$raison, $datenais,$enseigne, $user_adm_id  );
+            // $ninea = $this->getDoctrine()->getRepository(NiCessation::class)->findByFieldRechercheEtat($numNinea, $nineamere,$raison, $datenais,$enseigne  ); 
+
+            
             if (count($ninea) < 1 )
             {
                 $request->getSession()->getFlashBag()->add('messageDonnee',"Aucune donnée trouvée.");
@@ -122,20 +157,27 @@ class NireactivationController extends AbstractController
     }
 
     /**
-     * @Route("/reactivationsList", name="reactivationsList", methods={"GET"})
+     * Presente la liste des reactivations à valider pour le profile validateur 
+     * @Route("/reactivationsList", name="reactivationsList", methods={"GET", "POST"})
      */
-    public function reactivationsList(): Response
+    public function reactivationsList(NireactivationRepository $nireactivationRepository, AuthorizationCheckerInterface $autorization, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('nireactivation/reactivationsList.html.twig', [
-            'nireactivations' => $this->getDoctrine()->getRepository(Nireactivation::class)->findBy(array("etat"=>"v"), null, 70, null),
+        // return $this->render('nireactivation/reactivationsList.html.twig', [
+        return $this->render('nireactivation/index.html.twig', [
+            'nireactivations' => $entityManager->getRepository(DemandeModification::class)->findBy(array("typeDemande"=>"3","etat"=>array("a","c"))),
         ]);
     }
 
-
-
-
-
-
+    /**
+     * Presente la liste des reactivations valide prêtes à l'impression 
+     * @Route("/reactivationsListImprimer", name="reactivationsListImprimer", methods={"GET", "POST"})
+     */
+    public function reactivationsListImprimer(NireactivationRepository $nireactivationRepository, AuthorizationCheckerInterface $autorization, EntityManagerInterface $entityManager): Response
+    {
+        return $this->render('nireactivation/reactivationsList.html.twig', [
+            'nireactivations' => $entityManager->getRepository(Nireactivation::class)->findBy(array("etat"=>"v")),
+        ]);
+    }
 
 
 
@@ -143,24 +185,23 @@ class NireactivationController extends AbstractController
      * @Route("/editEntete/{id}", name="editEnteteReactivation", methods={"GET", "POST"})
      */
     public function modifierEntete(Request $request, EntityManagerInterface $entityManager, NINinea $ninea): Response
-    {    
-
-
-      $ninea->setNinmajdate(new \DateTime());
-
-      $session=new Session();
-      $session->set('actived',"");
-      
-       $ninRegcom = "";
-       $ninDatreg = "";
+    {
+        
+        
+        $ninea->setNinmajdate(new \DateTime());       
+        
+        $ninStatut = "";
+        $ninRegcom = "";
+        $ninDatreg = "";
 
       if ($request->get('modifierEntete')) {
 
-
+          $ninStatut = $request->get('ninStatut');
           $ninEnseigne = $request->get('ninEnseigne');
           $ninDatreg = $request->get('ninDatreg');
           $ninRegcom= $request->get('ni_nineaproposition_ninRegcom');
 
+          $ninea->setNinStatut($ninStatut);
           $ninea->setNinEnseigne($ninEnseigne);
           $ninea->setNinDatreg(new \DateTime($ninDatreg));
           $ninea->setNinRegcom( str_replace("_","",$ninRegcom));
@@ -169,15 +210,14 @@ class NireactivationController extends AbstractController
 
         }
 
-        return $this->redirectToRoute('modifier_Ninea_Reactivation', ["id"=>$ninea->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_nireactivation_show', ["id"=>$ninea->getId()], Response::HTTP_SEE_OTHER);
       
-      
-
+        // return $this->render('nireactivation/_partialsShowReact.html.twig', []);
     }
 
 
      /**
-     * @Route("/modifier_Ninea/{id}", name="modifier_Ninea_Reactivation", methods={"GET", "POST"})
+     * @Route("/modifier_Reactivation/{id}", name="modifier_Ninea_Reactivation", methods={"GET", "POST"})
      */
     public function modifier_Ninea(Request $request,  $id="", EntityManagerInterface $entityManager, $dirigeant=""): Response
     {
@@ -250,16 +290,6 @@ class NireactivationController extends AbstractController
     }
 
 
-
-
-
-
-
-
-
-
-
-
     /**
      * @Route("/new", name="app_nireactivation_new", methods={"GET", "POST"})
      */
@@ -269,27 +299,182 @@ class NireactivationController extends AbstractController
         $form = $this->createForm(NireactivationType::class, $nireactivation);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             $nireactivation->setEtat("a");
             $nireactivation->setCreatedBy($this->getUser());
             $nireactivation->setUpdatedBy($this->getUser());
            
-            $ninea = $request->get('nineamere');
-            if ($ninea)
-             $nireactivation->setNinea($entityManager->getRepository(NINinea::class)->findOneBy(['ninNinea' => $ninea]));
+            $ninea_val = $request->get('nineamere');
+            $ninea= "";
+            if ($ninea_val){
+
+                $ninea=$entityManager->getRepository(NINinea::class)->findOneBy(['ninNinea' => $ninea_val]);
+                $nireactivation->setNinea($ninea);
+
+            }
              else{
                 $request->getSession()->getFlashBag()->add('message',"NINEA ne doit pas être vide.");
                 return $this->redirectToRoute('app_nireactivation_new', [], Response::HTTP_SEE_OTHER);
             }
 
+            //Entete pres initialiser les informations de l'entete 
+            // on est entrain de temporiser dans cette etape
+            $tempNINinea = new TempNINinea();
+            $tempNINinea->setNinEnseigne($ninea->getNinEnseigne());
+            $tempNINinea->setNinRegcom($ninea->getNinRegcom());
+            $tempNINinea->setFormeJuridique($ninea->getFormejuridique());
+            $tempNINinea->setStatut($ninea->getStatut());
+            $tempNINinea->setNinNinea( $ninea->getNinNinea());
+            $tempNINinea->setNinEtat($ninea->getNinEtat());
+            if($ninea->getCreatedBy())
+             $tempNINinea->setCreatedBy($ninea->getCreatedBy());
+            if($ninea->getModifiedBy())
+                $tempNINinea->setModifiedBy($ninea->getModifiedBy());
+            if($ninea->getCreatedAt())
+             $tempNINinea->setCreatedAt($ninea->getCreatedAt());
+            if($ninea->getUpdatedAt())
+             $tempNINinea->setUpdatedAt($ninea->getUpdatedAt());
+            //  $tempNINinea->setNiTypedocument($ninea->setNiTypedocument());
+            $tempNINinea->setNinDatreg($ninea->getNinDatreg());
+            $tempNINinea->setNinRaison($ninea->getNinRaison());
+            $tempNINinea->setNinTitrefoncier($ninea->getNinTitrefoncier());
+            $tempNINinea->setNinAgrement($ninea->getNinAgrement());
+            $tempNINinea->setNinArrete($ninea->getNinArrete());
+            $tempNINinea->setNinRecepisse($ninea->getNinRecepisse());
+            $tempNINinea->setNinAccord($ninea->getNinAccord());
+            $tempNINinea->setNinBordereau($ninea->getNinBordereau());
+            $tempNINinea->setNinBail($ninea->getNinBail());
+            $tempNINinea->setNinPermisoccuper($ninea->getNinPermisoccuper());
+
+
+
+            //Personne temporiser les informations sur la personne morale ou physique
+            $personne = new TempNiPersonne();          
+
+            if ($ninea->getFormejuridique()->getNiFormeunite()->getId() == 11  or $ninea->getFormejuridique()->getNiFormeunite()->getId() == 12 ){
+                //Infos personne physique
+                $personne->setNinCNI($ninea->getNiPersonne()->getNinCNI());
+                $personne->setNinDateCNI($ninea->getNiPersonne()->getNinDateCNI());
+                $personne->setNinQvh($ninea->getNiPersonne()->getNinQvh());
+                $personne->setNinNom($ninea->getNiPersonne()->getNinNom());
+                $personne->setNinPrenom($ninea->getNiPersonne()->getNinPrenom());
+                $personne->setNinEmailPersonnel($ninea->getNiPersonne()->getNinEmailPersonnel());
+                $personne->setNinTelephone($ninea->getNiPersonne()->getNinTelephone());
+                $personne->setAdresse($ninea->getNiPersonne()->getAdresse());
+                $personne->setNinVoie($ninea->getNiPersonne()->getNinVoie());
+                $personne->setNumVoie($ninea->getNiPersonne()->getNumVoie());
+                $personne->setCivilite($ninea->getNiPersonne()->getCivilite());
+                $personne->setNinDateNaissance($ninea->getNiPersonne()->getNinDateNaissance());
+                $personne->setNinLieuNaissance($ninea->getNiPersonne()->getNinLieuNaissance());
+                $personne->setNationalite($ninea->getNiPersonne()->getNationalite());
+                $personne->setNinSexe($ninea->getNiPersonne()->getNinSexe());
+                $personne->setNinTypevoie($ninea->getNiPersonne()->getNinTypevoie());
+            }else{
+                //Infos personne morale
+                $personne->setNinRaison($ninea->getNiPersonne()->getNinRaison());
+                $personne->setNinSigle($ninea->getNiPersonne()->getNinSigle());
+                
+                //Dirigeant
+                foreach ($ninea->getNinDirigeant() as $key) {
+                    $tempNiDirigeant= new TempNiDirigeant();
+                    $tempNiDirigeant->setNinCNI($key->getNinCNI());
+                    $tempNiDirigeant->setNinDateCNI($key->getNinDateCNI());
+                    $tempNiDirigeant->setNinQvh($key->getNinQvh());
+                    $tempNiDirigeant->setNinNom($key->getNinNom());
+                    $tempNiDirigeant->setNinPrenom($key->getNinPrenom());
+                    $tempNiDirigeant->setNinEmail($key->getNinEmail());
+                    $tempNiDirigeant->setNinTelephone1($key->getNinTelephone1());
+                    $tempNiDirigeant->setNinTelephone2($key->getNinTelephone2());
+                    $tempNiDirigeant->setNinAddresse($key->getNinAddresse());
+                
+                    $tempNiDirigeant->setNinCivilite($key->getNinCivilite());
+                    $tempNiDirigeant->setNinDatenais($key->getNinDatenais());
+                    $tempNiDirigeant->setNinLieunais($key->getNinLieunais());
+                    $tempNiDirigeant->setNinNationalite($key->getNinNationalite());
+                    $tempNiDirigeant->setNinSexe($key->getNinSexe());
+                    $tempNiDirigeant->setNiNinea($tempNINinea);
+                    $entityManager->persist($tempNiDirigeant);
+                    
+
+                }
+
+            }
+            
+            $personne->setNinNinea($tempNINinea);
+            $entityManager->persist($personne);
+
+
+
+
+            //Info coordonnées 
+
+            $coordonnee = new TempNiCoordonnees();
+
+            $coordonnee->setNinTypevoie($ninea->getNiCoordonnees()[0]->getNinTypevoie());
+            $coordonnee->setNinVoie($ninea->getNiCoordonnees()[0]->getNinVoie());
+            $coordonnee->setNinnumVoie($ninea->getNiCoordonnees()[0]->getNinnumVoie());
+            $coordonnee->setNinadresse1($ninea->getNiCoordonnees()[0]->getNinadresse1());
+            $coordonnee->setNintelephon2($ninea->getNiCoordonnees()[0]->getNintelephon2());
+            $coordonnee->setNinTelephon1($ninea->getNiCoordonnees()[0]->getNinTelephon1());
+            $coordonnee->setNinEmail($ninea->getNiCoordonnees()[0]->getNinEmail());
+            $coordonnee->setQvh($ninea->getNiCoordonnees()[0]->getQvh());
+            $coordonnee->setNinBP($ninea->getNiCoordonnees()[0]->getNinBP());
+            $coordonnee->setNinUrl($ninea->getNiCoordonnees()[0]->getNinUrl());
+            $coordonnee->setNinNinea($tempNINinea);
+            $entityManager->persist($coordonnee);
+           
+            //Info Activités et produit
+
+            foreach ($ninea->getNinActivite() as $key) {
+                $tempNiActivite = new TempNiActivite();
+                $tempNiActivite->setNinAutact($key->getNinAutact());
+                $tempNiActivite->setRefSyscoa($key->getRefSyscoa());
+                $tempNiActivite->setRefNaema($key->getRefNaema());
+                $tempNiActivite->setRefCiti($key->getRefCiti());
+                
+                $tempNiActivite->setStatActivprincipale($key->getStatActivprincipale());
+                $tempNiActivite->setNiNinea($tempNINinea);
+                $entityManager->persist($tempNiActivite);
+
+            }
+            foreach ($ninea->getNinproduits() as $key) {
+                $ninea->addNinproduit($key);
+                $tempNinproduits= new TempNinproduits();
+                $tempNinproduits->setRefproduits($key->getRefproduits());
+                $tempNinproduits->setNINinea($tempNINinea);
+                $entityManager->persist($tempNinproduits);
+            }
+
+            // Activités économiques
+
+            $tempNiActiviteEconomique= new TempNiActiviteEconomique();
+            $tempNiActiviteEconomique->setNinCapital($ninea->getNinActivitesEconomiques()[0]->getNinCapital());
+            $tempNiActiviteEconomique->setNinEffect1($ninea->getNinActivitesEconomiques()[0]->getNinEffect1());
+            $tempNiActiviteEconomique->setNinEffectifFem($ninea->getNinActivitesEconomiques()[0]->getNinEffectifFem());
+            $tempNiActiviteEconomique->setNinEffectif($ninea->getNinActivitesEconomiques()[0]->getNinEffectif());
+            $tempNiActiviteEconomique->setNinAffaire($ninea->getNinActivitesEconomiques()[0]->getNinAffaire());
+            $tempNiActiviteEconomique->setNinEffectifFemSAIS($ninea->getNinActivitesEconomiques()[0]->getNinEffectifFemSAIS());
+            $tempNiActiviteEconomique->setNiNinea($tempNINinea);
+            $entityManager->persist($tempNiActiviteEconomique);
+
+
+           
+    
+            $nireactivation->setTempNinea($tempNINinea);            
+            
+
 
             $nireactivationRepository->add($nireactivation, true);
 
-            return $this->redirectToRoute('app_nireactivation_index', [], Response::HTTP_SEE_OTHER);
+            // return $this->redirectToRoute('app_nireactivation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_nireactivation_show', ["id"=>$nireactivation->getId()], Response::HTTP_SEE_OTHER);
+            
         }
 
         return $this->renderForm('nireactivation/new.html.twig', [
             'nireactivation' => $nireactivation,
+            'demande_modification' => $nireactivation,
             'form' => $form,
         ]);
     }
@@ -298,12 +483,80 @@ class NireactivationController extends AbstractController
     /**
      * @Route("/{id}", name="app_nireactivation_show", methods={"GET"})
      */
-    public function show(Nireactivation $nireactivation): Response
+    public function show(Nireactivation $nireactivation, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('nireactivation/show.html.twig', [
-            'nireactivation' => $nireactivation,
-            'ninea'=>$nireactivation->getNinea()
+
+
+        $nINinea = $nireactivation->getNinea();
+        $formeunites = $entityManager->getRepository(NiFormeunite::class)->findAll();
+        $formejuridiques = $entityManager->getRepository(NiFormejuridique::class)->findAll();
+        $regions = $entityManager->getRepository(Region::class)->findAll();
+        $departements = $entityManager->getRepository(Departement::class)->findAll();
+        $cacrs = $entityManager->getRepository(CACR::class)->findAll();
+        $cavs = $entityManager->getRepository(CAV::class)->findAll();
+        $departements = $entityManager->getRepository(Departement::class)->findAll();
+        $qvhs = $entityManager->getRepository(QVH::class)->findAll();
+
+        $sexe = $entityManager->getRepository(NiSexe::class)->findAll();
+        $nationalites = $entityManager->getRepository(Pays::class)->findAll();
+        $regions = $entityManager->getRepository(Region::class)->findAll();
+        $civilites = $entityManager->getRepository(NiCivilite::class)->findAll();
+        $typevoies = $entityManager->getRepository(NiTypevoie::class)->findAll();
+        $coordoonnes = $entityManager->getRepository(NiCoordonnees::class)->findBy(array("ninNinea"=>$nINinea),array('id'=>'desc'));
+        $lastacteEcononomique=$entityManager->getRepository(NiActiviteEconomique::class)->findBy(array("nINinea"=>$nINinea),array('id'=>'desc'),1,0);
+        if(count($lastacteEcononomique)>0)
+          $lastactiviteEco =$lastacteEcononomique[0];
+        else
+          $lastactiviteEco=null;
+        
+        $activiteseconmiques = $entityManager->getRepository(NiActiviteEconomique::class)->findBy(array("nINinea"=>$nINinea),array('id'=>'desc'));
+        
+
+        if(count($coordoonnes)>0)
+         $coordoonne =$coordoonnes[0];
+        else
+         $coordoonne=null;
+        
+        $ninactivites = $entityManager->getRepository(NiActivite::class)->findBy(array("nINinea"=>$nINinea),array('statActivprincipale'=>'desc'));
+        $ninproduits = $entityManager->getRepository(Ninproduits::class)->findBy(array("nINinea"=>$nINinea));
+        $activiteglobale = $nINinea->getNiLibelleactiviteglobale();
+        $naemas = $entityManager->getRepository(NAEMA::class)->findAll();
+        $produits = $entityManager->getRepository(RefProduits::class)->findAll();
+        $Odirigeant = "";
+        $Dirigeants = $entityManager->getRepository(NiDirigeant::class)->findBy(array("nINinea"=>$nINinea),array('id'=>'desc'));
+        $qualifications = $entityManager->getRepository(Qualite::class)->findAll();
+        $tempNINinea=$nireactivation->getTempNinea();
+
+        return $this->render('nireactivation/_partialsShowReact.html.twig', [
+            'demande_modification' => $nireactivation,
+            'ninea'=>$nireactivation->getNinea(),
+            'tempNINinea'=>$tempNINinea,
+            'formeunites' => $formeunites,             
+            'Odirigeant' => $Odirigeant,             
+            'qualifications' => $qualifications,             
+            'Dirigeants' => $Dirigeants,             
+            'formejuridiques' => $formejuridiques, 
+            'registreCommerce'=>"",
+            'regions' => $regions,
+            'sexes' => $sexe,
+            'nationalites' => $nationalites,
+            'civilites' => $civilites,
+            'typevoies' => $typevoies,
+            'departements' => $departements,
+            'cacrs' => $cacrs,
+            'cavs' => $cavs,
+            'qvhs' => $qvhs,
+            'lastcoordoonnee'=>$coordoonne,
+            'lastactiviteEco'=>$lastactiviteEco,
+            'activiteseconmiques' => $activiteseconmiques,
+            'activiteglobale' => $activiteglobale,
+            'naemas' => $naemas,
+			'ninactivites' => $ninactivites,
+			'ninproduits' => $ninproduits,
+            'produits' => $produits,
+            'statut' => "c",
         ]);
+
     }
 
     /**
@@ -320,7 +573,7 @@ class NireactivationController extends AbstractController
             $nireactivation->setUpdatedBy($this->getUser());
             $nireactivation->setUpdatedAt(new \DateTime());
             $nireactivationRepository->add($nireactivation, true);
-            return $this->redirectToRoute('app_nireactivation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_nireactivation_show', ["id"=>$nireactivation->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('nireactivation/edit.html.twig', [
@@ -372,7 +625,7 @@ class NireactivationController extends AbstractController
 
 
 
-                    /**
+    /**
      * @Route("/retourner/{id}", name="nireactivation__retourner", methods={"GET", "POST"})
      */
     
@@ -473,47 +726,13 @@ class NireactivationController extends AbstractController
              * faut tester sur toutes les id forme juridique
              * $doc_creation_id = $vars->getFormeJuridique()->getId();
              */
-            $doc_create = str_replace("_", "", $vars->getNinRegcom()); // init docu creation
+            $doc_create = str_replace("_", "", $vars->getNinNumeroDocument()); // init docu creation
 
-            $doc_create_txt = "RCCM";
+            $doc_create_txt = $vars->getNiTypedocument() ? $vars->getNiTypedocument()->getLibelle() : "";
+
+            $date_document = $vars->getNinDateDocument();
+
             $doc_rccm_txt = "DATE D'IMMATRICULATION AU RCCM";
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinBordereau();
-                $doc_create_txt = "BORDERAU";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinTitrefoncier();
-                $doc_create_txt = "TITRE FONCIER";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinAgrement();
-                $doc_create_txt = "AGREMENT";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinArrete();
-                $doc_create_txt = "ARRETE";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinRecepisse();
-                $doc_create_txt = "RECIPISSE";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinAccord();
-                $doc_create_txt = "ACCORD";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinBail();
-                $doc_create_txt = "BAIL";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNinPermisoccuper();
-                $doc_create_txt = "PERMIS D'OCCUPER";
-            }
-            if ($doc_create==null) {
-                $doc_create = $vars->getNiPersonne() ? $vars->getNiPersonne()->getNinCNI() : "";
-                $doc_create_txt = "CARTE NATIONALE D'IDENTITE";
-            }
-
             
             $html = $this->renderView('nireactivation/_vimprimable_reactivation.html.twig', array(
                 'some'  => $vars,
@@ -526,6 +745,7 @@ class NireactivationController extends AbstractController
                 'doc_create' => $doc_create,
                 'doc_create_txt' => $doc_create_txt,
                 'doc_rccm_txt' => $doc_rccm_txt,
+                'date_document' => $date_document,
             )); 
 
 

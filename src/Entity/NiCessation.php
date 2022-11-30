@@ -67,6 +67,36 @@ class NiCessation
      */
     private $remarque;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=NiTypeConsequence::class, inversedBy="niCessations")
+     */
+    private $ninConsequences;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $ninlock;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $consequences;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $denominationBeneficiaire;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $adresseBeneficiaire;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $rccmBeneficiaire;
+
 
     public function __construct()
     {
@@ -204,6 +234,78 @@ class NiCessation
     public function setRemarque(?string $remarque): self
     {
         $this->remarque = $remarque;
+
+        return $this;
+    }
+
+    public function getNinConsequences(): ?NiTypeConsequence
+    {
+        return $this->ninConsequences;
+    }
+
+    public function setNinConsequences(?NiTypeConsequence $ninConsequences): self
+    {
+        $this->ninConsequences = $ninConsequences;
+
+        return $this;
+    }
+
+    public function isNinlock(): ?bool
+    {
+        return $this->ninlock;
+    }
+
+    public function setNinlock(?bool $ninlock): self
+    {
+        $this->ninlock = $ninlock;
+
+        return $this;
+    }
+
+    public function getConsequences(): ?string
+    {
+        return $this->consequences;
+    }
+
+    public function setConsequences(?string $consequences): self
+    {
+        $this->consequences = $consequences;
+
+        return $this;
+    }
+
+    public function getDenominationBeneficiaire(): ?string
+    {
+        return $this->denominationBeneficiaire;
+    }
+
+    public function setDenominationBeneficiaire(?string $denominationBeneficiaire): self
+    {
+        $this->denominationBeneficiaire = $denominationBeneficiaire;
+
+        return $this;
+    }
+
+    public function getAdresseBeneficiaire(): ?string
+    {
+        return $this->adresseBeneficiaire;
+    }
+
+    public function setAdresseBeneficiaire(?string $adresseBeneficiaire): self
+    {
+        $this->adresseBeneficiaire = $adresseBeneficiaire;
+
+        return $this;
+    }
+
+    public function getRccmBeneficiaire(): ?string
+    {
+        return $this->rccmBeneficiaire;
+    }
+
+    public function setRccmBeneficiaire(?string $rccmBeneficiaire): self
+    {
+        $this->rccmBeneficiaire = $rccmBeneficiaire;
 
         return $this;
     }

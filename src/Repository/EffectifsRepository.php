@@ -85,19 +85,36 @@ class EffectifsRepository extends ServiceEntityRepository
     // /**
     //  * @return Effectifs[] Returns an array of Effectifs objects
     //  */    
-    public function findByCodeCuci($codeCuci, $annee, $type)
+    public function findByCodeCuci($codeCuci="", $annee, $type="")
     {
-        return $this->createQueryBuilder('e')
 
-            ->innerJoin('e.repertoire','r')
-            ->addSelect('r')
-            ->andWhere('e.anneeFinanciere = :annee')
-            ->andWhere('e.type = :type')
-            ->andWhere('r.codeCuci = :codeCuci')
-            ->setParameter('annee', $annee)
-            ->setParameter('type', $type)
-            ->setParameter('codeCuci', $codeCuci)
+        $query = $this->createQueryBuilder('e')
+                      ->innerJoin('e.repertoire','r')
+                      ->addSelect('r')
+        ;
+
+        if($annee){
+
+            $query = $query->andWhere('e.anneeFinanciere = :annee')
+                           ->setParameter('annee', $annee);
+        }
+        if($type){
+            $query = $query->andWhere('e.type = :type')
+                           ->setParameter('type', $type);
             
+
+        }
+        if($codeCuci){
+            
+            $query = $query
+            ->andWhere('r.codeCuci = :codeCuci')
+            ->setParameter('codeCuci', $codeCuci);
+
+        }
+
+                      
+        return $query 
+            ->orderBy('e.repertoire', 'DESC')          
             ->getQuery()
             ->getResult()
         ;

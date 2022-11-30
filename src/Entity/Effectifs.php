@@ -385,6 +385,8 @@ class Effectifs
         return $this;
     }
 
+    
+    // effectifs hors de uemoa 
     public function getHmfef(): ?string
     {
         return $this->hmfef;
@@ -409,6 +411,8 @@ class Effectifs
         return $this;
     }
 
+    
+    // masses salaires hors uemoa
     public function getMhmfef(): ?string
     {
         return $this->mhmfef;
@@ -433,6 +437,8 @@ class Effectifs
         return $this;
     }
 
+    
+    /// masses salaires nationales 
     public function getMnfef(): ?string
     {
         return $this->mnfef;
@@ -457,6 +463,8 @@ class Effectifs
         return $this;
     }
 
+    
+    // Massa salaire uemoa 
     public function getMumfef(): ?string
     {
         return $this->mumfef;
@@ -481,6 +489,8 @@ class Effectifs
         return $this;
     }
 
+
+    // natinaux feminin effectifs 
     public function getNfef(): ?string
     {
         return $this->nfef;
@@ -510,6 +520,8 @@ class Effectifs
         return $this;
     }
 
+
+    // effectifs uemoa
     public function getUmfef(): ?string
     {
         return $this->umfef;

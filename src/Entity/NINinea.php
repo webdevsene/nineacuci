@@ -6,10 +6,12 @@ use App\Repository\NINineaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NINineaRepository::class)
- *   @ORM\Table(name="`ni_ninea`")
+ * @ORM\Table(name="`ni_ninea`")
+ * @Gedmo\Loggable
  */
 class NINinea
 {
@@ -23,11 +25,13 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninRaison;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninRegcom;
 
@@ -39,6 +43,7 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninNinea;
 
@@ -51,6 +56,7 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninSigle;
 
@@ -73,12 +79,11 @@ class NINinea
     private $ninDatcre;
 
 
-
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninDatreg;
-
 
 
     /**
@@ -88,6 +93,7 @@ class NINinea
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninEnseigne;
 
@@ -98,6 +104,7 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninEtat;
 
@@ -115,7 +122,6 @@ class NINinea
     private $ninNature;
 
 
-
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
      */
@@ -124,6 +130,7 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninNineamere;
 
@@ -154,6 +161,7 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninNumerodemande;
 
@@ -167,7 +175,6 @@ class NINinea
      * @ORM\Column(type="date", nullable=true)
      */
     private $ninCreationninea;
-
 
 
 
@@ -230,46 +237,56 @@ class NINinea
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned
      */
     private $niLibelleactiviteglobale;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninTitrefoncier;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned
      */
     private $ninAgrement;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninArrete;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninRecepisse;
 
     /**
      * @ORM\Column(type="string", length=255,nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninAccord;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninBordereau;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned 
+     * @Gedmo\Versioned 
      */
     private $ninBail;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninPermisoccuper;
 
@@ -295,6 +312,7 @@ class NINinea
     
      /**
      * @ORM\Column(type="text",  nullable=true)
+     * @Gedmo\Versioned
      */
     private $observationsrccm;
 
@@ -308,6 +326,49 @@ class NINinea
      */
     private $niTypedocument;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DemandeModification::class, mappedBy="ninea")
+     */
+    private $demandeModifications;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     * @Gedmo\Versioned
+     */
+    private $ninRegcomModif;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned
+     */
+    private $ninDatregModif;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned
+     */
+    private $ninDatregReprise;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     * @Gedmo\Versioned
+     */
+    private $ninRegcomReprise;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ninNumeroDocument;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $ninDateDocument;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nomCommercial;
 
 
     public function __construct()
@@ -322,6 +383,7 @@ class NINinea
         $this->ninproduits = new ArrayCollection();
         $this->niCessations = new ArrayCollection();
         $this->nireactivations = new ArrayCollection();
+        $this->demandeModifications = new ArrayCollection();
 
     }
 
@@ -1423,6 +1485,120 @@ class NINinea
     public function setNiTypedocument(?NinTypedocuments $niTypedocument): self
     {
         $this->niTypedocument = $niTypedocument;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DemandeModification>
+     */
+    public function getDemandeModifications(): Collection
+    {
+        return $this->demandeModifications;
+    }
+
+    public function addDemandeModification(DemandeModification $demandeModification): self
+    {
+        if (!$this->demandeModifications->contains($demandeModification)) {
+            $this->demandeModifications[] = $demandeModification;
+            $demandeModification->setNinea($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeModification(DemandeModification $demandeModification): self
+    {
+        if ($this->demandeModifications->removeElement($demandeModification)) {
+            // set the owning side to null (unless already changed)
+            if ($demandeModification->getNinea() === $this) {
+                $demandeModification->setNinea(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNinRegcomModif(): ?string
+    {
+        return $this->ninRegcomModif;
+    }
+
+    public function setNinRegcomModif(?string $ninRegcomModif): self
+    {
+        $this->ninRegcomModif = $ninRegcomModif;
+
+        return $this;
+    }
+
+    public function getNinDatregModif(): ?\DateTimeInterface
+    {
+        return $this->ninDatregModif;
+    }
+
+    public function setNinDatregModif(?\DateTimeInterface $ninDatregModif): self
+    {
+        $this->ninDatregModif = $ninDatregModif;
+
+        return $this;
+    }
+
+    public function getNinDatregReprise(): ?\DateTimeInterface
+    {
+        return $this->ninDatregReprise;
+    }
+
+    public function setNinDatregReprise(?\DateTimeInterface $ninDatregReprise): self
+    {
+        $this->ninDatregReprise = $ninDatregReprise;
+
+        return $this;
+    }
+
+    public function getNinRegcomReprise(): ?string
+    {
+        return $this->ninRegcomReprise;
+    }
+
+    public function setNinRegcomReprise(?string $ninRegcomReprise): self
+    {
+        $this->ninRegcomReprise = $ninRegcomReprise;
+
+        return $this;
+    }
+
+    public function getNinNumeroDocument(): ?string
+    {
+        return $this->ninNumeroDocument;
+    }
+
+    public function setNinNumeroDocument(?string $ninNumeroDocument): self
+    {
+        $this->ninNumeroDocument = $ninNumeroDocument;
+
+        return $this;
+    }
+
+    public function getNinDateDocument(): ?\DateTimeInterface
+    {
+        return $this->ninDateDocument;
+    }
+
+    public function setNinDateDocument(?\DateTimeInterface $ninDateDocument): self
+    {
+        $this->ninDateDocument = $ninDateDocument;
+
+        return $this;
+    }
+
+    public function getNomCommercial(): ?string
+    {
+        return $this->nomCommercial;
+    }
+
+    public function setNomCommercial(?string $nomCommercial): self
+    {
+        $this->nomCommercial = $nomCommercial;
 
         return $this;
     }

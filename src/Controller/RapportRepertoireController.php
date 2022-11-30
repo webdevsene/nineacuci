@@ -145,10 +145,103 @@ class RapportRepertoireController extends AbstractController
                $activeSheet->getColumnDimension($col)->setAutoSize(true);
            }
 
+        $worksheet = $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex(1);
+        $worksheet->setTitle('Dirigeants');
 
+        $worksheet->setCellValue('A1', 'NINEA');
+        $worksheet->setCellValue('B1', 'CUCI');
+        $worksheet->setCellValue('C1', 'PRENOM');
+        $worksheet->setCellValue('D1', 'NOM');
+        $worksheet->setCellValue('E1', 'FONCTION/QUALITE');
+        $worksheet->setCellValue('F1', 'NUMERO D\'IDENTIFICATION FISCALE');
+        $worksheet->setCellValue('G1', 'ADRESSE');
+
+
+
+        $worksheet2 = $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex(2);
+        $worksheet2->setTitle('Actionnaires');
+
+        $worksheet2->setCellValue('A1', 'NINEA');
+        $worksheet2->setCellValue('B1', 'CUCI');
+        $worksheet2->setCellValue('C1', 'PRENOM');
+        $worksheet2->setCellValue('D1', 'NOM');
+        $worksheet2->setCellValue('E1', 'NATIONALITE');
+        $worksheet2->setCellValue('F1', 'MONTANT CAPITAL');
+        $worksheet2->setCellValue('G1', 'POURCENTAGE CAPITAL');
+
+
+        $worksheet3 = $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex(3);
+        $worksheet3->setTitle('Membres');
+
+        $worksheet3->setCellValue('A1', 'NINEA');
+        $worksheet3->setCellValue('B1', 'CUCI');
+        $worksheet3->setCellValue('C1', 'PRENOM');
+        $worksheet3->setCellValue('D1', 'NOM');
+        $worksheet3->setCellValue('E1', 'FONCTION/QUALITE');
+        $worksheet3->setCellValue('F1', 'ADRESSE');
+       
+
+
+       
 
         foreach ($repertoire as $tag ) {
 
+
+          $j=2;
+           
+          foreach ($tag->getMembreConseils()  as $key ) {
+                $worksheet3->getCell('A'.$j)->setValueExplicit( $tag->getNinea(), DataType::TYPE_STRING2 );
+                $worksheet3->getCell('B'.$j)->setValueExplicit( $tag->getCodeCuci(), DataType::TYPE_STRING2);
+                $worksheet3->getCell('C'.$j)->setValueExplicit( $key ->getPrenom(), DataType::TYPE_STRING2);
+                $worksheet3->getCell('D'.$j)->setValueExplicit( $key ->getNom(), DataType::TYPE_STRING2);
+                if( $key ->getPosition()!=null)
+                  $worksheet3->getCell('E'.$j)->setValueExplicit( $key ->getPosition()->getLibelle(), DataType::TYPE_STRING2);
+                else
+                  $worksheet3->getCell('E'.$j)->setValueExplicit( "", DataType::TYPE_STRING2);
+                
+                $worksheet3->getCell('F'.$j)->setValueExplicit( $key ->getAddresse(), DataType::TYPE_STRING2);
+                $j++;
+          }
+
+
+          $j=2;
+          
+          foreach ($tag->getActionnaires()  as $key ) {
+                $worksheet2->getCell('A'.$j)->setValueExplicit( $tag->getNinea(), DataType::TYPE_STRING2 );
+                $worksheet2->getCell('B'.$j)->setValueExplicit( $tag->getCodeCuci(), DataType::TYPE_STRING2);
+                $worksheet2->getCell('C'.$j)->setValueExplicit( $key->getPrenom(), DataType::TYPE_STRING2);
+                $worksheet2->getCell('D'.$j)->setValueExplicit( $key->getNom(), DataType::TYPE_STRING2);
+                if( $key ->getNationality()!=null)
+                  $worksheet2->getCell('E'.$j)->setValueExplicit( $key->getNationality()->getLibelle(), DataType::TYPE_STRING2);
+                else
+                  $worksheet2->getCell('E'.$j)->setValueExplicit( "", DataType::TYPE_STRING2);
+                
+                $worksheet2->getCell('F'.$j)->setValueExplicit( $key->getCapital(), DataType::TYPE_STRING2);
+                $worksheet2->getCell('G'.$j)->setValueExplicit( $key->getPourcentage(), DataType::TYPE_STRING2);
+                $j++;
+          }
+        
+
+            $j=2;
+           
+            foreach ($tag->getDirigeants()  as $key ) {
+                  $worksheet->getCell('A'.$j)->setValueExplicit( $tag->getNinea(), DataType::TYPE_STRING2 );
+                  $worksheet->getCell('B'.$j)->setValueExplicit( $tag->getCodeCuci(), DataType::TYPE_STRING2);
+                  $worksheet->getCell('C'.$j)->setValueExplicit( $key ->getPrenom(), DataType::TYPE_STRING2);
+                  $worksheet->getCell('D'.$j)->setValueExplicit( $key ->getNom(), DataType::TYPE_STRING2);
+                  if( $key ->getPosition()!=null)
+                    $worksheet->getCell('E'.$j)->setValueExplicit( $key ->getPosition()->getLibelle(), DataType::TYPE_STRING2);
+                  else
+                  $worksheet->getCell('E'.$j)->setValueExplicit( "", DataType::TYPE_STRING2);
+                  
+                  $worksheet->getCell('F'.$j)->setValueExplicit( $key ->getNumero(), DataType::TYPE_STRING2);
+                  $worksheet->getCell('G'.$j)->setValueExplicit( $key ->getAddresse(), DataType::TYPE_STRING2);
+                  $j++;
+            }
+            
             $activeSheet->getCell('A'.$i)->setValueExplicit( $tag->getNinea(), DataType::TYPE_STRING2 );
             $activeSheet->getCell('B'.$i)->setValueExplicit( $tag->getCodeCuci(), DataType::TYPE_STRING2);
             $activeSheet->getCell('C'.$i)->setValueExplicit( $tag->getDenominationSocial(), DataType::TYPE_STRING2);
@@ -365,6 +458,14 @@ class RapportRepertoireController extends AbstractController
             $i++;
            
         }
+
+
+      
+
+       
+      
+
+
 
             // $activeSheet->fromArray(array_keys($columnNames, NULL, 'A1'));
             
@@ -612,11 +713,11 @@ class RapportRepertoireController extends AbstractController
        
 
         $activeSheet = $spreadsheet->getActiveSheet();
-        $activeSheet->setTitle('RÃ©gion');
+        $activeSheet->setTitle('Région');
        
 
-        $activeSheet->setCellValue('A1', 'RÃ©gion')
-        ->setCellValue('B1', 'Nombre de rÃ©pertoire');
+        $activeSheet->setCellValue('A1', 'Région')
+        ->setCellValue('B1', 'Nombre de répertoire');
 
         $i = 2;
         $j=0;
@@ -629,8 +730,8 @@ class RapportRepertoireController extends AbstractController
         }
 
         $worksheet = $spreadsheet->createSheet();
-        $worksheet->setTitle('DÃ©partement');
-        $worksheet->setCellValue('A1', 'DÃ©partement')->setCellValue('B1', 'Nombre de rÃ©pertoire');
+        $worksheet->setTitle('Département');
+        $worksheet->setCellValue('A1', 'Département')->setCellValue('B1', 'Nombre de rÃ©pertoire');
 
         $i = 2;
         foreach ($departement as $key ) {
@@ -642,7 +743,7 @@ class RapportRepertoireController extends AbstractController
 
         $worksheet = $spreadsheet->createSheet();
         $worksheet->setTitle('Ville');
-        $worksheet->setCellValue('A1', 'CAV')->setCellValue('B1', 'Nombre de rÃ©pertoire');
+        $worksheet->setCellValue('A1', 'CAV')->setCellValue('B1', 'Nombre de répertoire');
 
         $i = 2;
        

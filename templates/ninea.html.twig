@@ -513,7 +513,43 @@
             table textarea.classselect  { background-color :#D6EAF8; }
             
   
-  
+        /* spinner button */
+        #cover-spin {
+            position:fixed;
+            width:100%;
+            left:0;right:0;top:0;bottom:0;
+            background-color: rgba(255,255,255,0.7);
+            z-index:9999;
+            display:none;
+        }
+        
+        @-webkit-keyframes spin {
+            from {-webkit-transform:rotate(0deg);}
+            to {-webkit-transform:rotate(360deg);}
+        }
+        
+        @keyframes spin {
+            from {transform:rotate(0deg);}
+            to {transform:rotate(360deg);}
+        }
+        
+        #cover-spin::after {
+            content:'';
+            display:block;
+            position:absolute;
+            left:48%;top:40%;
+            width:40px;height:40px;
+            border-style:solid;
+            border-color:black;
+            border-top-color:transparent;
+            border-width: 4px;
+            border-radius:50%;
+            -webkit-animation: spin .8s linear infinite;
+            animation: spin .8s linear infinite;
+        }
+
+        
+
         </style>
 
 
@@ -581,44 +617,14 @@
                     </div>
 
         
-                    <div class="d-flex flex-wrap gap-2">
-                        <div>
-                            <button type="button" hidden class="btn btn-primary" id="liveToastBtn">Show live toast</button>
-                            
-                            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1005">
-                                <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                                    <div class="toast-header">
-                                        <strong class="me-auto">Urgent</strong>
-                                        <small> {{app.session.get('delais')}} traitement s urgent s</small>
-                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <a href="{{ path('ni_nineaproposition_index')}}">
-                                            Demandes plus de 24H en attente
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>        
-        
+                   
 
 
                     <div class="d-flex">
                         {% if is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
 
-                            {% if app.session.get("delais") >= 1  %}
-                                
-                                <div class="py-3">
-                                    <span class="spinner-grow text-danger p-1 text-center delaili" role="status">
-                                        <span class="badge bg-primary bg-soft rounded-pill font-size-11" title="Traitements urgents">
-                                            {{ app.session.get("delais") }} 
-                                        </span>
-                                    </span>
-                                </div>
-                            {% else %}
-                                
-                            {% endif %}
+                           
+                        
 
 
                             <div class="dropdown d-inline-block">
@@ -775,9 +781,26 @@
                                     <span key="t-dashboards">Tableau de bord</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{ path('ninea_accueil')}}" key="t-default">Statistiques</a></li>
+                                    <li><a href="{{ path('ninea_accueil')}}" key="t-default"> Tableau de bord </a></li>
                                     <li>
-                                    <li><a href="{{ path('app_ninea_data_report')}}" key="t-default">Reporting NINEA</a></li>
+                                    <li>
+                                        <a  
+                                            href="{{ path('app_ninea_data_report')}}" 
+                                            key="t-default">
+                                            Reporting NINEA
+                                        </a>
+                                    </li>
+
+                                     <li>
+                                        <a  
+                                            href="{{ path('diagramme_rep')}}" 
+                                            key="t-default">
+                                            Statistiques 
+                                        </a>
+                                    </li>
+
+
+                                    
                                     <li>
                                     {% if is_granted('ROLE_CUCI')  %}
                                         <a href="{{path('index')}}" >CUCI</a>
@@ -801,26 +824,6 @@
                                 </li>
                             {% endif %}
 
-                              {% if is_granted('ROLE_NINEA_ADMIN')  %}
-                                <li>
-                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                        <i class="bx bxs-cog"></i>
-                                        <span key="t-contacts">Paramétrage</span>
-                                    </a>
-                                    <ul class="sub-menu" aria-expanded="false">
-                                        <li><a href="{{path('app_ni_formeunite_index')}}" key="t-user-grid">Forme unité</a></li>
-                                        <li><a href="{{path('app_ni_formejuridique_index')}}" key="t-user-list">Forme juridique</a></li>
-                                        <li><a href="{{path('n_a_e_m_a_index')}}" key="t-user-list">Gestion nomenclature des activités (NAEMA)</a></li>
-                                        <li><a href="{{path('app_ref_produits_index')}}" key="t-user-list">Gestion nomenclature des produits</a></li>
-                                        <li><a href="{{path('app_ref_nomenclature_rc_index')}}" key="t-user-list">Gestion nomenclature des RC</a></li>
-                                        <li><a href="{{path('app_nin_jour_ferier_index')}}" key="t-user-list">Définition des jours fériés</a></li>
-                                        <li><a href="{{path('app_ni_administration_index')}}" key="t-user-list">Gestion des administration (CSI)</a></li>
-                                        <li><a href="{{path('app_ni_responsable_index')}}" key="t-user-list">Gestion des types de responsables </a></li>
-                                        <li><a href="{{path('app_pays_index')}}" key="t-user-list">Gestion des nationalités (Pays) </a></li>
-                                        <li><a href="{{path('app_nin_typedocuments_index')}}" key="t-user-list">Gestion des types de documents </a></li>
-                                    </ul>
-                                </li>
-                            {% endif %}
                         
                         {% if is_granted('ROLE_DEMANDE_NINEA') or is_granted('ROLE_CONSULTATION_NINEA') or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                             <li>
@@ -850,7 +853,7 @@
                                     </li>
 
                                     <li>
-                                        <a href="{{path('listeBrouillons')}}" key="t-basic-tables">Liste des brouillons</a>
+                                        <a href="{{path('listeBrouillons')}}" key="t-basic-tables">Liste des des demandes en cours de saisie</a>
                                     </li>
                                     
                                     <li>
@@ -866,33 +869,20 @@
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bxs-paste"></i>
-                                    <span key="t-contacts">Demandes  modifications</span>
+                                    <span key="t-contacts">Modifications</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                    
                                  {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                                     <li>
+                                       
                                         <a href="{{path('demandeModification') }}" key="t-basic-tables">Prise en charge des erreurs de saisie </a>
-                                        <a href="{{path('demandeModification') }}" key="t-basic-tables">Mis à jour des NINEA/NINET </a>
+                                        
                                     </li>
-
-                                   
-                                  {% endif %} 
-
-                                </ul>
-                            </li>
-                         {% endif %}
-
-                         {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
-                            <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="bx bxs-paste"></i>
-                                    <span key="t-contacts">Demandes  cessations</span>
-                                </a>
-                                <ul class="sub-menu" aria-expanded="false">
-                                   
-                                 {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                                     <li>
+                                      <a href="{{path('demande_miseajour') }}"  key="t-basic-tables">Mise à jour des NINEA/NINET </a>
+                                    </li>
+                                     <li>
                                         <a href="{{path('app_ni_cessation_new', {ind:1}) }}" key="t-basic-tables">Radiation </a>
                                     </li>
 
@@ -900,6 +890,11 @@
                                         <a href=" {{ path('app_ni_cessation_new',  {ind:2})}}" key="t-basic-tables">Suspension </a>
                                     </li>
 
+                                     <li>
+                                        <!--<a href="{{path('app_nireactivation_new')}}" key="t-basic-tables">Réactivation </a>-->
+                                        <a href="{{path('app_reprise_nineaList')}}" key="t-basic-tables">Réactivation </a>
+                                    </li>
+
                                    
                                   {% endif %} 
 
@@ -907,21 +902,28 @@
                             </li>
                          {% endif %}
 
+                        
+
                          
                          {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bxs-paste"></i>
-                                    <span key="t-contacts">Demandes  réactivations</span>
+                                    <span key="t-contacts">Suivi des modifications</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                    
                                  {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
-                                    <li>
-                                        <!--<a href="{{path('app_nireactivation_new')}}" key="t-basic-tables">Réactivation </a>-->
-                                        <a href="{{path('app_reprise_nineaList')}}" key="t-basic-tables">Réactivation </a>
+                                   
+                                   <li>
+                                        <a href=" {{ path('suiviDemandeModification')}}" key="t-basic-tables">Modifications </a>
                                     </li>
-
+                                   <li>
+                                        <a href=" {{ path('app_suivi_cessation')}}" key="t-basic-tables">Cessations </a>
+                                    </li>
+                                   <li>
+                                        <a href=" {{ path('app_nireactivation_index')}}" key="t-basic-tables">Réactivations</a>
+                                    </li>
                                   
 
                                    
@@ -931,7 +933,7 @@
                             </li>
                          {% endif %}
 
-                          {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
+                          {% if is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-table"></i>
@@ -941,15 +943,19 @@
                                    
                                  {% if is_granted('ROLE_DEMANDE_NINEA')  or is_granted('ROLE_NINEA_ADMIN') or  is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
                                     <li><a href="{{path('a_valider')}}" key="t-basic-tables">Valider les demandes NINEA/NINET</a></li>
-                                    <li>
-                                        <a href="{{path('app_temp_n_i_ninea_index')}}" key="t-basic-tables">Valider les demandes de modification </a>
+                                   
+
+                                     <li>
+                                        <a href="{{path('app_demande_modification_index')}}" key="t-basic-tables">Valider les demandes de modification </a>
                                     </li>
+
+                                    
                                     <li>
                                         <a href="{{path('app_ni_cessation_index')}}" key="t-basic-tables">Valider les cessations </a>
                                     </li>
 
                                      <li>
-                                        <a href="{{path('app_nireactivation_index')}}" key="t-basic-tables">Valider les réactivations </a>
+                                        <a href="{{path('reactivationsList')}}" key="t-basic-tables">Valider les réactivations </a>
                                     </li>
 
                                   {% endif %} 
@@ -973,7 +979,7 @@
                                         <a href="{{ path('cessationSuspensionsList') }}" key="t-basic-tables">Impression des cessations </a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('reactivationsList') }}" key="t-basic-tables">Impression des réactivations </a>
+                                        <a href="{{ path('reactivationsListImprimer') }}" key="t-basic-tables">Impression des réactivations </a>
                                     </li>
 
                                    
@@ -995,17 +1001,51 @@
                                                 <a href="{{path('n_i_ninea_index')}}" key="t-basic-tables">Suivi NINEA</a>
                                             {% endif %}
                                         </li>
-                                        <li>
-                                            {% if is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
-                                                <a href="{{path('n_i_ninea_index')}}" key="t-basic-tables">Historique des NINEA</a>
-                                            {% endif %}
-                                        </li>
                                         
                                     </ul>
                                 </li>
 
                             {% endif %}
 
+
+                                <!-- begin menu des parametres -->
+                              {% if is_granted('ROLE_NINEA_ADMIN')  %}
+                                <li>
+                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                        <i class="bx bxs-cog"></i>
+                                        <span key="t-contacts">Paramétrage</span>
+                                    </a>
+                                    <ul class="sub-menu" aria-expanded="false">
+                                        <li><a href="{{path('app_ni_formeunite_index')}}" key="t-user-grid">Forme unité</a></li>
+                                        <li><a href="{{path('app_ni_formejuridique_index')}}" key="t-user-list">Forme juridique</a></li>
+                                        <li><a href="{{path('n_a_e_m_a_index')}}" key="t-user-list">Gestion nomenclature<br> des activités (NAEMA)</a></li>
+                                        <li><a href="{{path('app_ref_produits_index')}}" key="t-user-list">Gestion nomenclature <br>des produits</a></li>
+                                        <li><a href="{{path('app_ref_nomenclature_rc_index')}}" key="t-user-list">Gestion nomenclature<br> des RC</a></li>
+                                        <li><a href="{{path('app_ni_type_consequence_index')}}" key="t-user-list">Définition des modalités de conséquence</a></li>
+                                        <li><a href="{{path('app_nin_jour_ferier_index')}}" key="t-user-list">Définition <br>des jours fériés</a></li>
+                                        <li><a href="{{path('app_ni_administration_index')}}" key="t-user-list">Gestion <br>des administration (CSI)</a></li>
+                                        <li><a href="{{path('app_ni_responsable_index')}}" key="t-user-list">Gestion des types <br>de responsables </a></li>
+                                        <li><a href="{{path('app_pays_index')}}" key="t-user-list">Gestion des nationalités<br> (Pays) </a></li>
+                                        <li><a href="{{path('app_nin_typedocuments_index')}}" key="t-user-list">Gestion des types <br>de documents </a></li>
+                                        <li><a href="{{path('app_ni_modaliteexploitation_index')}}" key="t-user-list">Gestion des modalités  </a></li>
+                                        <li><a href="{{path('app_ni_nature_localite_exploitation_index')}}" key="t-user-list">Gestion des natures d'exploitation  </a></li>
+                                        <li><a href="{{path('app_ni_sourcefinancement_index')}}" key="t-user-list">Gestion des sources de financement  </a></li>
+
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+
+                            {% if is_granted('ROLE_DEMANDE_NINEA') or is_granted('ROLE_NINEA_ADMIN') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') %}
+                                <li>
+                                    <a href="{{path('app_history_views')}}" class="">
+                                    <i class="bx bx-history "></i>
+                                        <span key="t-contacts">Historique des NINEA</span>
+                                    </a>
+
+                                </li>
+
+                            {% endif %}                            
                         </ul>
                     {% endif %}
                     </div>
@@ -1019,7 +1059,7 @@
             <!-- Start right Content here -->
             <!-- ============================================================== -->
                 <div class="main-content"> <div class="page-content">
-                    <div class="container-fluid">
+                    <div class="container-fluid" id="container-fluid-div">
                         {% block body %}{% endblock %}
 
                     </div>
@@ -1063,19 +1103,17 @@
             <script src="{{ asset('admin/dist/assets/libs/simplebar/simplebar.min.js')}}"></script>
             <script src="{{ asset('admin/dist/assets/libs/node-waves/waves.min.js')}}"></script>
 
+            <!--incorpor HTMX librarie to test -->
+            <script src="{{ asset('admin/dist/assets/js/htmx.min.js')}}" ></script>               
 
             {% block javascript %}
-               
             {% endblock %}
 
 
             <script src="{{ asset('admin/dist/assets/js/app.js')}}"></script>
             <script>
 
-                $(".delaili").hover( function() {
-                    document.getElementById("liveToastBtn").click();
-
-                });
+               
             </script>
         </body>
 

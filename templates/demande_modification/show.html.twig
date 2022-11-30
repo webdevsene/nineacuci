@@ -1,0 +1,5403 @@
+{% extends 'ninea.html.twig' %}
+{% block title %}Demande de modification
+{% endblock %}
+{% block stylesheets %}
+
+	<link href="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('admin/dist/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css"/>
+	<link
+	href="{{ asset('admin/dist/assets/libs/@chenfengyuan/datepicker/datepicker.min.css')}}" rel="stylesheet">
+	<!-- App favicon -->
+	<link
+	rel="shortcut icon" href="{{ asset('admin/dist/assets/images/favicon.ico')}}">
+
+	<!-- Bootstrap Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+	<!-- Icons Css -->
+	<link
+	href="{{ asset('admin/dist/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css"/>
+	<!-- App Css-->
+	<link href="{{ asset('admin/dist/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css"/>
+
+	<style type="text/css">
+		.has_error {
+			background-color: #E8F0FE;
+			border-color: red;
+		}
+
+		.larger {
+			width: 100%;
+		}
+
+		.fieldcolor {
+			border: 2px solid #eeeeee;
+
+		}
+
+		.toast{
+			position: absolute; 
+			top: 10px; 
+			right: 10px;
+		}
+
+		legend {
+			color: black;
+			font-size: 12px;
+		}
+
+
+
+
+		a:hover,
+a:focus{
+    text-decoration: none;
+    outline: none;
+}
+.tab{ font-family: 'Nunito', sans-serif; }
+.tab .nav-tabs{ border: none; }
+.tab .nav-tabs li a{
+    color:#0d3174;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 20px 8px;
+    margin: 0 5px 10px 0;
+    border: 5px solid #fff;
+    border-radius: 0;
+    box-shadow: 0 0 7px rgba(0,0,0,0.1), 0 0 5px rgba(0,0,0,0.15) inset;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease 0s;
+}
+.tab .nav-tabs li.active a,
+.tab .nav-tabs li a:hover ,
+.tab .nav-tabs li.active a:hover{
+    color: #fff;
+    background-color: #fff;
+    border: 5px solid #fff;
+	
+}
+.tab .nav-tabs li a:before{
+    content: "";
+    background-color: #0d3174;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: rotate(20deg);
+    position: absolute;
+    top: 150%;
+    left: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease 0s,transform 0.3s ease 0.13s, top 0.5s ease 0s;
+}
+.tab .nav-tabs li.active a:before,
+.tab .nav-tabs li a:hover:before{
+    opacity: 1;
+    transform: rotate(0);
+    top: 0;
+}
+.tab .tab-content{
+    color:#fff;
+    font-size: 12px;
+    padding: 20px;
+    border: 10px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15), 0 0 10px rgba(0,0,0,0.15) inset;
+    position: relative;
+}
+@media only screen and (max-width: 479px){
+    .tab .nav-tabs li{
+        width: 100%;
+        text-align: center;
+        margin: 0 0 5px;
+    }
+}
+
+	</style>
+
+{% endblock %}
+{% block body %}
+
+	<div class="row  " >
+	    <div class="col-lg-4 mt-2 " align="left">
+			<a type="button" class="btn btn-outline-secondary btn-sm waves-effect valider abtn" onclick="history.back()">Retourner sur à la liste </a>
+
+
+		</div>
+		<div class="col-lg-8 mt-2" align="right">
+				{% if demande_modification.etat == "a" or demande_modification.etat == "t" %}
+				{% if demande_modification.createdBy and app.user.id == demande_modification.createdBy.id %}
+					
+					<P>
+						<a type="button" id="id_soumettre" class="btn btn-outline-primary btn-sm waves-effect soumettre abtn">Soumettre </a>
+					</P>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+		
+	
+	
+		{% for message in app.session.flashbag.get('message')%}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					{{message}}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+		{% endfor %}
+		<div class="box">
+			<div class="box-header">
+				<ul class="nav nav-tabs nav-tabs-left">
+					<li class="active">
+						<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+						
+							{% if demande_modification.typeDemande !=  "3"%}
+													
+								Demande de modification 
+							{% else %}
+								Demande de réactivation 
+							
+							{% endif %}
+						</a>
+					</li>
+
+				</ul>
+			</div>
+
+			<form name="FormEntete"  id="id_FormEntete" method="post" action="{{path('temp_editEntete',{id:ninea.id,demande:demande_modification.id})}}">
+
+				<div class="box-content padded">
+
+					<div class="tab-content">            
+						<div class="example-wrapper ">
+							<div class="row">
+								<div class="col-12">
+						
+									<div class="row mb-0">
+										<div class="col-lg-12">
+											<fieldset class=" p-2 fieldcolor ">
+												<div class="row">
+													<div class="col-lg-5">
+														<table style="width: 100%;">
+														
+															{% if ninea.ninNinea is not null %}
+																		<tr>
+																			<td style="width: 40%;">
+																				<label  id="id_Ninea" for="basicpill-firstname-input" class=" TXT"> <b><u>NINEA:</u></b>  <span style="color:red;">*</span>
+																				</label>
+																			</td>
+																			<td style="width: 60%;">
+																			<input type="text"id="inputmere" disabled name="nineamere" value="{{ninea.ninNinea}}" class="form-control form-control-sm" oninput="this.value = this.value.replace(/[^0-9,]/g, '');">
+																			
+																			</td>
+																		</tr>
+																		
+																{% endif %}
+															<tr>
+																<td style="width: 40%;">
+																	<label for="" class="TXT"> <b><u> Nom commercial  </u></b>   </label>	
+																</td>
+																<td style="width: 60%;">
+																	<input name="commercial"   value="{{ninea.nomCommercial}}" type="text" id="idcommercial"  class="form-control form-control-sm">
+																</td>
+															</tr>
+															<tr>
+															<td style="width: 40%;">
+																<label for="" class="TXT"> <b><u> Forme unité : </u></b>   </label>	
+																<span style="color:red;">*</span>	
+																</td>
+															<td style="width: 60%;">
+																<select disabled name="formeunite" required class="form-control form-control-sm classselect" id="idformeunite">
+																		{% for tag in formeunites %}
+																				{% if   ninea.formejuridique.niFormeunite.id == tag.id  %}										
+																				<option  value="{{ tag.id}}" selected >{{ tag.libelle}}</option>
+																				{% else %}
+																				<option  value="{{ tag.id}}">{{ tag.libelle}}</option>
+																				{% endif %}
+																		{% endfor %}
+																</select>
+																<span style="color: red;" id="ninpersonne"></span>
+															</td>
+															</tr>
+						
+															<tr>
+																<td style="width: 40%;">
+																<label class="TXT" for="basicpill-firstname-input"> <b><u> Régime juridique : </u></b>
+																<span style="color:red;">*</span>
+																	</label>
+																</td>
+																<td style="width: 60%;">
+																	<select disabled name="formejuridique" required id="idFormejuridique" class="form-control form-control-sm classselect">
+																		{% for tag in ninea.formejuridique.niFormeunite.regimeJuridique %}
+																				{% if   ninea.formejuridique.id == tag.id  %}										
+																				<option  value="{{ tag.id}}" selected>{{ tag.fojLibelle}}</option>
+																				{% else %}
+																				<option  value="{{ tag.id}}">{{ tag.fojLibelle}}</option>
+																				{% endif %}
+																		{% endfor %}											
+																	</select>
+																	<span style="color: red;" id="ninformejuridique"></span>
+																</td>
+
+															</tr>
+															<tr>
+																<td style="width: 40%;">
+																<label for="basicpill-firstname-input" ><b><u>Statut :</u></b>
+																	</label>
+																</td>
+															<td style="width: 60%;">
+																<select name="ninStatut" disabled required id="idninStatut" class="form-control form-control-sm classselect">
+																		{% if ninea.ninStatut is not null %}	
+																		{% if ninea.ninStatut.id == 1  %}	
+																			<option  value="1" selected >	{{ninea.ninStatut is not null ? ninea.ninStatut.statLibelle : ""}}</option>	
+																			<option  value="2"  >ETS SECONDAIRE</option>			
+																		{% else %}	
+																				<option  value="2" selected >	{{ninea.ninStatut is not null ? ninea.ninStatut.statLibelle : ""}}</option>	
+																				<option  value="1"  >SIEGE</option>							
+																		{% endif %}	
+																						
+																		{% endif %}								
+																</select>
+															</td>
+
+															</tr>
+															
+															
+						
+														
+														</table>
+													</div>
+						
+													<div class="col-lg-7">
+														<table style="width: 100%;" id="tbdocuments">
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Enseigne </u></b>   </label>	
+																			
+																	</td>
+																	<td style="width: 60%;">
+																		<input name="enseigne" type="text" value="{{ninea.ninEnseigne}}" id="idenseigne"  class="form-control form-control-sm">
+																	</td>
+																</tr>
+																
+																				
+															</table>
+															<table style="width: 100%;" id="tb_documents">
+															<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Type document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<select {% if app.session.get('erreurSaisie')=="2" or app.session.get('erreurSaisie')=="3" %} readonly {% endif %} name="typdocument" required class="form-control form-control-sm classselect" id="idtypdocument">
+																			{% for tag in  ninea.formejuridique.typeDocument %}
+																			
+																			{% if ninea.niTypedocument != null %}
+																				{% if ninea.niTypedocument.id == tag.id %}
+																					<option  value="{{tag.id}}" selected >{{tag.libelle}}</option>
+																				{% else %}	
+																						<option  value="{{tag.id}}"  >{{tag.libelle}}</option>	
+																					{% endif %}		
+																			{% else  %}	
+																				<option  value="{{tag.id}}"  >{{tag.libelle}}</option>	
+																			{% endif %}		
+																			{% endfor %}
+																			<option  value=""  >Séléctionner...</option>			
+
+																	</select>
+																		
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u> Numéro du document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																	
+																		<input {% if app.session.get('erreurSaisie')=="2" or app.session.get('erreurSaisie')=="3" %} readonly {% endif %} name="document" value="{{ninea.ninNumeroDocument}}"  type="text" id="iddocument"  class="form-control form-control-sm">
+																		<span style="color: red;" id="ninreg"></span>
+																		
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"> <b><u>Date du document </u></b>   </label>	
+																		<span style="color:red;">*</span>	
+																	</td>
+																	<td style="width: 60%;">
+																		<input {% if app.session.get('erreurSaisie')=="2" or app.session.get('erreurSaisie')=="3" %} readonly {% endif %} name="datedocument" value="{{ninea.ninDateDocument|date('Y-m-d')}}" type="date" id="iddatedocument"  class="form-control form-control-sm ">
+																		
+																		
+																	</td>
+																</tr>
+																{% if app.session.get('erreurSaisie')=="2" %}
+																			<tr>
+																				<td style="width: 30%;">
+																					<label class="TXT"> <b><u>N° document de modification :</u></b> </label>
+																				</td>
+																				<td style="width: 70%;">
+																					<input type="text" value="{{ ninea.ninRegcomModif }}" id="ninRegcomModif" name="ninRegcomModif"
+																						value="" maxlength="19"	  minlength="15"   class="form-control form-control-sm mt-2 input-mask inputregcom">
+																					<span style="color: red;" id="ninregcom"></span>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td style="width: 30%;">
+																					<label class="TXT"> <b><u>Date document de modification :</u></b> </label>
+																				</td>
+																				<td style="width: 70%;">
+																					<input type="date" id="ninDatregModif" name="ninDatregModif"  value="{{ninea.ninDatregModif != null ? ninea.ninDatregModif | date('Y-m-d') : ""}}"
+																						class="form-control form-control-sm" required>
+																				</td>
+																			</tr>
+																{% endif %}
+
+
+																{% if app.session.get('erreurSaisie')=="3" %}
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u>N° document de réactivation :</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<input type="text" value="{{ ninea.ninRegcomReprise }}" required id="ninRegcomReprise" name="ninRegcomReprise"
+																				maxlength="19"	  minlength="15"   class="form-control form-control-sm mt-2 input-mask inputregcom">
+																			<span style="color: red;" id="ninregcom"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""> <b><u>Date document de réactivation :</u></b> </label>
+																		</td>
+																		<td style="width: 70%;">
+																			<input required type="date" id="ninDatregReprise" name="ninDatregReprise"  value="{{ninea.ninDatregReprise != null ? ninea.ninDatregReprise | date('Y-m-d') : ""}}"
+																				class="form-control form-control-sm" required>
+																		</td>
+																	</tr>
+																{% endif %}
+																
+															</table>
+															
+								
+													</div>
+												</div>
+											</fieldset>
+											<br>
+										</div>
+										
+									</div>
+											
+								</div>
+							</div>
+							<!-- end row -->
+						</div>
+											
+					</div>
+						
+				</div>
+
+				<div class="box-footer " style="text-align: center ;">
+					<input type="button"  value="Modifier" name="modifierEntete" id="idmodifierEntete"  >
+				</div>
+			</form>
+		</div>
+
+
+	
+	<div class="card" style=" margin: 0%;padding: 0%;-webkit-box-shadow:0 1rem 3rem rgba(0,0,0,.175);box-shadow:0 1rem 3rem rgba(0,0,0,.175)">
+			
+			<div class="col-lg-12">
+				<div class="tab " role="tabpanel">
+					<ul class="nav nav-tabs nav-fill " role="tablist" >
+
+						<li class="nav-item ">
+							<a class="nav-link active  " id="idpersonne" data-bs-toggle="tab"  href="#personne" role="tab" id="idpersonne" >
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">
+									{% if ninea.formeJuridique.niFormeunite.id == 11 %} Personne physique 
+									{% else %}
+										{% if ninea.formeJuridique.niFormeunite.id == 21 %}
+											Personne morale
+										{% else %}
+											{% if ninea.formeJuridique.niFormeunite.id == 12 %}
+												Autres personnes physiques imposables
+											{% else %}
+												{% if ninea.formeJuridique.niFormeunite.id == 22 %}
+													Autres personnes morales
+												{% endif %}	
+											{% endif %}
+										{% endif %}
+									{% endif %}
+
+								</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link " id="idcoordonnee" data-bs-toggle="tab" href="#coordonnees" role="tab" id="idcoordonnee">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Coordonnées de l'entreprise
+								</span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link " id="idactivite" data-bs-toggle="tab" href="#activites" role="tab">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Activités et produits</span>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link " id="idactiviteEconomique" data-bs-toggle="tab" href="#activiteEconomiques" role="tab">
+								<span class="d-block d-sm-none">
+									<i class="fas fa-home"></i>
+								</span>
+								<span class="d-none d-sm-block">Activité économique
+								</span>
+							</a>
+						</li>
+
+						{% if (ninea.formeJuridique.niFormeunite.id == 21 or ninea.formeJuridique.niFormeunite.id == 22) %} 
+
+							<li class="nav-item">
+								<a class="nav-link " id="iddirigeant" data-bs-toggle="tab" href="#dirigeants" role="tab">
+									<span class="d-block d-sm-none">
+										<i class="fas fa-home"></i>
+									</span>
+									<span class="d-none d-sm-block">Dirigeants et associés</span>
+								</a>
+							</li>
+						{% endif %}
+
+					
+					</ul>
+
+					<div class="tab-content p-3 text-muted tabs" style="border: 3px solid #eeeeee;">
+						
+						<div	class="tab-pane active" id="personne" role="tabpanel">
+
+							{% if ninea.tempNiPersonnes[0] is not null %} 
+								<fieldset class=" fieldcolor p-2">
+										<form id="temp_ninea_editPersonne" action="{{path('temp_ninea_editPersonne',{id:ninea.tempNiPersonnes[0].id,demande:demande_modification.id})}}" method="post" autocomplete="off">
+											{% if (ninea.formeJuridique.niFormeunite.id == 11) or (ninea.formeJuridique.niFormeunite.id == 12)  %}
+												<div id="idPPhysique">
+													<div class="row">
+														<div class="col-lg-6">
+															<fieldset class="border p-2">	
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT mt-2"><b><u>Sigle : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="sigle" id="sigle"  value="{{ninea.tempNiPersonnes[0].ninSigle}}" class="form-control form-control-sm classselect mt-2"
+																				onkeyup="this.value=this.value.toUpperCase()">
+																			<span style="color: red;" id="ninsigle"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Civilité : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm" name="civilite" id="idCivilite" required>
+																				<option value="" selected>Sélectionner ...			</option>
+																				{% for tagciv in civilites %}
+																					{% if tagciv.id == ninea.tempNiPersonnes[0].civilite.id %}
+																							<option value="{{ tagciv.id}}" selected>	{{ tagciv.civlibelle}}</option>
+																						{% else %}
+																							<option value="{{ tagciv.id}}" >	{{ tagciv.civlibelle}}</option>
+																					{% endif %}
+																				{% endfor %}
+																			</select>
+																			<span style="color: red;" id="nincivil"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="prenom"  id="prenom" onkeyup="this.value=this.value.toUpperCase()" required value="{{ninea.tempNiPersonnes[0].ninPrenom}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="ninprenom"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for=""><b><u>Nom : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="nom" id="idnom" onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm" required value="{{ninea.tempNiPersonnes[0].ninNom}}">
+																			<span style="color: red;" id="ninnom"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm" name="sexe" id="idsexe" aria-readonly="true">
+																				{% for tags in sexes %}
+																					{% if tags.id == ninea.tempNiPersonnes[0].ninSexe.id %}
+																						<option value="{{ tags.id }}" selected > {{ tags.libelle}}</option>
+																					{% else %}
+																						<option value="0" > Sélectionner ...</option>
+																					{% endif %}
+																				{% endfor %}														
+																			</select>
+																			<span style="color: red;" id="ninsexe"></span>
+										
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Date de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="date" name="datenais" id="idDatenais" min="1901-01-01" required value="{{ninea.tempNiPersonnes[0].ninDateNaissance|date("Y-m-d")}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="nindatenais"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Lieu de naissance : </u></b></label>
+																			<span style="color: red;">*</span>
+
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="lieunais" id="idlieunais" onkeyup="this.value=this.value.toUpperCase()" 
+																				 value="{{ninea.tempNiPersonnes[0].ninLieuNaissance}}"class="form-control form-control-sm" required>
+																			<span style="color: red;" id="ninlieunais"></span>
+																		</td>
+																	</tr>
+																</table>
+
+																	
+																									
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"> <b><u>Nationalité : </u></b>  </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm select2" name="nationalite"   id="idnationalite_personne" required>
+																				<option value="" selected>
+																					Sélectionner</option>
+																				{% for tag in nationalites %}
+																					<option value="{{tag.id}}" {% if tag.id == ninea.tempNiPersonnes[0].nationalite.id %} selected {% endif %}>
+																						{{tag.id}}-{{ tag.libelle}}</option>
+																				{% endfor %}
+																			</select>
+																			<span style="color: red;" id="ninationalite"></span>
+																		</td>
+																	</tr>
+																</table>
+										
+																<div id="tableCni_personne">
+																	<table  style="width: 100%;">
+																		<tr id="trcni">
+																			<td style="width: 40%;">
+																				<label for="" class="TXT"> <b><u>CNI : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 60%;" >
+																				<input type="text" name="cni" id="idcni" readonly onfocus="this.removeAttribute('readonly');" 
+																					value="{{ninea.tempNiPersonnes[0].ninCNI}}" maxlength = '14' pattern ="[A-z0-9]{13,14}" 
+																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" onkeyup="this.value=this.value.toUpperCase()" 
+																					onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																					class="form-control form-control-sm">
+																				<span style="color: red;" id="nincni"></span>
+																			</td>
+																		</tr>
+																		<tr >
+																			<td style="width: 30%;">
+																				<label for="" class="TXT mt-2" id="labelconfirmcni"> <b><u>Confirmation CNI : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 50%;" >
+																				<input type="text" name="confirm_cni" id="idConfirmcni" required class="form-control form-control-sm  mt-2" 
+																					maxlength = '14'  onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="{{ninea.tempNiPersonnes[0].ninCNI}}" >
+																				<span style="color: red;" id="ninconfcni"></span>
+																			</td>
+																		</tr>
+																		<tr id="trcni">
+																			<td style="width: 40%;">
+																				<label for="" class="TXT"><b><u>Date de délivrance  : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 60%;" >
+																				<input type="date" name="datecni" id="idDatecni" min="1901-01-01"   value="{{ninea.tempNiPersonnes[0].ninDateCNI|date("Y-m-d") }}" class="form-control form-control-sm">
+																				<span style="color: red;" id="nincni"></span>
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+																
+																<div  id="tablePassport_personne">
+																	<table style="width: 100%;">
+																		<tr id="trPassport">
+																			<td style="width: 40%;">
+																				<label for="" class="TXT">	<b><u>Passport : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 60%;">
+																				<input type="password" name="passport" id="idpassport" maxlength = '14' oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
+																					value="{{ninea.tempNiPersonnes[0].ninCNI}}" onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																					class="form-control form-control-sm"  readonly onfocus="this.removeAttribute('readonly');">
+																				<span style="color: red;" id="ninpassport"></span>
+																			</td>
+																		</tr>
+																		<tr >
+																			<td style="width: 30%;">
+																				<label for="" class="TXT mt-2" id="labelconfirmpassport"> <b><u>Confirmation PP : </u></b></label>
+																				<span style="color: red;">*</span>
+																			</td>
+																			<td style="width: 50%;" >
+																				<input type="text" name="confirm_passport" id="idConfirmpassport" required onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																					 class="form-control form-control-sm  mt-2" 
+																					maxlength = '14'  onkeyup="this.value=this.value.toUpperCase()"
+																					oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" value="{{ninea.tempNiPersonnes[0].ninCNI}}" >
+																				<span style="color: red;" id="ninconfpassport"></span>
+																			</td>
+																		</tr>
+
+																		<tr id="trDatePassport">
+																			<td style="width: 40%;">
+																				<label for="" class="TXT"><b><u>Date du passport  : </u></b></label>
+																			</td>
+																			<td style="width: 60%;">
+																				<input type="date" name="datepassport" id="idDatepassport"  min="1901-01-01" value="{{ninea.tempNiPersonnes[0].ninDateCNI|date("Y-m-d") }}" class="form-control form-control-sm">
+																				<span style="color: red;" id="nindatepassport"></span>
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Téléphone : </u></b></label>
+																			<span style="color: red;">*</span>
+	
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="telephone" id="idtelpersonne"  maxlength="9" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" 
+																				value="{{ninea.tempNiPersonnes[0].ninTelephone}}" class="form-control form-control-sm" required>
+																			<span style="color: red;" id="nintelpersonne"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Email : </u></b></label>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="email" name="email" id="idemailpersonne"  value="{{ninea.tempNiPersonnes[0].ninEmailPersonnel}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="ninemail_personne"></span>
+																		</td>
+																	</tr>
+																</table>
+																
+									
+																		
+															</fieldset>
+															
+														</div>
+										
+														<div class="col-lg-6">
+															<fieldset class="border p-2">										
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																			<span style="color: red;"></span>
+																		</td>
+										
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie" >
+																				{% for tagv in typevoies %}
+																					{% if ninea.tempNiPersonnes[0].ninTypevoie is not null %}
+																						{% if tagv.id == ninea.tempNiPersonnes[0].ninTypevoie.id %}
+																							<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
+																						{% else %}
+																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																						{% endif %}
+																					{% else %}
+																						<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																					{% endif %}	
+																				{% endfor %}
+																			</select>
+																			<span style="color: red;" id="nintypevoie"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+																			<span style="color: red;"></span>
+
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="voie" id="idvoie" onkeyup="this.value=this.value.toUpperCase()" value="{{ ninea.tempNiPersonnes[0].ninVoie}}" 
+																				class="form-control form-control-sm " >
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="numvoie" id="idNumvoie" value="{{ ninea.tempNiPersonnes[0].numVoie}}" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" class="form-control form-control-sm" >
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label for="numvoie" class="TXT"><b><u>Région : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm select2 " name="region" id="region" style="width: 100%;">
+																				<option>Sélectionner ...</option>
+																				{% for tagr in regions %}
+																					{% if tagr.id == ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																						<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+																					{% else %}
+																						<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+																					{% endif %}
+
+																				{% endfor %}
+																				</select>
+																				<span style="color: red;" id="ninregion"></span>
+																			</td>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="numvoie" class="TXT"><b><u>Département : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm select2 " name="departement" id="departement" style="width: 100%;">
+																				
+																				{% if ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																				{% else %}
+																						<option value="" ></option>
+																				{% endif %}
+																			</select>
+																			<span style="color: red;" id="nindepartement"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="numvoie" class="TXT"><b><u>Comm/Ville/Arrond : </u></b>:</label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm select2" name="cav" id="cav" style="width: 100%;">
+																					{% if ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID %}
+																						<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincav"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="basicpill-firstname-input" class="TXT">	<b><u>Comm d'arr/Com Rurale : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm select2" name="cacr" id="cacr" style="width: 100%;">
+																					{% if ninea.tempNiPersonnes[0].ninQvh.qvhCACRID %}
+																						<option value="{{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.qvhCACRID.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincacr"></span>
+																		</td>
+																	</tr>
+																	<tr>
+										
+																		<td style="width: 40%;">
+																			<label for="basicpill-firstname-input" class="TXT">
+																				<b><u>Quartier/Village/Hameau : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm select2"  required="true" name="qvh" id="qvh" style="width: 100%;">
+																					{% if ninea.tempNiPersonnes[0].ninQvh %}
+																						<option value="{{ ninea.tempNiPersonnes[0].ninQvh.id }}" selected> {{ ninea.tempNiPersonnes[0].ninQvh.libelle}}</option>
+																					{% else %}
+																							<option value="" ></option>
+																					{% endif %}
+																			</select>
+																			<span style="color: red;" id="ninqvh"></span>
+																		</td>
+																	</tr>	
+																	<tr>				
+																		<td style="width: 30%;">
+																			<label for="basicpill-firsAdresse complète:tname-input" class="TXT">
+																				<b><u>Adresse domicile : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<input type="text" name="adresse" id="idadresse" value="{{ ninea.tempNiPersonnes[0].adresse}}" onkeyup="this.value=this.value.toUpperCase()"
+																				class="form-control form-control-sm">
+																			<span style="color: red;" id="ninadresse"></span>
+																		</td>
+																	</tr>
+
+																</table>	
+															</fieldset>
+										
+														</div>
+													</div>
+
+												</div>
+											{% else %}
+												{% if (ninea.formeJuridique.niFormeunite.id == 21) or (ninea.formeJuridique.niFormeunite.id == 22)  %}
+													<div id="idMorale"  class="col-lg-6 " >
+														<fieldset class="border p-2" >
+														<center>	
+															<table style="width: 100%;">
+																<tr >
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Raison sociale : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 55%;" >
+																		<input type="text" name="raison" id="idraison" onkeyup="this.value=this.value.toUpperCase()" value="{{ninea.tempNiPersonnes[0].ninRaison}}"  class="form-control form-control-sm">
+																		<span style="color: red;" id="ninraison"></span>
+																	</td>
+																</tr>
+
+																<tr >
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Sigle : </u></b></label>
+																	</td>
+																	<td style="width: 55%;" >
+																		<input  type="text" name="sigle" id="idSigle" onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm" value="{{ninea.tempNiPersonnes[0].ninSigle}}">
+																		<span style="color: red;" id="ninsigle"></span>
+																	</td>
+																</tr>
+															</table>
+														</center>
+														</fieldset>
+													</div>
+												{% endif %}
+											{% endif %}
+                                         <div class="row">
+                                            <div class="col-lg-12">	
+                                           <center> <input type="button" id="id_btnsuivant" name="Modifier" value="Modifer" class="boutonsm" > </center> 
+                                            </div>
+                                        </div>
+										</form>
+								</fieldset>
+							{% endif %}
+							
+						</div>
+						<div class="tab-pane " id="coordonnees" role="tabpanel">
+							<div class="col-lg-12">					
+								<fieldset class=" p-2 fieldcolor ">
+									<div class="row">
+									        {% if lastcoordoonnee is not null %}
+												<form action="{{path('temp_editCoordonnees',{id:lastcoordoonnee.id,demande:demande_modification.id})}}" method="post" autocomplete="off">
+													<div class="row">
+														<div class="col-lg-6">
+										
+															<fieldset class="border p-2">													
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"> <b><u>Type Voie : </u></b> </label>
+																			
+																		</td>
+										
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm" name="typevoie" value="" id="idtypevoie" >
+																				<option value="" selected >	Sélectionner</option>
+																				
+																					{% for tagv in typevoies %}
+																						{% if lastcoordoonnee.ninTypevoie is not null %}
+																							{% if tagv.id == lastcoordoonnee.ninTypevoie.id %}
+																								<option value="{{ tagv.id }}" selected> {{ tagv.tyvlibelle}}</option>
+																							{% else %}
+																								<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																							{% endif %}
+																						{% else %}
+																							<option value="{{ tagv.id }}" > {{ tagv.tyvlibelle}}</option>
+																						{% endif %}
+																					{% endfor %}
+																			</select>
+																			<span style="color: red;" id="nintypevoie"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Voie : </u></b>  </label>
+																			
+
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="voie" id="idvoie" value="{{ lastcoordoonnee.ninVoie}}"  onkeyup="this.value=this.value.toUpperCase()" 
+																				class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="numvoie" class="TXT"> <b><u>Numero de la voie : </u></b> </label>
+										
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="numvoie" id="idNumvoie" oninput="this.value = this.value.replace(/[^0-9,]/g, '');"
+																				value="{{lastcoordoonnee.ninnumVoie}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="numvoie" class="TXT"> <b><u>Région : </u></b> </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control select2 form-control-sm  " name="region" required id="region_coordonnees" style="width: 100%;">
+																				<option>Sélectionner ...</option>
+																					{% for tagr in regions %}
+																						{% if  lastcoordoonnee.qvh is not null %}
+																						{% if tagr.id == lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.depRegCD.id %}
+																							<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+																						{% else %}
+																							<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+
+																						{% endif %}
+                                                                                            {% else %}
+																							<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+                                                                                        {% endif %}
+
+																					{% endfor %}
+																				</select>
+																				<span style="color: red;" id="ninregion"></span>
+																			</td>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for="numvoie" class="TXT"> <b><u> Département : </u></b> </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<select class="form-control form-control-sm   select2" name="departement" required id="departement_coordonnees" style="width: 100%;">
+                                                                               {% if  lastcoordoonnee.qvh is not null %}
+																				{% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID %}
+																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.cavDEPID.description}}</option>
+																				{% else %}
+																						<option value="" >Sélectionner ...</option>
+																				{% endif %}
+                                                                                
+                                                                                {% endif %}
+																			</select>
+																			<span style="color: red;" id="nindepartement"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for="numvoie" class="TXT"><b><u>Comm/Arr/Vill : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 40%;">
+																			<select class="form-control form-control-sm   select2" name="cav" required id="cav_coordonnees" style="width: 100%;">
+																				{% if  lastcoordoonnee.qvh is not null %}
+                                                                                {% if lastcoordoonnee.qvh.qvhCACRID.cacrCAVID %}
+																					<option value="{{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.cacrCAVID.libelle}}</option>
+																				{% else %}
+																					<option value="" ></option>
+																				{% endif %}												
+																				{% endif %}												
+																			</select>
+																			<span style="color: red;" id="nincav"></span>
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td>
+																			<label for="basicpill-firstname-input" class="TXT"><b><u>Cpmm Arr/Comm Rurale: </u></b>           </label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td>
+																			<select class="form-control form-control-sm   select2" name="cacr" id="cacr_coordonnees" required style="width: 100%;">
+																				{% if  lastcoordoonnee.qvh is not null %}
+                                                                                {% if lastcoordoonnee.qvh.qvhCACRID %}
+																							<option value="{{ lastcoordoonnee.qvh.qvhCACRID.id }}" selected> {{ lastcoordoonnee.qvh.qvhCACRID.libelle}}</option>
+																						{% else %}
+																								<option value="" ></option>
+																						{% endif %}
+																						{% endif %}
+																			</select>
+																			<span style="color: red;" id="nincacr"></span>
+																		</td>
+																	</tr>
+																	<tr>
+										
+																		<td style="width: 30%;">
+																			<label for="basicpill-firstname-input" class="TXT"><b><u>Quartier/Village/Hameau : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 70%;">
+																			<select class="form-control form-control-sm  select2" name="qvh" id="qvh_coordonnees" required style="width: 100%;">
+																			{% if  lastcoordoonnee.qvh is not null %}
+                                                                            	{% if lastcoordoonnee.qvh %}
+																						<option value="{{ lastcoordoonnee.qvh.id }}" selected> {{ lastcoordoonnee.qvh.libelle}}</option>
+																					{% else %}
+																						<option value="" ></option>
+																					{% endif %}
+																				{% endif %}
+																			</select>
+																			<span style="color: red;" id="ninqvh"></span>
+																		</td>
+																	</tr>
+										
+																</table>
+										
+															</fieldset>
+														</div>
+										
+														<div class="col-lg-6">
+															<fieldset class="border p-2">													
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for=""><b><u>Adresse de l'établissement : </u></b></label>
+																			<span style="color: red;">*</span>
+										
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="adresse1" id="idadresse1" onkeyup="this.value=this.value.toUpperCase()" value="{{lastcoordoonnee.ninadresse1}}	" required class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for=""><b><u>Téléphone portable : </u></b></label>
+																			<span style="color: red;">*</span>
+										
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="telephone1" id="idtelephone1" maxlength="9" oninput="this.value = this.value.replace(/[^0-9,]/g, '');" value="{{lastcoordoonnee.ninTelephon1}}" required class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 40%;">
+																			<label for=""><b><u>Téléphone fixe : </u></b></label>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="telephone2" id="idtelephone2" value="{{lastcoordoonnee.nintelephon2}}" 
+																			oninput="this.value.replace(/[^0-9,]/g, '');"  maxlength="9" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for=""><b><u>Email : </u></b></label>
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="email" id="idemail" value="{{lastcoordoonnee.ninEmail}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+										
+																	<tr>
+																		<td style="width: 50%;">
+																			<label for=""><b><u>Boite postale : </u></b></label>
+																		</td>
+																		<td style="width: 40%;">
+																			<input type="text" name="bp" id="idbp" value="{{lastcoordoonnee.ninBP}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="width: 30%;">
+																			<label for=""><b><u>URL : </u></b></label>
+																		</td>
+																		<td style="width: 70%;">
+																			<input type="text" name="url" id="idurl" value="{{lastcoordoonnee.ninUrl}}" class="form-control form-control-sm">
+																		</td>
+																	</tr>
+																</table>
+										
+															</fieldset>
+														</div>
+															
+
+                                                            <div class="row">
+								                                   <div class="col-lg-12">
+									                                		 <input type="submit"  value="Modifier" name="editer" id="idBtnSuivantCoordonnees" class="boutonsm">
+							                                        </div>
+							                                    </div>
+
+																
+													</div>
+										
+												</form>
+											{% endif %}
+												
+										
+									</div>
+								</fieldset>				
+							</div>
+
+						</div>
+
+
+
+						<div class="tab-pane" id="activites" role="tabpanel">							
+
+						<div class="w-100">
+                           <div class="col-lg-12 justify-content-center"> 
+
+                           <form name="formActivites" id="id_formActivites" action="{{path('temp_activiteEtProduitsHisto',{id:demande_modification.id,demande:demande_modification.id})}}" method="post" autocomplete="off">
+
+                            <fieldset class="fieldcolor p-2 mb-3">
+                                 <div class="row justify-content-center">
+													<div class="col-lg-10">
+													    <table width="100%" >
+														    <tr>
+															   <td width="20%">
+																	<label for="" > <b><u> Libellé de l'ativité</u></b> </label>
+											                   </td>
+															   <td width="80%">
+																	<textarea name="libelleactiviteglobale" id="txtLibelleact" onkeyup="this.value=this.value.toUpperCase()" cols="5" rows="3" value="" class="form-control form-control-sm classselect"
+																required style="font-weight: bold; padding: 0;">{{ activiteglobale  }}</textarea>
+																<span id="ninLibelleact" style="color: red;"></span>
+											                   </td>
+															</tr>
+														</table>
+														
+													</div>
+												</div>
+								<label for="basicpill-address-input">
+                                    <button type="button" id="btnAjouterActivities"  class="btn btn-primary waves-effect waves-light btn-sm"><i class="fas fa-plus-circle"></i> Ajouter
+                                    </button>
+								</label>
+
+                              <div class="row">
+                              <div class="col-lg-12">
+							  <table id="idtab" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+                               <thead class="tr_entete" >
+                             
+                                  <tr>
+                                     <th style="width: 40%;">Libelle</th>
+                                     <th>NAEMA</th>
+                                     <th>Produits</th>
+									 
+									 <th>Action</th>
+                                  </tr>
+                               </thead>
+                               <tbody id="idActivities"></tbody>
+							   {% set nb=0 %}
+                                
+                               {% for tagact in ninactivites %}
+							      {% set nb=nb+1 %}
+                                  <tr>
+				                      <td style="width: 40%;">
+					                     <input type="text" {% if tagact.statActivprincipale == 1 %}  {% endif %} name="ninAutact{{ nb }}" id="idninAutact{{ nb }}" value="{{tagact.ninAutact}}" class="form-control form-control-sm " required>
+										 {% if nb==1 %}
+										     <input type="hidden" name="nbActivites" id="idnbActivites">
+										 {% endif %}
+			                          </td>
+			                    	  <td style="width: 20%;">				                      
+									     <select  class="form-control form-control-sm select2" name="refNaema{{ nb }}"   id="idrefNaema{{ nb }}" required>
+											{% for tagN in naemas %}
+											    {% if tagN.id == tagact.refNaema.id %}
+												    <option value="{{tagN.id}}" selected> {{tagN.id}}-{{ tagN.libelle}}</option>
+											    {% endif %}
+											{% endfor %}
+									    </select>
+									  </td>
+                                      <td style="width: 20%;">
+                                         <select style="width: 100%;" class="select2 form-control select2-multiple" name="refProduit{{ nb }}[]"   id="idrefProduit{{ nb }}"
+												multiple="multiple" data-placeholder="Selectionner...">
+											{% for tagP in ninproduits %}
+                                                {% if tagP.refproduits is not null %}
+											    {% if tagP.refproduits.naema.id == tagact.refNaema.id %}
+												    <option value="{{tagP.refproduits.id}}" selected> {{tagP.refproduits.id}}-{{ tagP.refproduits.libelle}}</option>
+											    {% endif %}
+											    {% endif %}
+											{% endfor %}
+
+											{% for tagPR in produits %}
+											{% if tagPR.naema.id == tagact.refNaema.id %}
+												{% set bProduitExiste = false %}
+												{% for tagP in ninproduits %}
+													{% if tagP.refproduits is not null %}
+													{% if tagP.refproduits.id == tagPR.id %}
+														{% set bProduitExiste = true %}
+														
+													{% endif %}
+													{% endif %}
+												{% endfor %}
+												{% if bProduitExiste == false %}
+													<option value="{{tagPR.id}}"> {{tagPR.id}}-{{ tagPR.libelle}}</option>
+												{% endif %}
+											{% endif %}
+										    {% endfor %}
+
+										  </select>
+                                      </td>
+										
+									  <td style="width: 20%;">
+									      {% if tagact.statActivprincipale!=1 %}
+                                             <input style="width: 100%;"  id="idBtnSupprimerActivite{{ nb }}"  type="submit" onclick="suppActiviteEtProduitsHisto('{{tagact.id}}');" value="Supprimer" >
+										   {% endif %}
+									  </td>
+								   </tr>
+								  {% endfor %}
+								  {% if nb==0 %}
+                                     <tr>
+				                      <td style="width: 40%;">
+					                     <input type="text" name="ninAutact1" id="idninAutact1" class="form-control form-control-sm " required>
+										<input type="hidden" name="nbActivites" id="idnbActivites">
+			                          </td>
+			                           <td style="width: 20%;">				                      
+									     <select style="width: 100%;" class="form-control form-control-sm select2" name="refNaema1"   id="idrefNaema1" required>
+											<option value="" selected>
+												Sélectionner...</option>
+											{% for tag in naemas %}
+												<option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option>
+											{% endfor %}
+									    </select>
+									  </td>
+                                      <td style="width: 20%;">
+                                         <select style="width: 100%;" class="select2 form-control select2-multiple" name="refProduit1[]"   id="idrefProduit1"
+												multiple="multiple" data-placeholder="Selectionner...">
+										  </select>
+                                      </td>
+                                    
+								   </tr>
+								  {% endif %}
+                               </tbody>
+                              </table>
+									</div>
+								</div>
+			
+								<div class="row">
+								<div class="col-lg-12">
+									<div class="mb-3 row">
+										<div align="center">
+											<input type="button"  value="Valider" id="idBtnSuivantActivites" name="ajouter" class="boutonsm">
+										</div>
+									</div>
+								</div>
+							   </div>
+
+                            </fieldset>
+
+            </form>			
+          </div>
+        </div>
+
+						</div>
+
+
+				<div class="tab-pane" id="activiteEconomiques" role="tabpanel"> 
+					
+                     <div class="col-lg-12"> 
+                     <fieldset class=" p-2 fieldcolor ">
+                        <div class="row">
+							{% if lastactiviteEco is not null %}
+                            <form action="{{path('temp_nininea_editActivitesEconomiques',{id:lastactiviteEco.id,demande:demande_modification.id})}}" method="post" autocomplete="off">
+
+
+                              	<div class="row">
+									<div class="col-lg-6">
+
+                                   <table style="width: 100%;">
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Chiffre d'affaires : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											 <input type="text" name="ninAffaire" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+											 	id="idninAffaire" value="{{lastactiviteEco.ninAffaire}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+										<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u> Capital : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninCapital" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+												 id="idninCapital" value="{{lastactiviteEco.ninCapital}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+										<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif permanent : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninEffectif" id="idninEffectif" value="{{lastactiviteEco.ninEffectif}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+												class="form-control form-control-sm">
+										</td>
+									</tr>
+
+										<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif permanent féminin:</u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninEffectifFem" id="idninEffectifFem" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" 
+												value="{{lastactiviteEco.ninEffectifFem}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif temporaire : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+										   <input type="text" name="ninEffect1" id="idninEffect1" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+										   	value="{{lastactiviteEco.ninEffect1}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Effectif temporaire féminin : </u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											 <input type="text" name="ninEffectifFemSAIS" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+											 	id="idninEffectifFemSAIS" value="{{lastactiviteEco.ninEffectifFemSAIS}}" class="form-control form-control-sm">
+										</td>
+									</tr>
+								</table>
+						 </div>
+
+						     <div class="col-lg-6">
+                               <table style="width: 100%;">
+									<tr>
+										<td style="width: 50%;">
+											<label for="" class="TXT"> <b><u>Année du chiffres d'affaires :</u></b>   </label>	
+										</td>
+										<td style="width: 50%;">
+											<input type="text" name="ninAnneeCa" id="idninAnneeCa" maxlength="4"   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+												value="{{lastactiviteEco.ninAnneeCa}}" class="form-control form-control-sm input-mask">
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 40%;">
+											<label for="numvoie" class="TXT mt-2"><b><u>Source de financement : </u></b></label>
+										</td>
+										<td style="width: 60%;">
+											<select class="form-control form-control-sm  " name="ninOcc" id="ni_activite_economique_ninOcc" style="width: 100%;">
+												<option>Sélectionner ...</option>
+												{% for tagr in sources %}
+													{% if tagr.id == lastactiviteEco.ninOcc is not null %}
+
+														{% if tagr.id == lastactiviteEco.ninOcc.id %}
+															<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+														{% else %}
+															<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+														{% endif %}
+													{% else %}
+														<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+													{% endif %}
+												{% endfor %}
+												</select>
+												<span style="color: red;" id="ninocc"></span>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 40%;">
+											<label for="numvoie" class="TXT mt-2"><b><u>Nature : </u></b></label>
+										</td>
+										<td style="width: 60%;">
+											<select class="form-control form-control-sm  " name="ninNature" id="ni_activite_economique_ninNature" style="width: 100%;">
+												<option>Sélectionner ...</option>
+												{% for tagr in natures %}
+													{% if tagr.id == lastactiviteEco.ninNature is not null %}
+														{% if tagr.id == lastactiviteEco.ninNature.id %}
+															<option value="{{ tagr.id }}" selected> {{ tagr.nleLibelle}}</option>
+														{% else %}
+															<option value="{{ tagr.id }}" > {{ tagr.nleLibelle}}</option>
+														{% endif %}
+													{% else %}
+														<option value="{{ tagr.id }}" > {{ tagr.nleLibelle}}</option>
+													{% endif %}
+												{% endfor %}
+												</select>
+												<span style="color: red;" id="ninnature"></span>
+										</td>
+									</tr>	
+									<tr>
+										<td style="width: 40%;">
+											<label for="numvoie" class="TXT mt-2"><b><u>Modalité d'exploitation : </u></b></label>
+										</td>
+										<td style="width: 60%;">
+											<select class="form-control form-control-sm  " name="ninMode" id="ni_activite_economique_ninMode" style="width: 100%;">
+												<option>Sélectionner ...</option>
+												{% for tagr in occupations %}
+													{% if tagr.id == lastactiviteEco.ninMode is not null %}
+														{% if tagr.id == lastactiviteEco.ninMode.id %}
+															<option value="{{ tagr.id }}" selected> {{ tagr.libelle}}</option>
+														{% else %}
+															<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+														{% endif %}
+													{% else %}
+														<option value="{{ tagr.id }}" > {{ tagr.libelle}}</option>
+													{% endif %}
+
+												{% endfor %}
+												</select>
+												<span style="color: red;" id="ninmode"></span>
+										</td>
+									</tr>
+
+									
+
+								</table>
+						 </div>
+					      
+								</div> 
+
+								<div class="row">
+                                  <div class="col-lg-12">
+                                    <div class="mb-3 row">
+                                       <label class="col-md-6" for="basicpill-firstname-input"></label>
+                                       
+                                       <div class="col-md-1" align="right">
+                                           <input type="submit"  value="Modifier" name="modifierActivitesEcos" id="idBtnsuivantActivitesEconomiques" class="boutonsm">
+                                        </div>
+                                     </div>
+                                 </div>
+                                </div>
+
+
+                               
+
+
+
+								</form>
+                            {% endif %}
+							</div>
+							</fieldset>
+            	    </div>
+
+			      </div>
+
+
+		{% if demande_modification.typeDemande != "3" %}
+			
+				<div class="tab-pane" id="dirigeants" role="tabpanel">
+					<button type="button" id="idBtnAjoutDirigeants" class="boutonsm"><i class="fas fa-plus-circle"></i> Ajouter </button>
+					
+					<div class="col-lg-12 justify-content-center"> 
+					<fieldset class=" p-2 fieldcolor ">
+					<div>
+					<form name="formDirigeant"  id="formDirigeants" action="{{path('temp_modifierDirigeantsHisto',{id:0, demande:demande_modification.id})}}" method="post" autocomplete="off">
+						<div class="row" id="idPageAjoutDirigeants">
+													<div class="col-lg-6" id="idPageAjoutDirigeants1">
+														<fieldset class="border p-2">
+															<table style="width: 100%;">
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Civilite : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<select class="form-control form-control-sm classselect" name="civilite" required id="idcivilite_dirig">
+																			<option value="" selected>Sélectionner...</option>
+																			{% for tag in civilites %}
+																				{% if Odirigeant %}
+																				{% if Odirigeant.ninCivilite and  Odirigeant.ninCivilite.id==tag.id %}
+																					<option value="{{ tag.id}}" selected>{{ tag.civlibelle}}</option>
+																				{% else %}
+																					<option value="{{ tag.id}}">{{ tag.civlibelle}}</option>
+																					{% endif %} 
+																				{% else %}
+																				<option value="{{ tag.id}}">{{ tag.civlibelle}}</option>
+																				{% endif %}
+																			{% endfor %}
+																		</select>
+																		<span style="color: red;" id="nincivil"></span>
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Prénom : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="text" name="prenom" maxlength="100" id="prenom_dirig" value="{{Odirigeant ? Odirigeant.ninPrenom : ""}}" required class="form-control form-control-sm"
+																		onkeyup="this.value=this.value.toUpperCase()"  >	
+																		<span style="color: red;" id="ninprenom"></span>
+																		<input type="hidden" name="idDirigeantAM"  id="idDirigeantAM" value="{{Odirigeant ? Odirigeant.id : ""}}" required class="form-control form-control-sm">	
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 40%;">
+																		<label for=""><b><u>Nom : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="text" name="nom" maxlength="100" id="idnom_dirig" value="{{Odirigeant ? Odirigeant.ninNom : ""}}" required class="form-control form-control-sm"
+																		onkeyup="this.value=this.value.toUpperCase()" >
+																		<span style="color: red;" id="ninnom"></span>
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Sexe : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																	<select type="text" readonly name="sexe" id="idSexe_dirig" value="" required class="form-control form-control-sm">
+																			{% for tag in sexes %}
+																				{% if Odirigeant %}
+																					{% if Odirigeant.ninSexe and  Odirigeant.ninSexe.id == tag.id %}
+																						<option value="{{ tag.id}}" selected>{{ tag.libelle}}</option>
+																					{% else %}
+																						<option value="" > Sélectionner ...</option>
+																					{% endif %} 
+																				{% endif %} 
+																			{% endfor %}
+
+																	</select>
+																	
+																	<span style="color: red;" id="ninsexe"></span>
+
+																	</td>
+																</tr>
+																
+															</table>
+															
+															<table style="width: 100%;">
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Nationalité : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<select style="width: 100%;" class="form-control form-control-sm classselect" required  name="nationalite"  id="idnationalite_dirigeant">
+																			<option value="" selected>		Sélectionner</option>
+																			{% for tag in nationalites %}
+																				<option value="{{tag.id}}" {% if Odirigeant!=null and Odirigeant.ninNationalite.id==tag.id %} selected {% elseif Odirigeant==null and  tag.id=="SN"%} selected {% endif %}>
+																					{{ tag.libelle}}</option>
+																			{% endfor %}
+																		</select>
+																		<span style="color: red;" id="ninationalite"></span>
+																	</td>
+																</tr>
+															</table>
+
+															<div id="tableCni_dirigeant">
+																<table  style="width: 100%;">
+																	<tr id="trcni">
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>CNI</u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;" >
+																		 
+																					
+																			<input type="password" readonly onfocus="this.removeAttribute('readonly');"  name="cni" id="idcni_dirig" value="{{Odirigeant ? Odirigeant.ninCni : ""}}" required="required" onselectstart="return false"
+																				maxlength = '14' pattern ="[A-Za-z0-9]{10,14}" onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																				class="form-control  form-control-sm">
+																			<span style="color: red;" id="nincni_dirig"></span>
+																		</td>
+																	</tr>
+																	<tr id="trcni">
+																		<td style="width: 40%;">
+																			<label for="" class="TXT " id="labelconfirmcni"> <b><u>Confirmation CNI : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;" >
+																			<input type="text" name="confirm_cni" id="idConfirmcni_dirig" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																			 value="{{Odirigeant ? Odirigeant.ninCni : ""}}" required class="form-control form-control-sm mt-2 " 
+																				maxlength = '14'  required
+																				oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');"onkeyup="this.value=this.value.toUpperCase()" >
+																			<span style="color: red;" id="ninconfcni_dirg"></span>
+																		</td>
+																	</tr>
+										
+																	<tr id="trcni">
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Date de délivrance CNI : </u></b></label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;" >
+																			<input type="date" name="datecni" id="idDatcni_dirig" value="{{Odirigeant ? Odirigeant.ninDateCni | date("Y-m-d")  : ""}}"  required class="form-control form-control-sm">
+																			<span style="color: red;" id=""></span>
+																		</td>
+																	</tr>
+																</table>
+															</div>
+															
+															<div id="tablePassport_dirigeant">
+																<table style="width: 100%;" >
+																	<tr id="trPassport">
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Passport : </u></b>	</label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="password" readonly onfocus="this.removeAttribute('readonly');"  
+																					 onkeyup="this.value=this.value.toUpperCase()" onselectstart="return false" 
+																					name="passport" id="idPassport_dirig"  oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
+																			value="{{Odirigeant ? Odirigeant.ninCni : ""}}" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																			 class="form-control form-control-sm">
+																			<span style="color: red;" id="ninpassport_dirig"></span>
+																		</td>
+																	</tr>
+																
+																	<tr id="trPassport">
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Confirmation du passport : </u></b>	</label>
+																			<span style="color: red;">*</span>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="text" name="confirmpassport" id="idPassport_confdirig"  oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '');" 
+																			value="{{Odirigeant ? Odirigeant.ninCni : ""}}" onselectstart="return false" onpaste="return false;" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+																			 class="form-control form-control-sm">
+																			<span style="color: red;" id="ninpassport_confdirig"></span>
+																		</td>
+																	</tr>
+
+																	<tr id="trDatePassport">
+																		<td style="width: 40%;">
+																			<label for="" class="TXT"><b><u>Date du passport : </u></b></label>
+																		</td>
+																		<td style="width: 60%;">
+																			<input type="date" name="datepassport" id="idDatepassport_dirig" value="{{Odirigeant and Odirigeant.ninDateCni ? Odirigeant.ninDateCni | date("Y-m-d")  : ""}}" class="form-control form-control-sm">
+																			<span style="color: red;" id="nindatepassport"></span>
+																		</td>
+																	</tr>
+																</table>
+															</div>
+															
+										
+														</fieldset>
+													</div>
+
+													<div class="col-lg-6" id="idPageAjoutDirigeants2">
+														<fieldset class="border p-2">
+															<table style="width: 100%;">
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT mt-2"><b><u>Date de naissance : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="date" name="datenais" id="idDatenais_dirig"  min="1900-01-01" value="{{Odirigeant and Odirigeant.ninDatenais ? Odirigeant.ninDatenais | date("Y-m-d")  : ""}}" required  class="form-control form-control-sm mt-2">
+																		<span style="color: red;" id="nindatenais"></span>
+																	</td>
+																</tr>
+																							
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Qualification : </u></b></label>
+																		<span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<select class="form-control form-control-sm classselect" name="qualification" required id="idqualification">
+																			<option value="" selected>	Sélectionner....</option>
+																			{% for tag in qualifications %}
+																				{% if Odirigeant %}
+																					{% if Odirigeant.ninPosition and  Odirigeant.ninPosition.id==tag.id %}
+																						<option value="{{ tag.id}}" selected>		{{ tag.libelle}}</option>
+																					{% else %}
+																						<option value="{{ tag.id}}">		{{ tag.libelle}}</option>
+																					{% endif %} 
+																				{% else %}
+																				<option value="{{ tag.id}}">		{{ tag.libelle}}</option>
+																				{% endif %}
+																			{% endfor %}
+																		</select>
+																		<span style="color: red;" id="ninqualications"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Téléphone : </u> <span style="color: red;">*</span></b> </label>
+
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="tel" name="telephone" id="idtelpersonne_dirig1"  value="{{Odirigeant ? Odirigeant.ninTelephone1 : ""}}" 
+																		class="form-control form-control-sm" maxlength = '9' oninput="this.value = this.value.replace(/[^0-9,]/g, '');" >
+																		<span style="color: red;" id="nintelpersonne_dirig"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Adresse : </u></b></label> <span style="color: red;">*</span>
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="text" name="adresse" id="idadresse_dirig" value="{{Odirigeant ? Odirigeant.ninAddresse : ""}}"   onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm">
+																		<span style="color: red;" id="ninadresse_dirig"></span>
+																	</td>
+																</tr>
+
+																<tr>
+																	<td style="width: 40%;">
+																		<label for="" class="TXT"><b><u>Email : </u></b></label>
+																	</td>
+																	<td style="width: 60%;">
+																		<input type="text" name="email" id="idemail_dirig" value="{{Odirigeant ? Odirigeant.ninEmail : ""}}"   class="form-control form-control-sm">
+																		<span style="color: red;" id="ninemail_dirig"></span>
+																	</td>
+																</tr>
+
+															</table>
+
+														</fieldset>
+
+													</div>
+												</div>
+								
+												<div class="row" id="idGroupeBtnAjoutDirigeants">
+													<div class="col-lg-12">
+														<div class="mb-3 row">
+															<label class="col-md-8" for="basicpill-firstname-input"></label>
+															
+															<div class="col-md-4" align="right">
+																<input type="button"  value="Valider" name="valider" onclick="ajoutModifDirigeant();" id="btnValider" class="boutonsm">
+																
+																<input type="button"  value="Annuler" id="idBtnAnnulerAjoutDirigeant" name="annuler"  class="boutonsm">
+															</div>
+															
+														</div>
+													</div>
+												</div>
+						
+															<div class="row ">
+																<div class="col-lg-12">
+																	<div class="mb-3 row">
+																		<label class="col-md-6" for="basicpill-firstname-input">LISTE DES DIRIGEANTS</label>
+																		
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-lg-12">
+																		<table id="ninea" class="table table-bordered dt-responsive table-hover nowrap w-100 ">
+																			<thead class="tr_entete" >
+																				<tr>
+																					<th>Prénom</th>
+																					<th>Nom</th>
+																					<th>Qualification</th>
+																					<th>CNI</th>
+																					<th>Nationalité</th>
+																					<th>Actions</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																			{% for tag in Dirigeants %}
+																				<tr>
+																					<td >{{tag.ninPrenom}}</td>
+																					<td >{{tag.ninNom}}	</td>
+																					<td > 
+																						{% if tag.ninPosition %}
+																							{{tag.ninPosition.libelle}} 
+																						{% endif %}
+																					</td>
+																					<td >{{tag.ninCni}}</td>
+																					<td >{{ tag.ninNationalite.libelle}}</td>
+																					<td>
+																						<a href="">
+																							
+																						</a>
+																						<input  id="idBtnModifDirigeant"  name="valider" type="button" value="Modifier" onclick="modifierDirigeants('{{ tag.id}}');" >
+																						<input  id="idBtnSupprimeDirigeant"  type="submit" value="Supprimer" onclick="supprimerDirigeants('{{ tag.id}}');" >
+
+
+																					</td>
+																				
+																				</tr>
+																				{% endfor %}
+																			</tbody>
+																		</table>
+																		
+																</div>
+
+															</div>
+
+															<div class="row">
+																<div class="col-lg-12">
+																	<div class="mb-3 row">
+																		<label class="col-md-8" for="basicpill-firstname-input"></label>
+																		<div class="col-md-4" align="right">
+																			<input type="button" value="Precedent" name="precedent" id="idBtnPrecedentDirigeant" class="boutonsm">
+																			<input type="button" value="Soumettre" name="suivent" id="idBtnsuivantDirigeant" class="boutonsm">
+																		</div>
+																		
+																	</div>
+																</div>
+															</div>
+						
+
+					</form>
+							
+
+						</div>
+					</fieldset>
+					</div>
+
+				</div>
+		{% else %}
+			
+		{% endif %}
+
+</div>
+
+	</div>
+
+
+
+	
+
+</div>
+</div>
+
+
+
+
+	{# edit Personne #}
+	<div class="modal fade editPersonne" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+				
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="body">
+					{# templates/base.html.twig #}
+
+					
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+	{# edit Coordonnees #}
+	<div class="modal fade editCoordonnees" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+				
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="body">
+					{# templates/base.html.twig #}
+					
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+
+<!-- end card -->
+{% endblock %}
+
+
+{% block javascript %}
+
+
+   <script src="{{ asset('admin/dist/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    
+
+	 <script src="{{ asset( 'admin/dist/assets/libs/select2/js/select2.min.js')}} "></script>
+
+	<script src="{{ asset('admin/dist/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
+
+				<!-- form mask init -->
+	<script src="{{ asset('admin/dist/assets/js/pages/form-mask.init.js')}}"></script>
+
+	<script src="{{ asset('admin/dist/assets/js/multiselect.min.js')}}"></script>
+
+	        <!-- form advanced init -->
+	<script src="{{ asset('admin/dist/assets/js/pages/form-advanced.init.js')}}"></script>
+	
+<script>
+   function formatJuridiction(juridiction) 
+	{
+		//var cleaned = ('' + rccm).replace(/\D/g, '')
+		var match = juridiction.match(/^(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR[A-Z]{3})$/)
+		if (match) {
+			return 1;
+		}
+			return 0;
+	}
+
+	function formatRCCM(texte) {
+		var match = texte.match(/^(SN)(DKR|STL|KLK|TBC|THS|DBL|KLD|ZGR|LGA|FTK|MTM|SDH|KDG|MBR)(\d{4})(A|B|C|E{1})(\d{1,5})$/)
+		if (match) {
+			return 1;
+		}
+		return 0;
+	}
+
+	function controlRCCM(rccm,formejuridique,statut)
+	{
+
+		var registre = rccm;
+		var registrenormal1 = registre.replace(/ /g, "");
+		var registrenormal2 = registrenormal1.split('_').join('').trim();
+		let juridiction = registrenormal2.substr(2,3);
+
+		let datereg = registrenormal2.substr(5,4);
+		let datecours = new Date();
+		let anneecours = datecours.getFullYear();
+		var message="";
+
+		if (registrenormal2.length < 11)
+		{
+			message='Numéro de registre incomplet.';
+			
+		}							
+		else
+		{
+			
+			if(statut==1){
+			if (formejuridique == 10) 
+				var rccmnormalsociete = registrenormal2.indexOf("A", 9);
+			else if(formejuridique == 27 || formejuridique == 30 )
+				var rccmnormalsociete = registrenormal2.indexOf("C", 9);
+			else if(formejuridique == 49 ){
+					if (registrenormal2.indexOf("C", 9) != -1 || registrenormal2.indexOf("B", 9) != -1 )
+					rccmnormalsociete =9;
+					else
+					rccmnormalsociete =-1;
+
+			}
+			else if(formejuridique == 93 )
+				var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+			else
+				var rccmnormalsociete = registrenormal2.indexOf("B", 9);
+			}else
+			   var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+			  
+				
+				
+			if (rccmnormalsociete == -1 ) {
+				message='Le format du RCCM saisi n\'est pas valide.';
+				
+			}
+			//juridiction
+			else if (formatJuridiction(juridiction) == 0)
+			{
+				message='Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.';
+
+			}
+			else if (datereg > anneecours)
+			{
+				message="L'année du registre de commerce ne doit pas être postérieure à l'année en cours.";
+					
+			}
+
+			else {
+				message="";
+			}
+													
+		}
+	    return message;
+		
+	}
+
+	function controlDateRCCM(date,datedoc){
+
+		var datedocument = new Date(date);
+		var dateDuJour = new Date();
+		let anneeDatereg = datedocument.getFullYear();
+		var message="";
+		
+		
+		if (datedocument > dateDuJour) 
+		{
+			//document.getElementById("inputdatereg").value = new Date("");
+			message='La date du registre de commerce ne doit pas être postérieure à la date du jour.';
+			
+		}
+		else
+		{
+			
+			if (anneeDatereg < "1900")
+			{
+				//document.getElementById("inputdatereg").value = new Date("");
+				message="La date du registre de commerce ne doit pas être antérieure à l'année 1900.";
+		
+			}
+			else 
+			{
+					let regcom = datedoc;
+					var registrenormal = regcom.replace(/ /g, "");
+					let dateregcom = registrenormal.substr(5,4);
+				
+					
+
+					if (anneeDatereg < dateregcom)
+					{
+						
+						//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
+						message= "La date du registre de commerce ne doit pas être antérieure à la date de création du registre.";
+						
+						
+					}
+					
+					else
+					{
+						
+						message="";
+						
+					}
+				
+				
+			}
+			
+		} 
+		return message;
+
+	}
+
+
+	function compareDateDocument(date, datemodif){
+		var datedocument = new Date(date);
+		var dateDeModif = new Date(datemodif);
+
+		var dateDuJour = new Date();
+		var $message = "";
+
+		if(datedocument > dateDeModif){
+			$message = "La date du document de modification ne peut pas être antérieure à la date du document de création ";
+		}
+
+		return $message ;
+
+	}
+
+</script>
+
+<script>
+ /*$("#id_btnsuivant").click(function() {
+	$("#temp_ninea_editPersonne").submit();
+
+
+
+ }); */
+
+
+
+ $("#id_btnsuivant").click(function() {
+			
+			
+	let formeunite = "{{ ninea.formeJuridique.niFormeunite.id }}" ;
+	if (formeunite == 11 || formeunite == 12)
+	{
+		if(document.getElementById("idCivilite").value!="" ){
+		   if(document.getElementById("idsexe").value!="" ){
+				if(document.getElementById("prenom").value!="" ){
+					if(document.getElementById("idnom").value!="" ){
+						if(document.getElementById("idDatenais").value!="" ){
+							if(document.getElementById("idlieunais").value!="" ){ 
+								if ($('#idnationalite_personne').val() == "SN")
+								{
+									if(document.getElementById("idcni").value!="" ){  
+									
+										
+										//verifier si nationalite==SN  idConfirmpassport
+											if(document.getElementById("idConfirmcni").value!="" ){
+												if(document.getElementById("idDatecni").value!="" ){
+													if(document.getElementById("idtelpersonne").value!="" ){
+														if(document.getElementById("qvh").value!="" ){
+															if(document.getElementById("idadresse").value !="" )
+															{
+
+																	let idlieunais = document.getElementById("idlieunais").value;
+																	if (idlieunais.match(/^[0-9]+$/)!=null)
+																	{
+																		Swal.fire("Le lieu de naissance ne peut pas contenir que des chiffres.");
+																				
+																	}
+																	else
+																	{
+																		let prenom = document.getElementById("prenom").value;
+																		if (prenom.match(/^[0-9]+$/)!=null){
+																			Swal.fire("Le prénom ne peut pas contenir que des chiffres.");
+																					
+																		}
+																		else if (document.getElementById("idadresse").value.match(/^[0-9]+$/) != null)
+																		{
+																			document.getElementById("ninadresse").innerHTML ="L'adresse ne peut contenir que des chiffres.";
+																			Swal.fire("L'adresse ne peut pas contenir que des chiffres.");
+																		}
+																		else
+																		{
+																			let nom = document.getElementById("idnom").value;
+																			if (nom.match(/^[0-9]+$/)!=null){
+																				Swal.fire("Nom ne peut pas contenir que des chiffres.");			
+																		}
+																		else
+																		{
+																			let datenais = new Date($('#idDatenais').val());
+																			var dateDuJour = new Date();
+																			let yearsDiff = dateDuJour.getFullYear() - datenais.getFullYear();
+																			//console.log(yearsDiff);
+																			var dateinf = new Date("1900-01-01");
+																			
+																			
+																			{% if ninea.niTypedocument is not null %}
+																				var typedocument = "{{ ninea.niTypedocument.id }}";
+																			{% else %}
+																			 	var typedocument = 2;
+
+																			{% endif %}
+
+																			if(typedocument == 1)
+																			{
+																				var datereg = new Date("{{ ninea.ninDateDocument|date('Y-m-d') }}");
+																			}
+																			else
+																			{
+																				var datereg = new Date('Y-m-d');
+
+																			}
+
+																			var datedeliv =  new Date($('#idDatecni').val());
+																			if(datenais >= datedeliv)
+																			{
+																			 Swal.fire('La date de naissance ne doit pas être postérieure ou égale à la date de délivrance de la CNI.');
+																			}
+																			else if(datenais > dateinf)
+																			{	
+																				if (yearsDiff < 18 )
+																				{
+																					$("#idDatenais").addClass("has_error");
+																					document.getElementById("nindatenais").innerHTML = "L'âge ne doit pas être antérieur à 18 ans";
+																					Swal.fire("L'âge ne doit pas être inférieur à 18 ans")
+
+																				}
+																				
+																				else if(datereg <= datenais)
+																				{
+																					$("#idDatenais").addClass("has_error");
+																					document.getElementById("nindatenais").innerHTML = "La date de naissance ne doit pas être postérieure à la date du registre de commerce";
+																					Swal.fire("La date de naissance ne doit pas être postérieure à la date du registre de commerce")
+
+																				}
+																				else
+																				{ 
+																					$("#idDatenais").removeClass("has_error");
+																						document.getElementById("nindatenais").innerHTML = "";
+
+																						let cni = $("#idcni").val();
+																						let confirmationCNI = $("#idConfirmcni").val();
+																					if (cni.length == 13 || cni.length == 14)
+																					{
+																							document.getElementById("nincni").innerHTML = "";	
+																							$("#idcni").removeClass("has_error");	
+
+																							if(cni != confirmationCNI)
+																							{
+																								document.getElementById("nincni").innerHTML = "Les deux CNI ne sont pas conformes.";
+																								Swal.fire("Les deux CNI ne sont pas conformes.");						
+																								
+																							}
+																							else
+																							{																						
+																								document.getElementById("nincni").innerHTML = "";
+																								if (document.getElementById("idCivilite").value == "2") {
+																																															
+																									if (cni.startsWith("2"))
+																									{
+																										
+																										$("#temp_ninea_editPersonne").submit();
+
+																											
+																									}
+																									else
+																									{
+																										Swal.fire("Attention! la CNI commmence par 1, donc non conforme avec la civilité Madame.");
+																			
+																									}
+																									
+																								}
+																								else 
+																								{
+																																																
+																									if ( cni.startsWith("1"))
+																									{
+																									
+																										$("#temp_ninea_editPersonne").submit();
+
+
+																									}
+																									else
+																									{
+																										Swal.fire("Attention! la CNI commmence par 2, donc non conforme avec la civilité Monsieur");
+																			
+																									}
+																									
+																			
+																								}
+																								
+		
+																							}
+																						
+										
+																					}
+																					else{
+																						
+																							$("#idcni").addClass("has_error");
+																							document.getElementById("nincni").innerHTML = "Le nombre de caractères de la CNI ne doit pas être inférieur à 13 ou 14 caractères.";
+																						
+																					}
+																					
+																						
+																				}
+																			}
+																			else{
+																				$("#idDatenais").addClass("has_error");
+																					
+																					Swal.fire('La date de naissance   ne doit pas être antérieure à la date 01-01-1900.');
+																					
+																			}
+																		}		
+																			
+																	}
+																	}
+
+																
+																
+															
+															}else{
+																Swal.fire("L'adresse complète ne peut pas être vide.");
+															}
+														}else{
+															Swal.fire("L'adresse(QVH) ne peut pas être vide.");
+														}	
+													}else{
+														Swal.fire("Le téléphone ne peut pas être vide.");
+													}			
+												}else{
+													Swal.fire("La date  de délivrance de la CNI  ne peut pas être vide.");
+												}
+											}else{
+												Swal.fire("La confirmation de la CNI  ne peut pas être vide.");
+											}
+										
+									}else{
+											Swal.fire("La CNI  ne peut pas être vide.");
+										}
+
+								}else{
+									if(document.getElementById("idpassport").value != "" ){  
+										
+											if(document.getElementById("idDatepassport").value!="" ){
+												if(document.getElementById("idtelpersonne").value!="" ){
+													if(document.getElementById("qvh").value!="" ){
+														if(document.getElementById("idadresse").value!="" ){
+															let idlieunais = document.getElementById("idlieunais").value;
+															if (idlieunais.match(/^[0-9]+$/)!=null){
+																Swal.fire("Le lieu de naissance ne peut pas contenir que des chiffres.");
+																		
+															}else{
+																	let prenom = document.getElementById("prenom").value;
+																	if (prenom.match(/^[0-9]+$/)!=null){
+																		Swal.fire("Le prénom ne peut pas contenir que des chiffres.");
+																				
+																	}
+																	else if (document.getElementById("idadresse").value.match(/^[0-9]+$/) != null)
+																		{
+																			document.getElementById("ninadresse").innerHTML ="L'adresse ne peut contenir que des chiffres.";
+																			Swal.fire("L'adresse ne peut pas contenir que des chiffres.");
+																		}
+																	else{
+																	let nom = document.getElementById("idnom").value;
+																	if (nom.match(/^[0-9]+$/)!=null){
+																		Swal.fire("Nom ne peut pas contenir que des chiffres.");			
+																	}
+																	else{
+																		let datenais = new Date($('#idDatenais').val());
+																		var dateDuJour = new Date();
+																		let yearsDiff = dateDuJour.getFullYear() - datenais.getFullYear();
+																		var dateinf=new Date("1900-01-01");
+																		var datedeliv =  new Date($('#idDatecni').val());
+																		{% if ninea.niTypedocument is not null %}
+																		  var typedocument = "{{ ninea.niTypedocument.id }}";
+																		{% else %}
+																		  var typedocument = 2;
+																		{% endif %}
+
+																			if(typedocument == 1)
+																			{
+																				var datereg = new Date("{{ ninea.ninDateDocument|date('Y-m-d') }}");
+																			}
+																			else
+																			{
+																				var datereg = new Date('Y-m-d');
+
+																			}
+
+																		if(datenais >= datedeliv){
+																			Swal.fire('La date de naissance ne doit pas être postérieure ou égale à la date du passport.');
+																		}
+																		else
+																		if(datenais>dateinf)
+																		{	
+																			if (yearsDiff < 18 && formejuridique == 10)
+																			{
+																				$("#idDatenais").addClass("has_error");
+																				document.getElementById("nindatenais").innerHTML = "L'âge ne doit pas être inférieur à 18 ans";
+																				Swal.fire("L'âge ne doit pas être inférieur à 18 ans")
+
+																			}
+																			else if (datenais >= datereg)
+																			{
+																				$("#idDatenais").addClass("has_error");
+																				document.getElementById("nindatenais").innerHTML = "La date de naissance ne doit pas être postérieure à la date du registre de commerce";
+																				Swal.fire("La date de naissance ne doit pas être postérieure à la date du registre de commerce")
+																			}
+																			else
+																			{ 
+																					let passport = document.getElementById("idpassport").value;
+																				
+
+																						let confirmationCNI = $("#idConfirmpassport").val();
+																							if(passport != confirmationCNI)
+																							{
+																								//$("#idmodif_confirmcni").focus();
+																								$('#idConfirmpassport').addClass('has_error');
+																								document.getElementById("ninconfpassport").innerHTML="Les deux numéros ne sont pas conformes.";
+																								$('#idConfirmpassport').focus();
+
+																								Swal.fire("Les deux numéros ne sont pas conformes.");				   
+
+																							}
+																							else
+																							{
+																								//document.getElementById("btnSuivant").removeAttribute("disabled");
+																								$('#idConfirmpassport').removeClass('has_error');
+																								document.getElementById("ninconfpassport").innerHTML="";
+
+																								if(document.getElementById("idCivilite").value==1){
+																									if(document.getElementById("idsexe").value==1)
+																									{
+
+																										$("#temp_ninea_editPersonne").submit();
+
+																									}
+																									else
+																									   Swal.fire("Vérifier la civilité et le sexe.");				   
+																									  
+																								}else{
+																									  if(document.getElementById("idsexe").value==2)
+																									  {
+																									   
+																										
+																											$("#temp_ninea_editPersonne").submit();
+
+																									   }
+																									  else
+																									   Swal.fire("Vérifier la civilité et le sexe.");		
+
+																								}
+
+																								
+																								
+																							}
+
+																			}
+																		}else{
+																				
+																				Swal.fire('La date du passport   ne doit pas être antérieure à la date 01-01-1900.');
+																				
+																		}
+																	}		
+																		
+																}
+															}
+														
+														}else{
+															Swal.fire("L'adresse complète ne peut pas être vide.");
+														}
+													}else{
+														Swal.fire("L'adresse(QVH) ne peut pas être vide.");
+													}	
+												}else{
+													Swal.fire("Le téléphone ne peut pas être vide.");
+												}			
+											}else{
+												Swal.fire("La date du passport ne peut pas être vide.");
+											}
+										
+									}else{
+										Swal.fire("Le passport  ne peut pas être vide.");
+									}
+								}
+							}else{
+								Swal.fire("Le lieu de naissance ne peut pas être vide.");
+							}
+						}else{
+							Swal.fire("La date de naissance ne peut pas être vide.");
+						}
+					}else{
+						Swal.fire("Le nom ne peut pas être vide.");
+					}
+		
+				}else{
+					Swal.fire("Le prénom ne peut pas être vide.");
+				}
+			}else{
+			Swal.fire("Le sexe ne peut pas être vide.");
+			}
+		}else{
+			Swal.fire("La civilité ne peut pas être vide.");
+		}
+	}
+	else
+	{
+		let raison = $("#idraison").val();
+		if (raison.replaceAll(" ","") != "")
+		{
+			
+			$("#temp_ninea_editPersonne").submit();
+			
+		}
+		else
+		{
+			$("#idraison").addClass("has_error");
+
+			Swal.fire("La raison sociale ne doit pas être vide.");
+
+		}
+
+		
+	}
+	
+});
+
+
+
+
+
+       $("#idtypdocument").change(function(){
+			if($("#idtypdocument").val()==1)
+				$("#iddocument").inputmask('SN AAA 9999 A 99999');
+			else
+			  $("#iddocument").inputmask('');
+
+			 $("#iddatedocument").val('');
+			 $("#iddocument").val('');
+
+			
+		});
+
+
+
+		$("#idmodifierEntete").click(function() {
+			if ($("#idninStatut").val() != "")
+			{
+					if ($("#idtypdocument").val() != "")
+			        {
+                        if ($("#iddocument").val() != "")
+						{
+
+							 if ($("#iddatedocument").val() != "")
+								{
+									if( $("#idtypdocument").val()==1){
+
+										if(controlRCCM($("#iddocument").val(),$("#idFormejuridique").val(),$("#idninStatut").val())==""){
+											
+											if(controlDateRCCM($("#iddatedocument").val(),$("#iddocument").val())=="")
+                                             
+											  if ($("#idninStatut").val() == 1)
+				                              {
+												       var datedocument = new Date($("#iddatedocument").val());
+													   let anneeDatereg = datedocument.getFullYear();
+                                                       let regcom = $("#iddocument").val();
+													   var registrenormal = regcom.replace(/ /g, "");
+													   let dateregcom = registrenormal.substr(5,4);
+												       if(anneeDatereg != dateregcom)
+														{
+															if ($("#observation").val() != "")
+																document.getElementById("id_FormEntete").submit();
+															else{
+																Swal.fire("Le champ Observation ne peut pas être vide.")
+															}
+															    
+														}else
+													       document.getElementById("id_FormEntete").submit();
+
+
+											  }else{
+                                                  
+												    if ($("#inputmere").val() != "")
+														 document.getElementById("id_FormEntete").submit();
+													else{
+														Swal.fire("Le champ  ninea mére  ne peut pas être vide.")
+													}
+
+											  }
+
+											else 
+											   Swal.fire(controlDateRCCM($("#iddatedocument").val(),$("#iddocument").val()));
+											  
+
+										}else{
+
+											Swal.fire(controlRCCM($("#iddocument").val(),$("#idFormejuridique").val(),$("#idninStatut").val()));
+
+										}
+
+									}else
+										{
+										var iddocument = $("#iddocument").val();
+			                            if(formatRCCM(iddocument.replaceAll(' ',''))==0){
+										  $(this).closest("form").submit();
+										}else
+									     Swal.fire("Le format n'est pas valide.")
+
+									}
+									
+
+								}else{
+									Swal.fire("La date du document ne peut pas être vide.")
+								}
+
+
+						}else{
+							Swal.fire("Le document ne peut pas être vide.")
+						}
+				    }else{
+						Swal.fire("Le type de document ne peut pas être vide.")
+					}
+				
+			}else{
+                Swal.fire("Le statut ne peut pas être vide.");
+			}
+		});
+
+
+		$("#iddocument").change(function()
+		{
+			if( $("#idtypdocument").val()==1)
+			{
+				var registre = $("#iddocument").val();
+				var registrenormal1 = registre.replace(/ /g, "");
+				var registrenormal2 = registrenormal1.split('_').join('').trim();
+				let juridiction = registrenormal2.substr(2,3);
+				let route = "{{ path('controleRCCM') }}" + "/" + registrenormal2;
+
+
+                 if($('#iddatedocument').val()!=""){
+					var datedocument = new Date($('#iddatedocument').val());
+					let anneeDatereg = datedocument.getFullYear();
+                    let regcom = $("#iddocument").val();
+					var registrenormal = regcom.replace(/ /g, "");
+					let dateregcom = registrenormal.substr(5,4);
+				
+					if(anneeDatereg > dateregcom)
+					{
+						document.getElementById("idtabobservation").style.display = "block";
+					}
+
+					else
+					{
+						document.getElementById("idtabobservation").style.display = "none";
+					}
+
+
+				 }
+
+
+				$.ajax
+				({
+					type: 'GET',
+					url: route,
+					success: function (data) 
+					{
+						if (data == 1) {
+							document.getElementById('idmodifierEntete').setAttribute("disabled", true);
+							document.getElementById('ninreg').innerHTML = "Ce numéro de registe existe déjà.";
+							Swal.fire('Ce numéro de registe existe déjà.');
+							$('#iddocument').addClass('has_error');
+							$("#iddocument").focus();
+
+						}
+						else 
+						{
+							let datereg = registrenormal2.substr(5,4);
+							let datecours = new Date();
+							let anneecours = datecours.getFullYear();
+
+							if (registrenormal2.length < 11)
+							{
+								Swal.fire('Numéro de registre incomplet.');
+								$('#iddocument').addClass('has_error');
+								$("#iddocument").focus();
+							}							
+							else
+							{
+								$('#iddocument').removeClass('has_error');
+								document.getElementById('idmodifierEntete').removeAttribute("disabled");
+							if($("#idninStatut").val()==1){
+							  if ($("#idFormejuridique").val() == 10) 
+									var rccmnormalsociete = registrenormal2.indexOf("A", 9);
+								else if($("#idFormejuridique").val() == 27 || $("#idFormejuridique").val() == 30 )
+									var rccmnormalsociete = registrenormal2.indexOf("C", 9);
+								else if($("#idFormejuridique").val() == 49 ){
+                                     if (registrenormal2.indexOf("C", 9) != -1 || registrenormal2.indexOf("B", 9) == -1 )
+									    rccmnormalsociete =1;
+									 else
+									   rccmnormalsociete =-1;
+
+								}
+								else if($("#idFormejuridique").val() == 93 )
+									var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+								else
+								  var rccmnormalsociete = registrenormal2.indexOf("B", 9);
+							}else{
+								var rccmnormalsociete = registrenormal2.indexOf("E", 9);
+							}
+					
+								if (rccmnormalsociete == -1 ) {
+									Swal.fire('Le format du RCCM saisi n\'est pas valide.');
+									$('#iddocument').addClass('has_error');
+									$('#iddocument').focus();
+									document.getElementById('idmodifierEntete').setAttribute("disabled", true);
+								}
+								//juridiction
+								else if (formatJuridiction(juridiction) == 0)
+								{
+									$('#iddocument').addClass('has_error');
+									$('#iddocument').focus();
+									Swal.fire('Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.');
+									document.getElementById("ninreg").innerHTML = "Le format du RCCM saisi n\'est pas valide: erreur sur la juridiction.";
+									document.getElementById('idmodifierEntete').setAttribute("disabled", true);
+
+								}
+								else if (datereg > anneecours)
+										{
+											Swal.fire("L'année du registre de commerce ne doit pas être postérieure à l'année en cours.");
+											$('#iddocument').addClass('has_error');
+											$('#iddocument').focus();
+										}
+
+								else {
+									$('#iddocument').removeClass('has_error');
+									document.getElementById('ninreg').innerHTML = "";
+									document.getElementById('idmodifierEntete').removeAttribute("disabled");
+								}
+																		
+							}
+							
+						}
+
+					},
+					error: function (error) 
+					{
+						console.log(error);
+					}
+				});
+			}else{
+                var iddocument = $("#iddocument").val();
+			    if(formatRCCM(replaceAll(' ','',iddocument))==0){
+					
+					let route = "{{ path('controleRCCM') }}" + "/" + iddocument;
+					$.ajax
+					({
+						type: 'GET',
+						url: route,
+						success: function (data) 
+						{
+							if (data == 1) {
+								document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+								document.getElementById('ninreg').innerHTML = "Ce numéro du document de création existe déjà.";
+								Swal.fire('Ce numéro du document de création existe déjà.');
+								$('#iddocument').addClass('has_error');
+								$("#iddocument").focus();
+
+							}
+							else 
+							{
+								$('#iddocument').removeClass('has_error');
+								document.getElementById('ninreg').innerHTML = "";
+								document.getElementById('id_sauvegarder').removeAttribute("disabled");
+								
+							}
+
+						},
+						error: function (error) 
+						{
+							console.log(error);
+						}
+					});
+                }else{
+                   
+				    //document.getElementById('id_sauvegarder').setAttribute("disabled", true);
+					document.getElementById('ninreg').innerHTML = "Le format est invalide.";
+					Swal.fire('Le format est invalide.');
+					$('#iddocument').addClass('has_error');
+					$("#iddocument").focus();
+
+				}
+
+			}
+		});
+
+		$("#iddatedocument").change(function()
+		{
+						let table_doc = document.getElementById("tb_documents");
+	
+						var datedocument = new Date($('#iddatedocument').val());
+						var dateDuJour = new Date();
+						let anneeDatereg = datedocument.getFullYear();
+						let datereg = $('#iddatedocument').val();
+						let datregannee = datereg.substr(0, 4);
+						
+							if (datedocument > dateDuJour) 
+							{
+								//document.getElementById("inputdatereg").value = new Date("");
+								Swal.fire('La date du registre de commerce ne doit pas être postérieure à la date du jour.');
+								
+							}
+							else
+							{
+								
+								if (anneeDatereg < "1900")
+								{
+									//document.getElementById("inputdatereg").value = new Date("");
+									Swal.fire("La date du registre de commerce ne doit pas être antérieure à l'année 1900.");
+							
+								}
+								else 
+								{
+									 if($("#idtypdocument").val()==1){
+									  let regcom = $("#iddocument").val();
+									  var registrenormal = regcom.replace(/ /g, "");
+									  let dateregcom = registrenormal.substr(5,4);
+									
+									   if(anneeDatereg > dateregcom)
+										{
+											document.getElementById("idtabobservation").style.display = "block";
+										}
+	
+										else
+										{
+											document.getElementById("idtabobservation").style.display = "none";
+										}
+	
+										if (anneeDatereg < dateregcom)
+										{
+											
+											//document.getElementById("id_sauvegarder").setAttribute("disabled", true);
+											$("#iddatedocument").addClass("has_error");
+											document.getElementById("iddatedocument").innerHTML = "La date du registre de commerce ne doit pas être antérieure à la date de création du registre.";
+											Swal.fire("La date du registre de commerce ne doit pas être antérieure à la date de création du registre.");
+											
+										}
+										
+										else
+										{
+											//document.getElementById("id_sauvegarder").removeAttribute("disabled");
+											$("#iddatedocument").removeClass("has_error");
+											document.getElementById("iddatedocument").innerHTML = "";
+											
+										}
+									}else{
+
+										//document.getElementById("id_sauvegarder").removeAttribute("disabled");
+											$("#iddatedocument").removeClass("has_error");
+											document.getElementById("iddatedocument").innerHTML = "";
+									}
+									
+									
+								}
+								
+							} 
+						
+					
+		});
+
+
+		// In your Javascript (external .js resource or <script> tag)
+			$(document).ready(function() {
+
+                
+				 if ($('#idformeunite').val() == 12 || $('#idformeunite').val() == 11  ) {
+				  if ($('#idnationalite_personne').val() == "SN") {
+			      document.getElementById("tablePassport_personne").style.display = "none";
+				  }else
+					document.getElementById("tableCni_personne").style.display = "none";
+				 }
+			 
+
+				if($("#idtypdocument").val()==1){
+					$("#iddocument").inputmask('SN AAA 9999 A 99999');
+					var datedocument = new Date($("#iddatedocument").val());
+					let anneeDatereg = datedocument.getFullYear();
+					let regcom = $("#iddocument").val();
+					var registrenormal = regcom.replace(/ /g, "");
+					let dateregcom = registrenormal.substr(5,4);
+					if(anneeDatereg != dateregcom)
+					{
+						//document.getElementById("idtabobservation").style.display = "block";
+					}else{
+						//document.getElementById("idtabobservation").style.display = "none";
+					}
+				}else{
+					//document.getElementById("idtabobservation").style.display = "none";
+				}
+
+
+					if( "{{ demande_modification.typeDemande  }}"!= 3 ){
+
+			let formeunite = "{{ ninea.formeJuridique.niFormeunite.id }}" ;
+
+			if ( formeunite == 21 || formeunite == 22 )
+			{
+				var $ninationalite_dirig = $('#idnationalite_dirigeant');
+				if ($ninationalite_dirig.val() == "SN") 
+				   document.getElementById("tablePassport_dirigeant").style.display = "none";
+				else
+				   document.getElementById("tableCni_dirigeant").style.display = "none";
+		
+				$ninationalite_dirig.change(function () 
+				{
+		
+					if ($ninationalite_dirig.val() == "SN") 
+					{
+						document.getElementById("tableCni_dirigeant").style.display = "block";
+						document.getElementById("idcni_dirig").setAttribute('required',true);
+						document.getElementById("idDatcni_dirig").setAttribute('required',true);
+						document.getElementById("idDatepassport_dirig").removeAttribute('required');
+						document.getElementById("idPassport").removeAttribute('required',true);
+				
+						document.getElementById("tablePassport_dirigeant").style.display = "none";
+			
+					} 
+					else 
+					{
+						document.getElementById("tableCni_dirigeant").style.display = "none";
+						document.getElementById("tablePassport_dirigeant").style.display = "block";
+						document.getElementById("idDatepassport_dirig").setAttribute('required',true);
+						document.getElementById("idPassport").setAttribute('required',true);
+						document.getElementById("idcni_dirig").removeAttribute('required');
+						document.getElementById("idDatcni_dirig").removeAttribute('required');
+			
+					}
+				});
+			}  
+			
+		}
+
+                $("#id_soumettre").click(function(e) {
+                   
+                    var soumettre  = 1;
+                    if (soumettre==1) {
+                        
+                        {
+                            e.preventDefault();
+                            
+                            var a=$(this);
+                            Swal.fire({
+                            title:"Confirmation",
+                            text:"Êtes-vous sûr de vouloir soumettre la demande  ?",
+                            icon:"warning",
+                            showCancelButton:true,
+                            confirmButtonText:"Oui",
+                            cancelButtonText:"Non",
+                            confirmButtonClass:"btn btn-success mt-2",
+                            cancelButtonClass:"btn btn-danger ms-2 mt-2",
+                            buttonsStyling:!1}).then(function(t)
+                            {
+                            if (t.value) {
+                                
+                                window.location.href="{{ path('tempsoumission', {'id': demande_modification.id } )}}";
+                            }else
+                                e.preventDefault();
+
+                            })}
+                    }
+
+                });
+                
+				$('#idActivities').find('select').each(function(){
+					$(this).select2();
+				  });	
+			
+              
+                
+				  $("#idnationalite_personne").select2();
+
+				
+					let formeunite = "{{ ninea.formeJuridique.niFormeunite.id }}" ;
+
+					if (formeunite == 21 || formeunite == 22)
+					{
+						var idDirigeantAM = document.getElementById("idDirigeantAM").value;
+						if(idDirigeantAM ==""){
+								document.getElementById("idGroupeBtnAjoutDirigeants").style.display = "none";
+								document.getElementById("idPageAjoutDirigeants1").style.display = "none";
+							document.getElementById("idPageAjoutDirigeants2").style.display = "none";
+						}
+						else {
+							if (document.getElementById("idcivilite_dirig").value == "1") {
+				
+								document.getElementById("idSexe_dirig").value="Masculin";
+				
+							} else if (document.getElementById("idcivilite_dirig").value == "2" ) {
+								document.getElementById("idSexe_dirig").value= "Féminin";
+			
+							}
+						}
+					}
+
+		        if( "{{ demande_modification.typeDemande  }}" != 3){
+                  if($("#idtypdocument").val()==1){
+					$('#ninRegcomModif').inputmask('SN AAA 9999 M 99999');
+
+					$('#ninDatregModif').change(function(){
+
+						$msg = compareDateDocument($("#iddatedocument").val(), $("#ninDatregModif").val());
+
+						if($msg != ""){
+							Swal.fire($msg);
+						}
+					});
+				}
+
+					
+
+				}else{
+                    
+					
+						$('#ninRegcomReprise').inputmask('SN AAA 9999 M 99999');
+
+					$('#ninDatregReprise').change(function(){
+
+						$msg = compareDateDocument($("#iddatedocument").val(), $("#ninDatregReprise").val());	
+
+						if($msg != ""){
+							Swal.fire($msg);
+						}
+					});
+									
+				}
+				
+	
+
+			});	
+
+
+			$(".form-control").bind("keypress", function(e) {
+
+				if (e.keyCode == 13) {
+					var inps = $("input"); //add select too
+					for (var x = 0; x < inps.length; x++) {
+						if (inps[x] == this) {
+							while ((inps[x]).name == (inps[x + 1]).name) {
+							x++;
+							}
+							if ((x + 1) < inps.length) $(inps[x + 1]).focus();
+						}
+					}   e.preventDefault();
+				}
+			});
+	
+
+			//CONTROLE SUR PRENOM NOM ADRESSE
+			$("#prenom").blur(function() {
+				let prenom = $("#prenom").val();
+				
+				if (prenom.match(/^[0-9]+$/)!=null)
+				{
+					//document.getElementById("idadresse_dirig").value = "";
+					document.getElementById("ninprenom").innerHTML = "Le prénom ne peut pas contenir que des chiffres.";
+				}
+				else
+				{
+					
+					document.getElementById("ninprenom").innerHTML = "";
+				
+				}
+				
+			  });
+			
+			  $("#idnom").blur(function() {
+				let prenom = $("#idnom").val();
+				
+				if (prenom.match(/^[0-9]+$/)!=null)
+				{
+					//document.getElementById("idadresse_dirig").value = "";
+					document.getElementById("ninnom").innerHTML = "Le nom ne peut pas contenir que des chiffres.";
+				}
+				else
+				{
+					
+					document.getElementById("ninnom").innerHTML = "";
+				
+				}
+				
+			  });
+
+			  $("#idadresse").blur(function() {
+				let prenom = $("#idadresse").val();
+				
+				if (prenom.match(/^[0-9]+$/)!=null)
+				{
+					//document.getElementById("idadresse_dirig").value = "";
+					document.getElementById("ninadresse").innerHTML = "L'adresse ne peut pas contenir que des chiffres.";
+				}
+				else
+				{
+					
+					document.getElementById("ninadresse").innerHTML = "";
+				
+				}
+				
+			  });
+
+
+	// Affichage des activités
+	const newItemActivities = (e) => {
+		var collections = document.querySelector(e.currentTarget.dataset.collection);
+		let index = parseInt(collections.dataset.index);
+			
+		let item = document.createElement("tr");
+		
+		// item.innerHTML = collections.dataset.index = index + 1;
+		collections.dataset.index = index + 1;
+		let prototype = collections.dataset.prototype;
+		item.innerHTML = prototype.replace(/__name__/g, index);
+		
+		
+		item.querySelector(".btn-delete").addEventListener("click", () => item.remove());
+		collections.appendChild(item);
+		$(".naemaselect2").select2();
+
+				
+	}
+	
+	document.querySelectorAll(".ajouterActivities").forEach(btn => btn.addEventListener("click", newItemActivities));
+	
+	
+
+	//CONTROLES CHAMPS 
+	$("#idBtnSuivantActivites").click(function()
+	{
+		var table = document.getElementById("idtab");
+	   
+		var rowNumber = table.rows.length-1;
+		var tabcode = [];
+		var tablibelle = [];
+		tabcode[0] ="none";
+		tablibelle[0] ="none";
+
+		
+		for(let i=1; i<=rowNumber;i++ )
+		{
+			if (document.getElementById("idrefNaema"+i) != null)
+			{
+				tabcode[i] =document.getElementById("idrefNaema"+i).value ;
+				tablibelle[i] =document.getElementById("idninAutact"+i).value ;
+				
+				
+			}else{
+			 tabcode[i] ="none"+i; 
+			 tablibelle[i] ="none"+i; 
+			}
+			
+		}
+
+		function hasDuplicates(arr) {
+			return new Set(arr).size !== arr.length;
+		}
+				
+		
+
+		let idlieunais = document.getElementById("txtLibelleact").value;
+		let ninautact = document.getElementById("idninAutact1").value;
+
+		if (idlieunais != "")
+		{
+			if (idlieunais.match(/^[0-9]+$/) != null)
+			{
+				
+				$("#txtLibelleact").focus();
+				document.getElementById("ninLibelleact").innerHTML = "Le libellé ne peut pas contenir que des chiffres.";
+				Swal.fire("Le libellé ne peut pas contenir que des chiffres.");
+			}
+			else
+			{
+				if (ninautact != "")
+				{
+					if (ninautact.match(/^[0-9]+$/) != null)
+					{
+						$("#idninAutact1").focus();
+						document.getElementById("ninAutact1").innerHTML = "Le libellé ne peut pas contenir que des chiffres.";
+						Swal.fire("Le libellé de l'activité ne peut pas contenir que des chiffres.");
+					}
+					else 
+					{
+						if (document.getElementById("idrefNaema1").value != "")
+						{
+
+							if (document.getElementById("idrefProduit1").value != "")
+								{
+
+									if (hasDuplicates(tablibelle)) {
+										Swal.fire("Les libellés ne doivent pas être les memes.");
+									}
+									else {
+										if (hasDuplicates(tabcode)) {
+											Swal.fire("Les acivités ne doiven pas être les mêmes.");
+										}
+										else {
+											var table = document.getElementById("idtab");
+											var rowNumber = table.rows.length-1;
+											document.getElementById("idnbActivites").value=rowNumber;
+											
+											$("#id_formActivites").submit();
+										}
+									}
+									
+									//$("#id_formActivites").submit();
+								}
+								else
+								{
+									$("#idrefProduit1").addClass("has_error");
+									Swal.fire("La liste de  produits ne peut pas être vide.");
+
+								}
+							
+						}
+						else
+						{
+							Swal.fire("La liste NAEMA de l'activité ne peut pas être vide.");
+							$("#idrefNaema1").addClass("has_error");
+						}
+						
+					}
+					
+				}
+				else
+				{
+					$("#idninAutact1").addClass("has_error");
+					Swal.fire("Le champ ne peut pas être vide.");
+				}
+			}
+		}
+		else
+		{
+			$("#txtLibelleact").addClass("has_error");
+			Swal.fire("Le champ ne peut pas être vide.");
+		}
+
+
+
+	});
+
+
+	function editPersonne (id) {
+		
+		let route = "{{ path('ninea_editPersonne') }}" + "/" +id;
+		
+		$.ajax({
+		type: 'GET',
+		url: route,
+		success: function (data) {
+			document.getElementById('body').innerHTML = "";
+			document.getElementById('body').innerHTML = data;
+			
+
+			document.getElementById("tablePassport_editpersonne").style.display = "none";
+
+			$('#idnationaliteditpersonne').change(function () {
+			
+				if ($('#idnationaliteditpersonne').val() == "SN") {
+					document.getElementById("tableCni_editpersonne").style.display = "block";
+					document.getElementById("tablePassport_editpersonne").style.display = "none";
+			
+				} else {
+					document.getElementById("tableCni_editpersonne").style.display = "none";
+					document.getElementById("tablePassport_editpersonne").style.display = "block";
+			
+				}
+			});
+
+
+
+			$('#editregion_personne').change(function () {
+
+				let route = "{{ path('departementsRegion') }}" + "/" + $('#editregion_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let departement = document.getElementById("editdepartement_personne");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				departement.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				departement.add(opt);
+				$("#editdepartement_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editdepartement_personne').change(function () {
+				
+				let route = "{{ path('cavDepartement') }}" + "/" + $('#editdepartement_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cav = document.getElementById("editcav_personne");
+				cav.setAttribute('class','form-control form-control-sm'); 
+				cav.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cav.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cav.add(opt);
+				$("#editcav_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				
+				$('#editcav_personne').change(function () {
+				
+				let route = "{{ path('cacrCav') }}" + "/" + $('#editcav_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cacr = document.getElementById("editcacr_personne");
+				cacr.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cacr.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cacr.add(opt);
+				$("#editcacr_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editcacr_personne').change(function () {
+				
+				let route = "{{ path('qvhCacr') }}" + "/" + $('#editcacr_personne').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let qvh = document.getElementById("editqvh_personne");
+				qvh.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				qvh.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				qvh.add(opt);
+				$("#editqvh_personne").select2({
+					dropdownParent : $('.editPersonne')
+				})
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+			
+		},
+		error: function (error) {
+			
+		console.log(error);
+		}
+		});
+
+
+	}
+
+
+	
+   $("#btnValider").click(function() {
+				let error = 0;
+				if(document.getElementById("idcivilite_dirig").value!="" ){
+					if(document.getElementById("prenom_dirig").value!="" ){
+						if(document.getElementById("idnom_dirig").value!="" ){
+							if(document.getElementById("idDatenais_dirig").value!="" ){
+								var nat_dirig = document.getElementById("idnationalite_dirigeant").value;
+								if(nat_dirig=='SN')
+								{
+									if(document.getElementById("idcni_dirig").value!="" ){  
+										if(document.getElementById("idConfirmcni_dirig").value!="" ){
+											if(document.getElementById("idDatcni_dirig").value!="" ){
+												if(document.getElementById("idqualification").value!="" ){
+													if(document.getElementById("idtelpersonne_dirig1").value!="" ){
+														
+															if(document.getElementById("idadresse_dirig").value!="" ){
+																		let prenom = document.getElementById("prenom_dirig").value;
+																		if (prenom.match(/^[0-9]+$/)!=null){
+																			Swal.fire("Le prénom ne peut pas contenir que des chiffres.");
+																					
+																		}
+																		else{
+																			let nom = document.getElementById("idnom_dirig").value;
+																			if (nom.match(/^[0-9]+$/)!=null){
+																				Swal.fire("Nom ne peut pas contenir que des chiffres.");			
+																			}
+																			else{
+																				let datenais = new Date($('#idDatenais_dirig').val());
+																				var dateDuJour = new Date();
+																				let yearsDiff = dateDuJour.getFullYear() - datenais.getFullYear();
+																				let dateCNI= $("#idDatcni_dirig").val();
+																				var dateinf = new Date("1900-01-01");
+
+																				if (datenais >= dateCNI)
+																				{
+																					Swal.fire("La date de naissance ne doit pas être postèrieure ou égale à la date de délivrance de CNI.")
+																				}
+																				else if (datenais > dateinf)
+																					
+																					{		
+																						if (yearsDiff < 18 )
+																						{
+																							Swal.fire("L'âge ne doit pas être inférieur à 18 ans")
+
+																						}
+																						else if (datenais > dateDuJour)
+																						{
+																							Swal.fire("La date de naissance ne doit pas être postérieure à la date du jour.")
+																						}
+																						
+																						else
+																						{
+																							let cni = $("#idcni_dirig").val();
+																							var confirmationCNIDirig = $("#idConfirmcni_dirig").val();
+																							let nationalite = $("#idnationalite_dirigeant").val();
+																							let idDemande = "";
+
+																							let route = "{{ path('controleDirigCNI') }}" + "/" + cni+"/"+nationalite;	 
+																							
+
+																																																	let confirmationCNI = $("#idPassport_confdirig").val();
+
+																										if(cni != confirmationCNIDirig)
+																										{
+																											$('#idPassport_confdirig').addClass('has_error');
+																											document.getElementById("ninpassport_confdirig").innerHTML="Les deux numéros ne sont pas conformes.";
+																											$('#idPassport_confdirig').focus();
+																											Swal.fire("Les deux numéros ne sont pas conformes.");						
+																											
+																										}
+																										else
+																										{																							
+
+																											if (document.getElementById("idcivilite_dirig").value == 1) 
+																											{
+																												if(document.getElementById("idSexe_dirig").value == 1)
+																																																																																			
+																												{
+																													
+
+																															$("#formDirigeants").submit();
+																													
+
+
+
+																													}
+																													else
+																													Swal.fire("Vérifier la civilité et le sexe.");				   
+																											}
+																											else 
+																											{
+																												if(document.getElementById("idSexe_dirig").value == 2)
+																												{
+																												
+
+																													$("#formDirigeants").submit();
+
+																											
+
+																												}
+																												else
+																													Swal.fire("Vérifier la civilité et le sexe.");		
+
+																											}
+
+																										}
+
+																							
+
+
+																							
+																								
+																						} //////
+
+																					}
+																					else{
+																						$("#idDatenais_dirig").addClass("has_error");
+																							
+																							Swal.fire('La date de naissance   ne doit pas être antérieure à la date 01-01-1900.');
+																							
+																					}
+
+
+																			}		
+																			
+																	}
+															
+															}else{
+																Swal.fire("L'adresse complète ne peut pas être vide.");
+															}
+															
+													}else{
+														Swal.fire("Le téléphone ne peut pas être vide.");
+													}
+												}else{
+													Swal.fire("La qualification ne peut pas être vide.");
+												}			
+											}else{
+												Swal.fire("La date  de délivrance de la CNI  ne peut pas être vide.");
+											}
+										}else{
+											Swal.fire("La confirmation de la CNI  ne peut pas être vide.");
+										}
+									}else{
+										Swal.fire("La CNI  ne peut pas être vide.");
+									}
+								}else{
+									if(document.getElementById("idPassport_dirig").value!="" ){  
+										
+											if(document.getElementById("idDatepassport_dirig").value!="" ){
+												if(document.getElementById("idqualification").value!="" ){
+													if(document.getElementById("idtelpersonne_dirig1").value!="" ){
+														
+															if(document.getElementById("idadresse_dirig").value!="" ){
+																		let prenom = document.getElementById("prenom_dirig").value;
+																		if (prenom.match(/^[0-9]+$/)!=null){
+																			Swal.fire("Le prénom ne peut pas contenir que des chiffres.");
+																					
+																		}
+																		else{
+																			let nom = document.getElementById("idnom_dirig").value;
+																			if (nom.match(/^[0-9]+$/)!=null){
+																				Swal.fire("Nom ne peut pas contenir que des chiffres.");			
+																			}
+																			else{
+																				let datenais = new Date($('#idDatenais_dirig').val());
+																				var dateDuJour = new Date();
+																				let yearsDiff = dateDuJour.getFullYear() - datenais.getFullYear();
+																				let dateCNI= new Date($("#idDatepassport_dirig").val());
+																				var dateinf = new Date("1900-01-01");
+
+																				if (datenais >= dateCNI)
+																				{
+																					$("#idDatenais_dirig").addClass("has_error");
+
+																					Swal.fire("La date de naissance ne doit pas être postèrieure ou égale à la date de délivrance du passport.")
+																				}
+
+																				else if (datenais > dateinf)
+																				{		
+																					if (yearsDiff < 18 )
+																					{
+																						$("#idDatenais_dirig").addClass("has_error");
+
+																						Swal.fire("L'âge ne doit pas être inférieur à 18 ans")
+
+																					}
+																					else if (datenais > dateDuJour)
+																					{
+																						$("#idDatenais_dirig").addClass("has_error");
+
+																						Swal.fire("La date de naissance ne doit pas être postérieure à la date du jour.")
+																					}
+																					
+																					else
+																					{
+																						let cni = $("#idPassport_dirig").val();
+																						let nationalite = $("#idnationalite_dirigeant").val();
+																						let idDemande = "";
+
+					                                                                    																										let confirmationCNI = $("#idPassport_confdirig").val();
+
+																										if(cni != confirmationCNI)
+																										{
+																											$('#idPassport_confdirig').addClass('has_error');
+																											document.getElementById("ninpassport_confdirig").innerHTML="Les deux numéros ne sont pas conformes.";
+																											$('#idPassport_confdirig').focus();
+																											Swal.fire("Les deux numéros ne sont pas conformes.");						
+																											
+																										}
+																										else
+																										{																							
+
+																											if (document.getElementById("idcivilite_dirig").value == 1) 
+																											{
+																												if(document.getElementById("idSexe_dirig").value == 1)
+																																																																																			
+																												{
+																													
+
+																															$("#formDirigeants").submit();
+																													
+
+
+
+																													}
+																													else
+																													Swal.fire("Vérifier la civilité et le sexe.");				   
+																											}
+																											else 
+																											{
+																												if(document.getElementById("idSexe_dirig").value == 2)
+																												{
+																												
+
+																													$("#formDirigeants").submit();
+
+																											
+
+																												}
+																												else
+																													Swal.fire("Vérifier la civilité et le sexe.");		
+
+																											}
+
+																										}
+
+																							
+																					} //////
+
+																				}
+																				else{
+																					$("#idDatenais_dirig").addClass("has_error");
+																						
+																						Swal.fire('La date de naissance   ne doit pas être antérieure à la date 01-01-1900.');
+																						
+																				}
+
+
+																			}		
+																			
+																	}
+															
+															}else{
+																Swal.fire("L'adresse complète ne peut pas être vide.");
+															}
+															
+													}else{
+														Swal.fire("Le téléphone ne peut pas être vide.");
+													}
+												}else{
+													Swal.fire("La qualification ne peut pas être vide.");
+												}			
+											}else{
+												Swal.fire("La date du passport  ne peut pas être vide.");
+											}
+										
+									}else{
+										Swal.fire("Le passport  ne peut pas être vide.");
+									}
+
+								}
+
+									
+							}else{
+								Swal.fire("La date de naissance ne peut pas être vide.");
+							}
+						}else{
+							Swal.fire("Le nom ne peut pas être vide.");
+						}
+			
+					}else{
+						Swal.fire("Le prénom ne peut pas être vide.");
+					}
+				}else{
+					Swal.fire("La civilité ne peut pas être vide.");
+				}
+		    });
+
+
+
+
+	function traceDirigeants (id) {
+     let route = "{{ path('tracerDirigeant') }}" + "/" +id;
+
+	 	$.ajax({
+		type: 'GET',
+		url: route,
+		success: function (data) {
+			document.getElementById('body').innerHTML = "";
+			document.getElementById('body').innerHTML = data;
+			
+			$(".editPersonne").modal('show');		
+		},
+		error: function (error) {
+			
+		console.log(error);
+		}
+		});
+    }  
+
+
+	 function supprimerDirigeants (id) {
+    	
+	  document.forms['formDirigeant'].action="{{path('supprimerDirigeants')}}"+ "/" +id;
+
+	  if ($('#idnationalite_dirigeant').val() != "SN") {
+            document.getElementById("idcni_dirig").removeAttribute('pattern');
+			document.getElementById("idConfirmcni_dirig").removeAttribute('pattern');
+
+		 }
+		document.getElementById("idnationalite_dirigeant").removeAttribute('required');
+		document.getElementById("idcni_dirig").removeAttribute('required');
+		document.getElementById("idConfirmcni_dirig").removeAttribute('required');
+		document.getElementById("idDatcni_dirig").removeAttribute('required');
+		document.getElementById("idPassport_dirig").removeAttribute('required');
+		document.getElementById("idDatepassport_dirig").removeAttribute('required');
+		document.getElementById("idcivilite_dirig").removeAttribute('required');
+		document.getElementById("prenom_dirig").removeAttribute('required');
+		document.getElementById("idnom_dirig").removeAttribute('required');
+
+		document.getElementById("idSexe_dirig").removeAttribute('required');
+		document.getElementById("idDatenais_dirig").removeAttribute('required');
+		document.getElementById("idqualification").removeAttribute('required');
+		document.getElementById("idemail_dirig").removeAttribute('required');
+
+	}
+
+
+	
+		function ajoutModifDirigeant(){
+			if ($('#idnationalite_dirigeant').val() != "SN") {
+				document.getElementById("idcni_dirig").removeAttribute('pattern');
+			}
+			var idDirigeantAM = document.getElementById("idDirigeantAM").value;
+
+
+			if(idDirigeantAM != ""){
+				document.forms['formDirigeant'].action="{{path('temp_modifierDirigeantsHisto')}}"+ "/" + idDirigeantAM+"/"+"{{demande_modification.id}}";
+			    //  alert(document.forms['formDirigeant'].action);
+			}
+		}
+
+	
+
+
+	function suppActiviteEtProduitsHisto (id) {
+    //  alert(document.forms['formDirigeant'].action);
+	  document.forms['formActivites'].action="{{path('temp_suppActiviteEtProduitsHisto')}}"+ "/" +id+ "/"+"{{demande_modification.id}}";
+
+	}
+
+	 $("#prenom_dirig").blur(function() {
+						let prenom = $("#prenom_dirig").val();
+						
+						if (prenom.match(/^[0-9]+$/) != null)
+						{
+							document.getElementById("ninprenom").innerHTML = "Le prénom ne peut pas contenir que des chiffres.";
+						}
+						else
+						{
+							document.getElementById("ninprenom").innerHTML = "";
+						
+						}
+					
+				  });
+
+                   $("#idnom_dirig").blur(function() {
+						let prenom = $("#idnom_dirig").val();
+						
+						if (prenom.match(/^[0-9]+$/)!=null)
+						{
+							
+							document.getElementById("ninnom").innerHTML = "Le nom ne peut pas contenir que des chiffres.";
+						}
+						else
+						{
+							
+							document.getElementById("ninnom").innerHTML = "";
+						
+						}
+					
+				    });
+
+
+				  $("#idadresse_dirig").blur(function() {
+					let prenom = $("#idadresse_dirig").val();
+					
+					if (prenom.match(/^[0-9]+$/)!=null)
+					{
+						//document.getElementById("idadresse_dirig").value = "";
+						document.getElementById("ninadresse_dirig").innerHTML = "L'adresse ne peut pas contenir que des chiffres.";
+					}
+					else
+					{
+						
+						document.getElementById("ninadresse_dirig").innerHTML = "";
+					
+					}
+					
+				  });
+
+
+	function modifierDirigeants (id) {
+           	window.location.href="{{ path('app_demande_modification_show', {id: demande_modification.id } )}}"+"/"+id;
+	}
+
+	function EnleverDirigeants (id) {
+    //  alert(document.forms['formDirigeant'].action);
+      document.forms['formDirigeant'].action="{{path('temp_modifierDirigeantsHisto')}}"+ "/" + id+"/"+"{{demande_modification.id}}";
+
+	 // document.forms['formDirigeant'].action="{{path('modifierDirigeantsHisto')}}"+ "/" +id;
+
+	  document.getElementById("idnationalite_dirigeant").removeAttribute('required');
+	  document.getElementById("idcni_dirig").removeAttribute('required');
+	  document.getElementById("idDatcni_dirig").removeAttribute('required');
+	  document.getElementById("idPassport").removeAttribute('required');
+	  document.getElementById("idDatepassport_dirig").removeAttribute('required');
+	  document.getElementById("idcivilite_dirig").removeAttribute('required');
+	 document.getElementById("prenom").removeAttribute('required');
+	  document.getElementById("idnom").removeAttribute('required');
+
+	document.getElementById("idSexe_dirig").removeAttribute('required');
+	document.getElementById("idDatenais_dirig").removeAttribute('required');
+	  document.getElementById("idlieunais").removeAttribute('required');
+	 document.getElementById("idqualification").removeAttribute('required');
+	  
+	 // alert(document.forms['formDirigeant'].action);
+	}
+
+
+	function editDirigeants (id) {
+		
+		let route = "{{ path('ninea_editDirigeant') }}" + "/" +id;
+		
+		$.ajax({
+		type: 'GET',
+		url: route,
+		success: function (data) {
+			document.getElementById('body').innerHTML = "";
+			document.getElementById('body').innerHTML = data;
+			
+			$(".editPersonne").modal('show');	
+
+			 if ($('#editnationalite_dirig').val() == "SN") {
+			      document.getElementById("edittablePassport_dirig").style.display = "none";
+	         }
+			
+
+			
+			
+		},
+		error: function (error) {
+			
+		console.log(error);
+		}
+		});
+	}
+
+
+
+
+	function activated ()
+	{
+		let route = "{{ path('activated') }}";
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		},
+		error: function (error) {
+		console.log(error);
+		}
+
+		});
+	}
+
+
+	//
+
+	//message toast
+		$(document).ready(function(){
+			
+			{% for message in app.session.flashbag.get('message')%}
+				
+				document.getElementById("toastbody").innerHTML="" ;
+				document.getElementById("toastbody").innerHTML="{{message}}" ;
+				
+				$("#myToast").toast({
+					delay: 2000
+				}); 
+				
+				// Show toast
+				$("#myToast").toast("show");
+			{% endfor%}				
+			
+		});
+	
+
+	
+	//garder la session sur la page
+     
+	//coordonnees	
+	if( "{{app.session.get('actived_temp')}}" == 2 ){
+		
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$('#idcoordonnee').addClass('active');
+			$('#coordonnees').addClass('active');
+
+			activated();
+		
+	}
+
+
+		//activites
+		if( "{{app.session.get('actived_temp')}}" == 3 ){
+		
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$("#idactivite").addClass('active');
+			$("#activites").addClass('active');
+		
+			activated();
+
+	}
+
+    
+	//Dirigeants
+    
+
+
+	if( "{{app.session.get('actived_temp')}}" == 4 ){
+		
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$("#idactiviteEconomique").addClass('active');
+			$("#activiteEconomiques").addClass('active');
+
+		
+			activated();
+
+	}
+	
+
+	//activites economiques
+	if( "{{app.session.get('actived_temp')}}" == 5 ){
+			$('#personne').removeClass('active');
+			$('#idpersonne').removeClass('active');
+
+			$("#iddirigeant").addClass('active');
+			$("#dirigeants").addClass('active');
+		
+			activated();
+
+	}
+
+
+        
+			$('#idnationalite_personne').change(function () {
+			
+				if ($('#idnationalite_personne').val() == "SN") {
+					document.getElementById("tableCni_personne").style.display = "block";
+					document.getElementById("idcni").setAttribute('required',true);
+					document.getElementById("idDatecni").setAttribute('required',true);
+					document.getElementById("idDatepassport").removeAttribute('required');
+
+					document.getElementById("tablePassport_personne").style.display = "none";
+			
+				} else {
+					document.getElementById("tableCni_personne").style.display = "none";
+					document.getElementById("tablePassport_personne").style.display = "block";
+					document.getElementById("idDatepassport").setAttribute('required',true);
+					document.getElementById("idcni").removeAttribute('required');
+					document.getElementById("idDatecni").removeAttribute('required');
+
+			
+				}
+			});
+
+			$('#editnationalite_dirig').change(function () {
+
+				alert("nationalite edit");
+
+				if ($('#editnationalite_dirig').val() == "SN") {
+					document.getElementById("edittableCni_dirig").style.display = "block";
+					document.getElementById("edittablePassport_dirig").style.display = "none";
+
+				} else {
+					document.getElementById("edittableCni_dirig").style.display = "none";
+					document.getElementById("edittablePassport_dirig").style.display = "block";
+
+				}
+			});
+
+
+     $("#idBtnAjoutDirigeants").click(function () {
+         document.getElementById("idPageAjoutDirigeants1").style.display = "block";
+         document.getElementById("idPageAjoutDirigeants2").style.display = "block";
+		document.getElementById("idGroupeBtnAjoutDirigeants").style.display = "block";
+
+     });
+
+      $("#idBtnAnnulerAjoutDirigeant").click(function () {
+         document.getElementById("idPageAjoutDirigeants1").style.display = "none";
+         document.getElementById("idPageAjoutDirigeants2").style.display = "none";
+		document.getElementById("idGroupeBtnAjoutDirigeants").style.display = "none";
+
+     });
+
+
+	 $('#idBtnSuivantActivites').click(function(){
+			var table = document.getElementById("idtab");
+			var rowNumber = table.rows.length-1;
+			document.getElementById("idnbActivites").value=rowNumber;
+		//	alert(document.getElementById("idnbActivites").value);
+		});
+
+
+        $("#btnAjouterActivities").click(function(){
+
+            var table = document.getElementById("idtab");
+	        var newRow = table.insertRow(-1);
+            var rowNumber = table.rows.length-1;
+
+			var newCell = newRow.insertCell(0);
+			 newCell.innerHTML = '<td style="width: 40%;"> <input style="width: 100%;" type="text" name="ninAutact'+rowNumber+'" id="idninAutact'+rowNumber+'" class="form-control form-control-sm "></td>';
+
+			var newCell2 = newRow.insertCell(1);		    
+			newCell2.innerHTML = '<td style="width: 20%;">	<select style="width: 100%;" class="form-control form-control-sm select2" name="refNaema'+rowNumber+'"   id="idrefNaema'+rowNumber+'" required> <option value="" selected> Sélectionner...</option> {% for tag in naemas %} <option value="{{tag.id}}"> {{tag.id}}-{{ tag.libelle}}</option> {% endfor %} </select></td>';
+		
+            var newCell3 = newRow.insertCell(2);		    
+			newCell3.innerHTML = '<td style="width: 20%;"> <select style="width: 100%;" class="select2 form-control select2-multiple" name="refProduit'+rowNumber+'[]"   id="idrefProduit'+rowNumber+'" multiple="multiple" data-placeholder="Selectionner...">  </select> </td>';
+
+
+          
+            var newCell6 = newRow.insertCell(3);
+            newCell6.innerHTML = ' <td style="width: 20%;"> <input style="width: 100%;"  id="idBtnSupprimerActivite'+rowNumber+'"  type="button" value="Supprimer" ></td>';
+          
+		    $('.select2').select2();
+
+            $('#idrefNaema'+rowNumber).change(function(){
+			document.getElementById("idrefProduit"+rowNumber).innerHTML = "";
+            {% for tag in produits %}
+				
+				if ($('#idrefNaema'+rowNumber).val() == '{{ tag.naema.id }}') {
+				let opt = document.createElement('option');
+				opt.value = "{{ tag.id }}";
+				opt.innerHTML = "{{ tag.id }}"+"-"+"{{ tag.libelle }}";
+				document.getElementById("idrefProduit"+rowNumber).add(opt);
+				}
+
+			{% endfor %}
+		});
+
+		$('#idBtnSupprimerActivite'+rowNumber).click(function(){
+            var table = document.getElementById("idtab");
+			table.deleteRow(rowNumber);
+         });
+
+       });    
+
+            
+   $("#idBViderCoordonnees").click(function () {
+       //alert("click");
+       document.getElementById("idvoie").value="";
+        document.getElementById("idNumvoie").value="";
+        document.getElementById("idadresse1").value="";
+      
+        document.getElementById("idtelephone1").value="";
+        document.getElementById("idtelephone2").value="";
+        document.getElementById("idemail").value="";
+        document.getElementById("idbp").value="";
+         document.getElementById("idurl").value="";
+
+
+         document.getElementById("idtypevoie").value="Sélectionner...";
+         document.getElementById("region_coordonnees").value="Sélectionner...";
+        document.getElementById("departement_coordonnees").value="Sélectionner...";
+        document.getElementById("cav_coordonnees").value="Sélectionner...";
+        document.getElementById("cacr_coordonnees").value="Sélectionner...";
+        document.getElementById("qvh_coordonnees").value="Sélectionner...";
+                  
+   }); 
+
+	$("#idActivites").click(function () {
+		$('#ni_activite_refSyscoa').select2({
+			dropdownParent: $('#modalActivites')
+		});
+
+		$('#ni_activite_refNaema').select2({
+			dropdownParent: $('#modalActivites')
+		});
+
+		$('#ni_activite_refNaemas').select2({
+			dropdownParent: $('#modalActivites')
+		});
+
+		$('#ni_activite_refCiti').select2({
+			dropdownParent: $('#modalActivites')
+		});
+	});
+
+
+
+function formatPhoneNumber(phoneNumberString) {
+		var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+		var match = cleaned.match(/^(\(33|77|78|72|75|76|36|32|70)[0-9]{7}$/)
+		if (match) {
+
+		return 1;
+		}
+		return 0;
+		}
+
+
+	function formatPhoneNumberPortable(phoneNumberString) {
+		var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+		var match = cleaned.match(/^(\(33|77|78|72|75|76|36|32|70)[0-9]{7}$/)
+		if (match) {
+
+		return 1;
+		}
+		return 0;
+		}
+
+
+	function formatPhoneNumberFixe(phoneNumberString1) {
+		var cleaned = ('' + phoneNumberString1).replace(/\D/g, '')
+		var match = cleaned.match(/^(\(77|78|72|75|76|36|33|70)[0-9]{7}$/)
+		if (match) {
+
+
+		return 1;
+		}
+		return 0;
+		}
+
+
+
+
+ //var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+
+		$('#idtelpersonne').change(function () {
+		if ($.trim($('#idtelpersonne').val()) != "") 
+		{
+			console.log(formatPhoneNumberPortable($.trim($('#idtelpersonne').val())));
+
+			if (formatPhoneNumberPortable($.trim($('#idtelpersonne').val())) == 0) {
+
+			Swal.fire('Le numéro téléphone n\'est pas valide.');
+
+				$('#idtelpersonne').focus();
+			}
+
+		}
+
+		});
+
+
+        			// QVH POUR coordonnees
+	$('#region_coordonnees').change(function () {
+      //  alert("region change");
+
+	let route = "{{ path('departementsRegion') }}" + "/" + $('#region_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let departement = document.getElementById("departement_coordonnees");
+	departement.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	departement.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	departement.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	
+	}
+	})
+	});
+
+    	$('#departement_coordonnees').change(function () {
+	
+	let route = "{{ path('cavDepartement') }}" + "/" + $('#departement_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let cav = document.getElementById("cav_coordonnees");
+	cav.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	cav.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	cav.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	}
+	})
+	});
+	
+	
+	$('#cav_coordonnees').change(function () {
+	
+	let route = "{{ path('cacrCav') }}" + "/" + $('#cav_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let cacr = document.getElementById("cacr_coordonnees");
+	cacr.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	cacr.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	cacr.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	}
+	})
+	});
+	
+	$('#cacr_coordonnees').change(function () {
+	
+	let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr_coordonnees').val();
+	$.ajax({
+	type: 'GET',
+	url: route,
+	dataType: "json",
+	success: function (data) {
+	
+	let qvh = document.getElementById("qvh_coordonnees");
+	qvh.innerHTML = "";
+	
+	let opt = document.createElement('option');
+	opt.innerHTML = "Selectionner ...";
+	opt.value = '';
+	qvh.add(opt);
+	for (var i = data.length - 1; i >= 0; i--) {
+	let opt = document.createElement('option');
+	opt.value = data[i][0];
+	opt.innerHTML = data[i][1];
+	qvh.add(opt);
+	
+	}
+	},
+	error: function (error) {
+	console.log(error);
+	}
+	})
+	});
+
+
+$('#idNumvoie').change(function () {
+		alert($('#idNumvoie').val());
+		});
+
+		$('#idtelephone1').change(function () {
+			if ($.trim($('#idtelephone1').val()) != "") 
+			{
+				if (formatPhoneNumberPortable($.trim($('#idtelephone1').val())) == 0) {
+				Swal.fire('Le numéro téléphone n\'est pas valide.');
+				$('#idtelephone1').focus();
+			}
+			
+			}
+		});
+
+
+		$('#idtelephone2').change(function () {
+			if ($.trim($('#idtelephone2').val()) != "") {
+
+			if (formatPhoneNumberFixe($.trim($('#idtelephone2').val())) == 0) {
+
+			Swal.fire('Le numéro téléphone n\'est pas valide.');
+				$('#idtelephone2').focus();
+			}
+
+			}
+		});
+
+
+	$('#idtelpersonne_dirig1').change(function () {
+		if ($.trim($('#idtelpersonne_dirig1').val() ) != "") {
+		
+		if (formatPhoneNumberPortable($.trim($('#idtelpersonne_dirig1').val())) == 0) {
+		
+		Swal.fire('Le numéro téléphone n\'est pas valide.');
+		$('#idtelpersonne_dirig1').val("");
+		$('#idtelpersonne_dirig1').focus();
+		}
+		
+		}
+		});
+
+
+
+		function controleCNI (cni) {
+			let route = "{{ path('controleCNI') }}" + "/" +cni;	   
+				$.ajax({
+			   	type: 'GET',
+			   	url: route,
+			   	success: function (data) {
+					if (data == 1)
+					{
+						document.getElementById('nincni').innerHTML = "Ce numéro d'identification est déjà utilisé.";
+						$('#idcni').addClass('has_error');
+						$("#idcni").focus();
+
+						document.getElementById('btnSuivant').setAttribute("disabled",true);
+					}
+					else 
+					{
+						$('#idcni').removeClass('has_error');
+						document.getElementById('nincni').innerHTML = "";
+						document.getElementById('btnSuivant').removeAttribute("disabled");
+					}
+				   
+			   	},
+			   error: function (error) {
+				   
+			   console.log(error);
+			   }
+			   });
+	   }
+
+
+
+
+			// Controle sur CNI
+			$('#idcni').change(function () {	
+
+				controleCNI($("#idcni").val());
+
+				var cni = $('#idcni').val();
+				if (cni.length == 14)
+				{
+					var element1 = cni.substring(0,1);		
+					if ( element1 != 1 && element1 != 2 )
+					{
+						$('#idcni').addClass('has_error');
+						Swal.fire("La CNI n'est pas valide.");
+						$("#idcni").val("");
+						$("#idcni").focus();
+					}
+					else
+					{
+						$('#idcni').removeClass('has_error');
+			
+					}
+				}
+				else
+				{
+					Swal.fire("La longueur de la CNI doit être de 13 à 14 caractères.");
+					$("#idcni").val("");
+		
+				}
+				
+			});  
+			
+
+
+	// contole date cni et date passpport
+	$('#idDatecni').change(function () {
+		var dateCNI = new Date($('#idDatecni').val());
+		var dateDuJour = new Date();
+		if (dateCNI > dateDuJour) {
+		Swal.fire('La date de délivrance du CNI  ne doit pas être postérieure à la date du jour.');
+		document.getElementById("idDatecni").value = new Date("");
+		}
+		});
+		
+	$('#idDatepassport').change(function () {
+	var datepassport = new Date($('#idDatepassport').val());
+	var dateDuJour = new Date();
+	if (datepassport > dateDuJour) {
+	Swal.fire('La date du passport ne doit pas être postérieure à la date du jour.');
+	document.getElementById("idDatepassport").value = new Date("");
+	}
+	});
+
+
+	// contole date cni et date passpport
+$('#idDatcni_dirig').change(function () {
+	
+	var dateCNI = new Date($('#idDatcni_dirig').val());
+	var dateDuJour = new Date();
+	if (dateCNI > dateDuJour) {
+	Swal.fire('La date de CNI ne doit pas être postérieure à la date du jour.');
+	document.getElementById("idDatcni_dirig").value = new Date("");
+	}
+	});
+	
+	$('#idDatepassport_dirig').change(function () {
+	var datepassport = new Date($('#idDatepassport_dirig').val());
+	var dateDuJour = new Date();
+	if (datepassport > dateDuJour) {
+	Swal.fire('La date du passport ne doit pas être postérieure à la date du jour.');
+	document.getElementById("idDatepassport_dirig").value = new Date("");
+	}
+	});
+
+
+	$("#idDatenais").change(function() {
+		var dateCNI = new Date($('#idDatecni').val());
+		var datepassport = new Date($('#idDatepassport').val());
+		var datenais =  new Date($('#idDatenais').val());
+		if (datenais > dateCNI)
+		{
+			Swal.fire('La date de naissance ne doit pas être postérieure  à la date de délivrance de la CNI.');
+			document.getElementById("idDatenais").value = new Date("");
+		}
+
+	});
+
+
+
+	// verification de l'Email
+function IsEmail(email) {
+	var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (! regex.test(email)) {
+	return false;
+	} else {
+	return true;
+	}
+	}
+
+	
+	
+	$("#idemailpersonne").change(function () {
+	var inputvalues = $(this).val();
+	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (! regex.test(inputvalues)) {
+	Swal.fire("Entrez une adresse email valide.");
+	$('#idemailpersonne').addClass('has_error');
+	$("#idemailpersonne").val("");
+	$("#idemailpersonne").focus();
+	}
+	
+	});
+
+
+	$("#idemail").change(function () {
+	var inputvalues = $(this).val();
+	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (! regex.test(inputvalues)) {
+	Swal.fire("Entrez une adresse email valide.");
+	$('#idemail').addClass('has_error');
+	$("#idemail").focus();
+	}
+	
+	});
+
+	$("#idemail_dirig").change(function () {
+		var inputvalues = $(this).val();
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if (! regex.test(inputvalues)) {
+		Swal.fire("Entrez une adresse email valide.");
+		$('#idemail_dirig').addClass('has_error');
+		$("#idemail_dirig").focus();
+		}
+		else 
+		{
+			$('#idemail_dirig').removeClass('has_error');
+		}
+		
+		});
+	
+	// CONTROLES SUR LES DATES
+	
+	$('#idDatenais').change(function () {
+	var verifdatenaiss = 0;
+	if ($('#idDatenais').val() != "") {
+	
+	var date1 = new Date($('#idDatenais').val());
+	var dateDuJour = new Date();
+	
+	if (date1 > dateDuJour) {
+	Swal.fire('La   date de naissance  doit être inférieure  à la date du jour.');
+	document.getElementById("idDatenais").value = new Date("");
+	
+	}
+	}
+	});
+
+	$('#idDatenais_dirig').change(function () {
+		var verifdatenaiss = 0;
+		if ($('#idDatenais').val() != "") {
+		
+		var date1 = new Date($('#idDatenais_dirig').val());
+		var dateDuJour = new Date();
+		
+		if (date1 > dateDuJour) {
+		Swal.fire('La   date de naissance  doit être inférieure  à la date du jour.');
+		document.getElementById("idDatenais_dirig").value = new Date("");
+		
+		}
+		}
+		});
+
+
+	
+	// Fonction servant à limiter le nombre de caractere  dans une textarea
+	function maxLength(element, max) {
+	value = element.value;
+	max = parseInt(max);
+	if (value.length > max) {
+	Swal.fire('Nombre de chiffres dépassé.');
+	element.value = value.substr(0, max);
+	}
+	}
+
+
+
+	$("#idBtnsuivantDirigeant").click(function() {
+	    $("#soumettre").click();
+
+	});
+
+
+// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentActivitesEconomiques').click(function () {
+
+$('#idactiviteEconomique').removeClass('active');
+$('#activiteEconomiques').removeClass('active');
+
+$('#idactivite').addClass('active');
+$('#idactivite').attr('href', '#activites');
+$('#activites').addClass('active');
+
+});
+
+	// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentDirigeant').click(function () {
+
+$('#iddirigeant').removeClass('active');
+$('#dirigeants').removeClass('active');
+
+$('#idactiviteEconomique').addClass('active');
+$('#idactiviteEconomique').attr('href', '#activiteEconomiques');
+$('#activiteEconomiques').addClass('active');
+
+});
+
+	// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentActivites').click(function () {
+
+$('#idactivite').removeClass('active');
+$('#activites').removeClass('active');
+
+$('#idcoordonnee').addClass('active');
+$('#idcoordonnee').attr('href', '#coordonnees');
+$('#coordonnees').addClass('active');
+
+});
+
+// controle sur les boutons précédent et suivant
+$('#idBtnPrecedentCoordonnees').click(function () {
+
+$('#idcoordonnee').removeClass('active');
+$('#coordonnees').removeClass('active');
+
+$('#idpersonne').addClass('active');
+$('#idpersonne').attr('href', '#personne');
+$('#personne').addClass('active');
+
+});
+
+
+$(document).keydown(function (eventObject) {
+	if(eventObject.keyCode==39){
+        // $("#btnSuivant").click();
+		var attClass=document.getElementById("personne").getAttribute('class');
+        var indexactive = attClass.indexOf("active");    
+        if(indexactive !== -1){
+             $("#btnSuivant").click();
+			 return;
+        }
+
+		attClass=document.getElementById("coordonnees").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnSuivantCoordonnees").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activites").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnSuivantActivites").click();
+			 return;
+        }
+
+		attClass=document.getElementById("dirigeants").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnsuivantDirigeant").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activiteEconomiques").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnsuivantActivitesEconomiques").click();
+			 return;
+        }
+
+	}
+    else if(eventObject.keyCode==37){
+	
+		attClass=document.getElementById("coordonnees").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentCoordonnees").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activites").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentActivites").click();
+			 return;
+        }
+
+		attClass=document.getElementById("dirigeants").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentDirigeant").click();
+			 return;
+        }
+
+		attClass=document.getElementById("activiteEconomiques").getAttribute('class');
+        indexactive = attClass.indexOf("active"); 
+        if(indexactive !== -1){
+             $("#idBtnPrecedentActivitesEconomiques").click();
+			 return;
+        }
+
+	}
+   
+});
+
+
+	
+
+// Controle sur CNI
+  $('#idcni_dirig').change(function () {	
+		var cni = $('#idcni_dirig').val();
+		if (cni.length == 13 || cni.length == 14)
+		{
+			var element1 = cni.substring(0,1);		
+			if ( element1 != 1 && element1 != 2 )
+			{
+				$('#idcni_dirig').addClass('has_error');
+				Swal.fire("La CNI n'est pas valide.");
+				$("#idcni_dirig").val("");
+				$("#idcni_dirig").focus();
+			}
+			else
+			{
+				$('#idcni_dirig').removeClass('has_error');
+	
+			}
+		}
+		else
+		{
+			Swal.fire("La longueur de la CNI doit être de 13 à 14 caractères.");
+			$("#idcni_dirig").val("");
+
+		}
+		
+	});  
+
+$('#idCivilite').change(function () {
+	if (document.getElementById("idCivilite").value == "1") 
+	{
+		var sexe = document.getElementById("idsexe");
+		sexe.innerHTML = "";
+		var opt = document.createElement('option');
+		opt.innerHTML = "Masculin";
+		opt.value = 1;
+		sexe.add(opt);
+	} else if (document.getElementById("idCivilite").value == 2) {
+		var sexe = document.getElementById("idsexe");
+		sexe.innerHTML = "";
+		var opt = document.createElement('option');
+		opt.innerHTML = "Féminin";
+		opt.value = 2;
+		sexe.add(opt);
+	}	
+	
+	else if (document.getElementById("idCivilite").value == "0") 
+
+		{
+			var sexe = document.getElementById("idsexe");
+			sexe.innerHTML = "";
+			var opt = document.createElement('option');
+			opt.innerHTML = "Sélectionner ...";
+			opt.value = 0;
+			sexe.add(opt);
+		}
+	
+	});
+
+
+		$('#idcivilite_dirig').change(function () {
+			if (document.getElementById("idcivilite_dirig").value == "1") {
+				
+				let departement = document.getElementById("idSexe_dirig");
+				departement.innerHTML = "";
+						
+				let opt = document.createElement('option');
+				opt.innerHTML = "Masculin";
+				opt.value = '1';
+				departement.add(opt);
+			
+			} else {
+				
+				let departement = document.getElementById("idSexe_dirig");
+				departement.innerHTML = "";
+						
+				let opt = document.createElement('option');
+				opt.innerHTML = "Féminin";
+				opt.value = '2';
+				departement.add(opt);
+		
+			}
+		
+		});
+
+
+		// QVH POUR coordonnees
+		$('#region').change(function () {
+
+		let route = "{{ path('departementsRegion') }}" + "/" + $('#region').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let departement = document.getElementById("departement");
+		departement.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		departement.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) 
+		{
+			let opt = document.createElement('option');
+			opt.value = data[i][0];
+			opt.innerHTML = data[i][1];
+			departement.add(opt);
+		
+		}
+
+			/*if ( document.getElementById("region").value == "0") 
+			{
+				let departement = document.getElementById("departement");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '0';
+				departement.add(opt);
+			}*/
+
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+		
+		$('#departement').change(function () {
+		
+		let route = "{{ path('cavDepartement') }}" + "/" + $('#departement').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let cav = document.getElementById("cav");
+		cav.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		cav.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) {
+		let opt = document.createElement('option');
+		opt.value = data[i][0];
+		opt.innerHTML = data[i][1];
+		cav.add(opt);		
+		
+		}
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+		
+		
+		$('#cav').change(function () {
+		
+		let route = "{{ path('cacrCav') }}" + "/" + $('#cav').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let cacr = document.getElementById("cacr");
+		cacr.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		cacr.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) {
+		let opt = document.createElement('option');
+		opt.value = data[i][0];
+		opt.innerHTML = data[i][1];
+		cacr.add(opt);
+		
+		
+		}
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+		
+		$('#cacr').change(function () {
+		
+		let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr').val();
+		$.ajax({
+		type: 'GET',
+		url: route,
+		dataType: "json",
+		success: function (data) {
+		
+		let qvh = document.getElementById("qvh");
+		qvh.innerHTML = "";
+		
+		let opt = document.createElement('option');
+		opt.innerHTML = "Selectionner ...";
+		opt.value = '';
+		qvh.add(opt);
+		for (var i = data.length - 1; i >= 0; i--) {
+		let opt = document.createElement('option');
+		opt.value = data[i][0];
+		opt.innerHTML = data[i][1];
+		qvh.add(opt);
+		
+
+		}
+		},
+		error: function (error) {
+		console.log(error);
+		}
+		})
+		});
+
+	
+
+			// QVH POUR PERSONNE
+			$('#region_dirigeant').change(function () {
+
+				let route = "{{ path('departementsRegion') }}" + "/" + $('#region_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let departement = document.getElementById("departement_dirigeant");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				departement.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				departement.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#departement_dirigeant').change(function () {
+				
+				let route = "{{ path('cavDepartement') }}" + "/" + $('#departement_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cav = document.getElementById("cav_dirigeant");
+				cav.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cav.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cav.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				
+				$('#cav_dirigeant').change(function () {
+				
+				let route = "{{ path('cacrCav') }}" + "/" + $('#cav_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cacr = document.getElementById("cacr_dirigeant");
+				cacr.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cacr.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cacr.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#cacr_dirigeant').change(function () {
+				
+				let route = "{{ path('qvhCacr') }}" + "/" + $('#cacr_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let qvh = document.getElementById("qvh_dirigeant");
+				qvh.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				qvh.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				qvh.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+
+
+
+             $('#editregion_dirigeant').change(function () {
+                alert("okkk");
+				let route = "{{ path('departementsRegion') }}" + "/" + $('#editregion_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let departement = document.getElementById("editdepartement_dirigeant");
+				departement.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				departement.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				departement.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editdepartement_dirigeant').change(function () {
+				
+				let route = "{{ path('cavDepartement') }}" + "/" + $('#editdepartement_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cav = document.getElementById("editcav_dirigeant");
+				cav.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cav.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cav.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				
+				$('#editcav_dirigeant').change(function () {
+				
+				let route = "{{ path('cacrCav') }}" + "/" + $('#editcav_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let cacr = document.getElementById("editcacr_dirigeant");
+				cacr.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				cacr.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				cacr.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+				
+				$('#editcacr_dirigeant').change(function () {
+				
+				let route = "{{ path('qvhCacr') }}" + "/" + $('#editcacr_dirigeant').val();
+				$.ajax({
+				type: 'GET',
+				url: route,
+				dataType: "json",
+				success: function (data) {
+				
+				let qvh = document.getElementById("editqvh_dirigeant");
+				qvh.innerHTML = "";
+				
+				let opt = document.createElement('option');
+				opt.innerHTML = "Selectionner ...";
+				opt.value = '';
+				qvh.add(opt);
+				for (var i = data.length - 1; i >= 0; i--) {
+				let opt = document.createElement('option');
+				opt.value = data[i][0];
+				opt.innerHTML = data[i][1];
+				qvh.add(opt);
+				
+				}
+				},
+				error: function (error) {
+				console.log(error);
+				}
+				})
+				});
+
+
+				$('#idninAffaire').change(function() {
+
+					let nStr = $("#idninAffaire").val();
+					nStr += '';
+					x = nStr.split('.');
+					x1 = x[0];
+					x2 = x.length > 1 ? '.' + x[1] : '';
+					var rgx = /(\d+)(\d{3})/;
+					while (rgx.test(x1)) {
+					x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+					}
+					$("#idninAffaire").val(x1 + x2) ;
+
+				});
+
+	
+				if($.trim($('#idninAffaire').val()).length > 2 )
+				{
+					document.getElementById('idninAnneeCa').removeAttribute("disabled");
+					document.getElementById('idninAnneeCa').setAttribute("required", true);
+					
+					let nStr = $("#idninAffaire").val();
+					nStr += '';
+					x = nStr.split('.');
+					x1 = x[0];
+					x2 = x.length > 1 ? '.' + x[1] : '';
+					var rgx = /(\d+)(\d{3})/;
+					while (rgx.test(x1)) {
+					x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+					}
+					$("#idninAffaire").val(x1 + x2) ;
+
+				}
+
+					$('#idninCapital').change(function() {
+
+						let nStr = $("#idninCapital").val();
+						nStr += '';
+						x = nStr.split('.');
+						x1 = x[0];
+						x2 = x.length > 1 ? '.' + x[1] : '';
+						var rgx = /(\d+)(\d{3})/;
+						while (rgx.test(x1)) {
+						x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+						}
+						$("#idninCapital").val(x1 + x2) ;
+
+					});
+
+					
+
+					$('#idninEffectifFemSAIS').change(function () {
+						//alert(document.getElementById("idninEffectifFemSAIS").value+" "+ document.getElementById("idninEffect1").value);
+						if(document.getElementById("idninEffect1").value!="")
+						{
+							if (Number(document.getElementById("idninEffectifFemSAIS").value) > Number(document.getElementById("idninEffect1").value)) {
+								Swal.fire("Effectif temporaire femme ne doit pas dépasser l'effectif temporaire total.");
+								document.getElementById("idninEffectifFemSAIS").value="";
+							}
+						}
+					
+					
+					// $("#sectionPersonnePhysique ").hide();
+					// $("#ninea_ninPrenom ").show();
+					
+					});
+
+
+					$('#idninEffect1').change(function () {
+					if(document.getElementById("idninEffectifFemSAIS").value!=""){
+						if (Number(document.getElementById("idninEffectifFemSAIS").value) > Number(document.getElementById("idninEffect1").value)) {
+							Swal.fire("l'effectif temporaire total doit être supérieur effectif temporaire femme.");
+							document.getElementById("idninEffect1").value="";
+						}
+					}
+					
+					
+					});
+
+					$('#idninEffectifFem').change(function () {
+						
+						if(document.getElementById("idninEffectif").value!=""){
+						//	alert(document.getElementById("idninEffectifFem").value +" "+ document.getElementById("idninEffectif").value);
+							if (Number(document.getElementById("idninEffectifFem").value) > Number(document.getElementById("idninEffectif").value)) {
+								Swal.fire("Effectif permanent femme ne doit pas dépasser l'effectif permanent total.");
+								document.getElementById("idninEffectifFem").value="";
+							}
+						}
+					
+					
+					});
+
+					$('#idninEffectif').change(function () {
+						if(document.getElementById("idninEffectifFem").value!=""){
+							if (Number(document.getElementById("idninEffectifFem").value) > Number(document.getElementById("idninEffectif").value)) {
+								Swal.fire("l'effectif permanent total doit être supérieur à effectif permanent femme.");
+								document.getElementById("idninEffectif").value="";
+							}
+						}
+					
+					
+					});
+
+
+					$('#ni_activite_economique_ninEffectifFemSAIS').change(function () {
+						if(document.getElementById("ni_activite_economique_ninEffect1").value!=""){
+							//alert(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value+ " "+ document.getElementById("ni_activite_economique_ninEffect1").value);
+							if (Number(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value) > Number(document.getElementById("ni_activite_economique_ninEffect1").value)) {
+								Swal.fire("Effectif temporaire femme ne doit pas dépasser l'effectif temporaire total.");
+								document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value="";
+							}
+						}
+					
+					// $("#sectionPersonnePhysique ").hide();
+					// $("#ninea_ninPrenom ").show();
+					
+					});
+
+					$('#ni_activite_economique_ninEffect1').change(function () {
+						if(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value!=""){
+							if (Number(document.getElementById("ni_activite_economique_ninEffectifFemSAIS").value)> Number(document.getElementById("ni_activite_economique_ninEffect1").value)) {
+								Swal.fire("l'effectif temporaire total doit être supérieur effectif temporaire femme.");
+								document.getElementById("ni_activite_economique_ninEffect1").value="";
+							}
+						}
+					
+					
+					});
+
+					$('#ni_activite_economique_ninEffectifFem').change(function () {
+						
+						if(document.getElementById("ni_activite_economique_ninEffectif").value!=""){
+							if (Number(document.getElementById("ni_activite_economique_ninEffectifFem").value) > Number(document.getElementById("ni_activite_economique_ninEffectif").value)) {
+								Swal.fire("Effectif permanent femme ne doit pas dépasser l'effectif permanent total.");
+								document.getElementById("ni_activite_economique_ninEffectifFem").value="";
+							}
+						}
+						
+					
+					});
+
+					$('#ni_activite_economique_ninEffectif').change(function () {
+						if(document.getElementById("ni_activite_economique_ninEffectifFem").value!=""){
+							if (Number(document.getElementById("ni_activite_economique_ninEffectifFem").value) > Number(document.getElementById("ni_activite_economique_ninEffectif").value)) {
+								Swal.fire("l'effectif permanent total doit être supérieur à effectif permanent femme.");
+								document.getElementById("ni_activite_economique_ninEffectif").value="";
+							}
+						}
+					});
+
+
+					$('#idninAnneeCa').change(function () {
+						//	alert("ca changes");
+							var annee=document.getElementById("idninAnneeCa").value;
+							let anneenormale = annee.split('_').join('').trim();
+							
+								if(anneenormale.length != 4){
+									Swal.fire("l'année du chiffre d'affaire doit être sur 4 chiffres");
+									//document.getElementById("ni_activite_economique_ninAnneeCa").value="";
+								}								
+								else
+								{
+									
+									var dateDuJour=new Date();
+									//alert(dateDuJour);
+									var anneeActuelle=dateDuJour.getFullYear();
+									if(anneenormale > anneeActuelle){
+										Swal.fire("l'année du chiffre d'affaire doit être antérieur à "+anneeActuelle);
+										
+										document.getElementById('idBtnsuivantActivitesEconomiques').setAttribute("disabled", true);
+	
+									}
+								}
+	
+								let formeunite = "{{ ninea.formeJuridique.niFormeunite.id }}"
+								
+								if (formeunite == 11 || formeunite == 12){
+									
+									let datenais = new Date($('#idDatenais').val());
+									
+								//let yearsDiff = dateDuJour.getFullYear() - datenais.getFullYear();
+									if (document.getElementById('idninAnneeCa').value < datenais.getFullYear() )
+									{
+										document.getElementById('idninAnneeCa').value = "";
+										Swal.fire("L'année du chiffre d'affaires ne doit pas être antérieure à l'année de naissance.");
+									}
+									
+									
+								}
+	
+						
+						});
+	
+						 
+					 
+                    $("#idninAffaire").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+
+					 $("#idninAnneeCa").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninCapital").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffectif").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffect1").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffectifFem").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+					 $("#idninEffectifFemSAIS").keyup(function (event) {
+                        var value = jQuery(this).val();
+                         value = value.replace(/[^0-9]+/g, '');
+                         jQuery(this).val(value);
+                     });
+				
+</script>{% endblock %}

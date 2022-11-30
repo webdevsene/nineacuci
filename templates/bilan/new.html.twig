@@ -632,7 +632,11 @@
                     input3.setAttribute('class','form-control form-control-sm inputPassif'); 
                     input3.setAttribute('type','text'); 
                    
-                    input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                      if(dataPassif[1][i][0]=="CI" || dataPassif[1][i][0]=="CB" || dataPassif[1][i][0]=="CH" || dataPassif[1][i][0]=="CP" || dataPassif[1][i][0]=="DF") 
+                            input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                        else
+                            input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
+                                   
                    
                     input3.setAttribute('name',dataPassif[1][i][0]+"PassifNet1");
                     input3.setAttribute('id',dataPassif[1][i][0]+"PassifNet1");
@@ -657,7 +661,11 @@
                         if (dataPassif[1][i][4]==true)
                         input4.setAttribute('style','font-weight: bold;'); 
                    
-                    input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                    if(dataPassif[1][i][0]=="CI" || dataPassif[1][i][0]=="CB" || dataPassif[1][i][0]=="CH" || dataPassif[1][i][0]=="CP" || dataPassif[1][i][0]=="DF") 
+                        input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                    else
+                        input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
+                                   
                    
                     input4.setAttribute('name',dataPassif[1][i][0]+"PassifNet2");
                     input4.setAttribute('id',dataPassif[1][i][0]+"PassifNet2");
@@ -1306,7 +1314,11 @@ $('#effacerPassif1').click(function(){
                                 if (dataPassif[1][i][4]==true)  
                                  input3.setAttribute('style','font-weight: bold;');
                                 
-                                input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9-,]/g, '');");
+                                if(dataPassif[1][i][0]=="CI" || dataPassif[1][i][0]=="CB" || dataPassif[1][i][0]=="CH" || dataPassif[1][i][0]=="CP" || dataPassif[1][i][0]=="DF")
+                                   input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9-,]/g, '');");
+                                else
+                                   input3.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
+
                                 
                                 input3.setAttribute('name',dataPassif[1][i][0]+"PassifNet1");
                                 input3.setAttribute('id',dataPassif[1][i][0]+"PassifNet1");
@@ -1330,8 +1342,11 @@ $('#effacerPassif1').click(function(){
                                 input4.setAttribute('type','text');
                                 if (dataPassif[1][i][4]==true)  
                                  input4.setAttribute('style','font-weight: bold;'); 
-                                 
-                                input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                                
+                                if(dataPassif[1][i][0]=="CI" || dataPassif[1][i][0]=="CB" || dataPassif[1][i][0]=="CH" || dataPassif[1][i][0]=="CP" || dataPassif[1][i][0]=="DF") 
+                                 input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,-]/g, '');");
+                                else
+                                 input4.setAttribute('oninput',"this.value = this.value.replace(/[^0-9,]/g, '');");
                                    
                                 input4.setAttribute('name',dataPassif[1][i][0]+"PassifNet2");
                                 input4.setAttribute('id',dataPassif[1][i][0]+"PassifNet2");

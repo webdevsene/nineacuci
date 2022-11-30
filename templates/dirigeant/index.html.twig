@@ -30,7 +30,7 @@
                 <td>{{ dirigeant.prenom }}</td>
                 <td>
                     <a href="{{ path('dirigeant_show', {'id': dirigeant.id}) }}">show</a>
-                    <a href="{{ path('dirigeant_edit', {'id': dirigeant.id}) }}">edit</a>
+                    <a href="{{ path('dirigeant_edit', {'id': dirigeant.id}) }}"> <i class="fas fa-edit"></i></a>
                 </td>
             </tr>
         {% else %}

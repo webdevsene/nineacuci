@@ -10,6 +10,8 @@
 
 {% block body %}
 
+<div class"contenu" id="id-responsive-div">
+
     {% for message in app.flashes('notice') %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <i class="mdi mdi-alert-outline me-2"></i>
@@ -18,86 +20,86 @@
             </div>
     {% endfor %}
 
-<div class="box mt-lg-5">
-	<div class="box-header">
-		<ul class="nav nav-tabs nav-tabs-left">
-			<li class="active">
-				<a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
-                    Exportation/Filtrer des NINEAs
-				</a>
-			</li>
+    <div class="box mt-lg-5">
+        <div class="box-header">
+            <ul class="nav nav-tabs nav-tabs-left">
+                <li class="active">
+                    <a href="#list" data-toggle="tab"><i class="fas fa-list"></i> 
+                        Exportation/Filtrer des NINEAs
+                    </a>
+                </li>
 
-		</ul>
-	</div>
+            </ul>
+        </div>
 
-	<div class="box-content padded">
+        <div class="box-content padded">
 
-		<div class="tab-content">            
-			<div class="example-wrapper ">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                        <div class="card-body">
-                                <form id="sample_form" class="repeater" enctype="multipart/form-data" method="post" >
-                                    <div data-repeater-list="group-a">
+            <div class="tab-content">            
+                <div class="example-wrapper ">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                            <div class="card-body">
+                                    <form id="sample_form" class="repeater" enctype="multipart/form-data" method="post" >
+                                        <div data-repeater-list="group-a">
 
-                                        <div class="" id="process" style="display:none;">
-                                            <div class="progress">
-                                                <!-- <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-                                                    <span id="process_data">0</span> - <span id="total_data">0</span>
-                                                -->
-                                                <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-                                            </div>
-                                        </div>
-
-                                        <!-- <div id="myProgress">
-                                            <div id="myBar"></div>
-                                        </div> -->
-
-                                        <div data-repeater-item class="row mt-4">
-                                            <div class="mb-3 col-lg-4">
-                                              <label for="" class="form-label">Date de début</label>
-                                              <input type="date" class="form-control form-control-sm" name="var-datedebut" id="var-datedebut" aria-describedby="helpId" placeholder="">
-                                              <small id="helpId" class="form-text text-muted"></small>
-                                            </div>
-
-                                            <div class="mb-3 col-lg-4">
-                                            <label for="" class="form-label">Date de fin</label>
-                                            <input type="date"
-                                                class="form-control form-control-sm" name="var-datefin" id="var-datefin" aria-describedby="helpId" placeholder="" required>
-                                            <small id="helpId" class="form-text text-muted"></small>
-                                            </div>
-
-                                            <div class="mb-3 col-lg-4">
-                                            <label for="" class="form-label">Centre SI</label>
-                                            <input type="text"
-                                                class="form-control form-control-sm" name="var-csi" id="var-csi" aria-describedby="helpId" placeholder="" >
-                                            <small id="helpId" class="form-text text-muted"></small>
-                                            </div>
-                                            
-                                            <div class="col-lg-2 mt-2 align-self-center">
-                                                <div class="d-grid">
-                                                    <input id="submit-templ" name="submit-templ" type="submit" class="btn btn-secondary bg-secondary btn-sm" value="Générer rapport "/>
+                                            <div class="" id="process" style="display:none;">
+                                                <div class="progress">
+                                                    <!-- <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                        <span id="process_data">0</span> - <span id="total_data">0</span>
+                                                    -->
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                                                 </div>
                                             </div>
+
+                                            <!-- <div id="myProgress">
+                                                <div id="myBar"></div>
+                                            </div> -->
+
+                                            <div data-repeater-item class="row mt-4">
+                                                <div class="mb-3 col-lg-4">
+                                                <label for="" class="form-label">Date de début</label>
+                                                <input type="date" class="form-control form-control-sm" name="var-datedebut" id="var-datedebut" aria-describedby="helpId" placeholder="">
+                                                <small id="helpId" class="form-text text-muted"></small>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-4">
+                                                <label for="" class="form-label">Date de fin</label>
+                                                <input type="date"
+                                                    class="form-control form-control-sm" name="var-datefin" id="var-datefin" aria-describedby="helpId" placeholder="" required>
+                                                <small id="helpId" class="form-text text-muted"></small>
+                                                </div>
+
+                                                <div class="mb-3 col-lg-4">
+                                                <label for="" class="form-label">Centre SI</label>
+                                                <input type="text"
+                                                    class="form-control form-control-sm" name="var-csi" id="var-csi" aria-describedby="helpId" placeholder="" >
+                                                <small id="helpId" class="form-text text-muted"></small>
+                                                </div>
+                                                
+                                                <div class="col-lg-2 mt-2 align-self-center">
+                                                    <div class="d-grid">
+                                                        <input id="submit-templ" name="submit-templ" type="submit" class="btn btn-secondary bg-secondary btn-sm" value="Générer rapport "/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
-                                        
-                                    </div>
-                                </form> 
-                            </div>
-                            </div>
+                                    </form> 
+                                </div>
+                                </div>
+                        </div>
                     </div>
+                    <!-- end row -->
                 </div>
-                <!-- end row -->
+                                    
             </div>
-								
-		</div>
-			
+                
+        </div>
     </div>
-</div>
 	
 
-
+</div>
 {% endblock %}
 
 {% block javascript %}

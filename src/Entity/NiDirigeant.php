@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\NiDirigeantRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NiDirigeantRepository::class)
+ * @Gedmo\Loggable
  */
 class NiDirigeant
 {
@@ -20,26 +22,31 @@ class NiDirigeant
 
     /**
      * @ORM\Column(type="string",  nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninPrenom;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninNom;
 
     /**
      * @ORM\Column(type="string",  nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninNumero;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninAddresse;
 
     /**
      * @ORM\ManyToOne(targetEntity=Qualite::class, inversedBy="niDirigeants")
+     * @Gedmo\Versioned 
      */
     private $ninPosition;
 
@@ -67,31 +74,37 @@ class NiDirigeant
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninCni;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninDateCni;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninTelephone1;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninTelephone2;
 
     /**
      * @ORM\ManyToOne(targetEntity=QVH::class, inversedBy="niDirigeants")
+     * @Gedmo\Versioned 
      */
     private $ninQvh;
 
     /**
      * @ORM\Column(type="string",  nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninEmail;
 
@@ -102,11 +115,13 @@ class NiDirigeant
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninDatenais;
 
     /**
      * @ORM\Column(type="string",  nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninLieunais;
 
@@ -122,11 +137,13 @@ class NiDirigeant
 
     /**
      * @ORM\ManyToOne(targetEntity=NINinea::class, inversedBy="ninDirigeant")
+     * @Gedmo\Versioned 
      */
     private $nINinea;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $DateDeCloture;
 

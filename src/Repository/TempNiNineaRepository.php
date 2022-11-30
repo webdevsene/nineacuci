@@ -39,6 +39,63 @@ class TempNiNineaRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function distinctGroupTempNINinea($id, $dateDebut, $dateFin){
+        
+        $query = $this->createQueryBuilder('tn');
+
+        if($id){
+            $query = $query
+                ->andWhere('tn.ninNinea  LIKE :numero')
+                ->setParameter('numero', $id.'%');
+        }
+
+        if ($dateDebut) {
+            $dateDebut = new \DateTime($dateDebut);
+            // $var = $var->format('Y-m-d');
+            $query = $query->andWhere('tn.createdAt >= :var')
+                        ->setParameter('var',$dateDebut);
+        }
+        if ($dateFin) {
+            $dateFin = new \DateTime($dateFin);
+           //  $var2 = $var2->format('Y-m-d');
+
+            $query = $query->andWhere('tn.createdAt <= :var2')
+                        ->setParameter('var2',$dateFin);
+        }
+
+        return $query
+            ->groupBy("tn.ninNinea")
+            ->orderBy("tn.createdAt", "DESC")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function distinctGroupTempNINineaNoFilter(){
+        
+        $query = $this->createQueryBuilder('tn');
+
+        return $query
+            ->groupBy("tn.ninNinea")
+            ->orderBy("tn.createdAt", "DESC")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    public function distinctTempNINinea(){
+        
+        $query = $this->createQueryBuilder('tn');
+        return $query->select('tn.ninNinea')
+            ->distinct(true)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
 //    /**
 //     * @return TempNiNinea[] Returns an array of TempNiNinea objects
 //     */

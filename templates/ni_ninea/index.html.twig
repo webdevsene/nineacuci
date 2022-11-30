@@ -96,7 +96,13 @@
                                                                                     
                                                                                     <div class="col-lg-6">
                                                                                         
-                                                                                        <table width="100%">     
+                                                                                        <table width="100%"> 
+                                                                                             <tr>
+                                                                                                <td style="width: 40%;"><label for=""><b><u> Adresse : </u></b> </label></td>
+                                                                                                <td style="width: 60%;"><input type="text" name="adresse" id="id_raison" onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm"
+                                                                                                    {% if adresse !="" %} value="{{adresse}}" {% endif %}>
+                                                                                                </td>
+                                                                                            </tr>      
                                                                                             <tr>
                                                                                                 <td style="width: 30%;"><label for=""><b><u> Raison sociale : </u></b> </label></td>
                                                                                                 <td style="width: 70%;"><input type="text" name="raisonsociale" onkeyup="this.value=this.value.toUpperCase()" class="form-control form-control-sm"
@@ -208,13 +214,13 @@
                                     <a href="{{ path('nininea_show', {'id': tag.id}) }}" title="Détails"  class="btn btn-outline-success btn-sm edit" id="consultation">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ path('n_i_ninea_edit', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
+                                    <!--a href="{{ path('n_i_ninea_edit', {'id': tag.id}) }}" title="Modifier" id="modification" class="btn btn-outline-primary btn-sm edit">
                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
+                                    </a -->
 
                                      <a href="{{ path('n_i_ninea_delete', {'id': tag.id}) }}" title="Supprimer" id="modification"  class="btn btn-outline-danger btn-sm">
                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    </a >
 
                                     
                                 </td>
@@ -270,12 +276,38 @@
             sDom: '<"table-header"fl>t<"table-footer"ip>'
 
         })
+      jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "date-uk-pre": function ( a ) {
+            if (a == null || a == "") {
+                return 0;
+            }
+            var ukDatea = a.split('/');
+            return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+        },
+     
+        "date-uk-asc": function ( a, b ) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+     
+        "date-uk-desc": function ( a, b ) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+
+    });
+
+
+
      $("#ninea").DataTable({
 
+       
         "order": [0, "asc" ],
         "columnDefs": [
-            { "visible": false, "targets": 0 }
+            { "visible": false, "targets": 0 },
+             { type: 'date-uk', targets: 4 }
           ],
+
+          
+
 
         "sDom": 'f<"top">tip',
         "language": {

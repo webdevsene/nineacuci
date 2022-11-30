@@ -4,7 +4,6 @@
 
 {% block body %}
 
- <a href="{{ path('app_ni_formejuridique_new') }}" class="btn btn-primary  mt-lg-3">+Ajouter forme juridique</a>
 
 <div class="box mt-lg-2">
 	<div class="box-header">
@@ -15,8 +14,6 @@
                    Liste forme juridique
 				</a>
 			</li>
-
-          
 
 		</ul>
 	</div>
@@ -31,8 +28,8 @@
                         <div class="card-body">
   
 
-                        <table class="table">
-                            <thead>
+                        <table class="table table-bordered table-striped">
+                            <thead class="tr_entete">
                                 <tr>
                                     <th>Code</th>
                                     <th>Libelle</th>
@@ -46,7 +43,9 @@
                                     <td>{{ ni_formejuridique.fojLibelle }}</td>
                                     <td>
                                        
-                                        <a href="{{ path('app_ni_formejuridique_edit', {'id': ni_formejuridique.id}) }}">edit</a>
+                                        <a href="{{ path('app_ni_formejuridique_edit', {'id': ni_formejuridique.id}) }}">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             {% else %}
@@ -67,6 +66,10 @@
 								
 		</div>
 			
+    </div>
+
+    <div class="box-footer">
+        <a href="{{ path('app_ni_formejuridique_new') }}" class="btn btn-outline-secondary">+ Ajouter  forme  juridique</a>
     </div>
 </div>
 

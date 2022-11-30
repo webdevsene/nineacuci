@@ -7,10 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NiActiviteRepository::class)
+ * 
  */
 class NiActivite
 {
@@ -22,6 +23,7 @@ class NiActivite
 
     /**
      * @ORM\Column(type="string", length=200, nullable=true)
+     *
      */
     private $ninAutact;
 
@@ -33,6 +35,7 @@ class NiActivite
 
     /**
      * @ORM\ManyToOne(targetEntity=NAEMA::class, inversedBy="niActivites")
+     *
      */
     private $refNaema;
 
@@ -74,17 +77,20 @@ class NiActivite
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     *
      */
     private $statActivprincipale;
 
     /**
      * @ORM\ManyToOne(targetEntity=NINinea::class, inversedBy="ninActivite")
+     *  
      */
     private $nINinea;
 
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     *
      */
     private $DateDeCloture;
   

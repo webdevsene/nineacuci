@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\TempNINinea;
 use App\Entity\NINinea;
 use App\Entity\QVH;
+use App\Entity\DemandeModification;
+
 use App\Entity\TempNiPersonne;
 use App\Entity\NiActivite;
 use App\Entity\NiCivilite;
@@ -55,10 +57,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 /**
  * @Route("/temp/n/i/ninea")
+ * @Security("is_granted('ROLE_CONSULTATION_NINEA') or is_granted('ROLE_DEMANDE_NINEA') or is_granted('ROLE_VALIDER_DEMANDE_NINEA') or is_granted('ROLE_NINEA_ADMIN')")
  */
 class TempNINineaController extends AbstractController
 {
@@ -94,6 +99,112 @@ class TempNINineaController extends AbstractController
             $tempNINinea->setNinNinea($ninea->getNinNinea());
             $tempNINinea->setCreatedBy($this->getUser());
             $tempNINinea->setModifiedBy($this->getUser());
+
+
+            /// activité
+
+            $ninactivites = $entityManager->getRepository(NiActivite::class)->findBy(array("nINinea"=>$ninea),array('id'=>'desc'));
+            $ninproduits = $entityManager->getRepository(Ninproduits::class)->findBy(array("nINinea"=>$ninea),array('id'=>'desc'));
+    
+           // var_dump($ninactivites);
+            $nbActivites=$request->get('nbActivites_modif');
+           // var_dump($nbActivites);
+           //var_dump($ninproduits);
+            for($indice = 1; $indice <= (int)($nbActivites); $indice++){
+              //var_dump($ninproduits);
+  
+              $refProduit=$request->get('refProduit_modif'.strval($indice));
+              $refNaema=$request->get('refNaema_modif'.strval($indice));
+              $libelleActivite=$request->get('ninAutact_modif'.strval($indice));
+  
+              
+              $bActiviteTrouve=false;
+             // var_dump($refProduit);
+             foreach ($ninactivites as $act) {
+              if($act->getRefNaema()->getId()==$refNaema){
+                   $bActiviteTrouve=true;
+                   $ninactivite=$act;
+                  // var_dump($ninactivite);
+                   break;
+              }
+             }
+  
+              
+              if($bActiviteTrouve==false){
+                $ninactivite = new NiActivite();
+  
+               // var_dump($ninactivite);
+  
+                $ninactivite->setNiNineaproposition($niNineaproposition);
+                if(count($ninea->getNinActivite())>0)
+                  $ninactivite->setStatActivPrincipale(false);
+                else
+                  $ninactivite->setStatActivPrincipale(true);
+  
+                
+                $ninactivite->setNinAutact($libelleActivite);
+                $ninactivite->setNINinea($ninea);
+                $ninactivite->setRefNaema($entityManager->getRepository(NAEMA::class)->find($refNaema));
+                // $niNineaproposition->addNinActivite($ninactivite);
+                $ninea->addNinActivite($ninactivite);
+                $entityManager->persist($ninactivite);
+  
+              }
+              else {
+               // $ninactivite=$act;
+                $ninactivite->setNinAutact($libelleActivite);
+                
+               // var_dump($ninactivite);
+              }
+  
+              foreach ($refProduit as $key) {
+   
+                $bProduitTrouve=false;
+                foreach ($ninproduits as $prod) {
+                  if($prod->getRefproduits()->getId()==$key){
+                       $bProduitTrouve=true;
+                       $ninproduit = $prod;
+                       //var_dump($ninactivite);
+                       break;
+                  }
+               }
+  
+                if($bProduitTrouve==false){
+                  $ninproduit = new Ninproduits();
+                  $ninproduit->setRefproduits($entityManager->getRepository(RefProduits::class)->find($key));
+                  $niNinea->addNinproduit($ninproduit);
+                  
+                  $entityManager->persist($ninproduit);
+                }
+                else{
+                //  var_dump($ninproduit);
+                }
+            
+              }
+  
+              //Gestion de la suppression des produits
+              foreach ($ninproduits as $ninprod) {
+                if($ninprod->getRefproduits()->getNaema()->getId()==$refNaema){
+                  $bProduitASupprimer=true;
+                  foreach ($refProduit as $refprod) {
+                    if($ninprod->getRefproduits()->getId()==$refprod){
+                      $bProduitASupprimer=false;
+                      break;
+                    }
+                  }
+  
+                  if($bProduitASupprimer==true){
+                    $niNinea->removeNinproduit($ninprod);
+                    $entityManager->remove($ninprod);
+                  }
+                }
+               
+              }
+  
+            }
+
+
+            // FIN
             
             
             
@@ -233,7 +344,11 @@ class TempNINineaController extends AbstractController
                 
 
             }else{
-
+                $personne = new TempNiPersonne();
+                $raison=$request->get('raison_modif');
+                $sigle=$request->get('sigle_modif');
+                $personne->setNinRaison($raison);
+                $personne->setNinSigle($sigle);
             }
 
             $tempNiActiviteEconomique->setNiNinea($tempNINinea);
@@ -254,6 +369,99 @@ class TempNINineaController extends AbstractController
             'temp_n_i_ninea' => $tempNINinea,
             'form' => $form,
         ]);
+    }
+
+
+
+    /**
+     * @Route("/temp_editPersonne/{id}/{demande}", name="temp_editPersonne", methods={"GET", "POST"})
+     */
+    public function temp_editPersonne(Request $request, EntityManagerInterface $entityManager,TempNiPersonne $tempNiPersonne,$demande=""): Response
+    {
+        $demandeModification=$entityManager->getRepository(DemandeModification::class)->find($demande);
+        if ($tempNiPersonne->getNinNinea()->getFormeJuridique()->getNiFormeunite()->getId() == 11 || 
+            $tempNiPersonne->getNinNinea()->getFormeJuridique()->getNiFormeunite()->getId() == 12)
+            {
+
+              //récupération personne physique
+                $personne = $tempNiPersonne;
+                $civilite=$request->get('civilite_modif');
+                $prenom=$request->get('prenom_modif');
+                $nom=$request->get('nom_modif');
+                $sexe=$request->get('sexe_modif');
+                $datenais = $request->get("datenais_modif");
+                $lieunais = $request->get("lieunais_modif");
+                $nationalite = $request->get("nationalite_modif");
+                $telephone = $request->get('telephone_modif');
+                if( $nationalite=="SN"){
+                    $cni = $request->get("cni_modif");
+                    $datecni = $request->get("datecni_modif");
+                    $personne->setNinCNI($cni);
+                    if($datecni)
+                        $personne->setNinDateCNI(new \DateTime($datecni));
+                    }
+                else {
+                    $passport = $request->get("passport_modif");
+                    $datepassport = $request->get("datepassport_modif");
+                    $personne->setNinCNI($passport);
+                    if($datepassport)
+                          $personne->setNinDateCNI(new \DateTime($datepassport));
+                    
+                }
+                if ($request->get("qvh_modif"))
+                {
+                   $qvh_personne =  $request->get("qvh_modif");
+                   $personne->setNinQvh($entityManager->getRepository(QVH::class)->find($qvh_personne));
+                } 
+                $email = $request->get('email_modif');
+                if ($request->get("typevoie_modif"))
+                {
+                    $typevoie = $request->get("typevoie_modif");
+                }
+                $voie = $request->get('voie_modif');
+                $numvoie = $request->get('numvoie_modif'); 
+                $adresse = $request->get('adresse_modif'); 
+
+
+                
+
+                $personne->setNinNom($nom);
+                $personne->setNinPrenom($prenom);
+                $personne->setNinEmailPersonnel($email);
+                $personne->setNinTelephone($telephone);
+                $personne->setAdresse($adresse);
+                $personne->setNinVoie($voie);
+                $personne->setNumVoie($numvoie);
+                $personne->setCivilite($entityManager->getRepository(NiCivilite::class)->find($civilite));
+                $personne->setNinDateNaissance(new \DateTime($datenais));
+                $personne->setNinLieuNaissance($lieunais);
+                $personne->setNationalite($entityManager->getRepository(Pays::class)->find($nationalite));
+                $personne->setNinSexe($entityManager->getRepository(NiSexe::class)->find($sexe));
+                if ($request->get("typevoie"))
+                {
+                  $typevoie = $request->get("typevoie");
+                  $personne->setNinTypevoie($entityManager->getRepository(NiTypevoie::class)->find($typevoie));
+                }
+
+                $request->getSession()->getFlashBag()->add('message',"La personne physique a été modifié avec succès .");
+
+             
+             }
+            else
+            {
+                  $request->getSession()->getFlashBag()->add('message',"La personne morale a été modifié avec succès .");
+                  //recupération personne morale
+                  $raisonsociale = $request->get("raison_modif");
+                  $siglesociale = $request->get("sigle_modif");
+                  $tempNiPersonne->setNinRaison($raisonsociale);
+                  $tempNiPersonne->setNinSigle($siglesociale);
+
+            }
+        
+       
+
+        $entityManager->flush();
+        return $this->redirectToRoute('app_demande_modification_show', ["id"=>$demandeModification->getId()], Response::HTTP_SEE_OTHER);
     }
 
     /**

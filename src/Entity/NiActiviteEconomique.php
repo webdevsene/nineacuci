@@ -6,9 +6,11 @@ use App\Repository\NiActiviteEconomiqueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=NiActiviteEconomiqueRepository::class)
+ * @Gedmo\Loggable
  */
 class NiActiviteEconomique
 {
@@ -21,42 +23,37 @@ class NiActiviteEconomique
 
     /**
      * @ORM\Column(type="string", length=6, nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninAnneeCa;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $ninMode;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $ninNature;
+
+
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninCapital;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $ninOcc;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninEffect1;
 
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninEffectifFem;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninEffectifFemSAIS;
 
@@ -79,11 +76,13 @@ class NiActiviteEconomique
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninEffectif;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $ninAffaire;
 
@@ -94,13 +93,30 @@ class NiActiviteEconomique
 
     /**
      * @ORM\ManyToOne(targetEntity=NINinea::class, inversedBy="ninActivitesEconomiques")
+     * @Gedmo\Versioned 
      */
     private $nINinea;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Gedmo\Versioned 
      */
     private $DeteDeCloture;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NiSourcefinancement::class, inversedBy="niActiviteEconomiques")
+     */
+    private $ninOcc;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NiModaliteexploitation::class, inversedBy="niActiviteEconomiques")
+     */
+    private $ninMode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NiNatureLocaliteExploitation::class, inversedBy="niActiviteEconomiques")
+     */
+    private $ninNature;
 
 
     
@@ -136,29 +152,7 @@ class NiActiviteEconomique
         return $this;
     }
 
-    public function getNinMode(): ?string
-    {
-        return $this->ninMode;
-    }
-
-    public function setNinMode(?string $ninMode): self
-    {
-        $this->ninMode = $ninMode;
-
-        return $this;
-    }
-
-    public function getNinNature(): ?string
-    {
-        return $this->ninNature;
-    }
-
-    public function setNinNature(?string $ninNature): self
-    {
-        $this->ninNature = $ninNature;
-
-        return $this;
-    }
+   
 
     public function getNinCapital(): ?float
     {
@@ -172,17 +166,7 @@ class NiActiviteEconomique
         return $this;
     }
 
-    public function getNinOcc(): ?string
-    {
-        return $this->ninOcc;
-    }
-
-    public function setNinOcc(string $ninOcc): self
-    {
-        $this->ninOcc = $ninOcc;
-
-        return $this;
-    }
+   
 
     public function getNinEffect1(): ?int
     {
@@ -315,6 +299,42 @@ class NiActiviteEconomique
     public function setDeteDeCloture(?\DateTimeInterface $DeteDeCloture): self
     {
         $this->DeteDeCloture = $DeteDeCloture;
+
+        return $this;
+    }
+
+    public function getNinOcc(): ?NiSourcefinancement
+    {
+        return $this->ninOcc;
+    }
+
+    public function setNinOcc(?NiSourcefinancement $ninOcc): self
+    {
+        $this->ninOcc = $ninOcc;
+
+        return $this;
+    }
+
+    public function getNinMode(): ?NiModaliteexploitation
+    {
+        return $this->ninMode;
+    }
+
+    public function setNinMode(?NiModaliteexploitation $ninMode): self
+    {
+        $this->ninMode = $ninMode;
+
+        return $this;
+    }
+
+    public function getNinNature(): ?NiNatureLocaliteExploitation
+    {
+        return $this->ninNature;
+    }
+
+    public function setNinNature(?NiNatureLocaliteExploitation $ninNature): self
+    {
+        $this->ninNature = $ninNature;
 
         return $this;
     }

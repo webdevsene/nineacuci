@@ -267,6 +267,56 @@ class HistoryNINinea
      */
     private $historyDocumentCreations;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nomCommercial;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $ninDateDocument;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ninNumeroDocument;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $ninRegcomReprise;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $ninDatregReprise;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $ninDatregModif;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $ninRegcomModif;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NinTypedocuments::class, inversedBy="historyNINineas")
+     */
+    private $niTypedocument;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $observationsrccm;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=NiStatut::class, inversedBy="historyNINineas")
+     */
+    private $ninStatutH;
+
     public function __construct()
     {
         $this->historyNiActivites = new ArrayCollection();
@@ -977,6 +1027,126 @@ class HistoryNINinea
                 $historyDocumentCreation->setDocumentNinea(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNomCommercial(): ?string
+    {
+        return $this->nomCommercial;
+    }
+
+    public function setNomCommercial(?string $nomCommercial): self
+    {
+        $this->nomCommercial = $nomCommercial;
+
+        return $this;
+    }
+
+    public function getNinDateDocument(): ?\DateTimeInterface
+    {
+        return $this->ninDateDocument;
+    }
+
+    public function setNinDateDocument(?\DateTimeInterface $ninDateDocument): self
+    {
+        $this->ninDateDocument = $ninDateDocument;
+
+        return $this;
+    }
+
+    public function getNinNumeroDocument(): ?string
+    {
+        return $this->ninNumeroDocument;
+    }
+
+    public function setNinNumeroDocument(?string $ninNumeroDocument): self
+    {
+        $this->ninNumeroDocument = $ninNumeroDocument;
+
+        return $this;
+    }
+
+    public function getNinRegcomReprise(): ?string
+    {
+        return $this->ninRegcomReprise;
+    }
+
+    public function setNinRegcomReprise(?string $ninRegcomReprise): self
+    {
+        $this->ninRegcomReprise = $ninRegcomReprise;
+
+        return $this;
+    }
+
+    public function getNinDatregReprise(): ?\DateTimeInterface
+    {
+        return $this->ninDatregReprise;
+    }
+
+    public function setNinDatregReprise(?\DateTimeInterface $ninDatregReprise): self
+    {
+        $this->ninDatregReprise = $ninDatregReprise;
+
+        return $this;
+    }
+
+    public function getNinDatregModif(): ?\DateTimeInterface
+    {
+        return $this->ninDatregModif;
+    }
+
+    public function setNinDatregModif(?\DateTimeInterface $ninDatregModif): self
+    {
+        $this->ninDatregModif = $ninDatregModif;
+
+        return $this;
+    }
+
+    public function getNinRegcomModif(): ?string
+    {
+        return $this->ninRegcomModif;
+    }
+
+    public function setNinRegcomModif(?string $ninRegcomModif): self
+    {
+        $this->ninRegcomModif = $ninRegcomModif;
+
+        return $this;
+    }
+
+    public function getNiTypedocument(): ?NinTypedocuments
+    {
+        return $this->niTypedocument;
+    }
+
+    public function setNiTypedocument(?NinTypedocuments $niTypedocument): self
+    {
+        $this->niTypedocument = $niTypedocument;
+
+        return $this;
+    }
+
+    public function getObservationsrccm(): ?string
+    {
+        return $this->observationsrccm;
+    }
+
+    public function setObservationsrccm(?string $observationsrccm): self
+    {
+        $this->observationsrccm = $observationsrccm;
+
+        return $this;
+    }
+
+    public function getNinStatutH(): ?NiStatut
+    {
+        return $this->ninStatutH;
+    }
+
+    public function setNinStatutH(?NiStatut $ninStatutH): self
+    {
+        $this->ninStatutH = $ninStatutH;
 
         return $this;
     }
